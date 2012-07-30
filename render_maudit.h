@@ -308,6 +308,9 @@ private:
                 lines.push_back(std::make_pair(fore, li->text.substr(si, box_w)));
                 si += box_w;
             }
+
+            ++i;
+            ++li;
         }
 
         lines.resize(3);

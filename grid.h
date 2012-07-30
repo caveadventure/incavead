@@ -354,20 +354,13 @@ struct Map {
         }
     }
 
-    void generate(int type, unsigned int npass = 5) {
+    void generate(int type, unsigned int nflatten = 0, unsigned int nunflow = 0) {
         makegrid();
         makerivers();
-
-        unsigned int nflatten = 0;
-        unsigned int nunflow = 0;
-
-        if (type == 1) {
-            nflatten = npass;
-
-        } else if (type == -1) {
-            nflatten = 1;
-            nunflow = 6;
-        }
+        
+        // nflatten, nunflow:
+        // 5, 0; 
+        // 1, 6;
 
         flatten(nflatten, nunflow);
     }

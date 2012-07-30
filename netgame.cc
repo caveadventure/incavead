@@ -61,7 +61,7 @@ struct Game {
 
     void generate() {
         std::cout << "Generating..." << std::endl;
-        grid::get().generate(1);
+        grid::get().generate(0, 0);
         std::cout << "Generating OK" << std::endl;
 
         grid::pt xy;
@@ -147,8 +147,6 @@ struct Game {
 
     void process_world(size_t& ticks, bool& done, bool& dead, bool& need_input) {
         
-        ticks++;
-        need_input = true;
     }
 
     void move(int dx, int dy, size_t& ticks) {
@@ -196,6 +194,7 @@ struct Game {
             done = true;
             dead = true;
             break;
+
         case 'h':
             move(-1, 0, ticks);
             break;
