@@ -27,7 +27,7 @@
 #include <stdlib.h> /* calloc */
 #include <string.h> /* NULL/memcpy */
 
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 
 #define LIST(l) ((TCOD_list_int_t *)l)

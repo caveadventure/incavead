@@ -151,7 +151,7 @@ struct Game {
         need_input = true;
     }
 
-    void move(int dx, int dy) {
+    void move(int dx, int dy, size_t& ticks) {
         int nx = px + dx;
         int ny = py + dy;
 
@@ -164,6 +164,8 @@ struct Game {
             return;
         }
 
+        ++ticks;
+
         grender::get().unset_skin(px, py, 1);
 
         px = nx;
@@ -172,6 +174,16 @@ struct Game {
         grender::get().set_skin(px, py, 1, 
                                 grender::Grid::skin("@", maudit::color::bright_white, 
                                                     maudit::color::bright_black));
+    }
+
+    void rest(size_t& ticks) {
+
+        std::ostringstream s;
+        s << "Turn no.: " << ticks;
+
+        grender::get().do_message(s.str(), false);
+
+        ++ticks;
     }
 
     void handle_input(size_t& ticks, bool& done, bool& dead, maudit::keypress k) {
@@ -185,43 +197,47 @@ struct Game {
             dead = true;
             break;
         case 'h':
-            move(-1, 0);
+            move(-1, 0, ticks);
             break;
         case 'j':
-            move(0, 1);
+            move(0, 1, ticks);
             break;
         case 'k':
-            move(0, -1);
+            move(0, -1, ticks);
             break;
         case 'l':
-            move(1, 0);
+            move(1, 0, ticks);
             break;
         case 'y':
-            move(-1, -1);
+            move(-1, -1, ticks);
             break;
         case 'u':
-            move(1, -1);
+            move(1, -1, ticks);
             break;
         case 'b':
-            move(-1, 1);
+            move(-1, 1, ticks);
             break;
         case 'n':
-            move(1, 1);
+            move(1, 1, ticks);
+            break;
+
+        case '.':
+            rest(ticks);
             break;
         }
 
         switch (k.key) {
         case maudit::keycode::up:
-            move(0, -1);
+            move(0, -1, ticks);
             break;
         case maudit::keycode::left:
-            move(-1, 0);
+            move(-1, 0, ticks);
             break;
         case maudit::keycode::right:
-            move(1, 0);
+            move(1, 0, ticks);
             break;
         case maudit::keycode::down:
-            move(0, 1);
+            move(0, 1, ticks);
             break;
         default:
             break;

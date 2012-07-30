@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 
 static int mult[4][8]= {

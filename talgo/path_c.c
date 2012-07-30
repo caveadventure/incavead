@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 
 

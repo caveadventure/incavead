@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 
 /* The size of each square in units */

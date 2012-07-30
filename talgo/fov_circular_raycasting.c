@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 #include <string.h>
 #include <math.h>

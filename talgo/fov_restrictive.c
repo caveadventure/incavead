@@ -32,7 +32,7 @@
 */
 
 #include <stdlib.h> /* for NULL in VS */
-#include "talgo.h"
+#include "../talgo.h"
 #include "talgo_int.h"
 
 /* angle ranges */
