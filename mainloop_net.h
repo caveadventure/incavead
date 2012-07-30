@@ -15,6 +15,8 @@ namespace mainloop {
 
 
 struct drawing_context_t {
+    unsigned int view_w;
+    unsigned int view_h;
     int voff_x;
     int voff_y;
     unsigned int px;
@@ -27,6 +29,7 @@ struct drawing_context_t {
     bool do_hud;
 
     drawing_context_t() :
+        view_w(0), view_h(0),
         voff_x(0), voff_y(0), px(0), py(0), lightradius(1000), 
         hlx(std::numeric_limits<unsigned int>::max()), 
         hly(hlx),
@@ -52,9 +55,11 @@ struct Main {
     GAME game;
     SCREEN& screen;
 
+    unsigned int view_w;
+    unsigned int view_h;
     size_t ticks;
 
-    Main(SCREEN& s) : screen(s), ticks(1) {}
+    Main(SCREEN& s) : screen(s), view_w(0), view_h(0), ticks(1) {}
 
 
 
@@ -134,6 +139,8 @@ struct Main {
     void draw() {
 
         drawing_context_t ctx;
+        ctx.view_w = view_w;
+        ctx.view_h = view_h;
         game.drawing_context(ctx);
 
         if (ctx.do_hud) {
@@ -145,6 +152,7 @@ struct Main {
                             ctx.px, ctx.py, ctx.hlx, ctx.hly,
                             ctx.rangemin, ctx.rangemax, ctx.lightradius, 
                             ctx.do_hud,
+                            view_w, view_h,
                             std::bind(&GAME::set_skin, &game, 
                                       std::placeholders::_1, std::placeholders::_2));
 

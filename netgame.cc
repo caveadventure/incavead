@@ -61,7 +61,7 @@ struct Game {
 
     void generate() {
         std::cout << "Generating..." << std::endl;
-        grid::get().generate(0, 0);
+        grid::get().generate(6, 0);
         std::cout << "Generating OK" << std::endl;
 
         grid::pt xy;
@@ -129,8 +129,24 @@ struct Game {
 
     void drawing_context(mainloop::drawing_context_t& ctx) {
 
-        ctx.voff_x = 0;
-        ctx.voff_y = 0;
+        //unsigned int view_x = (px / 20) * 20;
+        //unsigned int view_y = (py / 20) * 20;
+
+        unsigned int grid_x = ctx.view_w / 4;
+        unsigned int grid_y = ctx.view_h / 4;
+
+        if (grid_x > 1) {
+            ctx.voff_x = -(px % grid_x) + (grid_x / 2);
+        } else {
+            ctx.voff_x = 0;
+        }
+
+        if (grid_y > 1) {
+            ctx.voff_y = -(py % grid_y) + (grid_y / 2);
+        } else {
+            ctx.voff_y = 0;
+        }
+
         ctx.px = px;
         ctx.py = py;
         ctx.lightradius = 8;

@@ -540,6 +540,8 @@ public:
 	      unsigned int hlx, unsigned int hly,
 	      unsigned int rangemin, unsigned int rangemax,
 	      unsigned int lightradius, bool do_hud,
+              unsigned int& ret_view_w, 
+              unsigned int& ret_view_h,
               FUNC make_valid) {
 
         int voff_x;
@@ -549,6 +551,9 @@ public:
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
 
                 // Do some initialization.
+
+                ret_view_w = view_w;
+                ret_view_h = view_h;
 
                 voff_x = px - (view_w / 2) + voff_off_x;
                 voff_y = py - (view_h / 2) + voff_off_y;
