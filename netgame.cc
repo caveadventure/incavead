@@ -47,22 +47,82 @@ struct Game {
     unsigned int px;
     unsigned int py;
 
-    Game() : px(0), py(0) {}
+    int worldx;
+    int worldy;
+    int worldz;
+
+    static const unsigned int GRID_W = 256;
+    static const unsigned int GRID_H = 256;
+
+
+    Game() : px(0), py(0), worldx(0), worldy(0), worldz(0) {}
 
     void make_screen(mainloop::screen_params_t& sp) {
 
-        sp.w = 256;
-        sp.h = 256;
+        sp.w = GRID_W;
+        sp.h = GRID_H;
         sp.w2 = sp.w;
         sp.h2 = sp.h;
     }
 
     void init() {}
 
-    void generate() {
+    void make_map(uint64_t gridseed, const std::string& cached_grid) {
+
+        rnd::get().init(gridseed);
+
+        unsigned int nflatten = std::max(8 - (::abs(worldx) + ::abs(worldy)), 0);
+        unsigned int nunflow = std::min(std::max(0, worldz), 8);
+
         std::cout << "Generating..." << std::endl;
-        grid::get().generate(6, 0);
+
+        grid::get().generate(nflatten, nunflow);
+
         std::cout << "Generating OK" << std::endl;
+
+        for (unsigned int x = 0; x < GRID_W; ++x) {
+            grid::get().set_walk(x, 0, false);
+            grid::get().set_walk(x, GRID_H-1, false);
+        }
+
+        for (unsigned int y = 1; y < GRID_H-1; ++y) {
+            grid::get().set_walk(0, y, false);
+            grid::get().set_walk(GRID_W-1, y, false);
+        }
+
+        std::cout << "Writing grid..." << std::endl;
+
+        serialize::Sink sink(cached_grid);
+        grid::get().write(sink);
+
+        std::cout << "Writing OK" << std::endl;
+    }
+
+    void generate() {
+
+        std::ostringstream cached_grid;
+
+        cached_grid << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
+
+        uint64_t gridseed = (((uint64_t)worldx) ^ 
+                             ((uint64_t)worldy << 16) ^
+                             ((uint64_t)worldz << 32));
+
+        try {
+
+            std::cout << "Reading grid..." << std::endl;
+
+            serialize::Source source(cached_grid.str());
+            grid::get().read(source);
+
+            std::cout << "Reading OK" << std::endl;
+
+        } catch (std::exception& e) {
+
+            make_map(gridseed, cached_grid.str());
+        }
+
+        rnd::get().init(gridseed);
 
         grid::pt xy;
         if (!grid::get().one_of_floor(xy))
@@ -71,17 +131,7 @@ struct Game {
         px = xy.first;
         py = xy.second;
 
-
-        for (unsigned int y = 0; y < 256; ++y) {
-            for (unsigned int x = 0; x < 256; ++x) {
-                bool walk = grid::get().is_walk(x, y);
-                bool water = grid::get().is_water(x, y);
-                std::cout << (walk ? (water ? '-' : ' ') : '#');
-            }
-            std::cout << std::endl;
-        }
-
-        std::cout << std::endl << std::endl;
+        rnd::get().init(::time(NULL));
     }
 
 
