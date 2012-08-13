@@ -67,38 +67,42 @@ struct Game {
 
     void init() {}
 
-    void make_map(uint64_t gridseed, const std::string& cached_grid) {
+    void make_map(mainloop::GameState& state,
+                  uint64_t gridseed, const std::string& cached_grid) {
 
-        rnd::get().init(gridseed);
+        state.rng.init(gridseed);
 
         unsigned int nflatten = std::max(8 - (::abs(worldx) + ::abs(worldy)), 0);
         unsigned int nunflow = std::min(std::max(0, worldz), 8);
 
-        std::cout << "Generating..." << std::endl;
+        //nflatten = 0;
 
-        grid::get().generate(nflatten, nunflow);
+        std::cout << "Generating... " << gridseed << " " 
+                  << nflatten << " " << nunflow << std::endl;
+
+        state.grid.generate(state.neigh, state.rng, nflatten, nunflow);
 
         std::cout << "Generating OK" << std::endl;
 
         for (unsigned int x = 0; x < GRID_W; ++x) {
-            grid::get().set_walk(x, 0, false);
-            grid::get().set_walk(x, GRID_H-1, false);
+            state.grid.set_walk(x, 0, false);
+            state.grid.set_walk(x, GRID_H-1, false);
         }
 
         for (unsigned int y = 1; y < GRID_H-1; ++y) {
-            grid::get().set_walk(0, y, false);
-            grid::get().set_walk(GRID_W-1, y, false);
+            state.grid.set_walk(0, y, false);
+            state.grid.set_walk(GRID_W-1, y, false);
         }
 
-        std::cout << "Writing grid..." << std::endl;
+        std::cout << "Writing grid... " << cached_grid << std::endl;
 
         serialize::Sink sink(cached_grid);
-        grid::get().write(sink);
+        state.grid.write(sink);
 
         std::cout << "Writing OK" << std::endl;
     }
 
-    void generate() {
+    void generate(mainloop::GameState& state) {
 
         std::ostringstream cached_grid;
 
@@ -106,42 +110,42 @@ struct Game {
 
         uint64_t gridseed = (((uint64_t)worldx) ^ 
                              ((uint64_t)worldy << 16) ^
-                             ((uint64_t)worldz << 32));
+                             ((uint64_t)worldz << 32)) + 1;
 
         try {
 
-            std::cout << "Reading grid..." << std::endl;
+            std::cout << "Reading grid... " << cached_grid.str() << std::endl;
 
             serialize::Source source(cached_grid.str());
-            grid::get().read(source);
+            state.grid.read(source);
 
             std::cout << "Reading OK" << std::endl;
 
         } catch (std::exception& e) {
 
-            make_map(gridseed, cached_grid.str());
+            make_map(state, gridseed, cached_grid.str());
         }
 
-        rnd::get().init(gridseed);
+        state.rng.init(gridseed);
 
         grid::pt xy;
-        if (!grid::get().one_of_floor(xy))
+        if (!state.grid.one_of_floor(state.rng, xy))
             throw std::runtime_error("Failed to generate grid");
 
         px = xy.first;
         py = xy.second;
 
-        rnd::get().init(::time(NULL));
+        state.rng.init(::time(NULL));
     }
 
 
-    void set_skin(unsigned int x, unsigned int y) {
+    void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
 
-        bool walkable = grid::get().is_walk(x, y);
-        bool water = grid::get().is_water(x, y);
+        bool walkable = state.grid.is_walk(x, y);
+        bool water = state.grid.is_water(x, y);
 
-        grender::get().set_is_viewblock(x, y, 0, !walkable);
-        grender::get().set_is_walkblock(x, y, 0, !walkable);
+        state.render.set_is_viewblock(x, y, 0, !walkable);
+        state.render.set_is_walkblock(x, y, 0, !walkable);
 
         grender::Grid::skin s;
 
@@ -160,12 +164,12 @@ struct Game {
             }
         }
 
-        grender::get().set_skin(x, y, 0, s);
+        state.render.set_skin(x, y, 0, s);
 
         if (x == px && y == py) {
 
             s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
-            grender::get().set_skin(x, y, 1, s);
+            state.render.set_skin(x, y, 1, s);
         }
     }
 
@@ -186,15 +190,15 @@ struct Game {
         unsigned int grid_y = ctx.view_h / 4;
 
         if (grid_x > 1) {
-            ctx.voff_x = -(px % grid_x) + (grid_x / 2);
+            ctx.voff_off_x = -(px % grid_x) + (grid_x / 2);
         } else {
-            ctx.voff_x = 0;
+            ctx.voff_off_x = 0;
         }
 
         if (grid_y > 1) {
-            ctx.voff_y = -(py % grid_y) + (grid_y / 2);
+            ctx.voff_off_y = -(py % grid_y) + (grid_y / 2);
         } else {
-            ctx.voff_y = 0;
+            ctx.voff_off_y = 0;
         }
 
         ctx.px = px;
@@ -202,55 +206,56 @@ struct Game {
         ctx.lightradius = 8;
     }
 
-    void draw_hud() {
+    void draw_hud(mainloop::GameState& state) {
 
-        grender::get().push_hud_line("Foo", maudit::color::bright_yellow, 
-                                     4, '+', maudit::color::bright_green);
+        state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
+                                   4, '+', maudit::color::bright_green);
 
-        grender::get().push_hud_line("Bump", maudit::color::bright_red, 
-                                     -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
+        state.render.push_hud_line("Bump", maudit::color::bright_red, 
+                                   -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
     void process_world(size_t& ticks, bool& done, bool& dead, bool& need_input) {
         
     }
 
-    void move(int dx, int dy, size_t& ticks) {
+    void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
         int nx = px + dx;
         int ny = py + dy;
 
         if (nx < 0 || ny < 0) 
             return;
 
-        if (!neighbors::get().linked(neighbors::pt(px, py), neighbors::pt(nx, ny)) ||
-            !grid::get().is_walk(nx, ny)) {
+        if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny)) ||
+            !state.grid.is_walk(nx, ny)) {
 
             return;
         }
 
         ++ticks;
 
-        grender::get().unset_skin(px, py, 1);
+        state.render.unset_skin(px, py, 1);
 
         px = nx;
         py = ny;
 
-        grender::get().set_skin(px, py, 1, 
-                                grender::Grid::skin("@", maudit::color::bright_white, 
-                                                    maudit::color::bright_black));
+        state.render.set_skin(px, py, 1, 
+                              grender::Grid::skin("@", maudit::color::bright_white, 
+                                                  maudit::color::bright_black));
     }
 
-    void rest(size_t& ticks) {
+    void rest(mainloop::GameState& state, size_t& ticks) {
 
         std::ostringstream s;
         s << "Turn no.: " << ticks;
 
-        grender::get().do_message(s.str(), false);
+        state.render.do_message(s.str(), false);
 
         ++ticks;
     }
 
-    void handle_input(size_t& ticks, bool& done, bool& dead, maudit::keypress k) {
+    void handle_input(mainloop::GameState& state,
+                      size_t& ticks, bool& done, bool& dead, maudit::keypress k) {
 
         bool regen = false;
         bool redraw = false;
@@ -262,57 +267,57 @@ struct Game {
             break;
 
         case 'h':
-            move(-1, 0, ticks);
+            move(state, -1, 0, ticks);
             break;
         case 'j':
-            move(0, 1, ticks);
+            move(state, 0, 1, ticks);
             break;
         case 'k':
-            move(0, -1, ticks);
+            move(state, 0, -1, ticks);
             break;
         case 'l':
-            move(1, 0, ticks);
+            move(state, 1, 0, ticks);
             break;
         case 'y':
-            move(-1, -1, ticks);
+            move(state, -1, -1, ticks);
             break;
         case 'u':
-            move(1, -1, ticks);
+            move(state, 1, -1, ticks);
             break;
         case 'b':
-            move(-1, 1, ticks);
+            move(state, -1, 1, ticks);
             break;
         case 'n':
-            move(1, 1, ticks);
+            move(state, 1, 1, ticks);
             break;
 
         case '.':
-            rest(ticks);
+            rest(state, ticks);
             break;
         }
 
         switch (k.key) {
         case maudit::keycode::up:
-            move(0, -1, ticks);
+            move(state, 0, -1, ticks);
             break;
         case maudit::keycode::left:
-            move(-1, 0, ticks);
+            move(state, -1, 0, ticks);
             break;
         case maudit::keycode::right:
-            move(1, 0, ticks);
+            move(state, 1, 0, ticks);
             break;
         case maudit::keycode::down:
-            move(0, 1, ticks);
+            move(state, 0, 1, ticks);
             break;
         default:
             break;
         }            
 
         if (regen) {
-            generate();
+            generate(state);
 
         } else if (redraw) {
-            grender::get().clear();
+            state.render.clear();
         }
     }
 };

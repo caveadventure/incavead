@@ -531,21 +531,21 @@ public:
         return (gp.in_fov || gp.is_lit != 0);
     }
 
-
-    template <typename SCREEN, typename FUNC>
+    
+    template <typename SCREEN, typename PARAMS, typename FUNC>
     void draw(SCREEN& screen,
+              celauto::CaMap& camap,
               unsigned int t,
-              int voff_off_x, int voff_off_y,
-	      unsigned int px, unsigned int py,
-	      unsigned int hlx, unsigned int hly,
-	      unsigned int rangemin, unsigned int rangemax,
-	      unsigned int lightradius, bool do_hud,
+              const PARAMS& params,
               unsigned int& ret_view_w, 
               unsigned int& ret_view_h,
               FUNC make_valid) {
 
         int voff_x;
         int voff_y;
+
+        unsigned int px = params.px;
+        unsigned int py = params.py;
 
         bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
@@ -555,8 +555,8 @@ public:
                 ret_view_w = view_w;
                 ret_view_h = view_h;
 
-                voff_x = px - (view_w / 2) + voff_off_x;
-                voff_y = py - (view_h / 2) + voff_off_y;
+                voff_x = px - (view_w / 2) + params.voff_off_x;
+                voff_y = py - (view_h / 2) + params.voff_off_y;
 
                 //
 
@@ -580,10 +580,10 @@ public:
                     }
                 }
                    
-                TCOD_map_compute_fov(tcodmap, px, py, lightradius, true, FOV_SHADOW);
+                TCOD_map_compute_fov(tcodmap, px, py, params.lightradius, true, FOV_SHADOW);
 
 
-                if (do_hud) {
+                if (params.do_hud) {
                     unsigned int hl = 0;
                     unsigned int hpx = (px > view_w / 2 ? 0 : view_w - 14);
 
@@ -683,10 +683,10 @@ public:
 
                         size_t caid;
                         unsigned int caage;
-                        celauto::get().get_state(xy, caid, caage);
+                        camap.get_state(xy, caid, caage);
 
                         if (caid) {
-                            unsigned int maxage = celauto::get().rules[caid]->age;
+                            unsigned int maxage = camap.rules[caid]->age;
                             double intrp = (double)caage / (maxage*2.0);
                             back = color_fade(back, intrp);
                         }
@@ -700,9 +700,9 @@ public:
                                 
                             } else {
 
-                                double d1 = d/lightradius;
+                                double d1 = d / params.lightradius;
 
-                                if (d < rangemin || d > rangemax) {
+                                if (d < params.rangemin || d > params.rangemax) {
                                     fore = gray_color;
                                     back = black_color;
 
@@ -713,7 +713,7 @@ public:
                             }
                         }
 
-                        if (x == hlx && y == hly) {
+                        if (x == params.hlx && y == params.hly) {
                             back = white_color;
                         }
 
@@ -885,7 +885,8 @@ public:
 
 
     template <typename FUNC>
-    void draw_floodfill(unsigned int x, unsigned int y, 
+    void draw_floodfill(neighbors::Neighbors& neigh,
+                        unsigned int x, unsigned int y, 
                         bool do_draw, color_t fore, color_t back,
                         FUNC func) {
 
@@ -899,7 +900,7 @@ public:
             pt xy = *(toproc.begin());
             toproc.erase(toproc.begin());
 
-            for (const auto& xyi : neighbors::get()(xy)) {
+            for (const auto& xyi : neigh(xy)) {
 
                 if (procd.count(xyi) != 0) 
                     continue;
@@ -1079,11 +1080,6 @@ public:
 
 };
 
-
-inline Grid& get() {
-    static Grid ret;
-    return ret;
-}
 
 }
 

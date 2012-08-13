@@ -13,12 +13,22 @@
 
 namespace mainloop {
 
+struct GameState {
+
+    rnd::Generator rng;
+    neighbors::Neighbors neigh;
+    celauto::CaMap camap;
+    grid::Map grid;
+    grender::Grid render;
+    moon::Moon moon;
+};
+
 
 struct drawing_context_t {
     unsigned int view_w;
     unsigned int view_h;
-    int voff_x;
-    int voff_y;
+    int voff_off_x;
+    int voff_off_y;
     unsigned int px;
     unsigned int py;
     unsigned int lightradius;
@@ -30,7 +40,7 @@ struct drawing_context_t {
 
     drawing_context_t() :
         view_w(0), view_h(0),
-        voff_x(0), voff_y(0), px(0), py(0), lightradius(1000), 
+        voff_off_x(0), voff_off_y(0), px(0), py(0), lightradius(1000), 
         hlx(std::numeric_limits<unsigned int>::max()), 
         hly(hlx),
         rangemin(0),
@@ -59,6 +69,9 @@ struct Main {
     unsigned int view_h;
     size_t ticks;
 
+    GameState state;
+
+
     Main(SCREEN& s) : screen(s), view_w(0), view_h(0), ticks(1) {}
 
 
@@ -67,12 +80,12 @@ struct Main {
         try {
             serialize::Source s(filename);
 
-            rnd::get().read(s);
-            neighbors::get().read(s);
-            grid::get().read(s);
-            grender::get().read(s);
-            celauto::get().read(s);
-            moon::get().read(s);
+            state.rng.read(s);
+            state.neigh.read(s);
+            state.grid.read(s);
+            state.render.read(s);
+            state.camap.read(s);
+            state.moon.read(s);
 
             serialize::read(s, ticks);
 
@@ -88,12 +101,12 @@ struct Main {
 
         serialize::Sink s(filename);
 
-        rnd::get().write(s);
-        neighbors::get().write(s);
-        grid::get().write(s);
-        grender::get().write(s);
-        celauto::get().write(s);
-        moon::get().write(s);
+        state.rng.write(s);
+        state.neigh.write(s);
+        state.grid.write(s);
+        state.render.write(s);
+        state.camap.write(s);
+        state.moon.write(s);
 
         serialize::write(s, ticks);
 
@@ -109,29 +122,26 @@ struct Main {
                long seed,
                const screen_params_t& sp) {
 
-        std::cout << "++ load savefile" << std::endl;
         if (load(savefile)) {
             return false;
         }
 
-        std::cout << "++ init" << std::endl;
         screen.io.write("\r\nInitializing game...\r\n");
 
-        rnd::get().init(seed);
-        neighbors::get().init(sp.w, sp.h);
-        grid::get().init(sp.w, sp.h);
-        grender::get().init(sp.w2, sp.h2);
-        grender::get().keylog.clear();
-        celauto::get().init();
-        moon::get().init();
+        state.rng.init(seed);
+        state.neigh.init(sp.w, sp.h);
+        state.grid.init(sp.w, sp.h);
+        state.render.init(sp.w2, sp.h2);
+        state.render.keylog.clear();
+        state.camap.init();
+        state.moon.init();
 
         ticks = 1;
 
-        std::cout << "++ init2" << std::endl;
         screen.io.write("Generating world...\r\n");
 
         game.init();
-        game.generate();
+        game.generate(state);
 
         return true;
     }
@@ -144,17 +154,16 @@ struct Main {
         game.drawing_context(ctx);
 
         if (ctx.do_hud) {
-            game.draw_hud();
+            game.draw_hud(state);
         }
         
-        grender::get().draw(screen, 
-                            ticks, ctx.voff_x, ctx.voff_y,
-                            ctx.px, ctx.py, ctx.hlx, ctx.hly,
-                            ctx.rangemin, ctx.rangemax, ctx.lightradius, 
-                            ctx.do_hud,
-                            view_w, view_h,
-                            std::bind(&GAME::set_skin, &game, 
-                                      std::placeholders::_1, std::placeholders::_2));
+        state.render.draw(screen, 
+                          state.camap,
+                          ticks, 
+                          ctx,
+                          view_w, view_h,
+                          std::bind(&GAME::set_skin, &game, std::ref(state),
+                                    std::placeholders::_1, std::placeholders::_2));
 
     }
 
@@ -174,8 +183,8 @@ struct Main {
 
         if (need_input) {
 
-            grender::Grid::keypress k = grender::get().wait_for_key(screen);
-            game.handle_input(ticks, done, dead, k);
+            grender::Grid::keypress k = state.render.wait_for_key(screen);
+            game.handle_input(state, ticks, done, dead, k);
         }
     }
 
@@ -195,7 +204,7 @@ struct Main {
 
             screen.io.write("\r\nPress any key.\r\n");
 
-            grender::get().wait_for_anykey(screen);
+            state.render.wait_for_anykey(screen);
             return true;
         }
 
@@ -207,15 +216,12 @@ struct Main {
 
         screen_params_t sp;
 
-        std::cout << "+ make_screen" << std::endl;
         game.make_screen(sp);
 
-        std::cout << "+ start" << std::endl;
         start(savefile, seed, sp);
 
         size_t oldticks = 0;
 
-        std::cout << "+ draw" << std::endl;
         draw();
 
         bool done = false;
@@ -225,10 +231,8 @@ struct Main {
 
             bool need_input = false;
 
-            std::cout << "+ process" << std::endl;
             process(oldticks, done, dead, need_input);
 
-            std::cout << "+ draw" << std::endl;
             draw();
 
             if (check_done(done, dead, savefile)) 

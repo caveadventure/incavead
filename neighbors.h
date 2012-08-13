@@ -83,11 +83,6 @@ struct Neighbors {
 };
 
 
-inline Neighbors& get() {
-    static Neighbors ret;
-    return ret;
-}
-
 
 }
 

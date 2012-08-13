@@ -76,7 +76,8 @@ struct Map {
     /*** *** *** *** *** ***/
 
 
-    void subdivide_mapgen(unsigned int a, unsigned int b, 
+    void subdivide_mapgen(rnd::Generator& rng,
+                          unsigned int a, unsigned int b, 
                           unsigned int c, unsigned int d, bool domid) {
 
         unsigned int x = ((c - a) / 2) + a;
@@ -98,27 +99,27 @@ struct Map {
         } else {
 
             mid = _get(a, b) + _get(c, b) + _get(a, d) + _get(c, d);
-            mid = (mid / 4.0) - step + rnd::get().range(-s, s);
+            mid = (mid / 4.0) - step + rng.range(-s, s);
 
             _get(x, y) = mid;
         }
 
-        double top = ((_get(a, b) + _get(c, b) + mid) / 3.0) - step + rnd::get().range(-s, s);
+        double top = ((_get(a, b) + _get(c, b) + mid) / 3.0) - step + rng.range(-s, s);
         _get(x, b) = top;
 
-        double bot = ((_get(a, d) + _get(c, d) + mid) / 3.0) - step + rnd::get().range(-s, s);
+        double bot = ((_get(a, d) + _get(c, d) + mid) / 3.0) - step + rng.range(-s, s);
         _get(x, d) = bot;
 
-        double lef = ((_get(a, b) + _get(a, d) + mid) / 3.0) - step + rnd::get().range(-s, s);
+        double lef = ((_get(a, b) + _get(a, d) + mid) / 3.0) - step + rng.range(-s, s);
         _get(a, y) = lef;
 
-        double rig = ((_get(c, b) + _get(c, d) + mid) / 3.0) - step + rnd::get().range(-s, s);
+        double rig = ((_get(c, b) + _get(c, d) + mid) / 3.0) - step + rng.range(-s, s);
         _get(c, y) = rig;
 
-        subdivide_mapgen(a, b, x, y, true);
-        subdivide_mapgen(x, b, c, y, true);
-        subdivide_mapgen(a, y, x, d, true);
-        subdivide_mapgen(x, y, c, d, true);
+        subdivide_mapgen(rng, a, b, x, y, true);
+        subdivide_mapgen(rng, x, b, c, y, true);
+        subdivide_mapgen(rng, a, y, x, d, true);
+        subdivide_mapgen(rng, x, y, c, d, true);
     }
 
 
@@ -149,14 +150,18 @@ struct Map {
         }
     }
 
-    void makegrid() {
+    void makegrid(rnd::Generator& rng) {
+
         _get((w-1)/2, (h-1)/2) = -10;
-        subdivide_mapgen(0, 0, w - 1, h - 1, false);
+
+        subdivide_mapgen(rng, 0, 0, w - 1, h - 1, false);
+
         normalize();
     }
 
 
-    void flow(const pt& xy,
+    void flow(neighbors::Neighbors& neigh,
+              const pt& xy,
               std::unordered_set<pt>& out, 
               double n) {
 
@@ -172,7 +177,7 @@ struct Map {
         double v0 = _get(xy);
         std::vector< std::pair<double, pt> > l;
 
-        for (const auto& xy_ : neighbors::get()(xy)) {
+        for (const auto& xy_ : neigh(xy)) {
 
             double v = _get(xy_);
 
@@ -203,11 +208,13 @@ struct Map {
         }
 
         for (auto& i : l) {
-            flow(i.second, out, n * (i.first / vtotal));
+            flow(neigh, i.second, out, n * (i.first / vtotal));
         }
     }
 
-    void makeflow(std::unordered_set<pt>& gout, 
+    void makeflow(neighbors::Neighbors& neigh,
+                  rnd::Generator& rng,
+                  std::unordered_set<pt>& gout, 
                   std::unordered_map<pt, int>& watr,
                   double n, double q) {
 
@@ -218,13 +225,13 @@ struct Map {
         }
 
         std::discrete_distribution<size_t> ddist(grid_norm.begin(), grid_norm.end());
-        size_t index = ddist(rnd::get().gen);
+        size_t index = ddist(rng.gen);
         
         unsigned int y = index / w;
         unsigned int x = index % w;
 
         std::unordered_set<pt> out;
-        flow(pt(x, y), out, n);
+        flow(neigh, pt(x, y), out, n);
 
         for (const pt& xy : out) {
 
@@ -239,7 +246,8 @@ struct Map {
         gout.insert(out.begin(), out.end());
     }
 
-    void makerivers() {
+    void makerivers(neighbors::Neighbors& neigh,
+                    rnd::Generator& rng) {
 
         std::unordered_set<pt> gout;
         std::unordered_map<pt, int> watr;
@@ -248,7 +256,7 @@ struct Map {
         double N2 = 50.0;
 
         for (unsigned int i = 0; i < N1; i++) {
-            makeflow(gout, watr, N2, 1);
+            makeflow(neigh, rng, gout, watr, N2, 1);
         }
 
         for (const pt& xy : gout) {
@@ -267,7 +275,7 @@ struct Map {
         std::sort(watr_r.begin(), watr_r.end());
         std::reverse(watr_r.begin(), watr_r.end());
 
-        unsigned int pctwater = rnd::get().gauss(5.0, 1.0);
+        unsigned int pctwater = rng.gauss(5.0, 1.0);
         if (pctwater <= 1) pctwater = 1;
 
         pctwater = watr_r.size() / pctwater;
@@ -282,7 +290,7 @@ struct Map {
 
     }
 
-    void flatten_pass() {
+    void flatten_pass(neighbors::Neighbors& neigh) {
 
         std::unordered_set<pt> towalk;
         std::unordered_set<pt> towater;
@@ -295,7 +303,7 @@ struct Map {
 
                 pt xy(x, y);
 
-                for (const auto& xy_ : neighbors::get()(xy)) {
+                for (const auto& xy_ : neigh(xy)) {
 
                     if (walkmap.count(xy_) == 0)
                         nwall++;
@@ -314,20 +322,22 @@ struct Map {
             }
         }
 
+        std::cout << "+ flatten... " << towalk.size() << " " << towater.size() << std::endl;
+
         walkmap.insert(towalk.begin(), towalk.end());
         walkmap.insert(towater.begin(), towater.end());
         watermap.insert(towater.begin(), towater.end());
     }
 
 
-    void unflow() {
+    void unflow(neighbors::Neighbors& neigh) {
 
         std::unordered_set<pt> unwater;
 
         for (const pt& xy : watermap) {
             int nwater = 0;
 
-            for (const auto& xy_ : neighbors::get()(xy)) {
+            for (const auto& xy_ : neigh(xy)) {
 
                 if (watermap.count(xy_) != 0)
                     nwater++;
@@ -343,26 +353,32 @@ struct Map {
         }
     }
 
-    void flatten(unsigned int nflatten, unsigned int nunflow) {
+    void flatten(neighbors::Neighbors& neigh, unsigned int nflatten, unsigned int nunflow) {
 
         for (unsigned int i = 0; i < nflatten; ++i) {
-            flatten_pass();
+            std::cout << "flatten..." << std::endl;
+            flatten_pass(neigh);
         }
 
         for (unsigned int i = 0; i < nunflow; ++i) {
-            unflow();
+            unflow(neigh);
         }
     }
 
-    void generate(int type, unsigned int nflatten = 0, unsigned int nunflow = 0) {
-        makegrid();
-        makerivers();
+    void generate(neighbors::Neighbors& neigh,
+                  rnd::Generator& rng,
+                  unsigned int nflatten = 0, unsigned int nunflow = 0) {
+
+        makegrid(rng);
+        makerivers(neigh, rng);
         
         // nflatten, nunflow:
         // 5, 0; 
         // 1, 6;
 
-        flatten(nflatten, nunflow);
+        std::cout << "+ nflatten: " << nflatten << std::endl;
+
+        flatten(neigh, nflatten, nunflow);
     }
 
 
@@ -404,9 +420,10 @@ struct Map {
         nogens.insert(pt(x, y));
     }
 
-    void add_nogen_expand(unsigned int x, unsigned int y, unsigned int depth) {
+    void add_nogen_expand(neighbors::Neighbors& neigh,
+                          unsigned int x, unsigned int y, unsigned int depth) {
 
-        std::set<pt> ng(neighbors::get()(pt(x, y)));
+        std::set<pt> ng(neigh(pt(x, y)));
         std::set<pt> proc;
         
         proc.insert(pt(x, y));
@@ -419,7 +436,7 @@ struct Map {
                 if (proc.count(z) == 0) {
                     proc.insert(z);
 
-                    const auto& tmp = neighbors::get()(z);
+                    const auto& tmp = neigh(z);
                     ngtmp.insert(tmp.begin(), tmp.end());
                 }
             }
@@ -431,17 +448,17 @@ struct Map {
     }
 
 
-    bool _one_of(std::vector<pt>& tmp, pt& ret) {
+    bool _one_of(rnd::Generator& rng, std::vector<pt>& tmp, pt& ret) {
         if (tmp.size() == 0) {
             return false;
         }
 
         std::sort(tmp.begin(), tmp.end());
-        ret = tmp[rnd::get().range(0, (int)tmp.size()-1)];
+        ret = tmp[rng.range(0, (int)tmp.size()-1)];
         return true;
     }
 
-    bool one_of_floor(pt& ret) {
+    bool one_of_floor(rnd::Generator& rng, pt& ret) {
         std::vector<pt> tmp;
 
         for (const pt& v : walkmap) {
@@ -452,10 +469,10 @@ struct Map {
             tmp.push_back(v);
         }
 
-        return _one_of(tmp, ret);
+        return _one_of(rng, tmp, ret);
     }
 
-    bool one_of_water(pt& ret) {
+    bool one_of_water(rnd::Generator& rng, pt& ret) {
         std::vector<pt> tmp;
 
         for (const pt& v : watermap) {
@@ -466,11 +483,11 @@ struct Map {
             tmp.push_back(v);
         }
 
-        return _one_of(tmp, ret);
+        return _one_of(rng, tmp, ret);
     }
 
 
-    bool one_of_walk(pt& ret) {
+    bool one_of_walk(rnd::Generator& rng, pt& ret) {
         std::vector<pt> tmp;
 
         for (const pt& v : walkmap) {
@@ -480,7 +497,7 @@ struct Map {
             tmp.push_back(v);
         }
 
-        return _one_of(tmp, ret);
+        return _one_of(rng, tmp, ret);
     }
 
 
@@ -500,11 +517,6 @@ struct Map {
         serialize::read(s, watermap);
     }
 };
-
-Map& get() {
-    static Map ret;
-    return ret;
-}
 
 
 }

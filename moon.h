@@ -357,11 +357,6 @@ struct Moon {
 };
 
 
-inline Moon& get() {
-    static Moon ret;
-    return ret;
-}
-
 }
 
 #endif

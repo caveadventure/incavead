@@ -98,11 +98,13 @@ struct CaMap {
         }
     } 
 
-    unsigned int find_n(const pt& xy, const std::shared_ptr<rule>& rul, camap_t* que = NULL) {
+    unsigned int find_n(neighbors::Neighbors& neigh,
+                        const pt& xy, 
+                        const std::shared_ptr<rule>& rul, camap_t* que = NULL) {
 
         unsigned int n = 0;
 
-        for (const auto& xy_ : neighbors::get()(xy)) {
+        for (const auto& xy_ : neigh(xy)) {
 
             camap_t::const_iterator i = camap.find(xy_);
 
@@ -121,7 +123,7 @@ struct CaMap {
 
 
     template <typename FUNC>
-    inline void step(FUNC funcon, FUNC funcoff) {
+    inline void step(neighbors::Neighbors& neigh, FUNC funcon, FUNC funcoff) {
     
         camap_t remove;
         camap_t insert;
@@ -148,7 +150,7 @@ struct CaMap {
             } else {
                 // Check if we survive
 
-                unsigned int n = find_n(xy, rul, &insert);
+                unsigned int n = find_n(neigh, xy, rul, &insert);
 
                 if (rul->survive.count(n) == 0) {
                     age_add = 1;
@@ -164,7 +166,7 @@ struct CaMap {
             const pt& xy = i->first;
             std::shared_ptr<rule>& rul = i->second.rul;
 
-            unsigned int n = find_n(xy, rul);
+            unsigned int n = find_n(neigh, xy, rul);
 
             if (rul->born.count(n) != 0) {
                 born[xy] = ca_element(rul, 0);
@@ -230,11 +232,6 @@ struct CaMap {
     }
 };
 
-
-inline CaMap& get() {
-    static CaMap ret;
-    return ret;
-}
 
 }
 

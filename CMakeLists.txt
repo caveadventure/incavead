@@ -1,6 +1,14 @@
 
+cmake_minimum_required (VERSION 2.6)
+project (netgame)
 
-include_directories(../libtcod/include)
+SET(CMAKE_BUILD_TYPE "Release")
+
+SET(CMAKE_CXX_FLAGS "-Wall -std=c++0x -O3 -g -pthread")
+
+SET(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist)
+
 include_directories(../libmaudit)
 
 add_executable(netgame netgame.cc

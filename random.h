@@ -69,11 +69,6 @@ struct Generator {
 
 };
 
-inline Generator& get() {
-    static Generator ret;
-    return ret;
-}
-
 }
 
 #endif
