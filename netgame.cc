@@ -119,7 +119,7 @@ struct Game {
             serialize::Source source(cached_grid.str());
             state.grid.read(source);
 
-            std::cout << "Reading OK" << std::endl;
+            std::cout << "Reading grid OK" << std::endl;
 
         } catch (std::exception& e) {
 
@@ -138,6 +138,27 @@ struct Game {
         state.rng.init(::time(NULL));
     }
 
+    maudit::color floor_color(mainloop::GameState& state, unsigned int x, unsigned int y) {
+        double z = state.grid._get(x, y);
+
+        if (z <= -9) {
+            return maudit::color::dim_red;
+        } else if (z <= -8) {
+            return maudit::color::bright_red;
+        } else if (z <= -7) {
+            return maudit::color::dim_green;
+        } else if (z <= -6) {
+            return maudit::color::bright_green;
+        } else if (z <= -5) {
+            return maudit::color::dim_yellow;
+        } else if (z <= -4) {
+            return maudit::color::bright_yellow;
+        } else if (z <= -3) {
+            return maudit::color::dim_white;
+        }
+
+        return maudit::color::bright_white;
+    }
 
     void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
 
@@ -153,7 +174,7 @@ struct Game {
             if (water) {
                 s = grender::Grid::skin("-", maudit::color::bright_blue, maudit::color::bright_black);
             } else {
-                s = grender::Grid::skin(".", maudit::color::dim_white, maudit::color::bright_black);
+                s = grender::Grid::skin(".", floor_color(state, x, y), maudit::color::bright_black);
             }
 
         } else {
@@ -247,7 +268,8 @@ struct Game {
     void rest(mainloop::GameState& state, size_t& ticks) {
 
         std::ostringstream s;
-        s << "Turn no.: " << ticks;
+        //s << "Turn no.: " << ticks;
+        s << "[" << px << "," << py << "] : " << state.grid._get(px, py);
 
         state.render.do_message(s.str(), false);
 
@@ -264,6 +286,11 @@ struct Game {
         case 'Q':
             done = true;
             dead = true;
+            break;
+
+        case 'S':
+            done = true;
+            dead = false;
             break;
 
         case 'h':

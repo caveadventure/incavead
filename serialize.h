@@ -191,6 +191,7 @@ template <typename T>
 inline void read_stl(Source& s, T& v) {
     size_t sz;
     s>>sz;
+    v.clear();
     for (size_t i = 0; i < sz; ++i) {
         typename remove_constpair<typename T::value_type>::type vv;
         reader<decltype(vv)>().read(s, vv);
