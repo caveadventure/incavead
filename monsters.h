@@ -55,7 +55,7 @@ struct Monsters {
         mons.clear();
     }
 
-    bool get_placement(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
+    bool get_placement(rnd::Generator& rng, grid::Map& grid, 
                        Species::habitat_t h, pt& ret) {
         switch (h) {
 
@@ -67,10 +67,10 @@ struct Monsters {
             if (!grid.one_of_water(rng, ret)) return false;
 
         case Species::habitat_t::corner:
-            if (!grid.one_of_corner(neigh, rng, ret)) return false;
+            if (!grid.one_of_corner(rng, ret)) return false;
 
         case Species::habitat_t::shoreline:
-            if (!grid.one_of_shoreline(neigh, rng, ret)) return false;
+            if (!grid.one_of_shore(rng, ret)) return false;
 
         }
 
@@ -78,7 +78,7 @@ struct Monsters {
         return true;
     }
         
-    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
+    void generate(rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                   unsigned int level, unsigned int n) {
 
         std::cout << "!!! " << level << " " << n << std::endl;
@@ -97,7 +97,7 @@ struct Monsters {
 
                 Species::habitat_t h = species().get(i.first).habitat; 
     
-                if (!get_placement(neigh, rng, grid, h, xy))
+                if (!get_placement(rng, grid, h, xy))
                     break;
 
                 mons[xy] = Monster(i.first, xy);

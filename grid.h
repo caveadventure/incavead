@@ -43,6 +43,11 @@ struct Map {
     std::unordered_set<pt> walkmap;
     std::unordered_set<pt> watermap;
 
+    std::unordered_set<pt> floormap;
+    std::unordered_set<pt> cornermap;
+    std::unordered_set<pt> shoremap;
+    std::unordered_set<pt> lakemap;
+
     std::unordered_set<pt> nogens;
 
     void init(unsigned int _w, unsigned int _h) {
@@ -52,6 +57,9 @@ struct Map {
         grid.resize(w*h);
         walkmap.clear();
         watermap.clear();
+        floormap.clear();
+        cornermap.clear();
+        shoremap.clear();
         nogens.clear();
 
         for (size_t i = 0; i < w*h; ++i) {
@@ -365,6 +373,47 @@ struct Map {
         }
     }
 
+    void _set_maps1(neighbors::Neighbors& neigh, const pt& xy) {
+
+        if (watermap.count(xy) == 0) {
+
+            floormap.insert(xy);
+
+
+            for (const auto& v : neigh(xy)) {
+                if (watermap.count(v) != 0) {
+                    shoremap.insert(xy);
+                    break;
+                }
+            }
+        }
+
+        for (const auto& v : neigh(xy)) {
+            if (walkmap.count(v) == 0) {
+                cornermap.insert(xy);
+                break;
+            }
+        }
+    }
+
+    void _set_maps2(const pt& xy) {
+
+        if (walkmap.count(xy) != 0) {
+            lakemap.insert(xy);
+        }
+    }
+
+    void set_maps(neighbors::Neighbors& neigh) {
+
+        for (const pt& xy : walkmap) {
+            _set_maps1(neigh, xy);
+        }
+
+        for (const pt& xy : watermap) {
+            _set_maps2(xy);
+        }
+    }
+
     void generate(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
                   unsigned int nflatten = 0, unsigned int nunflow = 0) {
@@ -379,6 +428,8 @@ struct Map {
         std::cout << "+ nflatten: " << nflatten << std::endl;
 
         flatten(neigh, nflatten, nunflow);
+
+        set_maps(neigh);
     }
 
 
@@ -400,19 +451,47 @@ struct Map {
         return (watermap.count(pt(x, y)) != 0);
     }
 
-    void set_walk(unsigned int x, unsigned int y, bool v) {
+    bool is_lake(unsigned int x, unsigned int y) {
+        return (lakemap.count(pt(x, y)) != 0);
+    }
+
+    bool is_floor(unsigned int x, unsigned int y) {
+        return (floormap.count(pt(x, y)) != 0);
+    }
+
+    bool is_corner(unsigned int x, unsigned int y) {
+        return (cornermap.count(pt(x, y)) != 0);
+    }
+
+    bool is_shore(unsigned int x, unsigned int y) {
+        return (shoremap.count(pt(x, y)) != 0);
+    }
+    
+    void set_walk(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
+        pt tmp(x, y);
+
         if (v) {
-            walkmap.insert(pt(x, y));
+            walkmap.insert(tmp);
+            _set_maps1(neigh, tmp);
+
         } else {
-            walkmap.erase(pt(x, y));
+            walkmap.erase(tmp);
+            floormap.erase(tmp);
+            cornermap.erase(tmp);
+            shoremap.erase(tmp);
         }
     }
 
     void set_water(unsigned int x, unsigned int y, bool v) {
+        pt tmp(x, y);
+
         if (v) {
-            watermap.insert(pt(x, y));
+            watermap.insert(tmp);
+            _set_maps2(tmp);
+
         } else {
-            watermap.erase(pt(x, y));
+            watermap.erase(tmp);
+            lakemap.erase(tmp);
         }
     }
 
@@ -458,10 +537,10 @@ struct Map {
         return true;
     }
 
-    bool one_of_walk(rnd::Generator& rng, pt& ret) {
+    bool _one_of(rnd::Generator& rng, const std::unordered_set<pt>& s, pt& ret) {
         std::vector<pt> tmp;
 
-        for (const pt& v : walkmap) {
+        for (const pt& v : s) {
             if (nogens.count(v) != 0)
                 continue;
 
@@ -471,70 +550,25 @@ struct Map {
         return _one_of(rng, tmp, ret);
     }
 
+    bool one_of_walk(rnd::Generator& rng, pt& ret) {
+        return _one_of(rng, walkmap, ret);
+    }
+
     bool one_of_floor(rnd::Generator& rng, pt& ret) {
-        std::vector<pt> tmp;
+        return _one_of(rng, floormap, ret);
+    }
 
-        for (const pt& v : walkmap) {
-            if (watermap.count(v) != 0 || nogens.count(v) != 0)
-                continue;
+    bool one_of_corner(rnd::Generator& rng, pt& ret) {
+        return _one_of(rng, cornermap, ret);
+    }
 
-            tmp.push_back(v);
-        }
-
-        return _one_of(rng, tmp, ret);
+    bool one_of_shore(rnd::Generator& rng, pt& ret) {
+        return _one_of(rng, shoremap, ret);
     }
 
     bool one_of_water(rnd::Generator& rng, pt& ret) {
-        std::vector<pt> tmp;
-
-        for (const pt& v : watermap) {
-            if (walkmap.count(v) == 0 || nogens.count(v) != 0)
-                continue;
-
-            tmp.push_back(v);
-        }
-
-        return _one_of(rng, tmp, ret);
+        return _one_of(rng, lakemap, ret);
     }
-
-    bool one_of_shoreline(neighbors::Neighbors& neigh, rnd::Generator& rng, pt& ret) {
-        std::vector<pt> tmp;
-
-        bm _z("one_shoreline");
-
-        for (const pt& v : walkmap) {
-            if (watermap.count(v) != 0 || nogens.count(v) != 0) 
-                continue;
-
-            for (const auto& v2 : neigh(v)) {
-                if (watermap.count(v2) != 0) {
-                    tmp.push_back(v);
-                    break;
-                }
-            }
-        }
-
-        return _one_of(rng, tmp, ret);
-    }
-
-    bool one_of_corner(neighbors::Neighbors& neigh, rnd::Generator& rng, pt& ret) {
-        std::vector<pt> tmp;
-
-        for (const pt& v : walkmap) {
-            if (nogens.count(v) != 0) 
-                continue;
-
-            for (const auto& v2 : neigh(v)) {
-                if (walkmap.count(v2) == 0) {
-                    tmp.push_back(v);
-                    break;
-                }
-            }
-        }
-
-        return _one_of(rng, tmp, ret);
-    }
-
 
     inline void write(serialize::Sink& s) {
         serialize::write(s, w);
@@ -542,6 +576,10 @@ struct Map {
         serialize::write(s, grid);
         serialize::write(s, walkmap);
         serialize::write(s, watermap);
+        serialize::write(s, floormap);
+        serialize::write(s, cornermap);
+        serialize::write(s, shoremap);
+        serialize::write(s, lakemap);
     }
 
     inline void read(serialize::Source& s) {
@@ -550,6 +588,10 @@ struct Map {
         serialize::read(s, grid);
         serialize::read(s, walkmap);
         serialize::read(s, watermap);
+        serialize::read(s, floormap);
+        serialize::read(s, cornermap);
+        serialize::read(s, shoremap);
+        serialize::read(s, lakemap);
     }
 };
 

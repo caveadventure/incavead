@@ -68,13 +68,13 @@ struct Game {
         std::cout << "Generating OK" << std::endl;
 
         for (unsigned int x = 0; x < GRID_W; ++x) {
-            state.grid.set_walk(x, 0, false);
-            state.grid.set_walk(x, GRID_H-1, false);
+            state.grid.set_walk(state.neigh, x, 0, false);
+            state.grid.set_walk(state.neigh, x, GRID_H-1, false);
         }
 
         for (unsigned int y = 1; y < GRID_H-1; ++y) {
-            state.grid.set_walk(0, y, false);
-            state.grid.set_walk(GRID_W-1, y, false);
+            state.grid.set_walk(state.neigh, 0, y, false);
+            state.grid.set_walk(state.neigh, GRID_W-1, y, false);
         }
 
         std::cout << "Writing grid... " << cached_grid << std::endl;
@@ -131,7 +131,7 @@ struct Game {
         unsigned int moncount = ::fabs(state.rng.gauss(150.0, 30.0));
 
         bm _z("monster generation");
-        state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
+        state.monsters.generate(state.rng, state.grid, state.species_counts, 
                                 ::abs(worldz), moncount);
     }
 
