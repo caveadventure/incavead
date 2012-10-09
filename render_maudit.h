@@ -547,7 +547,7 @@ public:
         unsigned int px = params.px;
         unsigned int py = params.py;
 
-        bool ok = screen.refresh(
+        bool ok = screen.refresh(ret_view_w, ret_view_h,
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
 
                 // Do some initialization.
@@ -756,7 +756,7 @@ public:
 
 
     template <typename SCREEN>
-    void wait_for_anykey(SCREEN& screen) {
+    void wait_for_anykey(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
 
         keypress tmp;
         
@@ -764,10 +764,13 @@ public:
 
             throw std::runtime_error("end of input");
         }
+
+        view_w = tmp.w;
+        view_h = tmp.h;
     }
 
     template <typename SCREEN>
-    keypress wait_for_key(SCREEN& screen) {
+    keypress wait_for_key(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
 
         keypress ret;
         
@@ -775,6 +778,9 @@ public:
 
             throw std::runtime_error("end of input");
         }
+
+        view_w = ret.w;
+        view_h = ret.h;
 
         return ret;
     }
@@ -798,7 +804,8 @@ public:
     /////
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, const std::vector<std::string>& msg) {
+    keypress draw_window(SCREEN& screen, unsigned int view_w, unsigned int view_h,
+                         const std::vector<std::string>& msg) {
 
         std::vector< std::vector<skin> > glyphs;
 
@@ -822,7 +829,7 @@ public:
             }
         }
 
-        bool ok = screen.refresh(
+        bool ok = screen.refresh(view_w, view_h, 
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
 
                 for (unsigned int y = 0; y < view_h; ++y) {
@@ -972,7 +979,8 @@ public:
     }
 
     template <typename SCREEN>
-    void draw_messages_window(SCREEN& screen) {
+    void draw_messages_window(SCREEN& screen, unsigned int view_w, unsigned int view_h) {
+
         unsigned int i = 0;
         std::list<message>::const_iterator li = messages.begin();
         std::vector<std::string> lines;
@@ -994,7 +1002,7 @@ public:
             ++li;
         }
 
-        draw_window(screen, lines);
+        draw_window(screen, view_w, view_h, lines);
     }
 
     bool path_walk(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1,

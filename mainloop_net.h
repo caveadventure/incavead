@@ -198,7 +198,7 @@ struct Main {
 
         if (need_input) {
 
-            grender::Grid::keypress k = state.render.wait_for_key(screen);
+            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
             game.handle_input(state, ticks, done, dead, k);
         }
     }
@@ -219,7 +219,7 @@ struct Main {
 
             screen.io.write("\r\nPress any key.\r\n");
 
-            state.render.wait_for_anykey(screen);
+            state.render.wait_for_anykey(screen, view_w, view_h);
             return true;
         }
 
