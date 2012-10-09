@@ -458,12 +458,24 @@ struct Map {
         return true;
     }
 
+    bool one_of_walk(rnd::Generator& rng, pt& ret) {
+        std::vector<pt> tmp;
+
+        for (const pt& v : walkmap) {
+            if (nogens.count(v) != 0)
+                continue;
+
+            tmp.push_back(v);
+        }
+
+        return _one_of(rng, tmp, ret);
+    }
+
     bool one_of_floor(rnd::Generator& rng, pt& ret) {
         std::vector<pt> tmp;
 
         for (const pt& v : walkmap) {
-            if (watermap.count(v) != 0 ||
-                nogens.count(v) != 0)
+            if (watermap.count(v) != 0 || nogens.count(v) != 0)
                 continue;
 
             tmp.push_back(v);
@@ -476,8 +488,7 @@ struct Map {
         std::vector<pt> tmp;
 
         for (const pt& v : watermap) {
-            if (walkmap.count(v) == 0 ||
-                nogens.count(v) != 0)
+            if (walkmap.count(v) == 0 || nogens.count(v) != 0)
                 continue;
 
             tmp.push_back(v);
@@ -486,15 +497,39 @@ struct Map {
         return _one_of(rng, tmp, ret);
     }
 
+    bool one_of_shoreline(neighbors::Neighbors& neigh, rnd::Generator& rng, pt& ret) {
+        std::vector<pt> tmp;
 
-    bool one_of_walk(rnd::Generator& rng, pt& ret) {
+        bm _z("one_shoreline");
+
+        for (const pt& v : walkmap) {
+            if (watermap.count(v) != 0 || nogens.count(v) != 0) 
+                continue;
+
+            for (const auto& v2 : neigh(v)) {
+                if (watermap.count(v2) != 0) {
+                    tmp.push_back(v);
+                    break;
+                }
+            }
+        }
+
+        return _one_of(rng, tmp, ret);
+    }
+
+    bool one_of_corner(neighbors::Neighbors& neigh, rnd::Generator& rng, pt& ret) {
         std::vector<pt> tmp;
 
         for (const pt& v : walkmap) {
-            if (nogens.count(v) != 0)
+            if (nogens.count(v) != 0) 
                 continue;
 
-            tmp.push_back(v);
+            for (const auto& v2 : neigh(v)) {
+                if (walkmap.count(v2) == 0) {
+                    tmp.push_back(v);
+                    break;
+                }
+            }
         }
 
         return _one_of(rng, tmp, ret);

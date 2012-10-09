@@ -10,8 +10,12 @@
 
 #include "moon.h"
 
+#include "counters.h"
+#include "monsters.h"
+
 
 namespace mainloop {
+
 
 struct GameState {
 
@@ -21,6 +25,9 @@ struct GameState {
     grid::Map grid;
     grender::Grid render;
     moon::Moon moon;
+
+    counters::Counts species_counts;
+    monsters::Monsters monsters;
 };
 
 
@@ -86,6 +93,8 @@ struct Main {
             state.render.read(s);
             state.camap.read(s);
             state.moon.read(s);
+            state.species_counts.read(s);
+            state.monsters.read(s);
 
             serialize::read(s, ticks);
 
@@ -107,6 +116,8 @@ struct Main {
         state.render.write(s);
         state.camap.write(s);
         state.moon.write(s);
+        state.species_counts.write(s);
+        state.monsters.write(s);
 
         serialize::write(s, ticks);
 
@@ -135,6 +146,10 @@ struct Main {
         state.render.keylog.clear();
         state.camap.init();
         state.moon.init();
+
+        state.species_counts = species().counts;
+
+        state.monsters.init();
 
         ticks = 1;
 

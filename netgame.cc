@@ -4,42 +4,25 @@
 #include <sstream>
 
 #include <iostream>
-#include <sys/time.h>
-struct bm {
-    struct timeval b;
-    std::string msg;
-    bm(const std::string& s) : msg(s) {
-        gettimeofday(&b, NULL);
-    }
-    ~bm() {
-        struct timeval e;
-        gettimeofday(&e, NULL);
-        size_t a = (e.tv_sec*1e6 + e.tv_usec);
-        size_t q = (b.tv_sec*1e6 + b.tv_usec);
-        std::cout << msg << ": " << ((double)a-(double)q)/1e6 << std::endl;
-    }
-};
-
-struct bm_s {
-    struct timeval b;
-    double& _s;
-    bm_s(double& s) : _s(s) {
-        gettimeofday(&b, NULL);
-    }
-    ~bm_s() {
-        struct timeval e;
-        gettimeofday(&e, NULL);
-        size_t a = (e.tv_sec*1e6 + e.tv_usec);
-        size_t q = (b.tv_sec*1e6 + b.tv_usec);
-        _s += ((double)a-(double)q)/1e6;
-    }
-};
-
 
 #include "maudit.h"
+
+#include "debug_benchmark.h"
+
+////
+
+#include "species.h"
+#include "species_bank.h"
+
 #include "mainloop_net.h"
 
 
+
+void init_statics() {
+
+    init_species("moss1", 0, 300, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline);
+    init_species("moss2", 1, 280, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner);
+}
 
 
 struct Game {
@@ -104,6 +87,8 @@ struct Game {
 
     void generate(mainloop::GameState& state) {
 
+        // Read or generate cached map.
+
         std::ostringstream cached_grid;
 
         cached_grid << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
@@ -126,6 +111,8 @@ struct Game {
             make_map(state, gridseed, cached_grid.str());
         }
 
+        // Place the player on the same starting point every time.
+
         state.rng.init(gridseed);
 
         grid::pt xy;
@@ -135,7 +122,17 @@ struct Game {
         px = xy.first;
         py = xy.second;
 
+        state.grid.add_nogen(px, py);
+
+        // Place some random monsters.
+
         state.rng.init(::time(NULL));
+
+        unsigned int moncount = ::fabs(state.rng.gauss(150.0, 30.0));
+
+        bm _z("monster generation");
+        state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
+                                ::abs(worldz), moncount);
     }
 
     maudit::color floor_color(mainloop::GameState& state, unsigned int x, unsigned int y) {
@@ -192,6 +189,13 @@ struct Game {
             s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
             state.render.set_skin(x, y, 1, s);
         }
+
+        monsters::Monster mon;
+        if (state.monsters.get(x, y, mon)) {
+
+            const Species& s = species().get(mon.tag);
+            state.render.set_skin(x, y, 1, s.skin);
+        }
     }
 
     void endgame() {}
@@ -240,6 +244,14 @@ struct Game {
         
     }
 
+    bool attack(mainloop::GameState& state, monsters::Monster& mon) {
+
+        const Species& s = species().get(mon.tag);
+
+        state.render.do_message("You see " + s.name, false);
+        return true;
+    }
+
     void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
         int nx = px + dx;
         int ny = py + dy;
@@ -249,6 +261,16 @@ struct Game {
 
         if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny)) ||
             !state.grid.is_walk(nx, ny)) {
+
+            return;
+        }
+
+        monsters::Monster mon;
+        if (state.monsters.get(nx, ny, mon)) {
+
+            if (attack(state, mon)) {
+                ++ticks;
+            }
 
             return;
         }
@@ -377,6 +399,8 @@ void client_mainloop(int client_fd) {
 int main(int argc, char** argv) {
 
     maudit::server_socket server("0.0.0.0", 20020);
+
+    init_statics();
 
     while (1) {
 
