@@ -118,6 +118,9 @@ struct Counts {
         return ret;
     }
 
+    void replace(unsigned int level, const std::string& tag, unsigned int n = 1) {
+        data[level][tag] += n;
+    }
 
     inline void write(serialize::Sink& s) {
         serialize::write(s, data);

@@ -69,13 +69,15 @@ struct Monsters {
 
         case Species::habitat_t::water:
             if (!grid.one_of_water(rng, ret)) return false;
+            break;
 
         case Species::habitat_t::corner:
             if (!grid.one_of_corner(rng, ret)) return false;
+            break;
 
         case Species::habitat_t::shoreline:
             if (!grid.one_of_shore(rng, ret)) return false;
-
+            break;
         }
 
         grid.add_nogen(ret.first, ret.second);
@@ -89,18 +91,18 @@ struct Monsters {
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, n);
 
-        std::cout << "!!k " << q.size() << std::endl;
-
         bm _z("monster placement");
 
         for (const auto& i : q) {
+
+            Species::habitat_t h = species().get(i.first).habitat; 
+    
+            std::cout << "!!k " << i.first << " " << i.second << " " << (int)h << std::endl;
 
             for (unsigned int j = 0; j < i.second; ++j) {
 
                 pt xy;
 
-                Species::habitat_t h = species().get(i.first).habitat; 
-    
                 if (!get_placement(rng, grid, h, xy))
                     break;
 
@@ -118,6 +120,14 @@ struct Monsters {
 
         ret = i->second;
         return true;
+    }
+
+    void dispose(counters::Counts& counts) {
+
+        for (const auto& i : mons) {
+            const Species& s = species().get(i.second.tag);
+            counts.replace(s.level, s.tag);
+        }
     }
 
     inline void write(serialize::Sink& s) {

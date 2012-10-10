@@ -167,6 +167,8 @@ struct Main {
     }
 
     void regenerate() {
+        
+        game.dispose(state);
 
         state.neigh.clear();
         state.grid.clear();

@@ -146,6 +146,12 @@ struct Game {
                                 ::abs(worldz), moncount);
     }
 
+    void dispose(mainloop::GameState& state) {
+
+        state.monsters.dispose(state.species_counts);
+
+    }
+
     maudit::color floor_color(mainloop::GameState& state, unsigned int x, unsigned int y) {
         double z = state.grid._get(x, y);
 
