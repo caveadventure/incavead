@@ -280,15 +280,16 @@ private:
 
 
     void _draw_messages(std::vector<skin>& hud,
-                        unsigned int x, unsigned int y, unsigned int view_w, unsigned int box_w,
+                        unsigned int x, unsigned int y, unsigned int view_w, 
+                        unsigned int box_w, unsigned int box_h,
                         unsigned int t) {
 
         std::vector< std::pair<color_t, std::string> > lines;
 
-        int i = 0;
+        unsigned int i = 0;
         auto li = messages.begin();
 
-        while (i < 3 && li != messages.end()) {
+        while (i < box_h && li != messages.end()) {
 
             color_t fore = gray_color;
 
@@ -313,7 +314,7 @@ private:
             ++li;
         }
 
-        lines.resize(3);
+        lines.resize(box_h);
 
         for (size_t j = 0; j < lines.size(); ++j) {
 
@@ -582,8 +583,13 @@ public:
                    
                 TCOD_map_compute_fov(tcodmap, px, py, params.lightradius, true, FOV_SHADOW);
 
+                bool do_hud = params.do_hud;
 
-                if (params.do_hud) {
+                if (view_w <= 30 || view_h <= std::max(hud_pips.size(), (size_t)3)) {
+                    do_hud = false;
+                }
+
+                if (do_hud) {
                     unsigned int hl = 0;
                     unsigned int hpx = (px > view_w / 2 ? 0 : view_w - 14);
 
@@ -594,11 +600,13 @@ public:
 
                     if (py > h / 2) {
                         _draw_messages(ret_glyphs, 15, 0, 
-                                       view_w, view_w - 30, 
+                                       view_w,
+                                       view_w - 30, 3,
                                        t);
                     } else {
                         _draw_messages(ret_glyphs, 15, view_h - 3, 
-                                       view_w, view_w - 30,
+                                       view_w,
+                                       view_w - 30, 3,
                                        t);
                     }
                 }
