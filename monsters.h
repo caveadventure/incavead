@@ -130,6 +130,47 @@ struct Monsters {
         }
     }
 
+    template <typename FUNC>
+    void process(FUNC f) {
+
+        size_t sbefore = mons.size();
+
+        std::unordered_map<pt, Monster> neuw;
+        std::unordered_set<pt> wipe;
+
+        for (const auto& i : mons) {
+            const Species& s = species().get(i.second.tag);
+
+            pt nxy;
+
+            if (f(i.second, s, nxy) && neuw.count(nxy) == 0) {
+
+                neuw[nxy] = i.second;
+                wipe.insert(i.first);
+            }
+        }
+
+        for (auto& i : neuw) {
+            if (mons.count(i.first) == 0 || wipe.count(i.first) != 0) {
+
+                i.second.xy = i.first;
+                mons[i.first] = i.second;
+                wipe.erase(i.first);
+
+            } else {
+                wipe.erase(i.second.xy);
+            }
+        }
+
+        for (const pt& i : wipe) {
+            mons.erase(i);
+        }
+
+        if (mons.size() != sbefore) {
+            throw std::runtime_error("Lost a monster in monster::process()!");
+        }
+    }
+
     inline void write(serialize::Sink& s) {
         serialize::write(s, mons);
     }

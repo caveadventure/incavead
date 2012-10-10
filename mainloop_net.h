@@ -210,7 +210,7 @@ struct Main {
 
         oldticks = ticks;
 
-        game.process_world(ticks, done, dead, regen, need_input);
+        game.process_world(state, ticks, done, dead, regen, need_input);
     }
 
     void pump_event(bool need_input, bool& done, bool& dead, bool& regen) {

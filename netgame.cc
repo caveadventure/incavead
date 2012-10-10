@@ -23,8 +23,9 @@
 
 void init_statics() {
 
-    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline);
-    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner);
+    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline, Species::ai_t::none, 0);
+    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner, Species::ai_t::none, 0);
+    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, Species::habitat_t::floor, Species::ai_t::seek_player, 8);
 
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
@@ -261,8 +262,28 @@ struct Game {
                                    -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
-    void process_world(size_t& ticks, bool& done, bool& dead, bool& regen, bool& need_input) {
-        
+    bool move_monster(mainloop::GameState& state, const Monster& m, const Species& s,
+                      monsters::pt& nxy) {
+
+            if (s.ai == Species::ai_t::seek_player) {
+
+                unsigned int nx, ny;
+                if (state.render.path_walk(m.first, m.second, px, py, 1, s.range, nx, ny)) {
+
+                    if (nx == px && ny == py) {
+                        defend(state, m, s);
+
+                    } else{
+                        state.monsters.move(m, monsters::pt(nx, ny));
+                        continue;
+                    }
+                }
+            }
+    }
+
+    void process_world(mainloop::GameState& state, size_t& ticks, 
+                       bool& done, bool& dead, bool& regen, bool& need_input) {
+
     }
 
     bool attack(mainloop::GameState& state, monsters::Monster& mon) {
@@ -271,6 +292,11 @@ struct Game {
 
         state.render.do_message("You see " + s.name, false);
         return true;
+    }
+
+    void defend(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
+
+        state.render.do_message("You are pushed by " + s.name + "!");
     }
 
     void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
