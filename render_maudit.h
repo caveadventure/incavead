@@ -973,7 +973,7 @@ public:
 
 
 
-    void do_message(const std::string& msg, bool important) {
+    void do_message(const std::string& msg, bool important = false) {
         if (!messages.empty()) {
             message& m = messages.front();
 

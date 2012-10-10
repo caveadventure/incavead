@@ -12,6 +12,7 @@
 
 #include "counters.h"
 #include "monsters.h"
+#include "features.h"
 
 
 namespace mainloop {
@@ -28,6 +29,7 @@ struct GameState {
 
     counters::Counts species_counts;
     monsters::Monsters monsters;
+    features::Features features;
 };
 
 
@@ -95,6 +97,7 @@ struct Main {
             state.moon.read(s);
             state.species_counts.read(s);
             state.monsters.read(s);
+            state.features.read(s);
 
             serialize::read(s, ticks);
 
@@ -118,6 +121,7 @@ struct Main {
         state.moon.write(s);
         state.species_counts.write(s);
         state.monsters.write(s);
+        state.features.write(s);
 
         serialize::write(s, ticks);
 
@@ -150,6 +154,7 @@ struct Main {
         state.species_counts = species().counts;
 
         state.monsters.init();
+        state.features.init();
 
         ticks = 1;
 
@@ -159,6 +164,18 @@ struct Main {
         game.generate(state);
 
         return true;
+    }
+
+    void regenerate() {
+
+        state.neigh.clear();
+        state.grid.clear();
+        state.render.clear();
+        state.camap.clear();
+        state.monsters.clear();
+        state.features.clear();
+
+        game.generate(state);
     }
 
     void draw() {
@@ -182,7 +199,7 @@ struct Main {
 
     }
 
-    void process(size_t& oldticks, bool& done, bool& dead, bool& need_input) {
+    void process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input) {
 
         if (ticks == oldticks) {
             need_input = true;
@@ -191,15 +208,15 @@ struct Main {
 
         oldticks = ticks;
 
-        game.process_world(ticks, done, dead, need_input);
+        game.process_world(ticks, done, dead, regen, need_input);
     }
 
-    void pump_event(bool need_input, bool& done, bool& dead) {
+    void pump_event(bool need_input, bool& done, bool& dead, bool& regen) {
 
         if (need_input) {
 
             grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
-            game.handle_input(state, ticks, done, dead, k);
+            game.handle_input(state, ticks, done, dead, regen, k);
         }
     }
 
@@ -241,19 +258,25 @@ struct Main {
 
         bool done = false;
         bool dead = false;
+        bool regen = false;
 
         while (1) {
 
             bool need_input = false;
 
-            process(oldticks, done, dead, need_input);
+            process(oldticks, done, dead, regen, need_input);
+
+            if (regen) {
+                regenerate();
+                regen = false;
+            }
 
             draw();
 
             if (check_done(done, dead, savefile)) 
                 return dead;
 
-            pump_event(need_input, done, dead);
+            pump_event(need_input, done, dead, regen);
 
             if (check_done(done, dead, savefile)) {
 

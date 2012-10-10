@@ -12,7 +12,10 @@
 ////
 
 #include "species.h"
+#include "terrain.h"
+
 #include "species_bank.h"
+#include "terrain_bank.h"
 
 #include "mainloop_net.h"
 
@@ -20,8 +23,10 @@
 
 void init_statics() {
 
-    init_species("moss1", 0, 300, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline);
-    init_species("moss2", 1, 280, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner);
+    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline);
+    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner);
+
+    init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
 
 
@@ -124,6 +129,12 @@ struct Game {
 
         state.grid.add_nogen(px, py);
 
+        // Place some dungeon features on the same spots every time.
+
+        unsigned int stairscount = ::fabs(state.rng.gauss(50.0, 2.0));
+
+        state.features.generate(state.rng, state.grid, ">", stairscount);
+
         // Place some random monsters.
 
         state.rng.init(::time(NULL));
@@ -187,14 +198,21 @@ struct Game {
         if (x == px && y == py) {
 
             s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
-            state.render.set_skin(x, y, 1, s);
+            state.render.set_skin(x, y, 5, s);
         }
 
         monsters::Monster mon;
         if (state.monsters.get(x, y, mon)) {
 
             const Species& s = species().get(mon.tag);
-            state.render.set_skin(x, y, 1, s.skin);
+            state.render.set_skin(x, y, 5, s.skin);
+        }
+
+        features::Feature feat;
+        if (state.features.get(x, y, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+            state.render.set_skin(x, y, 1, t.skin);
         }
     }
 
@@ -207,9 +225,6 @@ struct Game {
     void load(SOURCE& s) {}
 
     void drawing_context(mainloop::drawing_context_t& ctx) {
-
-        //unsigned int view_x = (px / 20) * 20;
-        //unsigned int view_y = (py / 20) * 20;
 
         unsigned int grid_x = ctx.view_w / 4;
         unsigned int grid_y = ctx.view_h / 4;
@@ -240,7 +255,7 @@ struct Game {
                                    -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
-    void process_world(size_t& ticks, bool& done, bool& dead, bool& need_input) {
+    void process_world(size_t& ticks, bool& done, bool& dead, bool& regen, bool& need_input) {
         
     }
 
@@ -277,20 +292,56 @@ struct Game {
 
         ++ticks;
 
-        state.render.unset_skin(px, py, 1);
+        state.render.unset_skin(px, py, 5);
 
         px = nx;
         py = ny;
 
-        state.render.set_skin(px, py, 1, 
+        state.render.set_skin(px, py, 5, 
                               grender::Grid::skin("@", maudit::color::bright_white, 
                                                   maudit::color::bright_black));
+    }
+
+    template <typename FUNC>
+    bool toggle_feature(mainloop::GameState& state, size_t& ticks, FUNC f) {
+
+        features::Feature feat;
+        if (state.features.get(px, py, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+
+            if (f(t)) {
+                ticks++;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool descend(mainloop::GameState& state, size_t& ticks) {
+
+        if (toggle_feature(state, ticks, [&](const Terrain& t) {
+                    
+                    if (t.stairs) {
+
+                        state.render.do_message("You climb down the hole.");
+                        worldz += t.stairs;
+                        return true;
+                    } 
+
+                    return false;
+                }))
+            return true;
+
+        state.render.do_message("You can't descend here.");
+        return false;
     }
 
     void rest(mainloop::GameState& state, size_t& ticks) {
 
         std::ostringstream s;
-        //s << "Turn no.: " << ticks;
+
         s << "[" << px << "," << py << "] : " << state.grid._get(px, py);
 
         state.render.do_message(s.str(), false);
@@ -299,9 +350,9 @@ struct Game {
     }
 
     void handle_input(mainloop::GameState& state,
-                      size_t& ticks, bool& done, bool& dead, maudit::keypress k) {
+                      size_t& ticks, bool& done, bool& dead, bool& regen, 
+                      maudit::keypress k) {
 
-        bool regen = false;
         bool redraw = false;
 
         switch (k.letter) {
@@ -340,6 +391,12 @@ struct Game {
             move(state, 1, 1, ticks);
             break;
 
+        case '>':
+            if (descend(state, ticks)) {
+                regen = true;
+            }
+            break;
+
         case '.':
             rest(state, ticks);
             break;
@@ -362,10 +419,7 @@ struct Game {
             break;
         }            
 
-        if (regen) {
-            generate(state);
-
-        } else if (redraw) {
+        if (redraw) {
             state.render.clear();
         }
     }

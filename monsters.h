@@ -55,12 +55,16 @@ struct Monsters {
         mons.clear();
     }
 
+    void clear() {
+        init();
+    }
+
     bool get_placement(rnd::Generator& rng, grid::Map& grid, 
                        Species::habitat_t h, pt& ret) {
         switch (h) {
 
         case Species::habitat_t::floor:
-            if (!grid.one_of_walk(rng, ret)) return false;
+            if (!grid.one_of_floor(rng, ret)) return false;
             break;
 
         case Species::habitat_t::water:
