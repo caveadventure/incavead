@@ -235,9 +235,11 @@ struct Game {
 
             const Species& s = species().get(mon.tag);
             state.render.set_skin(x, y, 5, s.skin);
+            state.render.set_is_walkblock(x, y, 5, true);
 
         } else {
             state.render.unset_skin(x, y, 5);
+            state.render.set_is_walkblock(x, y, 5, false);
         }
     }
 
