@@ -23,9 +23,26 @@
 
 void init_statics() {
 
-    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline, Species::ai_t::none, 0);
-    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner, Species::ai_t::none, 0);
-    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, Species::habitat_t::clumped_floor, Species::ai_t::seek_player, 8);
+    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, 
+                 Species::habitat_t::shoreline, Species::ai_t::none, Species::move_t::any, 0);
+
+    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, 
+                 Species::habitat_t::corner, Species::ai_t::none, Species::move_t::any, 0);
+
+    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, 
+                 Species::habitat_t::clumped_floor, Species::ai_t::seek_player, Species::move_t::any, 8);
+
+    init_species("cavefish", 0, 100, "cavefish", "f", maudit::color::bright_white, 
+                 Species::habitat_t::clumped_water, Species::ai_t::seek_player, Species::move_t::water, 8);
+
+    init_species("vagrant", 1, 75, "vagrant", "h", maudit::color::dim_red,
+                 Species::habitat_t::walk, Species::ai_t::seek_player, Species::move_t::any, 12);
+
+    init_species("pirahna", 1, 90, "pirahna", "f", maudit::color::dim_cyan,
+                 Species::habitat_t::clumped_water, Species::ai_t::seek_player, Species::move_t::water, 20);
+
+    init_species("knight", 2, 60, "knight errant", "h", maudit::color::dim_white,
+                 Species::habitat_t::corner, Species::ai_t::seek_player, Species::move_t::any, 22);
 
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
@@ -142,12 +159,12 @@ struct Game {
 
         bm _z("monster generation");
 
-        unsigned int mongroups = ::fabs(state.rng.gauss(10.0, 3.0));
-        unsigned int monlevel = ::abs(worldz);
+        unsigned int mongroups = ::fabs(state.rng.gauss(25.0, 8.0));
 
         for (unsigned int i = 0; i < mongroups; ++i) {
 
             unsigned int moncount = ::fabs(state.rng.gauss(15.0, 5.0));
+            unsigned int monlevel = ::fabs(state.rng.gauss((double)worldz, 0.5));
 
             state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
                                     monlevel, moncount);
@@ -160,8 +177,7 @@ struct Game {
 
     }
 
-    maudit::color floor_color(mainloop::GameState& state, unsigned int x, unsigned int y) {
-        double z = state.grid._get(x, y);
+    maudit::color floor_color(double z) {
 
         if (z <= -9) {
             return maudit::color::dim_red;
@@ -192,11 +208,19 @@ struct Game {
 
         grender::Grid::skin s;
 
+        double z = state.grid._get(x, y);
+
         if (walkable) {
             if (water) {
-                s = grender::Grid::skin("-", maudit::color::bright_blue, maudit::color::bright_black);
+
+                if (z <= -5) {
+                    s = grender::Grid::skin("+", maudit::color::bright_blue, maudit::color::bright_black);
+                } else {
+                    s = grender::Grid::skin("-", maudit::color::bright_blue, maudit::color::bright_black);
+                }
+
             } else {
-                s = grender::Grid::skin(".", floor_color(state, x, y), maudit::color::bright_black);
+                s = grender::Grid::skin(".", floor_color(z), maudit::color::bright_black);
             }
 
         } else {
@@ -288,6 +312,19 @@ struct Game {
         if (s.ai == Species::ai_t::seek_player) {
 
             if (state.render.path_walk(m.xy.first, m.xy.second, px, py, 1, s.range, nxy.first, nxy.second)) {
+
+                switch (s.move) {
+                case Species::move_t::floor: 
+                    if (!state.grid.is_floor(nxy.first, nxy.second)) return false;
+                    break;
+
+                case Species::move_t::water: 
+                    if (!state.grid.is_water(nxy.first, nxy.second)) return false;
+                    break;
+
+                default:
+                    break;
+                }
 
                 if (nxy.first == px && nxy.second == py) {
                     defend(state, m, s);

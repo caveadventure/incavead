@@ -128,6 +128,10 @@ struct Monsters {
 
             switch (h) {
 
+            case Species::habitat_t::walk:
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_walk));
+                break;
+
             case Species::habitat_t::floor:
                 place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_floor));
                 break;
@@ -148,6 +152,12 @@ struct Monsters {
                 place_clump(neigh, rng, grid, i.first, i.second, 
                             std::mem_fn(&grid::Map::one_of_floor), std::mem_fn(&grid::Map::is_floor));
                 break;
+
+            case Species::habitat_t::clumped_water:
+                place_clump(neigh, rng, grid, i.first, i.second, 
+                            std::mem_fn(&grid::Map::one_of_water), std::mem_fn(&grid::Map::is_water));
+                break;
+
             }
         }
     }
@@ -187,12 +197,6 @@ struct Monsters {
             if (f(i.second, s, nxy) && neuw.count(nxy) == 0) {
 
                 neuw[nxy] = i.second;
-
-                std::cout << "MOVE " << i.first.first << "," << i.first.second << " -> " 
-                          << nxy.first << "," << nxy.second << std::endl;
-
-            } else {
-                std::cout << "STND " << i.first.first << "," << i.first.second << std::endl;
             }
         }
 
