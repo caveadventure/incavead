@@ -526,6 +526,10 @@ public:
         g.valid = true;
     }
 
+    void invalidate(unsigned int x, unsigned int y) {
+
+        _get(x, y).valid = false;
+    }
 
     bool is_in_fov(unsigned int x, unsigned int y) {
         const gridpoint& gp = _get(x,y);

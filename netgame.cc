@@ -25,7 +25,7 @@ void init_statics() {
 
     init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, Species::habitat_t::shoreline, Species::ai_t::none, 0);
     init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, Species::habitat_t::corner, Species::ai_t::none, 0);
-    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, Species::habitat_t::floor, Species::ai_t::seek_player, 8);
+    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, Species::habitat_t::clumped_floor, Species::ai_t::seek_player, 8);
 
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
@@ -140,11 +140,18 @@ struct Game {
 
         state.rng.init(::time(NULL));
 
-        unsigned int moncount = ::fabs(state.rng.gauss(150.0, 30.0));
-
         bm _z("monster generation");
-        state.monsters.generate(state.rng, state.grid, state.species_counts, 
-                                ::abs(worldz), moncount);
+
+        unsigned int mongroups = ::fabs(state.rng.gauss(10.0, 3.0));
+        unsigned int monlevel = ::abs(worldz);
+
+        for (unsigned int i = 0; i < mongroups; ++i) {
+
+            unsigned int moncount = ::fabs(state.rng.gauss(15.0, 5.0));
+
+            state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
+                                    monlevel, moncount);
+        }
     }
 
     void dispose(mainloop::GameState& state) {
@@ -202,24 +209,35 @@ struct Game {
 
         state.render.set_skin(x, y, 0, s);
 
-        if (x == px && y == py) {
-
-            s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
-            state.render.set_skin(x, y, 5, s);
-        }
-
-        monsters::Monster mon;
-        if (state.monsters.get(x, y, mon)) {
-
-            const Species& s = species().get(mon.tag);
-            state.render.set_skin(x, y, 5, s.skin);
-        }
+        // //
 
         features::Feature feat;
+
         if (state.features.get(x, y, feat)) {
 
             const Terrain& t = terrain().get(feat.tag);
             state.render.set_skin(x, y, 1, t.skin);
+
+        } else {
+            state.render.unset_skin(x, y, 1);
+        }
+
+        // //
+
+        monsters::Monster mon;
+
+        if (x == px && y == py) {
+
+            s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
+            state.render.set_skin(x, y, 5, s);
+
+        } else if (state.monsters.get(x, y, mon)) {
+
+            const Species& s = species().get(mon.tag);
+            state.render.set_skin(x, y, 5, s.skin);
+
+        } else {
+            state.render.unset_skin(x, y, 5);
         }
     }
 
@@ -262,27 +280,33 @@ struct Game {
                                    -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
-    bool move_monster(mainloop::GameState& state, const Monster& m, const Species& s,
+    bool move_monster(mainloop::GameState& state, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy) {
 
-            if (s.ai == Species::ai_t::seek_player) {
+        if (s.ai == Species::ai_t::seek_player) {
 
-                unsigned int nx, ny;
-                if (state.render.path_walk(m.first, m.second, px, py, 1, s.range, nx, ny)) {
+            if (state.render.path_walk(m.xy.first, m.xy.second, px, py, 1, s.range, nxy.first, nxy.second)) {
 
-                    if (nx == px && ny == py) {
-                        defend(state, m, s);
+                if (nxy.first == px && nxy.second == py) {
+                    defend(state, m, s);
 
-                    } else{
-                        state.monsters.move(m, monsters::pt(nx, ny));
-                        continue;
-                    }
+                } else{
+                    return true;
                 }
             }
+        }
+
+        return false;
     }
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input) {
+
+        bm _p("process_world");
+
+        state.monsters.process(state.render, 
+                               std::bind(&Game::move_monster, this, std::ref(state), 
+                                         std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
     }
 

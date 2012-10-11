@@ -59,32 +59,58 @@ struct Monsters {
         init();
     }
 
-    bool get_placement(rnd::Generator& rng, grid::Map& grid, 
-                       Species::habitat_t h, pt& ret) {
-        switch (h) {
+    
+    template <typename FUNC, typename FUNCP>
+    void place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
+                     const std::string& tag, unsigned int n,
+                     FUNC f, FUNCP fp) {
 
-        case Species::habitat_t::floor:
-            if (!grid.one_of_floor(rng, ret)) return false;
-            break;
+        std::unordered_set<pt> clump;
 
-        case Species::habitat_t::water:
-            if (!grid.one_of_water(rng, ret)) return false;
-            break;
+        for (unsigned int j = 0; j < n; ++j) {
+                    
+            if (clump.empty()) {
+                pt tmp;
+                if (!f(grid, rng, tmp)) 
+                    break;
 
-        case Species::habitat_t::corner:
-            if (!grid.one_of_corner(rng, ret)) return false;
-            break;
+                clump.insert(tmp);
+            }
 
-        case Species::habitat_t::shoreline:
-            if (!grid.one_of_shore(rng, ret)) return false;
-            break;
+            pt xy = *(clump.begin());
+            clump.erase(clump.begin());
+
+            mons[xy] = Monster(tag, xy);
+            grid.add_nogen(xy.first, xy.second);
+
+            std::cout << "  .. clump: " << j << " ~ " << xy.first << "," << xy.second << std::endl;
+
+            for (const pt& v : neigh(xy)) {
+
+                if (fp(grid, v.first, v.second) && !grid.is_nogen(v.first, v.second)) {
+                    clump.insert(v);
+                }
+            }
         }
-
-        grid.add_nogen(ret.first, ret.second);
-        return true;
     }
+
+    template <typename FUNC>
+    void place_scatter(rnd::Generator& rng, grid::Map& grid, const std::string& tag, unsigned int n, FUNC f) {
+
+        for (unsigned int j = 0; j < n; ++j) {
+
+            pt xy;
+
+            if (!f(grid, rng, xy))
+                break;
+
+            mons[xy] = Monster(tag, xy);
+            grid.add_nogen(xy.first, xy.second);
+        }
+    }
+
         
-    void generate(rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
+    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                   unsigned int level, unsigned int n) {
 
         std::cout << "!!! " << level << " " << n << std::endl;
@@ -97,16 +123,31 @@ struct Monsters {
 
             Species::habitat_t h = species().get(i.first).habitat; 
     
-            std::cout << "!!k " << i.first << " " << i.second << " " << (int)h << std::endl;
+            std::cout << "!-| " << i.first << " " << i.second << " " << (int)h << std::endl;
 
-            for (unsigned int j = 0; j < i.second; ++j) {
 
-                pt xy;
+            switch (h) {
 
-                if (!get_placement(rng, grid, h, xy))
-                    break;
+            case Species::habitat_t::floor:
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_floor));
+                break;
 
-                mons[xy] = Monster(i.first, xy);
+            case Species::habitat_t::water:
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_water));
+                break;
+
+            case Species::habitat_t::corner:
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_corner));
+                break;
+
+            case Species::habitat_t::shoreline:
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_shore));
+                break;
+
+            case Species::habitat_t::clumped_floor:
+                place_clump(neigh, rng, grid, i.first, i.second, 
+                            std::mem_fn(&grid::Map::one_of_floor), std::mem_fn(&grid::Map::is_floor));
+                break;
             }
         }
     }
@@ -131,7 +172,7 @@ struct Monsters {
     }
 
     template <typename FUNC>
-    void process(FUNC f) {
+    void process(grender::Grid& grid, FUNC f) {
 
         size_t sbefore = mons.size();
 
@@ -146,27 +187,43 @@ struct Monsters {
             if (f(i.second, s, nxy) && neuw.count(nxy) == 0) {
 
                 neuw[nxy] = i.second;
-                wipe.insert(i.first);
+
+                std::cout << "MOVE " << i.first.first << "," << i.first.second << " -> " 
+                          << nxy.first << "," << nxy.second << std::endl;
+
+            } else {
+                std::cout << "STND " << i.first.first << "," << i.first.second << std::endl;
             }
         }
 
         for (auto& i : neuw) {
             if (mons.count(i.first) == 0 || wipe.count(i.first) != 0) {
 
+                wipe.insert(i.second.xy);
+
                 i.second.xy = i.first;
                 mons[i.first] = i.second;
+
                 wipe.erase(i.first);
 
-            } else {
-                wipe.erase(i.second.xy);
+                grid.invalidate(i.first.first, i.first.second);
+
             }
         }
 
         for (const pt& i : wipe) {
             mons.erase(i);
+
+            grid.invalidate(i.first, i.second);
         }
 
         if (mons.size() != sbefore) {
+
+            for (const auto& i : mons) {
+                std::cout << "   | " << i.first.first << "," << i.first.second << std::endl;
+            }
+            std::cout << mons.size() << " " << sbefore << std::endl;
+
             throw std::runtime_error("Lost a monster in monster::process()!");
         }
     }

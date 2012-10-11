@@ -466,6 +466,10 @@ struct Map {
     bool is_shore(unsigned int x, unsigned int y) {
         return (shoremap.count(pt(x, y)) != 0);
     }
+
+    bool is_nogen(unsigned int x, unsigned int y) {
+        return (nogens.count(pt(x, y)) != 0);
+    }
     
     void set_walk(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
         pt tmp(x, y);
