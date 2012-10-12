@@ -29,6 +29,7 @@ struct GameState {
 
     counters::Counts species_counts;
     monsters::Monsters monsters;
+    items::Items items;
     features::Features features;
 
     std::string message_window;
