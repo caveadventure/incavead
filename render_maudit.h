@@ -98,6 +98,7 @@ struct Grid {
     static const size_t skincount = 8;
 
     static const color_t black_color  = color_t::bright_black;
+    static const color_t blue_color   = color_t::dim_blue;
     static const color_t yellow_color = color_t::bright_yellow;
     static const color_t gray_color   = color_t::dim_white;
     static const color_t white_color  = color_t::bright_white;
@@ -816,28 +817,30 @@ public:
     /////
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, unsigned int view_w, unsigned int view_h,
-                         const std::vector<std::string>& msg) {
+    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h,
+                         const std::string& msg) {
 
         std::vector< std::vector<skin> > glyphs;
 
-        for (const std::string& line : msg) {
+        glyphs.push_back(std::vector<skin>());
+        color_t fore = gray_color;
 
-            glyphs.push_back(std::vector<skin>());
+        for (unsigned char c : msg) {
 
-            color_t fore = gray_color;
+            if (c == '\n') {
+                glyphs.push_back(std::vector<skin>());
+                fore = gray_color;
+                continue;
+            }
 
-            for (unsigned char c : line) {
-
-                if (c == 3) {
-                    fore = yellow_color;
-                } else if (c == 2) {
-                    fore = white_color;
-                } else if (c == 1) {
-                    fore = gray_color;
-                } else {
-                    glyphs.back().push_back(skin(c, fore, black_color));
-                }
+            if (c == 3) {
+                fore = yellow_color;
+            } else if (c == 2) {
+                fore = white_color;
+            } else if (c == 1) {
+                fore = gray_color;
+            } else {
+                glyphs.back().push_back(skin(std::string(1, c), fore, blue_color));
             }
         }
 
@@ -852,19 +855,38 @@ public:
                         if (y <= 1 || y >= view_h-2 ||
                             x <= 1 || x >= view_w-2) {
 
-                            ret = skin();
+                            std::string c;
+
+                            if ((y <= 0 && x <= 0) ||
+                                (y <= 0 && x >= view_w-1) ||
+                                (y >= view_h-1 && x <= 0) ||
+                                (y >= view_h-1 && x >= view_w-1)) {
+
+                                c = "+";
+
+                            } else if (y <= 0 || y >= view_h-1) {
+                                c = "-";
+
+                            } else if (x <= 0 || x >= view_w-1) {
+                                c = "|";
+
+                            } else {
+                                c = " ";
+                            }
+
+                            ret = skin(c, gray_color, blue_color);
                             continue;
                         }
 
                         if (y-2 >= glyphs.size()) {
-                            ret = skin(" ", black_color, black_color);
+                            ret = skin(" ", black_color, blue_color);
                             continue;
                         }
 
                         const auto& line = glyphs[y-2];
 
                         if (x-2 >= line.size()) {
-                            ret = skin(" ", black_color, black_color);
+                            ret = skin(" ", black_color, blue_color);
                             continue;
                         }
 
@@ -876,7 +898,7 @@ public:
         if (!ok)
             throw std::runtime_error("broken pipe");
 
-        return wait_for_key(screen);
+        return wait_for_key(screen, view_w, view_h);
     }
 
     template <typename FUNC>
@@ -991,7 +1013,7 @@ public:
     }
 
     template <typename SCREEN>
-    void draw_messages_window(SCREEN& screen, unsigned int view_w, unsigned int view_h) {
+    void draw_messages_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
 
         unsigned int i = 0;
         std::list<message>::const_iterator li = messages.begin();

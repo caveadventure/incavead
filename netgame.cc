@@ -48,7 +48,7 @@ void init_statics() {
 }
 
 
-struct Game {
+struct Player {
 
     unsigned int px;
     unsigned int py;
@@ -57,11 +57,31 @@ struct Game {
     int worldy;
     int worldz;
 
+    unsigned int level;
+
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1) {}
+
+    void show_info(std::string& message) {
+
+        std::ostringstream buf;
+
+        buf << "Character level: " << level << "\n";
+        buf << "Dungeon level:   " << worldz << "\n";
+        buf << "QQXX: " << worldx << "," << worldy << "\n";
+
+        message = buf.str();
+    }
+};
+
+
+struct Game {
+
+    Player p;
+
     static const unsigned int GRID_W = 256;
     static const unsigned int GRID_H = 256;
 
-
-    Game() : px(0), py(0), worldx(0), worldy(0), worldz(0) {}
+    Game() {}
 
     void make_screen(mainloop::screen_params_t& sp) {
 
@@ -78,8 +98,8 @@ struct Game {
 
         state.rng.init(gridseed);
 
-        unsigned int nflatten = std::max(8 - (::abs(worldx) + ::abs(worldy)), 0);
-        unsigned int nunflow = std::min(std::max(0, worldz), 8);
+        unsigned int nflatten = std::max(8 - (::abs(p.worldx) + ::abs(p.worldy)), 0);
+        unsigned int nunflow = std::min(std::max(0, p.worldz), 8);
 
         //nflatten = 0;
 
@@ -114,11 +134,11 @@ struct Game {
 
         std::ostringstream cached_grid;
 
-        cached_grid << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
+        cached_grid << "_level_" << p.worldx << "_" << p.worldy << "_" << p.worldz << ".dat";
 
-        uint64_t gridseed = (((uint64_t)worldx) ^ 
-                             ((uint64_t)worldy << 16) ^
-                             ((uint64_t)worldz << 32)) + 1;
+        uint64_t gridseed = (((uint64_t)p.worldx) ^ 
+                             ((uint64_t)p.worldy << 16) ^
+                             ((uint64_t)p.worldz << 32)) + 1;
 
         try {
 
@@ -142,10 +162,10 @@ struct Game {
         if (!state.grid.one_of_floor(state.rng, xy))
             throw std::runtime_error("Failed to generate grid");
 
-        px = xy.first;
-        py = xy.second;
+        p.px = xy.first;
+        p.py = xy.second;
 
-        state.grid.add_nogen(px, py);
+        state.grid.add_nogen(p.px, p.py);
 
         // Place some dungeon features on the same spots every time.
 
@@ -164,7 +184,7 @@ struct Game {
         for (unsigned int i = 0; i < mongroups; ++i) {
 
             unsigned int moncount = ::fabs(state.rng.gauss(15.0, 5.0));
-            unsigned int monlevel = ::fabs(state.rng.gauss((double)worldz, 0.5));
+            unsigned int monlevel = ::fabs(state.rng.gauss((double)p.worldz, 0.5));
 
             state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
                                     monlevel, moncount);
@@ -250,7 +270,7 @@ struct Game {
 
         monsters::Monster mon;
 
-        if (x == px && y == py) {
+        if (x == p.px && y == p.py) {
 
             s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
             state.render.set_skin(x, y, 5, s);
@@ -281,19 +301,19 @@ struct Game {
         unsigned int grid_y = ctx.view_h / 4;
 
         if (grid_x > 1) {
-            ctx.voff_off_x = -(px % grid_x) + (grid_x / 2);
+            ctx.voff_off_x = -(p.px % grid_x) + (grid_x / 2);
         } else {
             ctx.voff_off_x = 0;
         }
 
         if (grid_y > 1) {
-            ctx.voff_off_y = -(py % grid_y) + (grid_y / 2);
+            ctx.voff_off_y = -(p.py % grid_y) + (grid_y / 2);
         } else {
             ctx.voff_off_y = 0;
         }
 
-        ctx.px = px;
-        ctx.py = py;
+        ctx.px = p.px;
+        ctx.py = p.py;
         ctx.lightradius = 8;
     }
 
@@ -311,7 +331,7 @@ struct Game {
 
         if (s.ai == Species::ai_t::seek_player) {
 
-            if (state.render.path_walk(m.xy.first, m.xy.second, px, py, 1, s.range, nxy.first, nxy.second)) {
+            if (state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
                 switch (s.move) {
                 case Species::move_t::floor: 
@@ -326,7 +346,7 @@ struct Game {
                     break;
                 }
 
-                if (nxy.first == px && nxy.second == py) {
+                if (nxy.first == p.px && nxy.second == p.py) {
                     defend(state, m, s);
 
                 } else{
@@ -363,13 +383,13 @@ struct Game {
     }
 
     void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
-        int nx = px + dx;
-        int ny = py + dy;
+        int nx = p.px + dx;
+        int ny = p.py + dy;
 
         if (nx < 0 || ny < 0) 
             return;
 
-        if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny)) ||
+        if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
             !state.grid.is_walk(nx, ny)) {
 
             return;
@@ -387,12 +407,12 @@ struct Game {
 
         ++ticks;
 
-        state.render.unset_skin(px, py, 5);
+        state.render.unset_skin(p.px, p.py, 5);
 
-        px = nx;
-        py = ny;
+        p.px = nx;
+        p.py = ny;
 
-        state.render.set_skin(px, py, 5, 
+        state.render.set_skin(p.px, p.py, 5, 
                               grender::Grid::skin("@", maudit::color::bright_white, 
                                                   maudit::color::bright_black));
     }
@@ -401,7 +421,7 @@ struct Game {
     bool toggle_feature(mainloop::GameState& state, size_t& ticks, FUNC f) {
 
         features::Feature feat;
-        if (state.features.get(px, py, feat)) {
+        if (state.features.get(p.px, p.py, feat)) {
 
             const Terrain& t = terrain().get(feat.tag);
 
@@ -421,7 +441,7 @@ struct Game {
                     if (t.stairs) {
 
                         state.render.do_message("You climb down the hole.");
-                        worldz += t.stairs;
+                        p.worldz += t.stairs;
                         return true;
                     } 
 
@@ -437,7 +457,7 @@ struct Game {
 
         std::ostringstream s;
 
-        s << "[" << px << "," << py << "] : " << state.grid._get(px, py);
+        s << "[" << p.px << "," << p.py << "] : " << state.grid._get(p.px, p.py);
 
         state.render.do_message(s.str(), false);
 
@@ -447,6 +467,11 @@ struct Game {
     void handle_input(mainloop::GameState& state,
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
+
+
+        if (state.window_stack.size() > 0) {
+            state.window_stack.pop_back();
+        }
 
         bool redraw = false;
 
@@ -494,6 +519,11 @@ struct Game {
 
         case '.':
             rest(state, ticks);
+            break;
+
+        case 'i':
+            p.show_info(state.message_window);
+            state.window_stack.push_back(1);
             break;
         }
 

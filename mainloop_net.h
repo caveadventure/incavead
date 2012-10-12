@@ -30,6 +30,9 @@ struct GameState {
     counters::Counts species_counts;
     monsters::Monsters monsters;
     features::Features features;
+
+    std::string message_window;
+    std::vector<unsigned int> window_stack;
 };
 
 
@@ -219,6 +222,13 @@ struct Main {
 
             grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
             game.handle_input(state, ticks, done, dead, regen, k);
+
+            while (state.window_stack.size() > 0) {
+
+                k = state.render.draw_window(screen, view_w, view_h, state.message_window);
+
+                game.handle_input(state, ticks, done, dead, regen, k);
+            }
         }
     }
 
