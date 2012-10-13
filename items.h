@@ -59,57 +59,45 @@ struct Items {
         init();
     }
 
-    
 
-        
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                   unsigned int level, unsigned int n) {
 
-        std::cout << "!!! " << level << " " << n << std::endl;
+        std::cout << "~~~ " << level << " " << n << std::endl;
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, n);
 
-        bm _z("monster placement");
+        bm _z("item placement");
 
         for (const auto& i : q) {
 
-            Species::habitat_t h = species().get(i.first).habitat; 
-    
-            std::cout << "!-| " << i.first << " " << i.second << " " << (int)h << std::endl;
+            std::cout << " - " << i.first << " " << i.second << std::endl;
 
+            std::unordered_set<pt> queue;
 
-            switch (h) {
+            for (unsigned int j = 0; j < i.second; ++j) {
 
-            case Species::habitat_t::walk:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_walk));
-                break;
+                pt xy;
 
-            case Species::habitat_t::floor:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_floor));
-                break;
+                if (queue.empty()) {
+                    if (!grid.one_of_floor(rng, xy)) {
+                        return;
+                    }
 
-            case Species::habitat_t::water:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_water));
-                break;
+                    queue.insert(xy);
+                }
 
-            case Species::habitat_t::corner:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_corner));
-                break;
+                xy = *(queue.begin());
+                queue.erase(queue.begin());
 
-            case Species::habitat_t::shoreline:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_shore));
-                break;
+                for (const pt& v : neigh(xy)) {
 
-            case Species::habitat_t::clumped_floor:
-                place_clump(neigh, rng, grid, i.first, i.second, 
-                            std::mem_fn(&grid::Map::one_of_floor), std::mem_fn(&grid::Map::is_floor));
-                break;
-
-            case Species::habitat_t::clumped_water:
-                place_clump(neigh, rng, grid, i.first, i.second, 
-                            std::mem_fn(&grid::Map::one_of_water), std::mem_fn(&grid::Map::is_water));
-                break;
-
+                    if (grid.is_floor(xy.first, xy.second) && stack_size(xy.first, xy.second) < 5) {
+                        queue.insert(v);
+                    }
+                }
+                
+                stuff[xy].push_back(Item(i.first, xy));
             }
         }
     }
@@ -137,9 +125,11 @@ struct Items {
 
     void dispose(counters::Counts& counts) {
 
-        for (const auto& i : stuff) {
-            const Specimen& s = specimens().get(i.second.tag);
-            counts.replace(s.level, s.tag);
+        for (const auto& j : stuff) {
+            for (const Item& i : j.second) {
+                const Design& d = designs().get(i.tag);
+                counts.replace(d.level, d.tag);
+            }
         }
     }
 

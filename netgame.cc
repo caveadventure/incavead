@@ -11,11 +11,14 @@
 
 ////
 
-#include "species.h"
 #include "terrain.h"
+#include "designs.h"
+#include "species.h"
 
-#include "species_bank.h"
 #include "terrain_bank.h"
+#include "designs_bank.h"
+#include "species_bank.h"
+
 
 #include "mainloop_net.h"
 
@@ -43,6 +46,20 @@ void init_statics() {
 
     init_species("knight", 2, 60, "knight errant", "h", maudit::color::dim_white,
                  Species::habitat_t::corner, Species::ai_t::seek_player, Species::move_t::any, 22);
+
+    ////
+
+    init_designs("twig", 0, 90, "twig", "~", maudit::color::dim_green);
+
+    init_designs("rock", 0, 200, "pebble", "*", maudit::color::dim_white);
+
+    init_designs("log", 0, 30, "log", "~", maudit::color::bright_green);
+
+    init_designs("leaf", 0, 100, "leaf", "~", maudit::color::dim_yellow);
+
+    init_designs("sword0", 0, 20, "rusted sword", "(", maudit::color::dim_white);
+
+    ////
 
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
@@ -173,9 +190,24 @@ struct Game {
 
         state.features.generate(state.rng, state.grid, ">", stairscount);
 
-        // Place some random monsters.
+        // Place some random items.
 
         state.rng.init(::time(NULL));
+
+        bm _y("item generation");
+
+        unsigned int itemgroups = ::fabs(state.rng.gauss(100.0, 10.0));
+
+        for (unsigned int i = 0; i < itemgroups; ++i) {
+
+            unsigned int itemcount = std::max(1.0, state.rng.gauss(1.0, 0.25));
+            unsigned int itemlevel = p.worldz;
+
+            state.items.generate(state.neigh, state.rng, state.grid, state.designs_counts, 
+                                 itemlevel, itemcount);
+        }
+
+        // Place some random monsters.
 
         bm _z("monster generation");
 
@@ -184,7 +216,7 @@ struct Game {
         for (unsigned int i = 0; i < mongroups; ++i) {
 
             unsigned int moncount = ::fabs(state.rng.gauss(15.0, 5.0));
-            unsigned int monlevel = ::fabs(state.rng.gauss((double)p.worldz, 0.5));
+            unsigned int monlevel = p.worldz;
 
             state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
                                     monlevel, moncount);
@@ -193,6 +225,7 @@ struct Game {
 
     void dispose(mainloop::GameState& state) {
 
+        state.items.dispose(state.designs_counts);
         state.monsters.dispose(state.species_counts);
 
     }
@@ -261,6 +294,19 @@ struct Game {
 
             const Terrain& t = terrain().get(feat.tag);
             state.render.set_skin(x, y, 1, t.skin);
+
+        } else {
+            state.render.unset_skin(x, y, 1);
+        }
+
+        // //
+
+        items::Item item;
+
+        if (state.items.get(x, y, 0, item)) {
+
+            const Design& d = designs().get(item.tag);
+            state.render.set_skin(x, y, 2, d.skin);
 
         } else {
             state.render.unset_skin(x, y, 1);

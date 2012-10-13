@@ -11,8 +11,9 @@
 #include "moon.h"
 
 #include "counters.h"
-#include "monsters.h"
 #include "features.h"
+#include "items.h"
+#include "monsters.h"
 
 
 namespace mainloop {
@@ -27,7 +28,9 @@ struct GameState {
     grender::Grid render;
     moon::Moon moon;
 
+    counters::Counts designs_counts;
     counters::Counts species_counts;
+
     monsters::Monsters monsters;
     items::Items items;
     features::Features features;
@@ -99,9 +102,11 @@ struct Main {
             state.render.read(s);
             state.camap.read(s);
             state.moon.read(s);
+            state.designs_counts.read(s);
             state.species_counts.read(s);
-            state.monsters.read(s);
             state.features.read(s);
+            state.items.read(s);
+            state.monsters.read(s);
 
             serialize::read(s, ticks);
 
@@ -123,9 +128,11 @@ struct Main {
         state.render.write(s);
         state.camap.write(s);
         state.moon.write(s);
+        state.designs_counts.write(s);
         state.species_counts.write(s);
-        state.monsters.write(s);
         state.features.write(s);
+        state.items.write(s);
+        state.monsters.write(s);
 
         serialize::write(s, ticks);
 
@@ -157,8 +164,9 @@ struct Main {
 
         state.species_counts = species().counts;
 
-        state.monsters.init();
         state.features.init();
+        state.items.init();
+        state.monsters.init();
 
         ticks = 1;
 
@@ -178,8 +186,9 @@ struct Main {
         state.grid.clear();
         state.render.clear();
         state.camap.clear();
-        state.monsters.clear();
         state.features.clear();
+        state.items.clear();
+        state.monsters.clear();
 
         game.generate(state);
     }
