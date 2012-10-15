@@ -97,6 +97,7 @@ struct Items {
                     }
                 }
                 
+                std::cout << "& " << xy.first << "," << xy.second << " " << i.first << std::endl;
                 stuff[xy].push_back(Item(i.first, xy));
             }
         }

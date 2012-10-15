@@ -163,6 +163,7 @@ struct Main {
         state.moon.init();
 
         state.species_counts = species().counts;
+        state.designs_counts = designs().counts;
 
         state.features.init();
         state.items.init();

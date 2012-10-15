@@ -196,7 +196,7 @@ struct Game {
 
         bm _y("item generation");
 
-        unsigned int itemgroups = ::fabs(state.rng.gauss(100.0, 10.0));
+        unsigned int itemgroups = ::fabs(state.rng.gauss(200.0, 10.0));
 
         for (unsigned int i = 0; i < itemgroups; ++i) {
 
@@ -428,6 +428,33 @@ struct Game {
         state.render.do_message("You are pushed by " + s.name + "!");
     }
 
+    void move_player(mainloop::GameState& state) {
+        
+        size_t nstack = state.items.stack_size(p.px, p.py);
+
+        if (nstack == 1) {
+            items::Item item;
+            state.items.get(p.px, p.py, 0, item);
+            const Design& d = designs().get(item.tag);
+
+            state.render.do_message("You see " + d.name + ".");
+
+        } else if (nstack > 1) {
+            std::ostringstream tmp;
+            tmp << "You see " << nstack << " items here.";
+
+            state.render.do_message(tmp.str());
+
+        } else {
+            features::Feature feat;
+            if (state.features.get(p.px, p.py, feat)) {
+                const Terrain& t = terrain().get(feat.tag);
+
+                state.render.do_message("There is " + t.name + " here.");
+            }
+        }
+    }
+
     void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
         int nx = p.px + dx;
         int ny = p.py + dy;
@@ -461,6 +488,8 @@ struct Game {
         state.render.set_skin(p.px, p.py, 5, 
                               grender::Grid::skin("@", maudit::color::bright_white, 
                                                   maudit::color::bright_black));
+
+        move_player(state);
     }
 
     template <typename FUNC>
