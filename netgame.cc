@@ -19,6 +19,7 @@
 #include "designs_bank.h"
 #include "species_bank.h"
 
+#include "nlp.h"
 
 #include "mainloop_net.h"
 
@@ -54,15 +55,15 @@ void init_statics() {
 
     ////
 
-    init_designs("twig", 0, 90, "twig", "~", maudit::color::dim_green);
+    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green);
 
-    init_designs("rock", 0, 200, "pebble", "*", maudit::color::dim_white);
+    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white);
 
-    init_designs("log", 0, 30, "log", "~", maudit::color::bright_green);
+    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green);
 
-    init_designs("leaf", 0, 100, "leaf", "~", maudit::color::dim_yellow);
+    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow);
 
-    init_designs("sword0", 0, 20, "rusted sword", "(", maudit::color::dim_white);
+    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white);
 
     ////
 
@@ -442,7 +443,7 @@ struct Game {
             state.items.get(p.px, p.py, 0, item);
             const Design& d = designs().get(item.tag);
 
-            state.render.do_message("You see " + d.name + ".");
+            state.render.do_message(nlp::message("You see %s.", d));
 
         } else if (nstack > 1) {
             std::ostringstream tmp;
@@ -455,7 +456,7 @@ struct Game {
             if (state.features.get(p.px, p.py, feat)) {
                 const Terrain& t = terrain().get(feat.tag);
 
-                state.render.do_message("There is " + t.name + " here.");
+                state.render.do_message(nlp::message("There is %s here.", t));
             }
         }
     }
