@@ -201,7 +201,7 @@ struct Game {
 
         bm _y("item generation");
 
-        unsigned int itemgroups = ::fabs(state.rng.gauss(100.0, 10.0));
+        unsigned int itemgroups = ::fabs(state.rng.gauss(250.0, 10.0));
 
         for (unsigned int i = 0; i < itemgroups; ++i) {
 
