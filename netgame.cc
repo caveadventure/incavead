@@ -22,10 +22,12 @@
 
 #include "mainloop_net.h"
 
+#include "configparser.h"
 
 
 void init_statics() {
-
+    
+    /*
     init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, 
                  Species::habitat_t::shoreline, Species::ai_t::none, Species::move_t::any, 0);
 
@@ -46,6 +48,9 @@ void init_statics() {
 
     init_species("knight", 2, 60, "knight errant", "h", maudit::color::dim_white,
                  Species::habitat_t::corner, Species::ai_t::seek_player, Species::move_t::any, 22);
+    */
+
+    configparser::parse_config("species.cfg");
 
     ////
 

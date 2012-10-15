@@ -1,6 +1,12 @@
 #ifndef __CONFIGPARSER_H
 #define __CONFIGPARSER_H
 
+// This file needs to be preprocessed with the 'ragel' tool.
+// Run it like this:
+//
+//   ragel -G2 configparser.rl -o configparser.h
+//
+
 #include <string>
 #include <stdexcept>
 #include <iostream>
@@ -8,10 +14,11 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "libmaudit/maudit.h"
+#include "maudit.h"
 #include "species.h"
 #include "species_bank.h"
 
+namespace configparser {
 
 struct ragel_state {
 
@@ -39,7 +46,7 @@ struct ragel_state {
     std::string match;
 };
 
-void print_species(const Species& s) {
+inline void print_species(const Species& s) {
     std::cout << "  tag: " << s.tag << std::endl;
     std::cout << "  name: " << s.name << std::endl;
     std::cout << "  skin: " << s.skin.text << " " << (int)s.skin.fore << " " << (int)s.skin.back << std::endl;
@@ -49,9 +56,15 @@ void print_species(const Species& s) {
     std::cout << "  ai: " << (int)s.ai << std::endl;
     std::cout << "  move: " << (int)s.move << std::endl;
     std::cout << "  range: " << s.range << std::endl;
+
+    init_species_copy(s);
 }
 
-void scan_file(const std::string& filename) {
+inline void add_color(maudit::color& c, unsigned int i) {
+    c = (maudit::color)((uint32_t)c + i);
+}
+
+void parse_config(const std::string& filename) {
 
     /** File reading cruft. **/
 
@@ -84,22 +97,6 @@ void scan_file(const std::string& filename) {
             state.match += fc;
         }
 
-        action print_number {
-            std::cout << "NUM " << state.match << std::endl;
-        }
-
-        action print_string {
-            std::cout << "STR " << state.match << std::endl;
-        }
-
-        action print_tag {
-            std::cout << "TAG " << state.match << std::endl;
-        }
-
-        action print_data {
-            std::cout << "DAT " << state.match << std::endl;
-        }
-
         onews = [ \t\r\n];
         ws = onews*;
         ws1 = onews+;
@@ -120,8 +117,20 @@ void scan_file(const std::string& filename) {
         string = '"' strdata '"';
 
 
-        colorname = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'magenta' | 'cyan' | 'white';
-        color = ('none') | ('dim' sep colorname) | ('bright' sep colorname);
+        colorname = 
+            'black'   | 
+            'red'     %{ add_color(spe.skin.fore, 1); } | 
+            'green'   %{ add_color(spe.skin.fore, 2); } | 
+            'yellow'  %{ add_color(spe.skin.fore, 3); } | 
+            'blue'    %{ add_color(spe.skin.fore, 4); } | 
+            'magenta' %{ add_color(spe.skin.fore, 5); } | 
+            'cyan'    %{ add_color(spe.skin.fore, 6); } | 
+            'white'   %{ add_color(spe.skin.fore, 7); } ;
+
+        color = 
+            ('none') | 
+            ('dim'    %{ spe.skin.fore = maudit::color::dim_black; }    sep colorname) | 
+            ('bright' %{ spe.skin.fore = maudit::color::bright_black; } sep colorname) ;
 
         skin = string %{ spe.skin.text = state.match; } ws1 color;
 
@@ -222,16 +231,6 @@ void scan_file(const std::string& filename) {
     }
 }
 
-int main(int argc, char** argv) {
-
-    try {
-        scan_file(argv[1]);
-
-    } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
-
-    return 0;
 }
 
 #endif
