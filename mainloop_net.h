@@ -11,7 +11,7 @@
 #include "moon.h"
 
 #include "counters.h"
-#include "features.h"
+#include "ffeatures.h"
 #include "items.h"
 #include "monsters.h"
 
