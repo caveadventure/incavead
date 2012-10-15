@@ -21,6 +21,16 @@ struct SpeciesBank {
         counts.init(tag, level, count);
     }
 
+    void copy(const Species& s) {
+
+        if (bank.count(s.tag) != 0) {
+            throw std::runtime_error("Duplicate species tag: " + s.tag);
+        }
+
+        bank[s.tag] = s;
+        counts.init(s.tag, s.level, s.count);
+    }
+
     const Species& get(const std::string& tag) const {
         auto i = bank.find(tag);
 
@@ -44,6 +54,10 @@ const SpeciesBank& species() {
 template <typename... ARGS>
 void init_species(ARGS... args) {
     __species__().init(std::forward<ARGS>(args)...);
+}
+
+void init_species_copy(const Species& s) {
+    __species__().copy(s);
 }
 
 #endif
