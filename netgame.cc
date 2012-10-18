@@ -27,6 +27,47 @@
 
 
 void init_statics() {
+
+    /*
+      0 kobold caves
+        kobold child
+        kobold farmer
+        kobold warrior
+        female kobold
+        kobold slave 
+        kobold slavedriver
+        kobold miner
+        kobold chieftain
+        kobold warlord
+        kobold sex slave
+        kobold shaman
+        kobold hunter
+        kobold infant
+        kobold cannibal
+        renegade kobold
+        dog
+        lichen
+        pond scum
+        orc raider
+        lizardman envoy
+
+      1 lizardmen 
+      2 drow & orcs
+      3 beholders/d&d
+      4 mutants/psi
+      5 dinosaur/megafauna
+      6 dragon
+      7 south asian/oriental
+      8 demons
+      9 cthulhu
+      10 robots
+      11 cyberpunk
+      12 zombie apocalypse
+      13 humanoid aliens
+      14 insectoid aliens
+      15 computer programs
+      16 abstract
+    */
     
     /*
     init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, 
