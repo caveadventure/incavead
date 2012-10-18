@@ -217,15 +217,14 @@ struct Game {
 
         bm _z("monster generation");
 
-        unsigned int mongroups = ::fabs(state.rng.gauss(25.0, 8.0));
+        unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
 
         for (unsigned int i = 0; i < mongroups; ++i) {
 
-            unsigned int moncount = ::fabs(state.rng.gauss(15.0, 5.0));
             unsigned int monlevel = p.worldz;
 
             state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
-                                    monlevel, moncount);
+                                    monlevel);
         }
     }
 

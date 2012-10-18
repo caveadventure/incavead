@@ -107,7 +107,7 @@ struct parsed_name {
         } else {
 
             char tmp[256];
-            ::snprintf(tmp, 255, "%ld", n);
+            ::snprintf(tmp, 255, "%zu", n);
 
             ret = tmp;
             ret += ' ';

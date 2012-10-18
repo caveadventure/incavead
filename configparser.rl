@@ -56,6 +56,7 @@ inline void print_species(const Species& s) {
     std::cout << "  ai: " << (int)s.ai << std::endl;
     std::cout << "  move: " << (int)s.move << std::endl;
     std::cout << "  range: " << s.range << std::endl;
+    std::cout << "  clumpsize: " << s.clumpsize.mean << " " << s.clumpsize.deviation << std::endl;
 
     init_species_copy(s);
 }
@@ -105,6 +106,9 @@ void parse_config(const std::string& filename) {
         number = [0-9]+ 
             >start $push;
 
+        real = ([0-9]+ '\.' [0-9]+) | ([0-9]+)
+            >start $push;
+
         tag = [a-zA-Z0-9_]+ 
             >start $push;
 
@@ -135,13 +139,15 @@ void parse_config(const std::string& filename) {
         skin = string %{ spe.skin.text = state.match; } ws1 color;
 
         habitat = 
-            'walk'          %{ spe.habitat = Species::habitat_t::walk; }          | 
-            'floor'         %{ spe.habitat = Species::habitat_t::floor; }         | 
-            'water'         %{ spe.habitat = Species::habitat_t::water; }         | 
-            'corner'        %{ spe.habitat = Species::habitat_t::corner; }        | 
-            'shoreline'     %{ spe.habitat = Species::habitat_t::shoreline; }     | 
-            'clumped_floor' %{ spe.habitat = Species::habitat_t::clumped_floor; } | 
-            'clumped_water' %{ spe.habitat = Species::habitat_t::clumped_water; } ;
+            'walk'              %{ spe.habitat = Species::habitat_t::walk; }              | 
+            'floor'             %{ spe.habitat = Species::habitat_t::floor; }             | 
+            'water'             %{ spe.habitat = Species::habitat_t::water; }             | 
+            'corner'            %{ spe.habitat = Species::habitat_t::corner; }            | 
+            'shoreline'         %{ spe.habitat = Species::habitat_t::shoreline; }         | 
+            'clumped_floor'     %{ spe.habitat = Species::habitat_t::clumped_floor; }     | 
+            'clumped_water'     %{ spe.habitat = Species::habitat_t::clumped_water; }     |
+            'clumped_corner'    %{ spe.habitat = Species::habitat_t::clumped_corner; }    |
+            'clumped_shoreline' %{ spe.habitat = Species::habitat_t::clumped_shoreline; } ;
 
         ai = 
             'none'        %{ spe.ai = Species::ai_t::none; }        |
@@ -152,17 +158,22 @@ void parse_config(const std::string& filename) {
             'floor' %{ spe.move = Species::move_t::floor; } | 
             'water' %{ spe.move = Species::move_t::water; } ;
 
-        species_count   = 'count'   ws1 number  %{ spe.count = ::atoi(state.match.c_str()); } ;
-        species_name    = 'name'    ws1 string  %{ spe.name = state.match; } ;
-        species_skin    = 'skin'    ws1 skin    ;
-        species_habitat = 'habitat' ws1 habitat ;
-        species_ai      = 'ai'      ws1 ai      ;
-        species_move    = 'move'    ws1 move    ;
-        species_range   = 'range'   ws1 number  %{ spe.range = ::atoi(state.match.c_str()); } ;
+        species_count     = 'count'     ws1 number  %{ spe.count = ::atoi(state.match.c_str()); } ;
+        species_name      = 'name'      ws1 string  %{ spe.name = state.match; } ;
+        species_skin      = 'skin'      ws1 skin    ;
+        species_habitat   = 'habitat'   ws1 habitat ;
+        species_ai        = 'ai'        ws1 ai      ;
+        species_move      = 'move'      ws1 move    ;
+        species_range     = 'range'     ws1 number  %{ spe.range = ::atoi(state.match.c_str()); } ;
+
+        species_clumpsize = 'clumpsize' 
+            ws1 real %{ spe.clumpsize.mean = ::atof(state.match.c_str()); } 
+            ws1 real %{ spe.clumpsize.deviation = ::atof(state.match.c_str()); } 
+        ;
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
-            species_move | species_range |
+            species_move | species_range | species_clumpsize |
             '}'
             %{ fret; })
             ;
