@@ -59,6 +59,38 @@ struct Monsters {
         init();
     }
 
+    static bool is_walkable(const grid::Map& grid, const Species& s, const pt& xy) {
+
+        switch (s.move) {
+        case Species::move_t::floor: 
+            if (!grid.is_floor(xy.first, xy.second)) return false;
+            break;
+
+        case Species::move_t::water: 
+            if (!grid.is_lake(xy.first, xy.second)) return false;
+            break;
+
+        default:
+            if (!grid.is_walk(xy.first, xy.second)) return false;
+            break;
+        }
+
+        return true;
+    }
+
+    static std::vector<pt> get_walkables(const neighbors::Neighbors& neigh, const grid::Map& grid,
+                                         const Species& s, const pt& xy) {
+
+        std::vector<pt> ret;
+
+        for (const pt& v : neigh(xy)) {
+            if (is_walkable(grid, s, v)) {
+                ret.push_back(v);
+            }
+        }
+
+        return ret;
+    }
     
     template <typename FUNC, typename FUNCP>
     void place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
@@ -154,7 +186,7 @@ struct Monsters {
                 break;
 
             case Species::habitat_t::water:
-                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_water));
+                place_scatter(rng, grid, i.first, i.second, std::mem_fn(&grid::Map::one_of_lake));
                 break;
 
             case Species::habitat_t::corner:
@@ -172,7 +204,7 @@ struct Monsters {
 
             case Species::habitat_t::clumped_water:
                 place_clump(neigh, rng, grid, i.first, i.second, 
-                            std::mem_fn(&grid::Map::one_of_water), std::mem_fn(&grid::Map::is_water));
+                            std::mem_fn(&grid::Map::one_of_lake), std::mem_fn(&grid::Map::is_lake));
                 break;
 
             case Species::habitat_t::clumped_corner:
@@ -186,6 +218,8 @@ struct Monsters {
                 break;
 
             }
+
+            if (s
         }
     }
 

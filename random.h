@@ -44,7 +44,7 @@ struct Generator {
 
     template <typename T>
     T n(T n_) {
-        return range((unsigned int)0, n_-1);
+        return range((size_t)0, n_-1);
     }
 
     template <typename T>

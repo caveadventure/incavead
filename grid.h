@@ -443,31 +443,31 @@ struct Map {
         return _get(x, y);
     }
 
-    bool is_walk(unsigned int x, unsigned int y) {
+    bool is_walk(unsigned int x, unsigned int y) const {
         return (walkmap.count(pt(x, y)) != 0);
     }
 
-    bool is_water(unsigned int x, unsigned int y) {
+    bool is_water(unsigned int x, unsigned int y) const {
         return (watermap.count(pt(x, y)) != 0);
     }
 
-    bool is_lake(unsigned int x, unsigned int y) {
+    bool is_lake(unsigned int x, unsigned int y) const {
         return (lakemap.count(pt(x, y)) != 0);
     }
 
-    bool is_floor(unsigned int x, unsigned int y) {
+    bool is_floor(unsigned int x, unsigned int y) const {
         return (floormap.count(pt(x, y)) != 0);
     }
 
-    bool is_corner(unsigned int x, unsigned int y) {
+    bool is_corner(unsigned int x, unsigned int y) const {
         return (cornermap.count(pt(x, y)) != 0);
     }
 
-    bool is_shore(unsigned int x, unsigned int y) {
+    bool is_shore(unsigned int x, unsigned int y) const {
         return (shoremap.count(pt(x, y)) != 0);
     }
 
-    bool is_nogen(unsigned int x, unsigned int y) {
+    bool is_nogen(unsigned int x, unsigned int y) const {
         return (nogens.count(pt(x, y)) != 0);
     }
     

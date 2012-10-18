@@ -123,7 +123,9 @@ struct Player {
 
     unsigned int level;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1) {}
+    unsigned int lightradius;
+
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
 
     void show_info(std::string& message) {
 
@@ -341,6 +343,8 @@ struct Game {
             const Terrain& t = terrain().get(feat.tag);
             state.render.set_skin(x, y, 1, t.skin);
 
+            std::cout << "!! " << x << " " << y << " : " << t.skin.text << " " << (int)t.skin.fore << std::endl;
+
         } else {
             state.render.unset_skin(x, y, 1);
         }
@@ -355,7 +359,7 @@ struct Game {
             state.render.set_skin(x, y, 2, d.skin);
 
         } else {
-            state.render.unset_skin(x, y, 1);
+            state.render.unset_skin(x, y, 2);
         }
 
         // //
@@ -406,7 +410,7 @@ struct Game {
 
         ctx.px = p.px;
         ctx.py = p.py;
-        ctx.lightradius = 8;
+        ctx.lightradius = p.lightradius;
     }
 
     void draw_hud(mainloop::GameState& state) {
@@ -418,36 +422,55 @@ struct Game {
                                    -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
+    double distance(double ax, double ay, double bx, double by) {
+        double q = (ax - bx);
+        double p = (ay - by);
+        return ::sqrt(q*q + p*p);
+    }
+
     bool move_monster(mainloop::GameState& state, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy) {
 
-        if (s.ai == Species::ai_t::seek_player) {
+        if (s.ai == Species::ai_t::seek_player &&
+            state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
-            if (state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
+            // Nothing, nxy is good.
 
-                switch (s.move) {
-                case Species::move_t::floor: 
-                    if (!state.grid.is_floor(nxy.first, nxy.second)) return false;
-                    break;
+        } else {
 
-                case Species::move_t::water: 
-                    if (!state.grid.is_water(nxy.first, nxy.second)) return false;
-                    break;
+            switch (s.idle_ai) {
 
-                default:
-                    break;
-                }
+            case Species::idle_ai_t::random:
+            {
+                double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
-                if (nxy.first == p.px && nxy.second == p.py) {
-                    defend(state, m, s);
+                if (dist > p.lightradius + 5)
+                    return false;
 
-                } else{
-                    return true;
-                }
+                std::vector<monsters::pt> tmp = monsters::Monster::get_walkables(state.neigh, state.grid, s, m.xy);
+
+                if (tmp.empty())
+                    return false;
+
+                nxy = tmp[state.rng.n(tmp.size())];
+            }
+            break;
+
+            default:
+                return false;
             }
         }
 
-        return false;
+        if (!monsters::Monster::is_walkable(state.grid, s, nxy))
+            return false;
+
+        if (nxy.first == p.px && nxy.second == p.py) {
+            defend(state, m, s);
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
@@ -465,13 +488,13 @@ struct Game {
 
         const Species& s = species().get(mon.tag);
 
-        state.render.do_message("You see " + s.name, false);
+        state.render.do_message(nlp::message("You see %s.", s));
         return true;
     }
 
     void defend(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
-        state.render.do_message("You are pushed by " + s.name + "!");
+        state.render.do_message(nlp::message("You are pushed by %s!", s));
     }
 
     void move_player(mainloop::GameState& state) {

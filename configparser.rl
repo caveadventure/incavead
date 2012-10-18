@@ -54,6 +54,7 @@ inline void print_species(const Species& s) {
     std::cout << "  count: " << s.count << std::endl;
     std::cout << "  habitat: " << (int)s.habitat << std::endl;
     std::cout << "  ai: " << (int)s.ai << std::endl;
+    std::cout << "  idle_ai: " << (int)s.idle_ai << std::endl;
     std::cout << "  move: " << (int)s.move << std::endl;
     std::cout << "  range: " << s.range << std::endl;
     std::cout << "  clumpsize: " << s.clumpsize.mean << " " << s.clumpsize.deviation << std::endl;
@@ -153,6 +154,10 @@ void parse_config(const std::string& filename) {
             'none'        %{ spe.ai = Species::ai_t::none; }        |
             'seek_player' %{ spe.ai = Species::ai_t::seek_player; } ;
 
+        idle_ai = 
+            'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }        |
+            'random' %{ spe.idle_ai = Species::idle_ai_t::random; } ;
+
         move = 
             'any'   %{ spe.move = Species::move_t::any; }   | 
             'floor' %{ spe.move = Species::move_t::floor; } | 
@@ -163,6 +168,7 @@ void parse_config(const std::string& filename) {
         species_skin      = 'skin'      ws1 skin    ;
         species_habitat   = 'habitat'   ws1 habitat ;
         species_ai        = 'ai'        ws1 ai      ;
+        species_idle_ai   = 'idle_ai'   ws1 idle_ai ;
         species_move      = 'move'      ws1 move    ;
         species_range     = 'range'     ws1 number  %{ spe.range = ::atoi(state.match.c_str()); } ;
 
@@ -173,7 +179,7 @@ void parse_config(const std::string& filename) {
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
-            species_move | species_range | species_clumpsize |
+            species_idle_ai | species_move | species_range | species_clumpsize |
             '}'
             %{ fret; })
             ;

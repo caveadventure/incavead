@@ -76,7 +76,7 @@ struct Features {
             break;
 
         case Terrain::placement_t::water:
-            if (!grid.one_of_water(rng, ret)) return false;
+            if (!grid.one_of_lake(rng, ret)) return false;
             break;
         }
 
