@@ -11,11 +11,7 @@ struct Species {
         floor,
         water,
         corner,
-        shoreline,
-        clumped_floor,
-        clumped_water,
-        clumped_corner,
-        clumped_shoreline
+        shoreline
     };
 
     enum class ai_t : unsigned int {

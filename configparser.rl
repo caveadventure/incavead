@@ -144,11 +144,7 @@ void parse_config(const std::string& filename) {
             'floor'             %{ spe.habitat = Species::habitat_t::floor; }             | 
             'water'             %{ spe.habitat = Species::habitat_t::water; }             | 
             'corner'            %{ spe.habitat = Species::habitat_t::corner; }            | 
-            'shoreline'         %{ spe.habitat = Species::habitat_t::shoreline; }         | 
-            'clumped_floor'     %{ spe.habitat = Species::habitat_t::clumped_floor; }     | 
-            'clumped_water'     %{ spe.habitat = Species::habitat_t::clumped_water; }     |
-            'clumped_corner'    %{ spe.habitat = Species::habitat_t::clumped_corner; }    |
-            'clumped_shoreline' %{ spe.habitat = Species::habitat_t::clumped_shoreline; } ;
+            'shoreline'         %{ spe.habitat = Species::habitat_t::shoreline; }         ; 
 
         ai = 
             'none'        %{ spe.ai = Species::ai_t::none; }        |

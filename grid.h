@@ -571,6 +571,10 @@ struct Map {
     }
 
     bool one_of_water(rnd::Generator& rng, pt& ret) {
+        return _one_of(rng, watermap, ret);
+    }
+
+    bool one_of_lake(rnd::Generator& rng, pt& ret) {
         return _one_of(rng, lakemap, ret);
     }
 

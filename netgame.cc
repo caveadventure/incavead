@@ -447,7 +447,7 @@ struct Game {
                 if (dist > p.lightradius + 5)
                     return false;
 
-                std::vector<monsters::pt> tmp = monsters::Monster::get_walkables(state.neigh, state.grid, s, m.xy);
+                std::vector<monsters::pt> tmp = monsters::Monsters::get_walkables(state.neigh, state.grid, s, m.xy);
 
                 if (tmp.empty())
                     return false;
@@ -461,7 +461,7 @@ struct Game {
             }
         }
 
-        if (!monsters::Monster::is_walkable(state.grid, s, nxy))
+        if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
             return false;
 
         if (nxy.first == p.px && nxy.second == p.py) {
