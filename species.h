@@ -53,6 +53,15 @@ struct Species {
 
     mean_deviation_t clumpsize;
 
+    struct companion_t {
+        std::string tag;
+        double chance;
+
+        companion_t(const std::string& t = "", double c = 0.0) : tag(t), chance(c) {}
+    };
+
+    std::vector<companion_t> companion;
+
     Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::any), range(0), clumpsize() {}
 

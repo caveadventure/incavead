@@ -173,9 +173,15 @@ void parse_config(const std::string& filename) {
             ws1 real %{ spe.clumpsize.deviation = ::atof(state.match.c_str()); } 
         ;
 
+        species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
+            ws1 string %{ spe.companion.back().tag = state.match; }
+            ws1 real   %{ spe.companion.back().chance = ::atof(state.match.c_str()); }
+            ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
+            species_companion |
             '}'
             %{ fret; })
             ;
