@@ -62,18 +62,13 @@ struct Species {
 
     std::vector<companion_t> companion;
 
+    double attack;
+    double defense;
+
     Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::any), range(0), clumpsize() {}
+                move(move_t::any), range(0), clumpsize(),
+                attack(0), defense(0) {}
 
-    Species(const std::string& _tag, unsigned int _level, unsigned int _count,
-            const std::string& _name, const std::string& _chr, maudit::color _fore,
-            habitat_t _habitat, ai_t _ai, idle_ai_t(_idle_ai), move_t _move, unsigned int _range,
-            double _clumpsize_m, double _clumpsize_d) :
-
-        tag(_tag), name(_name), skin(_chr, _fore, maudit::color::bright_black),
-        level(_level), count(_count), habitat(_habitat), ai(_ai), idle_ai(_idle_ai), 
-        move(_move), range(_range), clumpsize(_clumpsize_m, _clumpsize_d)
-        {}
 };
 
 #endif

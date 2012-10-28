@@ -1012,31 +1012,26 @@ public:
         messages.emplace_front(msg, important, 0);
     }
 
-    template <typename SCREEN>
-    void draw_messages_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
 
-        unsigned int i = 0;
-        std::list<message>::const_iterator li = messages.begin();
-        std::vector<std::string> lines;
+    std::string all_messages() {
 
-        while (i < 23 && li != messages.end()) {
-            lines.emplace_back();
-            std::string& m = lines.back();
+        std::string m;
 
-            if (li->important) {
+        for (const auto& li : messages) {
+
+            if (li.important) {
                 m += (char)3;
-            } else if (li == messages.begin()) {
+            } else if (m.empty()) {
                 m += (char)2;
             } else {
                 m += (char)1;
             }
 
-            m += li->text;
-            ++i;
-            ++li;
+            m += li.text;
+            m += '\n';
         }
 
-        draw_window(screen, view_w, view_h, lines);
+        return m;
     }
 
     bool path_walk(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1,

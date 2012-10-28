@@ -13,10 +13,12 @@ struct Monster {
     std::string tag;
     pt xy;
 
-    Monster() : xy(0, 0) {}
+    double health;
+
+    Monster() : xy(0, 0), health(3.0) {}
 
     Monster(const std::string& _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy) 
+        tag(_tag), xy(_xy), health(3.0)
         {}
 };
 
@@ -282,6 +284,15 @@ struct Monsters {
         return true;
     }
 
+    template <typename FUNC>
+    void change(const Monster& mon, FUNC f) {
+        auto i = mons.find(mon.xy);
+
+        if (i != mons.end()) {
+            f(i->second);
+        }
+    }
+
     void dispose(counters::Counts& counts) {
 
         for (const auto& i : mons) {
@@ -290,6 +301,7 @@ struct Monsters {
         }
     }
 
+
     template <typename FUNC>
     void process(grender::Grid& grid, FUNC f) {
 
@@ -297,15 +309,24 @@ struct Monsters {
 
         std::unordered_map<pt, Monster> neuw;
         std::unordered_set<pt> wipe;
+        unsigned int deadcount = 0;
 
         for (const auto& i : mons) {
             const Species& s = species().get(i.second.tag);
 
             pt nxy;
+            bool dead = false;
 
-            if (f(i.second, s, nxy) && neuw.count(nxy) == 0) {
+            if (f(i.second, s, nxy, dead)) {
 
-                neuw[nxy] = i.second;
+                if (dead) {
+                    deadcount++;
+                    wipe.insert(i.first);
+
+                } else if (neuw.count(nxy) == 0) {
+
+                    neuw[nxy] = i.second;
+                }
             }
         }
 
@@ -330,7 +351,7 @@ struct Monsters {
             grid.invalidate(i.first, i.second);
         }
 
-        if (mons.size() != sbefore) {
+        if (mons.size() != sbefore - deadcount) {
 
             for (const auto& i : mons) {
                 std::cout << "   | " << i.first.first << "," << i.first.second << std::endl;

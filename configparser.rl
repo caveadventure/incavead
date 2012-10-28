@@ -167,6 +167,8 @@ void parse_config(const std::string& filename) {
         species_idle_ai   = 'idle_ai'   ws1 idle_ai ;
         species_move      = 'move'      ws1 move    ;
         species_range     = 'range'     ws1 number  %{ spe.range = ::atoi(state.match.c_str()); } ;
+        species_attack    = 'attack'    ws1 real %{ spe.attack = ::atof(state.match.c_str()); } ;
+        species_defense   = 'defense'   ws1 real %{ spe.defense = ::atof(state.match.c_str()); } ;
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = ::atof(state.match.c_str()); } 
@@ -181,7 +183,7 @@ void parse_config(const std::string& filename) {
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
-            species_companion |
+            species_companion | species_attack | species_defense |
             '}'
             %{ fret; })
             ;
@@ -235,7 +237,7 @@ void parse_config(const std::string& filename) {
         %% write exec;
 
         if (state.cs == ConfigParser_error) {
-            throw std::runtime_error("Parse error.");
+            throw std::runtime_error("Parse error. Unconsumed input: " + std::string(state.p, state.pe));
         }
 
         if (state.ts == 0) {

@@ -125,6 +125,25 @@ struct Player {
 
     unsigned int lightradius;
 
+    struct stat_t {
+        double val;
+        
+        stat_t() : val(3.0) {}
+
+        void inc(double v) {
+            val += v;
+            if (val > 3) val = 3;
+        }
+
+        void dec(double v) {
+            val -= v;
+            if (val < -3) val = -3;
+        }
+    };
+
+    stat_t health;
+
+
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
 
     void show_info(std::string& message) {
@@ -415,11 +434,22 @@ struct Game {
 
     void draw_hud(mainloop::GameState& state) {
 
+        double v = p.health.val;
+        int vp = 0;
+
+        if (v > 2) vp = 3;
+        else if (v > 1) vp = 2;
+        else if (v > 0) vp = 1;
+        else if (v < -2) vp = -3;
+        else if (v < -1) vp = -2;
+        else if (v < 0) vp = -1;
+
+        state.render.push_hud_line("Health", maudit::color::dim_green,
+                                   vp, '-', '+',
+                                   maudit::color::dim_red, maudit::color::dim_blue);
+
         state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
                                    4, '+', maudit::color::bright_green);
-
-        state.render.push_hud_line("Bump", maudit::color::bright_red, 
-                                   -2, '-', '+', maudit::color::bright_blue, maudit::color::dim_red);
     }
 
     double distance(double ax, double ay, double bx, double by) {
@@ -429,7 +459,12 @@ struct Game {
     }
 
     bool move_monster(mainloop::GameState& state, const monsters::Monster& m, const Species& s,
-                      monsters::pt& nxy) {
+                      monsters::pt& nxy, bool& do_die) {
+
+        if (m.health < -3) {
+            do_die = true;
+            return true;
+        }
 
         if (s.ai == Species::ai_t::seek_player &&
             state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
@@ -478,23 +513,86 @@ struct Game {
 
         bm _p("process_world");
 
+        if (p.health.val <= -3.0) {
+            state.render.do_message("You are dead.", true);
+            dead = true;
+            done = true;
+            return;
+        }
+
         state.monsters.process(state.render, 
                                std::bind(&Game::move_monster, this, std::ref(state), 
-                                         std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+                                         std::placeholders::_1, std::placeholders::_2, 
+                                         std::placeholders::_3, std::placeholders::_4));
 
     }
 
-    bool attack(mainloop::GameState& state, monsters::Monster& mon) {
+    double roll_attack(rnd::Generator& rng, 
+                       double ddefense, unsigned int dlevel,
+                       double aattack, unsigned int alevel) {
+
+        double a = 0;
+        for (unsigned int i = 0; i < alevel; ++i) {
+            a += rng.uniform(0.0, aattack);
+        }
+
+        double d = 0;
+        for (unsigned int i = 0; i < dlevel; ++i) {
+            d += rng.uniform(0.0, ddefense);
+        }
+
+        return std::max(a - d, 0.0);
+    }
+
+    bool attack(mainloop::GameState& state, const monsters::Monster& mon) {
 
         const Species& s = species().get(mon.tag);
 
-        state.render.do_message(nlp::message("You see %s.", s));
+        double v = roll_attack(state.rng,
+                               s.defense, s.level+1, 0.4, 1);
+
+        {
+            std::ostringstream st;
+            st << v << " " << mon.health;
+            state.render.do_message(st.str());
+        }
+
+        if (v > 0) {
+
+            state.monsters.change(mon, [v](monsters::Monster& m) { m.health -= v; });
+
+            if (mon.health - v < -3) {
+                state.render.do_message(nlp::message("You killed %s.", s));
+
+            } else {
+                state.render.do_message(nlp::message("You hit %s.", s));
+            }
+
+        } else {
+            state.render.do_message(nlp::message("You attack %s but do no damage.", s));
+        }
+
         return true;
     }
 
     void defend(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
-        state.render.do_message(nlp::message("You are pushed by %s!", s));
+        double v = roll_attack(state.rng, 
+                               0.4, 1, s.attack, s.level+1);
+
+        {
+            std::ostringstream st;
+            st << v;
+            state.render.do_message(st.str());
+        }
+
+        if (v > 0) {
+            p.health.dec(v);
+
+            state.render.do_message(nlp::message("%s hits!", s));
+        } else {
+            state.render.do_message(nlp::message("%s attacks but does no damage.", s));
+        }
     }
 
     void move_player(mainloop::GameState& state) {
@@ -612,7 +710,6 @@ struct Game {
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
 
-
         if (state.window_stack.size() > 0) {
             state.window_stack.pop_back();
         }
@@ -668,6 +765,11 @@ struct Game {
         case 'i':
             p.show_info(state.message_window);
             state.window_stack.push_back(1);
+            break;
+
+        case 'P':
+            state.message_window = state.render.all_messages();
+            state.window_stack.push_back(0);
             break;
         }
 
