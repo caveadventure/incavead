@@ -107,7 +107,7 @@ void parse_config(const std::string& filename) {
         number = [0-9]+ 
             >start $push;
 
-        real = ([0-9]+ '\.' [0-9]+) | ([0-9]+)
+        real = (('-'?) (([0-9]+ '\.' [0-9]+) | ([0-9]+)))
             >start $push;
 
         tag = [a-zA-Z0-9_]+ 

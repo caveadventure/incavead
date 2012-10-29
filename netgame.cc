@@ -362,8 +362,6 @@ struct Game {
             const Terrain& t = terrain().get(feat.tag);
             state.render.set_skin(x, y, 1, t.skin);
 
-            std::cout << "!! " << x << " " << y << " : " << t.skin.text << " " << (int)t.skin.fore << std::endl;
-
         } else {
             state.render.unset_skin(x, y, 1);
         }
@@ -541,6 +539,9 @@ struct Game {
             d += rng.uniform(0.0, ddefense);
         }
 
+        std::cout << "** " << ddefense << ":" << dlevel << " <- " << aattack << ":" << alevel 
+                  << " = " << a << " " << d << std::endl;
+
         return std::max(a - d, 0.0);
     }
 
@@ -549,13 +550,7 @@ struct Game {
         const Species& s = species().get(mon.tag);
 
         double v = roll_attack(state.rng,
-                               s.defense, s.level+1, 0.4, 1);
-
-        {
-            std::ostringstream st;
-            st << v << " " << mon.health;
-            state.render.do_message(st.str());
-        }
+                               s.defense, s.level+1, 3.0, 1);
 
         if (v > 0) {
 
@@ -578,13 +573,7 @@ struct Game {
     void defend(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
         double v = roll_attack(state.rng, 
-                               0.4, 1, s.attack, s.level+1);
-
-        {
-            std::ostringstream st;
-            st << v;
-            state.render.do_message(st.str());
-        }
+                               1.0, 1, s.attack, s.level+1);
 
         if (v > 0) {
             p.health.dec(v);
