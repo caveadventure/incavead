@@ -12,11 +12,12 @@ typedef std::pair<unsigned int, unsigned int> pt;
 struct Item {
     std::string tag;
     pt xy;
+    unsigned int count;
 
-    Item() : xy(0, 0) {}
+    Item() : xy(0, 0), count(1) {}
 
-    Item(const std::string& _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy) 
+    Item(const std::string& _tag, const pt& _xy, unsigned int c = 1) : 
+        tag(_tag), xy(_xy), count(1)
         {}
 };
 
@@ -120,8 +121,32 @@ struct Items {
             return false;
         }
 
-        ret = i->second[z];
+        auto j = i->second.rbegin() + z;
+        ret = *j;
         return true;
+    }
+
+    bool take(unsigned int x, unsigned int y, unsigned int z, Item& ret) {
+        auto i = stuff.find(pt(x, y));
+
+        if (i == stuff.end() || z >= i->second.size()) {
+            return false;
+        }
+
+        auto j = i->second.rbegin() + z;
+        ret = *j;
+        i->second.erase(j.base()-1);
+
+        if (i->second.empty())
+            stuff.erase(i);
+        
+        return true;
+    }
+
+    void place(unsigned int x, unsigned int y, const Item& i) {
+        auto& v = stuff[pt(x, y)];
+        v.push_back(i);
+        v.back().xy = pt(x, y);
     }
 
     void dispose(counters::Counts& counts) {

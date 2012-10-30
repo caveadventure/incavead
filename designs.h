@@ -14,13 +14,16 @@ struct Design {
     unsigned int level;
     unsigned int count;
 
+    std::string slot;
+
     Design() : level(0), count(0) {}
 
     Design(const std::string& _tag, unsigned int _level, unsigned int _count,
-           const std::string& _name, const std::string& _chr, maudit::color _fore) :
+           const std::string& _name, const std::string& _chr, maudit::color _fore,
+           const std::string& _slot) :
 
         tag(_tag), name(_name), skin(_chr, _fore, maudit::color::bright_black),
-        level(_level), count(_count)
+        level(_level), count(_count), slot(_slot)
         {}
 };
 

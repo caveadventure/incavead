@@ -96,15 +96,15 @@ void init_statics() {
 
     ////
 
-    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green);
+    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green, "w");
 
-    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white);
+    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white, "w");
 
-    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green);
+    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green, "");
 
-    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow);
+    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow, "");
 
-    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white);
+    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white, "w");
 
     ////
 
@@ -144,15 +144,107 @@ struct Player {
     stat_t health;
 
 
+    struct inventory_t {
+        std::unordered_map<std::string, items::Item> stuff;
+
+        bool get(const std::string& slot, items::Item& ret) {
+            auto i = stuff.find(slot);
+
+            if (i == stuff.end())
+                return false;
+
+            ret = i->second;
+            return true;
+        }
+
+        bool take(const std::string& slot, items::Item& ret) {
+            auto i = stuff.find(slot);
+
+            if (i == stuff.end())
+                return false;
+
+            ret = i->second;
+            stuff.erase(i);
+            return true;
+        }
+
+        void place(const std::string& slot, const items::Item& i) {
+            stuff[slot] = i;
+        }
+
+        bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items) {
+
+            items::Item tmp;
+
+            if (!take(slot, tmp))
+                return false;
+
+            items.place(x, y, tmp);
+            return true;
+        }
+
+        bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items) {
+
+            items::Item ftmp;
+
+            if (!items.take(x, y, z, ftmp))
+                return false;
+
+            const std::string& slot = designs().get(ftmp.tag).slot;
+
+            items::Item itmp;
+
+            if (take(slot, itmp)) {
+                items.place(x, y, itmp);
+            }
+
+            place(slot, ftmp);
+        }
+
+        std::string name(const std::string& slot) {
+
+            items::Item tmp;
+
+            if (!get(slot, tmp)) {
+                return " - ";
+            }
+
+            const Design& d = designs().get(tmp.tag);
+            return nlp::message("%s", d, tmp.count);
+        }
+    };
+
+    inventory_t inv;
+
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
 
-    void show_info(std::string& message) {
+    void show_info(std::string& message, items::Items& items) {
 
         std::ostringstream buf;
 
-        buf << "Character level: " << level << "\n";
-        buf << "Dungeon level:   " << worldz << "\n";
-        buf << "QQXX: " << worldx << "," << worldy << "\n";
+        buf << (char)2 << "Player stats:\n"
+            << "  Character level: " << level << "\n"
+            << "  Dungeon level:   " << worldz << "\n"
+            << "\n"
+            << (char)2 << "Inventory:\n"
+            << "  a) Weapon: " << inv.name("w") << "\n"
+            << "\n"
+            << (char)2 << "Floor items:\n"
+            ;
+
+        size_t nz = items.stack_size(px, py);
+
+        for (size_t z = 0; z < nz; ++z) {
+
+            items::Item tmp;
+            
+            if (!items.get(px, py, z, tmp))
+                throw std::runtime_error("sanity error in items.get()");
+
+            const Design& d = designs().get(tmp.tag);
+
+            buf << 'b'+z << ") : " << nlp::message("%s", d, tmp.count) << "\n";
+        }
 
         message = buf.str();
     }
@@ -752,7 +844,7 @@ struct Game {
             break;
 
         case 'i':
-            p.show_info(state.message_window);
+            p.show_info(state.message_window, state.items);
             state.window_stack.push_back(1);
             break;
 
