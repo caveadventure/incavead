@@ -111,6 +111,167 @@ void init_statics() {
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
 
+enum class screens_t : unsigned int {
+    messages = 0,
+    inventory,
+    inv_item,
+    floor_item
+};
+
+
+
+struct stat_t {
+    double val;
+        
+    stat_t() : val(3.0) {}
+
+    void inc(double v) {
+        val += v;
+        if (val > 3) val = 3;
+    }
+
+    void dec(double v) {
+        val -= v;
+        if (val < -3) val = -3;
+    }
+};
+
+
+
+struct inventory_t {
+
+    std::unordered_map<std::string, items::Item> stuff;
+
+    std::string selected_slot;
+
+    bool get(const std::string& slot, items::Item& ret) {
+        auto i = stuff.find(slot);
+
+        if (i == stuff.end())
+            return false;
+
+        ret = i->second;
+        return true;
+    }
+
+    bool valid(const std::string& slot) const {
+
+        if (stuff.count(slot) == 0) 
+            return false;
+
+        return true;
+    }
+
+    bool take(const std::string& slot, items::Item& ret) {
+        auto i = stuff.find(slot);
+
+        if (i == stuff.end())
+            return false;
+
+        ret = i->second;
+        stuff.erase(i);
+        return true;
+    }
+
+    void place(const std::string& slot, const items::Item& i) {
+        stuff[slot] = i;
+    }
+
+    bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items) {
+
+        items::Item tmp;
+
+        if (!take(slot, tmp))
+            return false;
+
+        items.place(x, y, tmp);
+        return true;
+    }
+
+    bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items) {
+
+        items::Item ftmp;
+
+        if (!items.take(x, y, z, ftmp))
+            return false;
+
+        const std::string& slot = designs().get(ftmp.tag).slot;
+
+        items::Item itmp;
+
+        if (take(slot, itmp)) {
+            items.place(x, y, itmp);
+        }
+
+        place(slot, ftmp);
+    }
+
+    std::string name(const std::string& slot) {
+
+        items::Item tmp;
+
+        if (!get(slot, tmp)) {
+            return " - ";
+        }
+
+        const Design& d = designs().get(tmp.tag);
+        return nlp::message("%s", d, tmp.count);
+    }
+
+    std::string floor_name(const items::Items& items, unsigned int x, unsigned int y, unsigned int z) {
+
+        items::Item tmp;
+            
+        if (!items.get(x, y, z, tmp))
+            return " - ";
+
+        const Design& d = designs().get(tmp.tag);
+        return nlp::message("%s", d, tmp.count);
+    }
+
+
+    std::string slot_name(const std::string& slot) {
+
+        if (slot == "w") return "Weapon";
+
+        return "";
+    }
+
+    void select_inv_item(std::string& window, const std::string& slot) {
+
+        std::ostringstream buf;
+
+        buf << "\n"
+            << (char)1 << slot_name(slot) << ":\n"
+            << "\n"
+            << name(slot) << "\n"
+            << "\n"
+            << "  d) Drop.\n"
+            ;
+
+        window = buf.str();
+        selected_slot = slot;
+    }
+
+    void select_floor_item(std::string& window, items::Items& items,
+                           unsigned int px, unsigned int py, unsigned int z) {
+
+        std::ostringstream buf;
+
+        buf << "\n"
+            << (char)1 << "Floor item:\n"
+            << "\n"
+            << floor_name(items, px, py, z) << "\n"
+            << "\n"
+            << "  t) Take.\n"
+            ;
+
+        window = buf.str();
+    }
+    
+};
+
+
 
 struct Player {
 
@@ -125,94 +286,7 @@ struct Player {
 
     unsigned int lightradius;
 
-    struct stat_t {
-        double val;
-        
-        stat_t() : val(3.0) {}
-
-        void inc(double v) {
-            val += v;
-            if (val > 3) val = 3;
-        }
-
-        void dec(double v) {
-            val -= v;
-            if (val < -3) val = -3;
-        }
-    };
-
     stat_t health;
-
-
-    struct inventory_t {
-        std::unordered_map<std::string, items::Item> stuff;
-
-        bool get(const std::string& slot, items::Item& ret) {
-            auto i = stuff.find(slot);
-
-            if (i == stuff.end())
-                return false;
-
-            ret = i->second;
-            return true;
-        }
-
-        bool take(const std::string& slot, items::Item& ret) {
-            auto i = stuff.find(slot);
-
-            if (i == stuff.end())
-                return false;
-
-            ret = i->second;
-            stuff.erase(i);
-            return true;
-        }
-
-        void place(const std::string& slot, const items::Item& i) {
-            stuff[slot] = i;
-        }
-
-        bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items) {
-
-            items::Item tmp;
-
-            if (!take(slot, tmp))
-                return false;
-
-            items.place(x, y, tmp);
-            return true;
-        }
-
-        bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items) {
-
-            items::Item ftmp;
-
-            if (!items.take(x, y, z, ftmp))
-                return false;
-
-            const std::string& slot = designs().get(ftmp.tag).slot;
-
-            items::Item itmp;
-
-            if (take(slot, itmp)) {
-                items.place(x, y, itmp);
-            }
-
-            place(slot, ftmp);
-        }
-
-        std::string name(const std::string& slot) {
-
-            items::Item tmp;
-
-            if (!get(slot, tmp)) {
-                return " - ";
-            }
-
-            const Design& d = designs().get(tmp.tag);
-            return nlp::message("%s", d, tmp.count);
-        }
-    };
 
     inventory_t inv;
 
@@ -224,10 +298,10 @@ struct Player {
 
         buf << (char)2 << "Player stats:\n"
             << "  Character level: " << level << "\n"
-            << "  Dungeon level:   " << worldz << "\n"
+            << "  Dungeon level:   " << worldz+1 << "\n"
             << "\n"
             << (char)2 << "Inventory:\n"
-            << "  a) Weapon: " << inv.name("w") << "\n"
+            << "  " << inv.slot_name("w") << ": a) " << inv.name("w") << "\n"
             << "\n"
             << (char)2 << "Floor items:\n"
             ;
@@ -236,14 +310,7 @@ struct Player {
 
         for (size_t z = 0; z < nz; ++z) {
 
-            items::Item tmp;
-            
-            if (!items.get(px, py, z, tmp))
-                throw std::runtime_error("sanity error in items.get()");
-
-            const Design& d = designs().get(tmp.tag);
-
-            buf << 'b'+z << ") : " << nlp::message("%s", d, tmp.count) << "\n";
+            buf << "          " << (char)('b'+z) << ") " << inv.floor_name(items, px, py, z) << "\n";
         }
 
         message = buf.str();
@@ -787,13 +854,9 @@ struct Game {
         ++ticks;
     }
 
-    void handle_input(mainloop::GameState& state,
-                      size_t& ticks, bool& done, bool& dead, bool& regen, 
-                      maudit::keypress k) {
-
-        if (state.window_stack.size() > 0) {
-            state.window_stack.pop_back();
-        }
+    void handle_input_main(mainloop::GameState& state,
+                           size_t& ticks, bool& done, bool& dead, bool& regen, 
+                           maudit::keypress k) {
 
         bool redraw = false;
 
@@ -845,12 +908,12 @@ struct Game {
 
         case 'i':
             p.show_info(state.message_window, state.items);
-            state.window_stack.push_back(1);
+            state.window_stack.push_back((unsigned int)screens_t::inventory);
             break;
 
         case 'P':
             state.message_window = state.render.all_messages();
-            state.window_stack.push_back(0);
+            state.window_stack.push_back((unsigned int)screens_t::messages);
             break;
         }
 
@@ -873,6 +936,85 @@ struct Game {
 
         if (redraw) {
             state.render.clear();
+        }
+    }
+
+    void handle_input_inventory(mainloop::GameState& state,
+                                size_t& ticks, bool& done, bool& dead, bool& regen, 
+                                maudit::keypress k) {
+
+        switch (k.letter) {
+
+        case 'a':
+            if (!p.inv.valid("w")) return;
+
+            p.inv.select_inv_item(state.message_window, "w");
+            state.window_stack.back() = (unsigned int)screens_t::inv_item;
+            return;
+
+        default:
+            break;
+        }
+
+        if (k.letter >= 'b') {
+            unsigned int i = k.letter - 'b';
+
+            if (i < state.items.stack_size(p.px, p.py)) {
+
+                p.inv.select_floor_item(state.message_window, state.items, p.px, p.py, i);
+                state.window_stack.back() = (unsigned int)screens_t::floor_item;
+                return;
+            }
+        }
+
+        state.window_stack.pop_back();
+    }
+
+    void handle_input_inv_item(mainloop::GameState& state,
+                               size_t& ticks, bool& done, bool& dead, bool& regen, 
+                               maudit::keypress k) {
+
+        state.window_stack.pop_back();
+    }
+
+    void handle_input_floor_item(mainloop::GameState& state,
+                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
+                                 maudit::keypress k) {
+
+        state.window_stack.pop_back();
+    }
+
+    void handle_input_messages(mainloop::GameState& state, maudit::keypress k) {
+
+        state.window_stack.pop_back();
+    }
+
+    void handle_input(mainloop::GameState& state,
+                      size_t& ticks, bool& done, bool& dead, bool& regen, 
+                      maudit::keypress k) {
+
+        if (state.window_stack.empty()) {
+            handle_input_main(state, ticks, done, dead, regen, k);
+            return;
+        }
+
+        switch ((screens_t)state.window_stack.back()) {
+
+        case screens_t::messages:
+            handle_input_messages(state, k);
+            break;
+
+        case screens_t::inventory:
+            handle_input_inventory(state, ticks, done, dead, regen, k);
+            break;
+
+        case screens_t::inv_item:
+            handle_input_inv_item(state, ticks, done, dead, regen, k);
+            break;
+
+        case screens_t::floor_item:
+            handle_input_floor_item(state, ticks, done, dead, regen, k);
+            break;
         }
     }
 };

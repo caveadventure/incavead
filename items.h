@@ -104,7 +104,7 @@ struct Items {
         }
     }
 
-    size_t stack_size(unsigned int x, unsigned int y) {
+    size_t stack_size(unsigned int x, unsigned int y) const {
         auto i = stuff.find(pt(x, y));
 
         if (i == stuff.end()) {
@@ -114,7 +114,7 @@ struct Items {
         return i->second.size();
     }
 
-    bool get(unsigned int x, unsigned int y, unsigned int z, Item& ret) {
+    bool get(unsigned int x, unsigned int y, unsigned int z, Item& ret) const {
         auto i = stuff.find(pt(x, y));
 
         if (i == stuff.end() || z >= i->second.size()) {
