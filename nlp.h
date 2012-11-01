@@ -123,57 +123,116 @@ struct parsed_name {
 };
 
 
-template <typename T>
-std::string message(const std::string& tmpl, const T& obj, size_t n = 1) {
+struct _buffer {
+    std::string::const_iterator ti;
+    std::string::const_iterator te;
+    std::string& out;
 
-    std::string ret;
-    bool is_start = true;
-
-    parsed_name pn(obj.name);
+    bool is_start;
 
     enum {
         TEXT,
         PCT,
         PERIOD
-    } state = TEXT;
+    } state;
 
-    for (unsigned char c : tmpl) {
+    _buffer(const std::string& tmpl, std::string& _out) :
+        ti(tmpl.begin()), te(tmpl.end()), out(_out), is_start(true), state(TEXT)
+        {}
 
-        if (c == '%') {
-            state = PCT;
+    
+    unsigned char consume() {
+        while (ti != te) {
 
-        } else if (c == '.') {
-            ret += c;
-            state = PERIOD;
+            unsigned char c = *(ti);
+            ++ti;
 
-        } else {
+            if (c == '%') {
+                state = PCT;
 
-            switch (state) {
-            case TEXT:
-                ret += c;
-                is_start = false;
-                break;
+            } else if (c == '.') {
+                out += c;
+                state = PERIOD;
 
-            case PCT:
-                if (c == 's') {
-                    ret += pn.make(n, is_start);
-                } else {
-                    ret += c;
-                }
-                state = TEXT;
-                break;
+            } else {
 
-            case PERIOD:
-                ret += c;
-                if (::isspace(c)) {
-                    is_start = true;
-                } else {
+                switch (state) {
+                case TEXT:
+                    out += c;
                     is_start = false;
+                    break;
+
+                case PCT:
+                    state = TEXT;
+                    if (c == '%') {
+                        out += c;
+                    } else {
+                        return c;
+                    }
+                    break;
+
+                case PERIOD:
+                    out += c;
+                    if (::isspace(c)) {
+                        is_start = true;
+                    } else {
+                        is_start = false;
+                    }
+                    break;
                 }
-                break;
             }
         }
+
+        return '\0';
     }
+};
+
+
+void message(_buffer& b) {
+
+    b.out.append(b.ti, b.te);
+    return;
+}
+
+template <typename T, typename... TAIL>
+void message(_buffer& b, const T& val, unsigned int count, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 's') {
+        parsed_name pn(val.name);
+        b.out += pn.make(count, b.is_start);
+    }
+
+    message(b, args...);
+}
+
+template <typename T, typename... TAIL>
+void message(_buffer& b, const T& val, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 's') {
+        parsed_name pn(val.name);
+        b.out += pn.make(1, b.is_start);
+    }
+
+    message(b, args...);
+}
+
+template <typename... ARGS>
+std::string message(const std::string& tmpl, const ARGS&... args) {
+
+    std::string ret;
+    _buffer b(tmpl, ret);
+
+    message(b, args...);
 
     return ret;
 }
