@@ -240,6 +240,8 @@ struct Monsters {
 
             double v = rng.gauss(0.0, 1.0);
 
+            std::cout << " ++ " << comp.tag << " " << v << " " << comp.chance << std::endl;
+
             if (v <= comp.chance)
                 continue;
 
