@@ -144,6 +144,17 @@ struct inventory_t {
 
     std::string selected_slot;
 
+    struct slot_t {
+        std::string name;
+        std::string letter;
+    };
+
+    std::map<std::string, slot_t> slots;
+
+    inventory_t() {
+        slots["w"] = slot_t{"Weapon", "a"};
+    }
+
     bool get(const std::string& slot, items::Item& ret) {
         auto i = stuff.find(slot);
 
@@ -206,45 +217,14 @@ struct inventory_t {
         place(slot, ftmp);
     }
 
-    std::string name(const std::string& slot) {
-
-        items::Item tmp;
-
-        if (!get(slot, tmp)) {
-            return " - ";
-        }
-
-        const Design& d = designs().get(tmp.tag);
-        return nlp::message("%s", d, tmp.count);
-    }
-
-    std::string floor_name(const items::Items& items, unsigned int x, unsigned int y, unsigned int z) {
-
-        items::Item tmp;
-            
-        if (!items.get(x, y, z, tmp))
-            return " - ";
-
-        const Design& d = designs().get(tmp.tag);
-        return nlp::message("%s", d, tmp.count);
-    }
-
-
-    std::string slot_name(const std::string& slot) {
-
-        if (slot == "w") return "Weapon";
-
-        return "";
-    }
-
     void select_inv_item(std::string& window, const std::string& slot) {
 
         std::ostringstream buf;
 
         buf << "\n"
-            << (char)1 << slot_name(slot) << ":\n"
+            << (char)1 << "WW" << ":\n"
             << "\n"
-            << name(slot) << "\n"
+            << slot << "\n"
             << "\n"
             << "  d) Drop.\n"
             ;
@@ -261,7 +241,7 @@ struct inventory_t {
         buf << "\n"
             << (char)1 << "Floor item:\n"
             << "\n"
-            << floor_name(items, px, py, z) << "\n"
+            << "ZZ" << "\n"
             << "\n"
             << "  t) Take.\n"
             ;
@@ -292,28 +272,51 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
 
-    void show_info(std::string& message, items::Items& items) {
+    void show_info(std::string& m, items::Items& items) {
 
-        std::ostringstream buf;
+        m = nlp::message("\2Player stats:\n"
+                         "  Character level: %d\n"
+                         "  Dungeon level:   %d\n"
+                         "\n"
+                         "\2Inventory:\n",
+                         level, 
+                         worldz+1);
 
-        buf << (char)2 << "Player stats:\n"
-            << "  Character level: " << level << "\n"
-            << "  Dungeon level:   " << worldz+1 << "\n"
-            << "\n"
-            << (char)2 << "Inventory:\n"
-            << "  " << inv.slot_name("w") << ": a) " << inv.name("w") << "\n"
-            << "\n"
-            << (char)2 << "Floor items:\n"
-            ;
+        for (const auto& slot : inv.slots) {
+
+            items::Item tmp;
+
+            if (!inv.get(slot.first, tmp)) 
+                continue;
+
+            const Design& d = designs().get(tmp.tag);
+
+            m += nlp::message("  %s: %s) %S\n", 
+                              slot.second.name,
+                              slot.second.letter,
+                              nlp::count(), d, tmp.count);
+        }
+
+        m += nlp::message("\n"
+                          "\2Floor items:\n");
 
         size_t nz = items.stack_size(px, py);
+        char letter = 'j';
 
         for (size_t z = 0; z < nz; ++z) {
 
-            buf << "          " << (char)('b'+z) << ") " << inv.floor_name(items, px, py, z) << "\n";
-        }
+            items::Item tmp;
 
-        message = buf.str();
+            if (!items.get(px, py, z, tmp))
+                throw std::runtime_error("sanity error");
+
+            const Design& d = designs().get(tmp.tag);
+
+            m += nlp::message("          %c) %S\n",
+                              letter,
+                              nlp::count(), d, tmp.count);
+            ++letter;
+        }
     }
 };
 
@@ -603,7 +606,7 @@ struct Game {
 
         state.render.push_hud_line("Health", maudit::color::dim_green,
                                    vp, '-', '+',
-                                   maudit::color::dim_red, maudit::color::dim_blue);
+                                   maudit::color::dim_red, maudit::color::dim_green);
 
         state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
                                    4, '+', maudit::color::bright_green);
@@ -956,8 +959,8 @@ struct Game {
             break;
         }
 
-        if (k.letter >= 'b') {
-            unsigned int i = k.letter - 'b';
+        if (k.letter >= 'j') {
+            unsigned int i = k.letter - 'j';
 
             if (i < state.items.stack_size(p.px, p.py)) {
 

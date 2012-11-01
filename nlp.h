@@ -187,6 +187,8 @@ struct _buffer {
     }
 };
 
+struct count {};
+
 
 void message(_buffer& b) {
 
@@ -194,8 +196,8 @@ void message(_buffer& b) {
     return;
 }
 
-template <typename T, typename... TAIL>
-void message(_buffer& b, const T& val, unsigned int count, const TAIL&... args) {
+template <typename... TAIL>
+void message(_buffer& b, const std::string& s, const TAIL&... args) {
 
     unsigned char c = b.consume();
 
@@ -203,8 +205,90 @@ void message(_buffer& b, const T& val, unsigned int count, const TAIL&... args) 
         return;
 
     if (c == 's') {
+        b.out += s;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, unsigned int v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%zu", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, int v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%zd", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, double v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%g", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, char v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'c') {
+        b.out += v;
+    }
+
+    message(b, args...);
+}
+
+template <typename T, typename... TAIL>
+void message(_buffer& b, count, const T& val, unsigned int count, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 's' || c == 'S') {
+
         parsed_name pn(val.name);
-        b.out += pn.make(count, b.is_start);
+        b.out += pn.make(count, (c == 'S' ? true : b.is_start));
     }
 
     message(b, args...);
