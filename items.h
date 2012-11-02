@@ -126,7 +126,7 @@ struct Items {
         return true;
     }
 
-    bool take(unsigned int x, unsigned int y, unsigned int z, Item& ret) {
+    bool take(unsigned int x, unsigned int y, unsigned int z, Item& ret, grender::Grid& grid) {
         auto i = stuff.find(pt(x, y));
 
         if (i == stuff.end() || z >= i->second.size()) {
@@ -140,13 +140,17 @@ struct Items {
         if (i->second.empty())
             stuff.erase(i);
         
+        grid.invalidate(x, y);
+
         return true;
     }
 
-    void place(unsigned int x, unsigned int y, const Item& i) {
+    void place(unsigned int x, unsigned int y, const Item& i, grender::Grid& grid) {
         auto& v = stuff[pt(x, y)];
         v.push_back(i);
         v.back().xy = pt(x, y);
+
+        grid.invalidate(x, y);
     }
 
     void dispose(counters::Counts& counts) {

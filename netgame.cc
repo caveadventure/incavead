@@ -96,15 +96,25 @@ void init_statics() {
 
     ////
 
-    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green, "w");
+    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green, "w",
+                 "A twig from a dry, bleached branch.\n"
+                 "Can be used as an extremely ineffective melee weapon.");
 
-    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white, "w");
+    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white, "w",
+                 "A fist-sized rock.\n"
+                 "Can be used as an ineffective melee or projectile weapon.");
 
-    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green, "");
+    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green, "",
+                 "Part of a washed up, bleached tree.\n"
+                 "A useless item.");
 
-    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow, "");
+    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow, "",
+                 "A dry leaf from a tree.\n"
+                 "A useless item.");
 
-    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white, "w");
+    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white, "w",
+                 "A discarded, rusty sword.\n"
+                 "Can be used a melee weapon.");
 
     ////
 
@@ -143,6 +153,7 @@ struct inventory_t {
     std::unordered_map<std::string, items::Item> stuff;
 
     std::string selected_slot;
+    unsigned int selected_floor_item;
 
     struct slot_t {
         std::string name;
@@ -188,65 +199,85 @@ struct inventory_t {
         stuff[slot] = i;
     }
 
-    bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items) {
+    bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items, 
+                      grender::Grid& grid) {
 
         items::Item tmp;
 
         if (!take(slot, tmp))
             return false;
 
-        items.place(x, y, tmp);
+        items.place(x, y, tmp, grid);
         return true;
     }
 
-    bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items) {
+    bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items, 
+                      grender::Grid& grid) {
 
         items::Item ftmp;
 
-        if (!items.take(x, y, z, ftmp))
+        if (!items.take(x, y, z, ftmp, grid))
             return false;
 
         const std::string& slot = designs().get(ftmp.tag).slot;
 
+        if (slots.count(slot) == 0)
+            return false;
+
         items::Item itmp;
 
         if (take(slot, itmp)) {
-            items.place(x, y, itmp);
+            items.place(x, y, itmp, grid);
         }
 
         place(slot, ftmp);
+        return true;
     }
 
     void select_inv_item(std::string& window, const std::string& slot) {
+        
+        items::Item tmp;
 
-        std::ostringstream buf;
+        if (!get(slot, tmp))
+            throw std::runtime_error("sanity error");
 
-        buf << "\n"
-            << (char)1 << "WW" << ":\n"
-            << "\n"
-            << slot << "\n"
-            << "\n"
-            << "  d) Drop.\n"
-            ;
+        const Design& d = designs().get(tmp.tag);
 
-        window = buf.str();
+        window = nlp::message("\n"
+                              "\3%S\1: (in your inventory)\n"
+                              "\n"
+                              "%s\n"
+                              "\n"
+                              "  \2d\1) Drop.\n",
+                              nlp::count(), d, tmp.count,
+                              d.descr);
+
         selected_slot = slot;
     }
 
     void select_floor_item(std::string& window, items::Items& items,
                            unsigned int px, unsigned int py, unsigned int z) {
 
-        std::ostringstream buf;
+        items::Item tmp;
 
-        buf << "\n"
-            << (char)1 << "Floor item:\n"
-            << "\n"
-            << "ZZ" << "\n"
-            << "\n"
-            << "  t) Take.\n"
-            ;
+        if (!items.get(px, py, z, tmp))
+            throw std::runtime_error("sanity error");
 
-        window = buf.str();
+        const Design& d = designs().get(tmp.tag);
+
+        window = nlp::message("\n"
+                              "\3%S\1: (on the floor)\n"
+                              "\n"
+                              "%s\n"
+                              "\n",
+                              nlp::count(), d, tmp.count,
+                              d.descr);
+
+        if (slots.count(d.slot) != 0) {
+            window += "  \2t\1) Take.\n";
+        }
+
+        selected_floor_item = z;
     }
     
 };
@@ -291,7 +322,7 @@ struct Player {
 
             const Design& d = designs().get(tmp.tag);
 
-            m += nlp::message("  %s: %s) %S\n", 
+            m += nlp::message("  %s: \2%s\1) %S\n", 
                               slot.second.name,
                               slot.second.letter,
                               nlp::count(), d, tmp.count);
@@ -312,7 +343,7 @@ struct Player {
 
             const Design& d = designs().get(tmp.tag);
 
-            m += nlp::message("          %c) %S\n",
+            m += nlp::message("          \2%c\1) %S\n",
                               letter,
                               nlp::count(), d, tmp.count);
             ++letter;
@@ -758,10 +789,8 @@ struct Game {
             state.render.do_message(nlp::message("You see %s.", d));
 
         } else if (nstack > 1) {
-            std::ostringstream tmp;
-            tmp << "You see " << nstack << " items here.";
 
-            state.render.do_message(tmp.str());
+            state.render.do_message(nlp::message("You see %d items here.", nstack));
 
         } else {
             features::Feature feat;
@@ -952,7 +981,7 @@ struct Game {
             if (!p.inv.valid("w")) return;
 
             p.inv.select_inv_item(state.message_window, "w");
-            state.window_stack.back() = (unsigned int)screens_t::inv_item;
+            state.window_stack.push_back((unsigned int)screens_t::inv_item);
             return;
 
         default:
@@ -965,7 +994,7 @@ struct Game {
             if (i < state.items.stack_size(p.px, p.py)) {
 
                 p.inv.select_floor_item(state.message_window, state.items, p.px, p.py, i);
-                state.window_stack.back() = (unsigned int)screens_t::floor_item;
+                state.window_stack.push_back((unsigned int)screens_t::floor_item);
                 return;
             }
         }
@@ -977,12 +1006,25 @@ struct Game {
                                size_t& ticks, bool& done, bool& dead, bool& regen, 
                                maudit::keypress k) {
 
+        if (k.letter == 'd') {
+            p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
+            state.window_stack.clear();
+            return;
+        }
+
         state.window_stack.pop_back();
     }
 
     void handle_input_floor_item(mainloop::GameState& state,
                                  size_t& ticks, bool& done, bool& dead, bool& regen, 
                                  maudit::keypress k) {
+
+        if (k.letter == 't') {
+            if (p.inv.floor_to_inv(p.px, p.py, p.inv.selected_floor_item, state.items, state.render)) {
+                state.window_stack.clear();
+                return;
+            }
+        }
 
         state.window_stack.pop_back();
     }
