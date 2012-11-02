@@ -69,33 +69,13 @@ void init_statics() {
       16 abstract
     */
     
-    /*
-    init_species("moss1", 0, 150, "pond scum", "x", maudit::color::bright_green, 
-                 Species::habitat_t::shoreline, Species::ai_t::none, Species::move_t::any, 0);
-
-    init_species("moss2", 0, 150, "lichen", "x", maudit::color::dim_white, 
-                 Species::habitat_t::corner, Species::ai_t::none, Species::move_t::any, 0);
-
-    init_species("peasant", 0, 100, "dirty peasant", "h", maudit::color::dim_green, 
-                 Species::habitat_t::clumped_floor, Species::ai_t::seek_player, Species::move_t::any, 8);
-
-    init_species("cavefish", 0, 100, "cavefish", "f", maudit::color::bright_white, 
-                 Species::habitat_t::clumped_water, Species::ai_t::seek_player, Species::move_t::water, 8);
-
-    init_species("vagrant", 1, 75, "vagrant", "h", maudit::color::dim_red,
-                 Species::habitat_t::walk, Species::ai_t::seek_player, Species::move_t::any, 12);
-
-    init_species("pirahna", 1, 90, "pirahna", "f", maudit::color::dim_cyan,
-                 Species::habitat_t::clumped_water, Species::ai_t::seek_player, Species::move_t::water, 20);
-
-    init_species("knight", 2, 60, "knight errant", "h", maudit::color::dim_white,
-                 Species::habitat_t::corner, Species::ai_t::seek_player, Species::move_t::any, 22);
-    */
 
     configparser::parse_config("species.cfg");
 
-    ////
+    configparser::parse_config("designs.cfg");
 
+    ////
+    /*
     init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green, "w",
                  "A twig from a dry, bleached branch.\n"
                  "Can be used as an extremely ineffective melee weapon.");
@@ -115,7 +95,7 @@ void init_statics() {
     init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white, "w",
                  "A discarded, rusty sword.\n"
                  "Can be used a melee weapon.");
-
+    */
     ////
 
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
@@ -234,7 +214,8 @@ struct inventory_t {
         return true;
     }
 
-    void select_inv_item(std::string& window, const std::string& slot) {
+    std::string select_inv_item(const std::string& slot) {
+        std::string window;
         
         items::Item tmp;
 
@@ -253,10 +234,12 @@ struct inventory_t {
                               d.descr);
 
         selected_slot = slot;
+
+        return window;
     }
 
-    void select_floor_item(std::string& window, items::Items& items,
-                           unsigned int px, unsigned int py, unsigned int z) {
+    std::string select_floor_item(items::Items& items, unsigned int px, unsigned int py, unsigned int z) {
+        std::string window;
 
         items::Item tmp;
 
@@ -278,6 +261,8 @@ struct inventory_t {
         }
 
         selected_floor_item = z;
+
+        return window;
     }
     
 };
@@ -303,7 +288,8 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
 
-    void show_info(std::string& m, items::Items& items) {
+    std::string show_info(items::Items& items) {
+        std::string m;
 
         m = nlp::message("\2Player stats:\n"
                          "  Character level: %d\n"
@@ -348,6 +334,8 @@ struct Player {
                               nlp::count(), d, tmp.count);
             ++letter;
         }
+
+        return m;
     }
 };
 
@@ -939,13 +927,11 @@ struct Game {
             break;
 
         case 'i':
-            p.show_info(state.message_window, state.items);
-            state.window_stack.push_back((unsigned int)screens_t::inventory);
+            state.push_window(p.show_info(state.items), screens_t::inventory);
             break;
 
         case 'P':
-            state.message_window = state.render.all_messages();
-            state.window_stack.push_back((unsigned int)screens_t::messages);
+            state.push_window(state.render.all_messages(), screens_t::messages);
             break;
         }
 
@@ -979,9 +965,7 @@ struct Game {
 
         case 'a':
             if (!p.inv.valid("w")) return;
-
-            p.inv.select_inv_item(state.message_window, "w");
-            state.window_stack.push_back((unsigned int)screens_t::inv_item);
+            state.push_window(p.inv.select_inv_item("w"), screens_t::inv_item);
             return;
 
         default:
@@ -993,8 +977,7 @@ struct Game {
 
             if (i < state.items.stack_size(p.px, p.py)) {
 
-                p.inv.select_floor_item(state.message_window, state.items, p.px, p.py, i);
-                state.window_stack.push_back((unsigned int)screens_t::floor_item);
+                state.push_window(p.inv.select_floor_item(state.items, p.px, p.py, i), screens_t::floor_item);
                 return;
             }
         }
@@ -1043,7 +1026,7 @@ struct Game {
             return;
         }
 
-        switch ((screens_t)state.window_stack.back()) {
+        switch ((screens_t)state.window_stack.back().type) {
 
         case screens_t::messages:
             handle_input_messages(state, k);

@@ -221,6 +221,23 @@ void message(_buffer& b, unsigned int v, const TAIL&... args) {
 
     if (c == 'd') {
         char tmp[256];
+        ::snprintf(tmp, 255, "%zu", (size_t)v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, size_t v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
         ::snprintf(tmp, 255, "%zu", v);
         b.out += tmp;
     }
@@ -238,7 +255,7 @@ void message(_buffer& b, int v, const TAIL&... args) {
 
     if (c == 'd') {
         char tmp[256];
-        ::snprintf(tmp, 255, "%zd", v);
+        ::snprintf(tmp, 255, "%zd", (ssize_t)v);
         b.out += tmp;
     }
 

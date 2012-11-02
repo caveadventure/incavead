@@ -35,8 +35,21 @@ struct GameState {
     items::Items items;
     features::Features features;
 
-    std::string message_window;
-    std::vector<unsigned int> window_stack;
+    struct window_t {
+        std::string message;
+        unsigned int type;
+        
+        window_t() : type(0) {}
+        
+        window_t(const std::string& s, unsigned int t) : message(s), type(t) {}
+    };
+
+    std::vector<window_t> window_stack;
+
+    template <typename T>
+    void push_window(const std::string& m, T t) {
+        window_stack.push_back(window_t{m, (unsigned int)t});
+    }
 };
 
 
@@ -236,7 +249,7 @@ struct Main {
 
             while (state.window_stack.size() > 0) {
 
-                k = state.render.draw_window(screen, view_w, view_h, state.message_window);
+                k = state.render.draw_window(screen, view_w, view_h, state.window_stack.back().message);
 
                 game.handle_input(state, ticks, done, dead, regen, k);
             }

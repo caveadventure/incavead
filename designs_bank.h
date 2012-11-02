@@ -14,11 +14,21 @@ struct DesignsBank {
               ARGS... args) {
 
         if (bank.count(tag) != 0) {
-            throw std::runtime_error("Duplicate designs tag: " + tag);
+            throw std::runtime_error("Duplicate design tag: " + tag);
         }
 
         bank[tag] = Design(tag, level, count, std::forward<ARGS>(args)...);
         counts.init(tag, level, count);
+    }
+
+    void copy(const Design& d) {
+
+        if (bank.count(d.tag) != 0) {
+            throw std::runtime_error("Duplicate design tag: " + d.tag);
+        }
+
+        bank[d.tag] = d;
+        counts.init(d.tag, d.level, d.count);
     }
 
     const Design& get(const std::string& tag) const {
@@ -42,8 +52,12 @@ const DesignsBank& designs() {
 }
 
 template <typename... ARGS>
-void init_designs(ARGS... args) {
+void init_design(ARGS... args) {
     __designs__().init(std::forward<ARGS>(args)...);
+}
+
+void init_design_copy(const Design& d) {
+    __designs__().copy(d);
 }
 
 #endif

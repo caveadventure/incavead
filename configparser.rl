@@ -62,6 +62,19 @@ inline void print_species(const Species& s) {
     init_species_copy(s);
 }
 
+inline void print_design(const Design& d) {
+    std::cout << "  tag: " << d.tag << std::endl;
+    std::cout << "  name: " << d.name << std::endl;
+    std::cout << "  skin: " << d.skin.text << " " << (int)d.skin.fore << " " << (int)d.skin.back << std::endl;
+    std::cout << "  level: " << d.level << std::endl;
+    std::cout << "  count: " << d.count << std::endl;
+    std::cout << "  descr: " << d.descr << std::endl;
+    std::cout << "  attack: " << d.attack << std::endl;
+    std::cout << "  defense: " << d.defense << std::endl;
+
+    init_design_copy(d);
+}
+
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
 }
@@ -81,6 +94,9 @@ void parse_config(const std::string& filename) {
     ragel_state state;
 
     Species spe;
+    Design des;
+
+    maudit::glyph skin;
 
     %%{
 
@@ -116,28 +132,35 @@ void parse_config(const std::string& filename) {
         #/* 34 is the double quote character, the only reason for writing it like this is to make Emacs happy */
         quote = 34;
 
-        strdata = ('\\"' | ^quote)*  
-            >start $push;
+        strchar = ( (^ (quote | '\\') $push) |
+                    ('\\"'            %{ state.match += '"'; }) |
+                    ('\\n'            %{ state.match += '\n'; }) |
+                    ('\\'             %{ state.match += '\\'; }) );
 
-        string = '"' strdata '"';
+        strdata = strchar*;
+
+        string = '"' strdata '"'
+            >start;
 
 
         colorname = 
             'black'   | 
-            'red'     %{ add_color(spe.skin.fore, 1); } | 
-            'green'   %{ add_color(spe.skin.fore, 2); } | 
-            'yellow'  %{ add_color(spe.skin.fore, 3); } | 
-            'blue'    %{ add_color(spe.skin.fore, 4); } | 
-            'magenta' %{ add_color(spe.skin.fore, 5); } | 
-            'cyan'    %{ add_color(spe.skin.fore, 6); } | 
-            'white'   %{ add_color(spe.skin.fore, 7); } ;
+            'red'     %{ add_color(skin.fore, 1); } | 
+            'green'   %{ add_color(skin.fore, 2); } | 
+            'yellow'  %{ add_color(skin.fore, 3); } | 
+            'blue'    %{ add_color(skin.fore, 4); } | 
+            'magenta' %{ add_color(skin.fore, 5); } | 
+            'cyan'    %{ add_color(skin.fore, 6); } | 
+            'white'   %{ add_color(skin.fore, 7); } ;
 
         color = 
             ('none') | 
-            ('dim'    %{ spe.skin.fore = maudit::color::dim_black; }    sep colorname) | 
-            ('bright' %{ spe.skin.fore = maudit::color::bright_black; } sep colorname) ;
+            ('dim'    %{ skin.fore = maudit::color::dim_black; }    sep colorname) | 
+            ('bright' %{ skin.fore = maudit::color::bright_black; } sep colorname) ;
 
-        skin = string %{ spe.skin.text = state.match; } ws1 color;
+        skin = string %{ skin.text = state.match; } ws1 color;
+
+        ####
 
         habitat = 
             'walk'              %{ spe.habitat = Species::habitat_t::walk; }              | 
@@ -161,7 +184,7 @@ void parse_config(const std::string& filename) {
 
         species_count     = 'count'     ws1 number  %{ spe.count = ::atoi(state.match.c_str()); } ;
         species_name      = 'name'      ws1 string  %{ spe.name = state.match; } ;
-        species_skin      = 'skin'      ws1 skin    ;
+        species_skin      = 'skin'      ws1 skin    %{ spe.skin = skin; };
         species_habitat   = 'habitat'   ws1 habitat ;
         species_ai        = 'ai'        ws1 ai      ;
         species_idle_ai   = 'idle_ai'   ws1 idle_ai ;
@@ -188,7 +211,7 @@ void parse_config(const std::string& filename) {
             %{ fret; })
             ;
 
-      one_species :=  (ws species_one_data ws ';')+
+        one_species :=  (ws species_one_data ws ';')+
             ;
 
         species_level = number %{ spe.level = ::atoi(state.match.c_str()); }
@@ -204,7 +227,42 @@ void parse_config(const std::string& filename) {
             %{ std::cout << "species done: " << std::endl; print_species(spe); }
             ;
 
-      main := (ws species)+ ws ;
+        ####
+
+        design_count     = 'count'     ws1 number  %{ des.count = ::atoi(state.match.c_str()); } ;
+        design_name      = 'name'      ws1 string  %{ des.name = state.match; } ;
+        design_skin      = 'skin'      ws1 skin    %{ des.skin = skin; };
+        design_slot      = 'slot'      ws1 string  %{ des.slot = state.match; } ;
+        design_descr     = 'descr'     ws1 string  %{ des.descr = state.match; } ;
+        design_attack    = 'attack'    ws1 real %{ des.attack = ::atof(state.match.c_str()); } ;
+        design_defense   = 'defense'   ws1 real %{ des.defense = ::atof(state.match.c_str()); } ;
+
+        design_one_data = 
+            (design_count | design_name | design_skin | design_slot | design_descr |
+            design_attack | design_defense |
+            '}'
+            %{ fret; })
+            ;
+            
+        one_design :=  (ws design_one_data ws ';')+
+            ;
+
+        design_level = number %{ des.level = ::atoi(state.match.c_str()); }
+        ;
+
+        design_tag   = tag    %{ des.tag = state.match; }
+        ;
+
+        design =
+            'design' ${ des = Design(); }
+            ws1 design_level ws1 design_tag ws
+            '{' ${fcall one_design;}
+            %{ std::cout << "design done: " << std::endl; print_design(des); }
+            ;
+
+        entry = species | design ;
+            
+      main := (ws entry)+ ws ;
         
     }%%
 /*
