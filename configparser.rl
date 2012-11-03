@@ -132,15 +132,18 @@ void parse_config(const std::string& filename) {
         #/* 34 is the double quote character, the only reason for writing it like this is to make Emacs happy */
         quote = 34;
 
-        strchar = ( (^ (quote | '\\') $push) |
-                    ('\\"'            %{ state.match += '"'; }) |
-                    ('\\n'            %{ state.match += '\n'; }) |
-                    ('\\'             %{ state.match += '\\'; }) );
+        strchar_escape := 
+            ( ('"'   ${ state.match += '"';  fret; }) |
+              ('n'   ${ state.match += '\n'; fret; }) |
+              ('\\'  ${ state.match += '\\'; fret; }) )
+            ;
+
+        strchar = ( (^ (quote | '\\') $push ) |
+                    ('\\'             ${fcall strchar_escape;} ) );
 
         strdata = strchar*;
 
-        string = '"' strdata '"'
-            >start;
+        string = '"' >start strdata '"';
 
 
         colorname = 

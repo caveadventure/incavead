@@ -264,6 +264,26 @@ struct inventory_t {
 
         return window;
     }
+
+    template <typename T>
+    T get_inv_sum(T Design::* ptr) {
+        T ret{};
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+            ret += dp.*ptr;
+        }
+
+        return ret;
+    }
+
+    double get_attack() {
+        return get_inv_sum(&Design::attack);
+    }
+    
+    double get_defense() {
+        return get_inv_sum(&Design::defense);
+    }
     
 };
 
@@ -308,7 +328,7 @@ struct Player {
 
             const Design& d = designs().get(tmp.tag);
 
-            m += nlp::message("  %s: \2%s\1) %S\n", 
+            m += nlp::message("   %s: \2%s\1) %S\n", 
                               slot.second.name,
                               slot.second.letter,
                               nlp::count(), d, tmp.count);
@@ -730,8 +750,15 @@ struct Game {
 
         const Species& s = species().get(mon.tag);
 
+        double attack = p.inv.get_attack();
+
+        if (attack == 0) {
+            state.render.do_message("You can't attack without a weapon!", true);
+            return false;
+        }
+
         double v = roll_attack(state.rng,
-                               s.defense, s.level+1, 3.0, 1);
+                               s.defense, s.level+1, attack, p.level);
 
         if (v > 0) {
 
@@ -753,8 +780,10 @@ struct Game {
 
     void defend(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
+        double defense = p.inv.get_defense();
+
         double v = roll_attack(state.rng, 
-                               1.0, 1, s.attack, s.level+1);
+                               defense, p.level, s.attack, s.level+1);
 
         if (v > 0) {
             p.health.dec(v);
@@ -991,6 +1020,8 @@ struct Game {
 
         if (k.letter == 'd') {
             p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
+
+            ticks++;
             state.window_stack.clear();
             return;
         }
@@ -1004,6 +1035,8 @@ struct Game {
 
         if (k.letter == 't') {
             if (p.inv.floor_to_inv(p.px, p.py, p.inv.selected_floor_item, state.items, state.render)) {
+
+                ticks++;
                 state.window_stack.clear();
                 return;
             }
