@@ -136,14 +136,23 @@ struct inventory_t {
     unsigned int selected_floor_item;
 
     struct slot_t {
+        std::string slot;
         std::string name;
-        std::string letter;
+        char letter;
     };
 
     std::map<std::string, slot_t> slots;
+    std::map<char, std::string> slot_keys;
 
     inventory_t() {
-        slots["w"] = slot_t{"Weapon", "a"};
+        make_slot(slot_t{"w", "Weapon", 'a'});
+        make_slot(slot_t{"s", "Shield", 'b'});
+        make_slot(slot_t{"a", "Armour", 'c'});
+    }
+
+    void make_slot(const slot_t& s) {
+        slots[s.slot] = s;
+        slot_keys[s.letter] = s.slot;
     }
 
     bool get(const std::string& slot, items::Item& ret) {
@@ -175,8 +184,45 @@ struct inventory_t {
         return true;
     }
 
-    void place(const std::string& slot, const items::Item& i) {
-        stuff[slot] = i;
+    bool place(const std::string& slot, const items::Item& i, items::Item& old) {
+
+        auto j = stuff.find(slot);
+
+        if (j == stuff.end()) {
+            stuff[slot] = i;
+            return false;
+        }
+
+        items::Item& o = j->second;
+
+        const Design& d = designs().get(o.tag);
+
+        if (o.tag == i.tag) {
+
+            if (o.count < d.stackrange) {
+            
+                unsigned int n = std::min(i.count, d.stackrange - o.count);
+
+                o.count += n;
+
+                if (n == i.count) {
+                    return false;
+
+                } else {
+                    old = i;
+                    old.count -= n;
+                    return true;
+                }
+
+            } else {
+                old = i;
+                return true;
+            }
+        }
+
+        old = o;
+        o = i;
+        return true;
     }
 
     bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items, 
@@ -206,11 +252,10 @@ struct inventory_t {
 
         items::Item itmp;
 
-        if (take(slot, itmp)) {
+        if (place(slot, ftmp, itmp)) {
             items.place(x, y, itmp, grid);
         }
 
-        place(slot, ftmp);
         return true;
     }
 
@@ -271,7 +316,8 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
-            ret += dp.*ptr;
+
+            ret += (dp.*ptr) * i.second.count;
         }
 
         return ret;
@@ -328,7 +374,7 @@ struct Player {
 
             const Design& d = designs().get(tmp.tag);
 
-            m += nlp::message("   %s: \2%s\1) %S\n", 
+            m += nlp::message("   %s: \2%c\1) %S\n", 
                               slot.second.name,
                               slot.second.letter,
                               nlp::count(), d, tmp.count);
@@ -989,6 +1035,8 @@ struct Game {
     void handle_input_inventory(mainloop::GameState& state,
                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
                                 maudit::keypress k) {
+
+        
 
         switch (k.letter) {
 

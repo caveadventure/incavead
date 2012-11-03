@@ -146,11 +146,38 @@ struct Items {
     }
 
     void place(unsigned int x, unsigned int y, const Item& i, grender::Grid& grid) {
-        auto& v = stuff[pt(x, y)];
-        v.push_back(i);
-        v.back().xy = pt(x, y);
 
         grid.invalidate(x, y);
+
+        auto j = stuff.find(pt(x, y));
+
+        if (j == stuff.end()) {
+
+            auto& v = stuff[pt(x, y)];
+            v.push_back(i);
+            v.back().xy = pt(x, y);
+            return;
+        }
+
+        const Design& d = designs().get(i.tag);
+        unsigned int icount = i.count;
+
+        for (Item& it : j->second) {
+
+            if (it.tag == i.tag && it.count < d.stackrange) {
+
+                unsigned int n = std::min(icount, d.stackrange - it.count);
+                it.count += n;
+                icount -= n;
+
+                if (icount == 0)
+                    return;
+            }
+        }
+
+        j->second.push_back(i);
+        j->second.back().xy = pt(x, y);
+        j->second.back().count = icount;
     }
 
     void dispose(counters::Counts& counts) {

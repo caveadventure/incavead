@@ -110,7 +110,6 @@ struct parsed_name {
             ::snprintf(tmp, 255, "%zu", n);
 
             ret = tmp;
-            ret += ' ';
             ret += make_many();
         }
 

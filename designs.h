@@ -20,7 +20,9 @@ struct Design {
     double attack;
     double defense;
 
-    Design() : level(0), count(0), attack(0), defense(0) {}
+    unsigned int stackrange;
+
+    Design() : level(0), count(0), attack(0), defense(0), stackrange(0) {}
 
 };
 

@@ -232,17 +232,18 @@ void parse_config(const std::string& filename) {
 
         ####
 
-        design_count     = 'count'     ws1 number  %{ des.count = ::atoi(state.match.c_str()); } ;
-        design_name      = 'name'      ws1 string  %{ des.name = state.match; } ;
-        design_skin      = 'skin'      ws1 skin    %{ des.skin = skin; };
-        design_slot      = 'slot'      ws1 string  %{ des.slot = state.match; } ;
-        design_descr     = 'descr'     ws1 string  %{ des.descr = state.match; } ;
-        design_attack    = 'attack'    ws1 real %{ des.attack = ::atof(state.match.c_str()); } ;
-        design_defense   = 'defense'   ws1 real %{ des.defense = ::atof(state.match.c_str()); } ;
+        design_count      = 'count'      ws1 number  %{ des.count = ::atoi(state.match.c_str()); } ;
+        design_name       = 'name'       ws1 string  %{ des.name = state.match; } ;
+        design_skin       = 'skin'       ws1 skin    %{ des.skin = skin; };
+        design_slot       = 'slot'       ws1 string  %{ des.slot = state.match; } ;
+        design_descr      = 'descr'      ws1 string  %{ des.descr = state.match; } ;
+        design_attack     = 'attack'     ws1 real    %{ des.attack = ::atof(state.match.c_str()); } ;
+        design_defense    = 'defense'    ws1 real    %{ des.defense = ::atof(state.match.c_str()); } ;
+        design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = ::atoi(state.match.c_str()); };
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
-            design_attack | design_defense |
+            design_attack | design_defense | design_stackrange |
             '}'
             %{ fret; })
             ;
