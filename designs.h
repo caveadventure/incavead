@@ -22,7 +22,11 @@ struct Design {
 
     unsigned int stackrange;
 
-    Design() : level(0), count(0), attack(0), defense(0), stackrange(0) {}
+    double heal;
+
+    bool usable;
+
+    Design() : level(0), count(0), attack(0), defense(0), stackrange(0), heal(0), usable(false) {}
 
 };
 

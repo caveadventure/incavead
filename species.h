@@ -62,6 +62,15 @@ struct Species {
 
     std::vector<companion_t> companion;
 
+    struct drop_t {
+        std::string tag;
+        double chance;
+
+        drop_t(const std::string& t = "", double c = 0.0) : tag(t), chance(c) {}
+    };
+
+    std::vector<drop_t> drop;
+
     double attack;
     double defense;
 

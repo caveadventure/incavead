@@ -206,10 +206,15 @@ void parse_config(const std::string& filename) {
             ws1 real   %{ spe.companion.back().chance = ::atof(state.match.c_str()); }
             ;
 
+        species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }
+            ws1 string %{ spe.drop.back().tag = state.match; }
+            ws1 real   %{ spe.drop.back().chance = ::atof(state.match.c_str()); }
+            ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
-            species_companion | species_attack | species_defense |
+            species_companion | species_attack | species_defense | species_drop |
             '}'
             %{ fret; })
             ;
@@ -240,10 +245,12 @@ void parse_config(const std::string& filename) {
         design_attack     = 'attack'     ws1 real    %{ des.attack = ::atof(state.match.c_str()); } ;
         design_defense    = 'defense'    ws1 real    %{ des.defense = ::atof(state.match.c_str()); } ;
         design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = ::atoi(state.match.c_str()); };
+        design_heal       = 'heal'       ws1 real    %{ des.heal = ::atof(state.match.c_str()); };
+        design_usable     = 'usable'                 %{ des.usable = true; };
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
-            design_attack | design_defense | design_stackrange |
+            design_attack | design_defense | design_stackrange | design_heal | design_usable |
             '}'
             %{ fret; })
             ;
@@ -297,6 +304,13 @@ void parse_config(const std::string& filename) {
         }
 
         %% write exec;
+
+        // Avoid spurious gcc warnings.
+        (void)ConfigParser_first_final;
+        (void)ConfigParser_en_strchar_escape;
+        (void)ConfigParser_en_one_species;
+        (void)ConfigParser_en_one_design;
+        (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {
             throw std::runtime_error("Parse error. Unconsumed input: " + std::string(state.p, state.pe));

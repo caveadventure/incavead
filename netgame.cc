@@ -148,6 +148,7 @@ struct inventory_t {
         make_slot(slot_t{"w", "Weapon", 'a'});
         make_slot(slot_t{"s", "Shield", 'b'});
         make_slot(slot_t{"a", "Armour", 'c'});
+        make_slot(slot_t{"f", "Edible", 'd'});
     }
 
     void make_slot(const slot_t& s) {
@@ -155,7 +156,7 @@ struct inventory_t {
         slot_keys[s.letter] = s.slot;
     }
 
-    bool get(const std::string& slot, items::Item& ret) {
+    bool get(const std::string& slot, items::Item& ret) const {
         auto i = stuff.find(slot);
 
         if (i == stuff.end())
@@ -173,14 +174,27 @@ struct inventory_t {
         return true;
     }
 
-    bool take(const std::string& slot, items::Item& ret) {
+    bool take(const std::string& slot, items::Item& ret, unsigned int count = 0) {
         auto i = stuff.find(slot);
 
         if (i == stuff.end())
             return false;
 
         ret = i->second;
-        stuff.erase(i);
+
+        if (count == 0) {
+            stuff.erase(i);
+
+        } else {
+            unsigned int n = std::min(i->second.count, count);
+            ret.count = n;
+            i->second.count -= n;
+
+            if (i->second.count == 0) {
+                stuff.erase(i);
+            }
+        }
+
         return true;
     }
 
@@ -277,6 +291,10 @@ struct inventory_t {
                               "  \2d\1) Drop.\n",
                               nlp::count(), d, tmp.count,
                               d.descr);
+
+        if (d.usable) {
+            window += nlp::message("  \2a)\1 Apply or use this item.\n");
+        }
 
         selected_slot = slot;
 
@@ -384,7 +402,7 @@ struct Player {
                           "\2Floor items:\n");
 
         size_t nz = items.stack_size(px, py);
-        char letter = 'j';
+        char letter = '1';
 
         for (size_t z = 0; z < nz; ++z) {
 
@@ -395,13 +413,35 @@ struct Player {
 
             const Design& d = designs().get(tmp.tag);
 
-            m += nlp::message("          \2%c\1) %S\n",
+            m += nlp::message("           \2%c\1) %S\n",
                               letter,
                               nlp::count(), d, tmp.count);
             ++letter;
         }
 
         return m;
+    }
+
+    bool apply_item(const std::string& slot, grender::Grid& render) {
+
+        items::Item tmp;
+        
+        if (!inv.take(slot, tmp, 1))
+            return false;
+
+        const Design& d = designs().get(tmp.tag);
+
+        if (!d.usable)
+            return false;
+
+        if (d.heal > 0) {
+
+            health.inc(d.heal);
+            render.do_message(nlp::message("You feel better. %d %d", d.heal, health.val));
+            return true;
+        } 
+
+        return false;
     }
 };
 
@@ -792,6 +832,35 @@ struct Game {
         return std::max(a - d, 0.0);
     }
 
+    void monster_kill(mainloop::GameState& state, const monsters::Monster& mon, const Species& s, 
+                      double dmg) {
+
+        for (const auto& drop : s.drop) {
+            double v = state.rng.gauss(0.0, 1.0);
+
+            std::cout << "?? " << v << " " << drop.chance << std::endl;
+
+            if (v <= drop.chance)
+                continue;
+
+            state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
+        }
+
+        if (s.ai == Species::ai_t::none)
+            return;
+
+        if (s.level > p.level) {
+            p.level = s.level;
+            state.render.do_message(nlp::message("You gained level %d!", p.level), true);
+
+        } else if (s.level == p.level) {
+            if (dmg >= 2.8) {
+                ++p.level;
+                state.render.do_message(nlp::message("You gained level %d!", p.level), true);
+            }
+        }
+    }
+
     bool attack(mainloop::GameState& state, const monsters::Monster& mon) {
 
         const Species& s = species().get(mon.tag);
@@ -811,7 +880,10 @@ struct Game {
             state.monsters.change(mon, [v](monsters::Monster& m) { m.health -= v; });
 
             if (mon.health - v < -3) {
+
                 state.render.do_message(nlp::message("You killed %s.", s));
+
+                monster_kill(state, mon, s, v);
 
             } else {
                 state.render.do_message(nlp::message("You hit %s.", s));
@@ -940,12 +1012,6 @@ struct Game {
 
     void rest(mainloop::GameState& state, size_t& ticks) {
 
-        std::ostringstream s;
-
-        s << "[" << p.px << "," << p.py << "] : " << state.grid._get(p.px, p.py);
-
-        state.render.do_message(s.str(), false);
-
         ++ticks;
     }
 
@@ -1001,6 +1067,15 @@ struct Game {
             rest(state, ticks);
             break;
 
+        case ',':
+            if (state.items.stack_size(p.px, p.py) == 0) {
+                state.render.do_message("There are no items here.");
+
+            } else {
+                state.push_window(p.inv.select_floor_item(state.items, p.px, p.py, 0), screens_t::floor_item);
+            }
+            break;
+
         case 'i':
             state.push_window(p.show_info(state.items), screens_t::inventory);
             break;
@@ -1036,21 +1111,17 @@ struct Game {
                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
                                 maudit::keypress k) {
 
+        auto i = p.inv.slot_keys.find(k.letter);
+
+        if (i != p.inv.slot_keys.end() &&
+            p.inv.valid(i->second)) {
         
-
-        switch (k.letter) {
-
-        case 'a':
-            if (!p.inv.valid("w")) return;
-            state.push_window(p.inv.select_inv_item("w"), screens_t::inv_item);
+            state.push_window(p.inv.select_inv_item(i->second), screens_t::inv_item);
             return;
-
-        default:
-            break;
         }
 
-        if (k.letter >= 'j') {
-            unsigned int i = k.letter - 'j';
+        if (k.letter >= '1') {
+            unsigned int i = k.letter - '1';
 
             if (i < state.items.stack_size(p.px, p.py)) {
 
@@ -1068,6 +1139,12 @@ struct Game {
 
         if (k.letter == 'd') {
             p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
+
+            ticks++;
+            state.window_stack.clear();
+            return;
+
+        } else if (k.letter == 'a' && p.apply_item(p.inv.selected_slot, state.render)) {
 
             ticks++;
             state.window_stack.clear();
