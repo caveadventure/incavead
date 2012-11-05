@@ -751,10 +751,15 @@ struct Game {
             return true;
         }
 
+        bool do_random = false;
+
         if (s.ai == Species::ai_t::seek_player &&
             state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
             // Nothing, nxy is good.
+
+        } else if (s.ai == Species::ai_t::random) {
+            do_random = true;
 
         } else {
 
@@ -767,18 +772,22 @@ struct Game {
                 if (dist > p.lightradius + 5)
                     return false;
 
-                std::vector<monsters::pt> tmp = monsters::Monsters::get_walkables(state.neigh, state.grid, s, m.xy);
-
-                if (tmp.empty())
-                    return false;
-
-                nxy = tmp[state.rng.n(tmp.size())];
+                do_random = true;
             }
             break;
 
             default:
                 return false;
             }
+        }
+
+        if (do_random) {
+            std::vector<monsters::pt> tmp = monsters::Monsters::get_walkables(state.neigh, state.grid, s, m.xy);
+
+            if (tmp.empty())
+                return false;
+
+            nxy = tmp[state.rng.n(tmp.size())];
         }
 
         if (!monsters::Monsters::is_walkable(state.grid, s, nxy))

@@ -174,16 +174,18 @@ void parse_config(const std::string& filename) {
 
         ai = 
             'none'        %{ spe.ai = Species::ai_t::none; }        |
-            'seek_player' %{ spe.ai = Species::ai_t::seek_player; } ;
+            'seek_player' %{ spe.ai = Species::ai_t::seek_player; } |
+            'random'      %{ spe.ai = Species::ai_t::random; }      ;
 
         idle_ai = 
-            'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }        |
+            'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |
             'random' %{ spe.idle_ai = Species::idle_ai_t::random; } ;
 
         move = 
-            'any'   %{ spe.move = Species::move_t::any; }   | 
-            'floor' %{ spe.move = Species::move_t::floor; } | 
-            'water' %{ spe.move = Species::move_t::water; } ;
+            'any'    %{ spe.move = Species::move_t::any; }    | 
+            'floor'  %{ spe.move = Species::move_t::floor; }  | 
+            'water'  %{ spe.move = Species::move_t::water; }  |
+            'corner' %{ spe.move = Species::move_t::corner; } ;
 
         species_count     = 'count'     ws1 number  %{ spe.count = ::atoi(state.match.c_str()); } ;
         species_name      = 'name'      ws1 string  %{ spe.name = state.match; } ;

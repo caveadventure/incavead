@@ -16,7 +16,8 @@ struct Species {
 
     enum class ai_t : unsigned int {
         none,
-        seek_player
+        seek_player,
+        random
     };
 
     enum class idle_ai_t : unsigned int {
@@ -27,7 +28,8 @@ struct Species {
     enum class move_t : unsigned int {
         any,
         floor,
-        water
+        water,
+        corner
     };
 
     std::string tag;
