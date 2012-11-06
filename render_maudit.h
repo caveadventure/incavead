@@ -735,7 +735,7 @@ public:
                         }
 
                         if (x == params.hlx && y == params.hly) {
-                            back = white_color;
+                            back = blue_color;
                         }
 
                         ret = skin(text, fore, back);

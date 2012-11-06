@@ -78,22 +78,6 @@ struct drawing_context_t {
         rangemax(hlx),
         do_hud(true)
         {}
-
-    struct overlay_message_t {
-        std::string message;
-        unsigned int x;
-        unsigned int y;
-        grender::color_t fore;
-        grender::color_t back;
-    };
-
-    std::vector<overlay_message_t> overlay_message;
-
-    void push_overlay_message(unsigned int x, unsigned int y, const std::string& m, 
-                              grender::color_t fore, grender::color_t back) {
-
-        overlay_message.push_back(overlay_message_t{m, x, y, fore, back});
-    }
 };
 
 struct screen_params_t {
@@ -231,10 +215,6 @@ struct Main {
         ctx.view_w = view_w;
         ctx.view_h = view_h;
         game.drawing_context(ctx);
-
-        for (const auto& om : ctx.overlay_message) {
-            state.render.draw_text(om.x, om.y, om.message, om.fore, om.back);
-        }
 
         if (ctx.do_hud) {
             game.draw_hud(state);

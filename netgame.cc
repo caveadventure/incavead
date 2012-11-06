@@ -803,7 +803,9 @@ struct Game {
             p.is_looking = true;
             p.look_x = p.px;
             p.look_y = p.py;
-            center_draw_text(state.render, p.px, p.py, "Use arrow keys to look around");
+            p.look_target = -1;
+            center_draw_text(state.render, p.px, p.py, 
+                             "Use arrow keys to look around; <TAB> to cycle targets");
             break;
         }
 
@@ -852,6 +854,41 @@ struct Game {
         p.look_y = ny;
     }
 
+    void look_cycle(mainloop::GameState& state) {
+
+        (p.look_target)++;
+
+        int n = 0;
+
+        for (const auto& i : state.monsters.mons) {
+            if (!state.render.is_in_fov(i.first.first, i.first.second))
+                continue;
+
+            if (n == p.look_target) {
+                p.look_x = i.first.first;
+                p.look_y = i.first.second;
+                return;
+            }
+
+            ++n;
+        }
+
+        for (const auto& i : state.items.stuff) {
+            if (!state.render.is_in_fov(i.first.first, i.first.second))
+                continue;
+
+            if (n == p.look_target) {
+                p.look_x = i.first.first;
+                p.look_y = i.first.second;
+                return;
+            }
+
+            ++n;
+        }
+
+        p.look_target = -1;
+    }
+
     void handle_input_looking(mainloop::GameState& state, maudit::keypress k) {
 
         int stop = 0;
@@ -880,6 +917,10 @@ struct Game {
             break;
         case 'n':
             look_move(state, 1, 1);
+            break;
+            
+        case '\t':
+            look_cycle(state);
             break;
 
         default:
@@ -922,20 +963,20 @@ struct Game {
         if (!state.render.is_in_fov(x, y)) {
 
         } else if (x == p.px && y == p.py) {
-            msg = "This is you";
+            msg = " This is you";
 
         } else if (state.monsters.get(x, y, mon)) {
-            msg = nlp::message("%s", species().get(mon.tag));
+            msg = nlp::message(" %s", species().get(mon.tag));
 
         } else if (n > 1) {
-            msg = nlp::message("%d items", n);
+            msg = nlp::message(" %d items", n);
 
         } else if (n == 1 && state.items.get(x, y, 0, itm)) {
             
-            msg = nlp::message("%s", designs().get(itm.tag));
+            msg = nlp::message(" %s", designs().get(itm.tag));
         }
 
-        state.render.draw_text(p.look_x+2, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);
+        state.render.draw_text(p.look_x+1, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);
     }
 
 
