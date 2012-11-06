@@ -228,7 +228,7 @@ void message(_buffer& b, unsigned int v, const TAIL&... args) {
 }
 
 template <typename... TAIL>
-void message(_buffer& b, size_t v, const TAIL&... args) {
+void message(_buffer& b, unsigned long v, const TAIL&... args) {
 
     unsigned char c = b.consume();
 

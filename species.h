@@ -17,7 +17,8 @@ struct Species {
     enum class ai_t : unsigned int {
         none,
         seek_player,
-        random
+        random,
+        inrange_random
     };
 
     enum class idle_ai_t : unsigned int {

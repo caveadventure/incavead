@@ -231,6 +231,12 @@ private:
 
 
     skin& _overlay_set(const pt& xy) {
+
+        if (xy.first >= w || xy.second >= h) {
+            static skin tmp;
+            return tmp;
+        }
+
         auto& tmp = overlay[xy.second*w+xy.first];
         tmp.first = current_draw_n;
         return tmp.second;
@@ -552,6 +558,8 @@ public:
 
         unsigned int px = params.px;
         unsigned int py = params.py;
+        unsigned int cx = params.centerx;
+        unsigned int cy = params.centery;
 
         bool ok = screen.refresh(ret_view_w, ret_view_h,
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
@@ -561,8 +569,8 @@ public:
                 ret_view_w = view_w;
                 ret_view_h = view_h;
 
-                voff_x = px - (view_w / 2) + params.voff_off_x;
-                voff_y = py - (view_h / 2) + params.voff_off_y;
+                voff_x = cx - (view_w / 2) + params.voff_off_x;
+                voff_y = cy - (view_h / 2) + params.voff_off_y;
 
                 //
 
@@ -596,14 +604,14 @@ public:
 
                 if (do_hud) {
                     unsigned int hl = 0;
-                    unsigned int hpx = (px > view_w / 2 ? 0 : view_w - 14);
+                    unsigned int hpx = (cx > view_w / 2 ? 0 : view_w - 14);
 
                     for (const auto& hudline : hud_pips) {
                         _draw_pipline(ret_glyphs, hpx, hl, view_w, hudline);
                         ++hl;
                     }
 
-                    if (py > h / 2) {
+                    if (cy > h / 2) {
                         _draw_messages(ret_glyphs, 15, 0, 
                                        view_w,
                                        view_w - 30, 3,
@@ -997,6 +1005,14 @@ public:
         }
     }
 
+    void draw_text(unsigned int x0, unsigned int y0, const std::string& text,
+                   color_t fore, color_t back) {
+
+        for (size_t i = 0; i < text.size(); ++i) {
+
+            _overlay_set(pt(x0+i, y0)) = skin(std::string(1, text[i]), fore, back);
+        }
+    }
 
 
     void do_message(const std::string& msg, bool important = false) {

@@ -173,9 +173,10 @@ void parse_config(const std::string& filename) {
             'shoreline'         %{ spe.habitat = Species::habitat_t::shoreline; }         ; 
 
         ai = 
-            'none'        %{ spe.ai = Species::ai_t::none; }        |
-            'seek_player' %{ spe.ai = Species::ai_t::seek_player; } |
-            'random'      %{ spe.ai = Species::ai_t::random; }      ;
+            'none'           %{ spe.ai = Species::ai_t::none; }           |
+            'seek_player'    %{ spe.ai = Species::ai_t::seek_player; }    |
+            'random'         %{ spe.ai = Species::ai_t::random; }         |
+            'inrange_random' %{ spe.ai = Species::ai_t::inrange_random; } ;
 
         idle_ai = 
             'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |

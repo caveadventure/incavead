@@ -25,29 +25,34 @@
 
 #include "configparser.h"
 
+#include "inventory.h"
+#include "inv_screens.h"
+#include "player.h"
+#include "apply.h"
+
 
 void init_statics() {
 
     /*
       0 kobold caves
-        kobold child
-        kobold farmer
-        kobold warrior
-        female kobold
-        kobold slave 
-        kobold slavedriver
-        kobold miner
-        kobold chieftain
-        kobold warlord
-        kobold sex slave
+        *kobold child
+        *kobold farmer
+        *kobold warrior
+        *female kobold
+        *kobold slave 
+        *kobold slavedriver
+        *kobold miner
+        *kobold chieftain
+        *kobold warlord
+        *kobold sex slave
         kobold shaman
-        kobold hunter
+        *kobold fisherman
         kobold infant
-        kobold cannibal
-        renegade kobold
+        *kobold cannibal
+        *renegade kobold
         dog
-        lichen
-        pond scum
+        *lichen
+        *pond scum
         orc raider
         lizardman envoy
 
@@ -106,343 +111,6 @@ enum class screens_t : unsigned int {
     inventory,
     inv_item,
     floor_item
-};
-
-
-
-struct stat_t {
-    double val;
-        
-    stat_t() : val(3.0) {}
-
-    void inc(double v) {
-        val += v;
-        if (val > 3) val = 3;
-    }
-
-    void dec(double v) {
-        val -= v;
-        if (val < -3) val = -3;
-    }
-};
-
-
-
-struct inventory_t {
-
-    std::unordered_map<std::string, items::Item> stuff;
-
-    std::string selected_slot;
-    unsigned int selected_floor_item;
-
-    struct slot_t {
-        std::string slot;
-        std::string name;
-        char letter;
-    };
-
-    std::map<std::string, slot_t> slots;
-    std::map<char, std::string> slot_keys;
-
-    inventory_t() {
-        make_slot(slot_t{"w", "Weapon", 'a'});
-        make_slot(slot_t{"s", "Shield", 'b'});
-        make_slot(slot_t{"a", "Armour", 'c'});
-        make_slot(slot_t{"f", "Edible", 'd'});
-    }
-
-    void make_slot(const slot_t& s) {
-        slots[s.slot] = s;
-        slot_keys[s.letter] = s.slot;
-    }
-
-    bool get(const std::string& slot, items::Item& ret) const {
-        auto i = stuff.find(slot);
-
-        if (i == stuff.end())
-            return false;
-
-        ret = i->second;
-        return true;
-    }
-
-    bool valid(const std::string& slot) const {
-
-        if (stuff.count(slot) == 0) 
-            return false;
-
-        return true;
-    }
-
-    bool take(const std::string& slot, items::Item& ret, unsigned int count = 0) {
-        auto i = stuff.find(slot);
-
-        if (i == stuff.end())
-            return false;
-
-        ret = i->second;
-
-        if (count == 0) {
-            stuff.erase(i);
-
-        } else {
-            unsigned int n = std::min(i->second.count, count);
-            ret.count = n;
-            i->second.count -= n;
-
-            if (i->second.count == 0) {
-                stuff.erase(i);
-            }
-        }
-
-        return true;
-    }
-
-    bool place(const std::string& slot, const items::Item& i, items::Item& old) {
-
-        auto j = stuff.find(slot);
-
-        if (j == stuff.end()) {
-            stuff[slot] = i;
-            return false;
-        }
-
-        items::Item& o = j->second;
-
-        const Design& d = designs().get(o.tag);
-
-        if (o.tag == i.tag) {
-
-            if (o.count < d.stackrange) {
-            
-                unsigned int n = std::min(i.count, d.stackrange - o.count);
-
-                o.count += n;
-
-                if (n == i.count) {
-                    return false;
-
-                } else {
-                    old = i;
-                    old.count -= n;
-                    return true;
-                }
-
-            } else {
-                old = i;
-                return true;
-            }
-        }
-
-        old = o;
-        o = i;
-        return true;
-    }
-
-    bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items, 
-                      grender::Grid& grid) {
-
-        items::Item tmp;
-
-        if (!take(slot, tmp))
-            return false;
-
-        items.place(x, y, tmp, grid);
-        return true;
-    }
-
-    bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items, 
-                      grender::Grid& grid) {
-
-        items::Item ftmp;
-
-        if (!items.take(x, y, z, ftmp, grid))
-            return false;
-
-        const std::string& slot = designs().get(ftmp.tag).slot;
-
-        if (slots.count(slot) == 0)
-            return false;
-
-        items::Item itmp;
-
-        if (place(slot, ftmp, itmp)) {
-            items.place(x, y, itmp, grid);
-        }
-
-        return true;
-    }
-
-    std::string select_inv_item(const std::string& slot) {
-        std::string window;
-        
-        items::Item tmp;
-
-        if (!get(slot, tmp))
-            throw std::runtime_error("sanity error");
-
-        const Design& d = designs().get(tmp.tag);
-
-        window = nlp::message("\n"
-                              "\3%S\1: (in your inventory)\n"
-                              "\n"
-                              "%s\n"
-                              "\n"
-                              "  \2d\1) Drop.\n",
-                              nlp::count(), d, tmp.count,
-                              d.descr);
-
-        if (d.usable) {
-            window += nlp::message("  \2a)\1 Apply or use this item.\n");
-        }
-
-        selected_slot = slot;
-
-        return window;
-    }
-
-    std::string select_floor_item(items::Items& items, unsigned int px, unsigned int py, unsigned int z) {
-        std::string window;
-
-        items::Item tmp;
-
-        if (!items.get(px, py, z, tmp))
-            throw std::runtime_error("sanity error");
-
-        const Design& d = designs().get(tmp.tag);
-
-        window = nlp::message("\n"
-                              "\3%S\1: (on the floor)\n"
-                              "\n"
-                              "%s\n"
-                              "\n",
-                              nlp::count(), d, tmp.count,
-                              d.descr);
-
-        if (slots.count(d.slot) != 0) {
-            window += "  \2t\1) Take.\n";
-        }
-
-        selected_floor_item = z;
-
-        return window;
-    }
-
-    template <typename T>
-    T get_inv_sum(T Design::* ptr) {
-        T ret{};
-
-        for (const auto& i : stuff) {
-            const Design& dp = designs().get(i.second.tag);
-
-            ret += (dp.*ptr) * i.second.count;
-        }
-
-        return ret;
-    }
-
-    double get_attack() {
-        return get_inv_sum(&Design::attack);
-    }
-    
-    double get_defense() {
-        return get_inv_sum(&Design::defense);
-    }
-    
-};
-
-
-
-struct Player {
-
-    unsigned int px;
-    unsigned int py;
-
-    int worldx;
-    int worldy;
-    int worldz;
-
-    unsigned int level;
-
-    unsigned int lightradius;
-
-    stat_t health;
-
-    inventory_t inv;
-
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8) {}
-
-    std::string show_info(items::Items& items) {
-        std::string m;
-
-        m = nlp::message("\2Player stats:\n"
-                         "  Character level: %d\n"
-                         "  Dungeon level:   %d\n"
-                         "\n"
-                         "\2Inventory:\n",
-                         level, 
-                         worldz+1);
-
-        for (const auto& slot : inv.slots) {
-
-            items::Item tmp;
-
-            if (!inv.get(slot.first, tmp)) 
-                continue;
-
-            const Design& d = designs().get(tmp.tag);
-
-            m += nlp::message("   %s: \2%c\1) %S\n", 
-                              slot.second.name,
-                              slot.second.letter,
-                              nlp::count(), d, tmp.count);
-        }
-
-        m += nlp::message("\n"
-                          "\2Floor items:\n");
-
-        size_t nz = items.stack_size(px, py);
-        char letter = '1';
-
-        for (size_t z = 0; z < nz; ++z) {
-
-            items::Item tmp;
-
-            if (!items.get(px, py, z, tmp))
-                throw std::runtime_error("sanity error");
-
-            const Design& d = designs().get(tmp.tag);
-
-            m += nlp::message("           \2%c\1) %S\n",
-                              letter,
-                              nlp::count(), d, tmp.count);
-            ++letter;
-        }
-
-        return m;
-    }
-
-    bool apply_item(const std::string& slot, grender::Grid& render) {
-
-        items::Item tmp;
-        
-        if (!inv.take(slot, tmp, 1))
-            return false;
-
-        const Design& d = designs().get(tmp.tag);
-
-        if (!d.usable)
-            return false;
-
-        if (d.heal > 0) {
-
-            health.inc(d.heal);
-            render.do_message(nlp::message("You feel better. %d %d", d.heal, health.val));
-            return true;
-        } 
-
-        return false;
-    }
 };
 
 
@@ -695,26 +363,42 @@ struct Game {
     template <typename SOURCE>
     void load(SOURCE& s) {}
 
-    void drawing_context(mainloop::drawing_context_t& ctx) {
-
+    void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
+        
         unsigned int grid_x = ctx.view_w / 4;
         unsigned int grid_y = ctx.view_h / 4;
 
         if (grid_x > 1) {
-            ctx.voff_off_x = -(p.px % grid_x) + (grid_x / 2);
+            ctx.voff_off_x = -(x % grid_x) + (grid_x / 2);
         } else {
             ctx.voff_off_x = 0;
         }
 
         if (grid_y > 1) {
-            ctx.voff_off_y = -(p.py % grid_y) + (grid_y / 2);
+            ctx.voff_off_y = -(y % grid_y) + (grid_y / 2);
         } else {
             ctx.voff_off_y = 0;
         }
 
+        ctx.centerx = x;
+        ctx.centery = y;
+    }
+
+    void drawing_context(mainloop::drawing_context_t& ctx) {
+
         ctx.px = p.px;
         ctx.py = p.py;
         ctx.lightradius = p.lightradius;
+
+        if (p.is_looking) {
+            ctx.hlx = p.look_x;
+            ctx.hly = p.look_y;
+
+            drawing_context_center_at(ctx, p.look_x, p.look_y);
+
+        } else {
+            drawing_context_center_at(ctx, p.px, p.py);
+        }
     }
 
     void draw_hud(mainloop::GameState& state) {
@@ -753,6 +437,8 @@ struct Game {
 
         bool do_random = false;
 
+        double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
+
         if (s.ai == Species::ai_t::seek_player &&
             state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
@@ -761,20 +447,20 @@ struct Game {
         } else if (s.ai == Species::ai_t::random) {
             do_random = true;
 
+        } else if (s.ai == Species::ai_t::inrange_random && dist <= s.range) {
+            do_random = true;
+
         } else {
 
             switch (s.idle_ai) {
 
             case Species::idle_ai_t::random:
-            {
-                double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
                 if (dist > p.lightradius + 5)
                     return false;
 
                 do_random = true;
-            }
-            break;
+                break;
 
             default:
                 return false;
@@ -841,8 +527,7 @@ struct Game {
         return std::max(a - d, 0.0);
     }
 
-    void monster_kill(mainloop::GameState& state, const monsters::Monster& mon, const Species& s, 
-                      double dmg) {
+    void monster_kill(mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
         for (const auto& drop : s.drop) {
             double v = state.rng.gauss(0.0, 1.0);
@@ -861,12 +546,6 @@ struct Game {
         if (s.level > p.level) {
             p.level = s.level;
             state.render.do_message(nlp::message("You gained level %d!", p.level), true);
-
-        } else if (s.level == p.level) {
-            if (dmg >= 2.8) {
-                ++p.level;
-                state.render.do_message(nlp::message("You gained level %d!", p.level), true);
-            }
         }
     }
 
@@ -890,12 +569,39 @@ struct Game {
 
             if (mon.health - v < -3) {
 
-                state.render.do_message(nlp::message("You killed %s.", s));
+                if (s.ai == Species::ai_t::none) {
+                    state.render.do_message(nlp::message("You destroyed %s.", s));
+                } else {
+                    state.render.do_message(nlp::message("You killed %s.", s));
+                }
 
-                monster_kill(state, mon, s, v);
+                monster_kill(state, mon, s);
+
+            } else if (s.ai == Species::ai_t::none) {
+                state.render.do_message(nlp::message("You smash %s.", s));
+
+            } else if (v < 0.5) {
+                state.render.do_message(nlp::message("You hit %s.", s));
+
+            } else if (v < 1.0) {
+                state.render.do_message(nlp::message("You wound %s.", s));
+
+            } else if (v < 2.0) {
+                state.render.do_message(nlp::message("You heavily wound %s.", s));
+
+            } else if (v < 2.8) {
+                state.render.do_message(nlp::message("You critically wound %s.", s));
 
             } else {
-                state.render.do_message(nlp::message("You hit %s.", s));
+                state.render.do_message(nlp::message("You mortally wound %s.", s));
+            }
+
+            std::cout << "     ----    " << v << std::endl;
+
+            if (s.level == p.level && v >= 2.8) {
+
+                ++p.level;
+                state.render.do_message(nlp::message("You gained level %d!", p.level), true);
             }
 
         } else {
@@ -1081,16 +787,23 @@ struct Game {
                 state.render.do_message("There are no items here.");
 
             } else {
-                state.push_window(p.inv.select_floor_item(state.items, p.px, p.py, 0), screens_t::floor_item);
+                state.push_window(select_floor_item(p.inv, state.items, p.px, p.py, 0), screens_t::floor_item);
             }
             break;
 
         case 'i':
-            state.push_window(p.show_info(state.items), screens_t::inventory);
+            state.push_window(show_inventory(p.inv, p.level, p.worldz, state.items, p.px, p.py), screens_t::inventory);
             break;
 
         case 'P':
             state.push_window(state.render.all_messages(), screens_t::messages);
+            break;
+
+        case '/':
+            p.is_looking = true;
+            p.look_x = p.px;
+            p.look_y = p.py;
+            center_draw_text(state.render, p.px, p.py, "Use arrow keys to look around");
             break;
         }
 
@@ -1116,6 +829,116 @@ struct Game {
         }
     }
 
+    void center_draw_text(grender::Grid& render, unsigned int x, unsigned int y, const std::string& t) {
+
+        int _x = x;
+        unsigned int x1 = std::max(0, _x-(int)t.size()/2);
+        render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
+    }
+
+    void look_move(mainloop::GameState& state, int dx, int dy) {
+        int nx = p.look_x + dx;
+        int ny = p.look_y + dy;
+
+        if (nx < 0 || ny < 0) 
+            return;
+
+        if (!state.neigh.linked(neighbors::pt(p.look_x, p.look_y), neighbors::pt(nx, ny))) {
+
+            return;
+        }
+
+        p.look_x = nx;
+        p.look_y = ny;
+    }
+
+    void handle_input_looking(mainloop::GameState& state, maudit::keypress k) {
+
+        int stop = 0;
+
+        switch (k.letter) {
+        case 'h':
+            look_move(state, -1, 0);
+            break;
+        case 'j':
+            look_move(state, 0, 1);
+            break;
+        case 'k':
+            look_move(state, 0, -1);
+            break;
+        case 'l':
+            look_move(state, 1, 0);
+            break;
+        case 'y':
+            look_move(state, -1, -1);
+            break;
+        case 'u':
+            look_move(state, 1, -1);
+            break;
+        case 'b':
+            look_move(state, -1, 1);
+            break;
+        case 'n':
+            look_move(state, 1, 1);
+            break;
+
+        default:
+            ++stop;
+            break;
+        }
+
+        switch (k.key) {
+        case maudit::keycode::up:
+            look_move(state, 0, -1);
+            break;
+        case maudit::keycode::left:
+            look_move(state, -1, 0);
+            break;
+        case maudit::keycode::right:
+            look_move(state, 1, 0);
+            break;
+        case maudit::keycode::down:
+            look_move(state, 0, 1);
+            break;
+
+        default:
+            ++stop;
+            break;
+        }            
+
+        if (stop > 1) {
+            p.is_looking = false;
+            return;
+        }
+
+        std::string msg;
+        monsters::Monster mon;
+        items::Item itm;
+
+        unsigned int x = p.look_x;
+        unsigned int y = p.look_y;
+        size_t n = state.items.stack_size(x, y);
+
+        if (!state.render.is_in_fov(x, y)) {
+
+        } else if (x == p.px && y == p.py) {
+            msg = "This is you";
+
+        } else if (state.monsters.get(x, y, mon)) {
+            msg = nlp::message("%s", species().get(mon.tag));
+
+        } else if (n > 1) {
+            msg = nlp::message("%d items", n);
+
+        } else if (n == 1 && state.items.get(x, y, 0, itm)) {
+            
+            msg = nlp::message("%s", designs().get(itm.tag));
+        }
+
+        state.render.draw_text(p.look_x+2, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);
+    }
+
+
     void handle_input_inventory(mainloop::GameState& state,
                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
                                 maudit::keypress k) {
@@ -1125,7 +948,7 @@ struct Game {
         if (i != p.inv.slot_keys.end() &&
             p.inv.valid(i->second)) {
         
-            state.push_window(p.inv.select_inv_item(i->second), screens_t::inv_item);
+            state.push_window(select_inv_item(p.inv, i->second), screens_t::inv_item);
             return;
         }
 
@@ -1134,7 +957,7 @@ struct Game {
 
             if (i < state.items.stack_size(p.px, p.py)) {
 
-                state.push_window(p.inv.select_floor_item(state.items, p.px, p.py, i), screens_t::floor_item);
+                state.push_window(select_floor_item(p.inv, state.items, p.px, p.py, i), screens_t::floor_item);
                 return;
             }
         }
@@ -1153,7 +976,7 @@ struct Game {
             state.window_stack.clear();
             return;
 
-        } else if (k.letter == 'a' && p.apply_item(p.inv.selected_slot, state.render)) {
+        } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state.render)) {
 
             ticks++;
             state.window_stack.clear();
@@ -1187,6 +1010,11 @@ struct Game {
     void handle_input(mainloop::GameState& state,
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
+
+        if (p.is_looking) {
+            handle_input_looking(state, k);
+            return;
+        }
 
         if (state.window_stack.empty()) {
             handle_input_main(state, ticks, done, dead, regen, k);
