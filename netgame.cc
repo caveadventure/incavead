@@ -491,8 +491,6 @@ struct Game {
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input) {
 
-        bm _p("process_world");
-
         if (p.health.val <= -3.0) {
             state.render.do_message("You are dead.", true);
             dead = true;
@@ -881,6 +879,7 @@ struct Game {
         int n = 0;
 
         for (const auto& i : state.monsters.mons) {
+            std::cout << "  ., " << i.first.first << "," << i.first.second << " " << state.render.is_in_fov(i.first.first, i.first.second) << std::endl;
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 
@@ -895,6 +894,7 @@ struct Game {
         }
 
         for (const auto& i : state.items.stuff) {
+            std::cout << "  .. " << i.first.first << "," << i.first.second << " " << state.render.is_in_fov(i.first.first, i.first.second) << std::endl;
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 

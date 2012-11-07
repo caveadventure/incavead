@@ -593,6 +593,10 @@ public:
                         make_valid(xy.first, xy.second);
                     }
                 }
+
+                for (gridpoint& gp : grid) {
+                    gp.in_fov = false;
+                }
                    
                 TCOD_map_compute_fov(tcodmap, px, py, params.lightradius, true, FOV_SHADOW);
 

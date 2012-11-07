@@ -210,6 +210,7 @@ struct Main {
     }
 
     void draw() {
+        bm _p("draw");
 
         drawing_context_t ctx;
         ctx.view_w = view_w;
