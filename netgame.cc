@@ -545,7 +545,7 @@ struct Game {
 
         if (s.level > p.level) {
             p.level = s.level;
-            state.render.do_message(nlp::message("You gained level %d!", p.level), true);
+            state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
     }
 
@@ -561,7 +561,7 @@ struct Game {
         }
 
         double v = roll_attack(state.rng,
-                               s.defense, s.level+1, attack, p.level);
+                               s.defense, s.level+1, attack, p.level+1);
 
         if (v > 0) {
 
@@ -596,12 +596,12 @@ struct Game {
                 state.render.do_message(nlp::message("You mortally wound %s.", s));
             }
 
-            std::cout << "     ----    " << v << std::endl;
+            std::cout << "     ----    " << v << " " << s.level << " " << p.level << std::endl;
 
             if (s.level == p.level && v >= 2.8) {
 
                 ++p.level;
-                state.render.do_message(nlp::message("You gained level %d!", p.level), true);
+                state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
             }
 
         } else {
@@ -616,7 +616,7 @@ struct Game {
         double defense = p.inv.get_defense();
 
         double v = roll_attack(state.rng, 
-                               defense, p.level, s.attack, s.level+1);
+                               defense, p.level+1, s.attack, s.level+1);
 
         if (v > 0) {
             p.health.dec(v);
@@ -800,12 +800,11 @@ struct Game {
             break;
 
         case '/':
-            p.is_looking = true;
-            p.look_x = p.px;
-            p.look_y = p.py;
-            p.look_target = -1;
-            center_draw_text(state.render, p.px, p.py, 
-                             "Use arrow keys to look around; <TAB> to cycle targets");
+            start_look_plain(state);
+            break;
+
+        case '\t':
+            start_look_target(state, k);
             break;
         }
 
@@ -838,6 +837,25 @@ struct Game {
         render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
     }
 
+    void start_look_plain(mainloop::GameState& state) {
+
+        p.is_looking = true;
+        p.look_x = p.px;
+        p.look_y = p.py;
+        p.look_target = -1;
+        center_draw_text(state.render, p.px, p.py, 
+                         "Use arrow keys to look around; <TAB> to cycle targets");
+    }
+
+    void start_look_target(mainloop::GameState& state, maudit::keypress k) {
+        p.is_looking = true;
+        p.look_x = p.px;
+        p.look_y = p.py;
+        p.look_target = -1;
+
+        handle_input_looking(state, k);
+    }
+
     void look_move(mainloop::GameState& state, int dx, int dy) {
         int nx = p.look_x + dx;
         int ny = p.look_y + dy;
@@ -856,6 +874,8 @@ struct Game {
 
     void look_cycle(mainloop::GameState& state) {
 
+        std::cout << "| " << p.look_target << std::endl;
+
         (p.look_target)++;
 
         int n = 0;
@@ -864,6 +884,7 @@ struct Game {
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 
+            std::cout << "   = " << n << " " << p.look_target << std::endl;
             if (n == p.look_target) {
                 p.look_x = i.first.first;
                 p.look_y = i.first.second;
@@ -877,6 +898,7 @@ struct Game {
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 
+            std::cout << "   = " << n << " " << p.look_target << std::endl;
             if (n == p.look_target) {
                 p.look_x = i.first.first;
                 p.look_y = i.first.second;
@@ -886,7 +908,15 @@ struct Game {
             ++n;
         }
 
+        std::cout << " | " << std::endl;
+
         p.look_target = -1;
+        p.look_x = p.px;
+        p.look_y = p.py;
+
+        if (n > 0) {
+            look_cycle(state);
+        }
     }
 
     void handle_input_looking(mainloop::GameState& state, maudit::keypress k) {
@@ -962,9 +992,6 @@ struct Game {
 
         if (!state.render.is_in_fov(x, y)) {
 
-        } else if (x == p.px && y == p.py) {
-            msg = " This is you";
-
         } else if (state.monsters.get(x, y, mon)) {
             msg = nlp::message(" %s", species().get(mon.tag));
 
@@ -974,6 +1001,9 @@ struct Game {
         } else if (n == 1 && state.items.get(x, y, 0, itm)) {
             
             msg = nlp::message(" %s", designs().get(itm.tag));
+
+        } else if (x == p.px && y == p.py) {
+            msg = " This is you";
         }
 
         state.render.draw_text(p.look_x+1, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);

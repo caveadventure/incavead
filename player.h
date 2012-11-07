@@ -41,7 +41,7 @@ struct Player {
     unsigned int look_y;
     int look_target;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(1), lightradius(8), 
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0), lightradius(8), 
                is_looking(false), look_x(0), look_y(0), look_target(-1) {}
 
 };

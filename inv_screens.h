@@ -71,7 +71,7 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, int worl
                      "  Dungeon level:   %d\n"
                      "\n"
                      "\2Inventory:\n",
-                     level, 
+                     level+1, 
                      worldz+1);
 
     for (const auto& slot : inv.slots) {
