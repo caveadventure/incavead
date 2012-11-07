@@ -26,7 +26,10 @@ struct Design {
 
     bool usable;
 
-    Design() : level(0), count(0), attack(0), defense(0), stackrange(0), heal(0), usable(false) {}
+    unsigned int throwrange;
+
+    Design() : level(0), count(0), attack(0), defense(0), stackrange(0), heal(0), usable(false),
+               throwrange(0) {}
 
 };
 

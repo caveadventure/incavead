@@ -26,6 +26,10 @@ inline std::string select_inv_item(inventory_t& inv, const std::string& slot) {
         window += nlp::message("  \2a)\1 Apply or use this item.\n");
     }
 
+    if (d.throwrange > 0) {
+        window += nlp::message("  \2t)\1 Throw item.\n");
+    }
+
     inv.selected_slot = slot;
 
     return window;

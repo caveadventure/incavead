@@ -728,7 +728,7 @@ public:
                                 double d1 = d / params.lightradius;
 
                                 if (d < params.rangemin || d > params.rangemax) {
-                                    fore = gray_color;
+                                    fore = color_t::bright_black;
                                     back = black_color;
 
                                 } else {

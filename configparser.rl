@@ -250,10 +250,12 @@ void parse_config(const std::string& filename) {
         design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = ::atoi(state.match.c_str()); };
         design_heal       = 'heal'       ws1 real    %{ des.heal = ::atof(state.match.c_str()); };
         design_usable     = 'usable'                 %{ des.usable = true; };
+        design_throwrange = 'throwrange' ws1 number  %{ des.throwrange = ::atoi(state.match.c_str()); };
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
+            design_throwrange |
             '}'
             %{ fret; })
             ;

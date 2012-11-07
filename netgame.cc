@@ -391,6 +391,15 @@ struct Game {
         ctx.lightradius = p.lightradius;
 
         if (p.is_looking) {
+
+            if (p.look_rangemin >= 0) {
+                ctx.rangemin = p.look_rangemin;
+            }
+
+            if (p.look_rangemax >= 0) {
+                ctx.rangemax = p.look_rangemax;
+            }
+
             ctx.hlx = p.look_x;
             ctx.hly = p.look_y;
 
@@ -802,7 +811,7 @@ struct Game {
             break;
 
         case '\t':
-            start_look_target(state, k);
+            start_look_cycle(state, k);
             break;
         }
 
@@ -841,15 +850,22 @@ struct Game {
         p.look_x = p.px;
         p.look_y = p.py;
         p.look_target = -1;
+        p.look_rangemin = -1;
+        p.look_rangemax = -1;
+        p.look_ok = false;
+
         center_draw_text(state.render, p.px, p.py, 
                          "Use arrow keys to look around; <TAB> to cycle targets");
     }
 
-    void start_look_target(mainloop::GameState& state, maudit::keypress k) {
+    void start_look_cycle(mainloop::GameState& state, maudit::keypress k) {
         p.is_looking = true;
         p.look_x = p.px;
         p.look_y = p.py;
         p.look_target = -1;
+        p.look_rangemin = -1;
+        p.look_rangemax = -1;
+        p.look_ok = false;
 
         handle_input_looking(state, k);
     }
@@ -953,6 +969,11 @@ struct Game {
             look_cycle(state);
             break;
 
+        case '.':
+            p.is_looking = false;
+            p.look_ok = true;
+            return;
+
         default:
             ++stop;
             break;
@@ -1009,6 +1030,33 @@ struct Game {
         state.render.draw_text(p.look_x+1, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);
     }
 
+    void start_look_target(mainloop::GameState& state, int rangemin, int rangemax) {
+        p.is_looking = true;
+        p.look_x = p.px;
+        p.look_y = p.py;
+        p.look_target = -1;
+        p.look_rangemin = rangemin;
+        p.look_rangemax = rangemax;
+        p.look_ok = false;
+
+        center_draw_text(state.render, p.px, p.py, 
+                         "Use <TAB> or arrow keys to select target, '.' to fire");
+    }
+
+    bool throw_item(const std::string& slot, mainloop::GameState& state) {
+
+        items::Item tmp;
+        if (!p.inv.get(slot, tmp))
+            return false;
+
+        const Design& d = designs().get(tmp.tag);
+
+        if (d.throwrange == 0)
+            return false;
+
+        start_look_target(state, 0, d.throwrange);
+        return true;
+    }
 
     void handle_input_inventory(mainloop::GameState& state,
                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
@@ -1048,6 +1096,12 @@ struct Game {
             return;
 
         } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state.render)) {
+
+            ticks++;
+            state.window_stack.clear();
+            return;
+
+        } else if (k.letter == 't' && throw_item(p.inv.selected_slot, state)) {
 
             ticks++;
             state.window_stack.clear();
