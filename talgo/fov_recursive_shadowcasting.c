@@ -32,10 +32,10 @@
 #include "talgo_int.h"
 
 static int mult[4][8]= {
-	{1,0,0,-1,-1,0,0,1},
-	{0,1,-1,0,0,-1,1,0},
-	{0,1,1,0,0,-1,-1,0},
-	{1,0,0,1,-1,0,0,-1},
+    {1, 0,  0, -1, -1,  0,  0,  1},
+    {0, 1, -1,  0,  0, -1,  1,  0},
+    {0, 1,  1,  0,  0, -1, -1,  0},
+    {1, 0,  0,  1, -1,  0,  0, -1},
 };
 
 static void cast_light(map_t *map,int cx, int cy,int row,float start, float end, int radius, int r2,

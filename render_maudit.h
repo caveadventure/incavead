@@ -15,8 +15,10 @@ extern "C" {
 #include "talgo.h"
 }
 
-#include <iostream>
-#include <sys/time.h>
+//#include <iostream>
+//#include <sys/time.h>
+
+#include "fov.h"
 
 
 namespace serialize {
@@ -594,6 +596,9 @@ public:
                     }
                 }
 
+                fov::fov_shadowcasting(w, h, grid, px, py, params.lightradius);
+
+                /*
                 for (gridpoint& gp : grid) {
                     gp.in_fov = false;
                 }
@@ -606,7 +611,7 @@ public:
                         _get(pt(_x,_y)).in_fov = TCOD_map_is_in_fov(tcodmap, _x, _y);
                     }
                 }
-
+                */
 
                 bool do_hud = params.do_hud;
 
