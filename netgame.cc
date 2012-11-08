@@ -996,6 +996,38 @@ struct Game {
             return;
         }
 
+
+        if (p.state & Player::TARGET) {
+
+            unsigned int monc = 0;
+
+            state.render.draw_line(p.px, p.py, p.look.x, p.look.y, true, 
+                                   maudit::color::bright_red, maudit::color::white_red,
+                                   [&](unsigned int x, unsigned int y) {
+
+                                       double dist = distance(p.px, p.py, x, y);
+
+                                       if (!state.grid.is_walk(x, y) || 
+                                           !state.render.is_in_fov(x, y) ||
+                                           monc > 0 ||
+                                           dist < p.look.rangemin ||
+                                           dist > p.look.rangemax) {
+
+                                           return false;
+                                       }
+
+                                       monsters::Monster tmp;
+                                       if (state.monsters.get(x, y, tmp)) {
+                                           monc++;
+                                       }
+
+                                       p.look.x = x;
+                                       p.look.y = y;
+                                       return true;
+                                   });
+        }
+
+
         std::string msg;
         monsters::Monster mon;
         items::Item itm;
@@ -1094,7 +1126,6 @@ struct Game {
 
         } else if (k.letter == 't' && throw_item(p.inv.selected_slot, state)) {
 
-            ticks++;
             state.window_stack.clear();
             return;
         }
