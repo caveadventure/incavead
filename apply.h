@@ -55,6 +55,16 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     if (d.throwrange == 0 || v > d.throwrange) 
         return false;
 
+    monsters::Monster tmp;
+    if (state.monsters.get(lx, ly, tmp)) {
+
+        double v2 = std::max(0, (v-1) / d.throwrange);
+
+        unsigned int lev = (1 - v2) * p.level;
+
+        attack(p, d.attack, lev, state, tmp);
+    }
+
     state.items.place(lx, ly, tmp, state.grid);
     return true;
 }
