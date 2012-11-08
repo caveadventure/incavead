@@ -512,6 +512,7 @@ struct Game {
 
             end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
             ++ticks;
+            p.state = Player::MAIN;
         }
 
         state.monsters.process(state.render, 

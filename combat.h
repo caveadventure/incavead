@@ -68,7 +68,7 @@ inline bool attack(Player& p, double attack, unsigned int plevel,
                 state.render.do_message(nlp::message("You killed %s.", s));
             }
 
-            monster_kill(state, mon, s);
+            monster_kill(p, state, mon, s);
 
         } else if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
@@ -91,7 +91,7 @@ inline bool attack(Player& p, double attack, unsigned int plevel,
 
         std::cout << "     ----    " << v << " " << s.level << " " << p.level << std::endl;
 
-        if (s.level == p.level && v >= 2.8) {
+        if (s.level == p.level && v >= 2.8 && s.ai != Species::ai_t::none) {
 
             ++p.level;
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
