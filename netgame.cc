@@ -25,10 +25,21 @@
 
 #include "configparser.h"
 
+#include "utilstuff.h"
 #include "inventory.h"
 #include "inv_screens.h"
 #include "player.h"
+#include "look_screens.h"
 #include "apply.h"
+
+enum class screens_t : unsigned int {
+    messages = 0,
+    inventory,
+    inv_item,
+    floor_item
+};
+
+#include "inv_screens2.h"
 
 
 void init_statics() {
@@ -106,12 +117,6 @@ void init_statics() {
     init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
 
-enum class screens_t : unsigned int {
-    messages = 0,
-    inventory,
-    inv_item,
-    floor_item
-};
 
 
 struct Game {
@@ -428,12 +433,6 @@ struct Game {
 
         state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
                                    4, '+', maudit::color::bright_green);
-    }
-
-    double distance(double ax, double ay, double bx, double by) {
-        double q = (ax - bx);
-        double p = (ay - by);
-        return ::sqrt(q*q + p*p);
     }
 
     bool move_monster(mainloop::GameState& state, const monsters::Monster& m, const Species& s,
@@ -807,11 +806,11 @@ struct Game {
             break;
 
         case '/':
-            start_look_plain(state);
+            start_look_plain(p.state, p.look, p.px, p.py, state);
             break;
 
         case '\t':
-            start_look_cycle(state, k);
+            start_look_cycle(p.state, p.look, p.px, p.py, state, k);
             break;
         }
 
@@ -837,317 +836,6 @@ struct Game {
         }
     }
 
-    void center_draw_text(grender::Grid& render, unsigned int x, unsigned int y, const std::string& t) {
-
-        int _x = x;
-        unsigned int x1 = std::max(0, _x-(int)t.size()/2);
-        render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
-    }
-
-    void start_look_plain(mainloop::GameState& state) {
-
-        p.state = Player::LOOKING;
-        p.look = Player::look_t(p.px, p.py);
-
-        center_draw_text(state.render, p.px, p.py, 
-                         "Use arrow keys to look around; <TAB> to cycle targets");
-    }
-
-    void start_look_cycle(mainloop::GameState& state, maudit::keypress k) {
-
-        p.state = Player::LOOKING;
-        p.look = Player::look_t(p.px, p.py);
-        
-        handle_input_looking(state, k);
-    }
-
-    void look_move(mainloop::GameState& state, int dx, int dy) {
-        int nx = p.look.x + dx;
-        int ny = p.look.y + dy;
-
-        if (nx < 0 || ny < 0) 
-            return;
-
-        if (!state.neigh.linked(neighbors::pt(p.look.x, p.look.y), neighbors::pt(nx, ny))) {
-
-            return;
-        }
-
-        p.look.x = nx;
-        p.look.y = ny;
-    }
-
-    void look_cycle(mainloop::GameState& state) {
-
-        std::cout << "| " << p.look.target << std::endl;
-
-        (p.look.target)++;
-
-        int n = 0;
-
-        for (const auto& i : state.monsters.mons) {
-            if (!state.render.is_in_fov(i.first.first, i.first.second))
-                continue;
-
-            const Species& s = species().get(i.second.tag);
-            std::cout << "   = " << n << " " << p.look.target << " " << nlp::message("%s", s) << std::endl;
-            if (n == p.look.target) {
-                p.look.x = i.first.first;
-                p.look.y = i.first.second;
-                return;
-            }
-
-            ++n;
-        }
-
-        for (const auto& i : state.items.stuff) {
-            if (!state.render.is_in_fov(i.first.first, i.first.second))
-                continue;
-
-            const Design& d = designs().get(i.second.front().tag);
-
-            std::cout << "   = " << n << " " << p.look.target << " " << nlp::message("%s", d) << std::endl;
-            if (n == p.look.target) {
-                p.look.x = i.first.first;
-                p.look.y = i.first.second;
-                return;
-            }
-
-            ++n;
-        }
-
-        std::cout << " | " << std::endl;
-
-        p.look.target = -1;
-        p.look.x = p.px;
-        p.look.y = p.py;
-
-        if (n > 0) {
-            look_cycle(state);
-        }
-    }
-
-    void handle_input_looking(mainloop::GameState& state, maudit::keypress k) {
-
-        int stop = 0;
-
-        switch (k.letter) {
-        case 'h':
-            look_move(state, -1, 0);
-            break;
-        case 'j':
-            look_move(state, 0, 1);
-            break;
-        case 'k':
-            look_move(state, 0, -1);
-            break;
-        case 'l':
-            look_move(state, 1, 0);
-            break;
-        case 'y':
-            look_move(state, -1, -1);
-            break;
-        case 'u':
-            look_move(state, 1, -1);
-            break;
-        case 'b':
-            look_move(state, -1, 1);
-            break;
-        case 'n':
-            look_move(state, 1, 1);
-            break;
-            
-        case '\t':
-            look_cycle(state);
-            break;
-
-        case '.':
-            if (p.state & Player::TARGET) {
-                p.state = Player::FIRING;
-                return;
-            }
-
-        default:
-            ++stop;
-            break;
-        }
-
-        switch (k.key) {
-        case maudit::keycode::up:
-            look_move(state, 0, -1);
-            break;
-        case maudit::keycode::left:
-            look_move(state, -1, 0);
-            break;
-        case maudit::keycode::right:
-            look_move(state, 1, 0);
-            break;
-        case maudit::keycode::down:
-            look_move(state, 0, 1);
-            break;
-
-        default:
-            ++stop;
-            break;
-        }            
-
-        if (stop > 1) {
-            p.state = Player::MAIN;
-            return;
-        }
-
-
-        if (p.state & Player::TARGET) {
-
-            unsigned int monc = 0;
-
-            state.render.draw_line(p.px, p.py, p.look.x, p.look.y, true, 
-                                   maudit::color::bright_red, maudit::color::white_red,
-                                   [&](unsigned int x, unsigned int y) {
-
-                                       double dist = distance(p.px, p.py, x, y);
-
-                                       if (!state.grid.is_walk(x, y) || 
-                                           !state.render.is_in_fov(x, y) ||
-                                           monc > 0 ||
-                                           dist < p.look.rangemin ||
-                                           dist > p.look.rangemax) {
-
-                                           return false;
-                                       }
-
-                                       monsters::Monster tmp;
-                                       if (state.monsters.get(x, y, tmp)) {
-                                           monc++;
-                                       }
-
-                                       p.look.x = x;
-                                       p.look.y = y;
-                                       return true;
-                                   });
-        }
-
-
-        std::string msg;
-        monsters::Monster mon;
-        items::Item itm;
-
-        unsigned int x = p.look.x;
-        unsigned int y = p.look.y;
-        size_t n = state.items.stack_size(x, y);
-
-        if (!state.render.is_in_fov(x, y)) {
-
-        } else if (state.monsters.get(x, y, mon)) {
-            msg = nlp::message(" %s", species().get(mon.tag));
-
-        } else if (n > 1) {
-            msg = nlp::message(" %d items", n);
-
-        } else if (n == 1 && state.items.get(x, y, 0, itm)) {
-            
-            msg = nlp::message(" %s", designs().get(itm.tag));
-
-        } else if (x == p.px && y == p.py) {
-            msg = " This is you";
-        }
-
-        state.render.draw_text(p.look.x+1, p.look.y, msg, maudit::color::bright_white, maudit::color::dim_blue);
-    }
-
-    void start_look_target(mainloop::GameState& state, int rangemin, int rangemax) {
-
-        p.state = (Player::LOOKING | Player::TARGET);
-        p.look = Player::look_t(p.px, p.py);
-        p.look.rangemin = rangemin;
-        p.look.rangemax = rangemax;
-
-        center_draw_text(state.render, p.px, p.py, 
-                         "Use <TAB> or arrow keys to select target, '.' to fire");
-    }
-
-    bool throw_item(const std::string& slot, mainloop::GameState& state) {
-
-        items::Item tmp;
-        if (!p.inv.get(slot, tmp))
-            return false;
-
-        const Design& d = designs().get(tmp.tag);
-
-        if (d.throwrange == 0)
-            return false;
-
-        start_look_target(state, 0, d.throwrange);
-        return true;
-    }
-
-    void handle_input_inventory(mainloop::GameState& state,
-                                size_t& ticks, bool& done, bool& dead, bool& regen, 
-                                maudit::keypress k) {
-
-        auto i = p.inv.slot_keys.find(k.letter);
-
-        if (i != p.inv.slot_keys.end() &&
-            p.inv.valid(i->second)) {
-        
-            state.push_window(select_inv_item(p.inv, i->second), screens_t::inv_item);
-            return;
-        }
-
-        if (k.letter >= '1') {
-            unsigned int i = k.letter - '1';
-
-            if (i < state.items.stack_size(p.px, p.py)) {
-
-                state.push_window(select_floor_item(p.inv, state.items, p.px, p.py, i), screens_t::floor_item);
-                return;
-            }
-        }
-
-        state.window_stack.pop_back();
-    }
-
-    void handle_input_inv_item(mainloop::GameState& state,
-                               size_t& ticks, bool& done, bool& dead, bool& regen, 
-                               maudit::keypress k) {
-
-        if (k.letter == 'd') {
-            p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
-
-            ticks++;
-            state.window_stack.clear();
-            return;
-
-        } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state.render)) {
-
-            ticks++;
-            state.window_stack.clear();
-            return;
-
-        } else if (k.letter == 't' && throw_item(p.inv.selected_slot, state)) {
-
-            state.window_stack.clear();
-            return;
-        }
-
-        state.window_stack.pop_back();
-    }
-
-    void handle_input_floor_item(mainloop::GameState& state,
-                                 size_t& ticks, bool& done, bool& dead, bool& regen, 
-                                 maudit::keypress k) {
-
-        if (k.letter == 't') {
-            if (p.inv.floor_to_inv(p.px, p.py, p.inv.selected_floor_item, state.items, state.render)) {
-
-                ticks++;
-                state.window_stack.clear();
-                return;
-            }
-        }
-
-        state.window_stack.pop_back();
-    }
 
     void handle_input_messages(mainloop::GameState& state, maudit::keypress k) {
 
@@ -1159,7 +847,7 @@ struct Game {
                       maudit::keypress k) {
 
         if (p.state & Player::LOOKING) {
-            handle_input_looking(state, k);
+            handle_input_looking(p.state, p.look, p.px, p.py, state, k);
             return;
         }
 
@@ -1175,15 +863,15 @@ struct Game {
             break;
 
         case screens_t::inventory:
-            handle_input_inventory(state, ticks, done, dead, regen, k);
+            handle_input_inventory(p, state, ticks, done, dead, regen, k);
             break;
 
         case screens_t::inv_item:
-            handle_input_inv_item(state, ticks, done, dead, regen, k);
+            handle_input_inv_item(p, state, ticks, done, dead, regen, k);
             break;
 
         case screens_t::floor_item:
-            handle_input_floor_item(state, ticks, done, dead, regen, k);
+            handle_input_floor_item(p, state, ticks, done, dead, regen, k);
             break;
         }
     }

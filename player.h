@@ -39,7 +39,7 @@ struct Player {
     static const unsigned int MAIN         = 0x0;
     static const unsigned int LOOKING      = 0x1;
     static const unsigned int TARGET       = 0x2;
-    static const unsigned int FIRING       = 0x8;
+    static const unsigned int THROWING     = 0x8;
 
     unsigned int state;
 
