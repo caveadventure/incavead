@@ -36,18 +36,30 @@ struct Player {
 
     inventory_t inv;
 
-    bool is_looking;
-    unsigned int look_x;
-    unsigned int look_y;
-    int look_target;
+    static const unsigned int MAIN         = 0x0;
+    static const unsigned int LOOKING      = 0x1;
+    static const unsigned int TARGET       = 0x2;
+    static const unsigned int FIRING       = 0x8;
 
-    int look_rangemin;
-    int look_rangemax;
-    bool look_ok;
+    unsigned int state;
+
+
+    struct look_t {
+        unsigned int x;
+        unsigned int y;
+        int target;
+
+        int rangemin;
+        int rangemax;
+
+        look_t(unsigned int _x = 0, unsigned int _y = 0) : 
+            x(_x), y(_y), target(-1), rangemin(-1), rangemax(-1) {}
+    };
+
+    look_t look;
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0), lightradius(8), 
-               is_looking(false), look_x(0), look_y(0), look_target(-1), 
-               look_rangemin(-1), look_rangemax(-1), look_ok(false) {}
+               state(MAIN) {}
 
 };
 

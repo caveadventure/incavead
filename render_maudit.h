@@ -600,6 +600,14 @@ public:
                    
                 TCOD_map_compute_fov(tcodmap, px, py, params.lightradius, true, FOV_SHADOW);
 
+                for (unsigned int _y = 0; _y < h; ++_y) {
+                    for (unsigned int _x = 0; _x < w; ++_x) {
+
+                        _get(pt(_x,_y)).in_fov = TCOD_map_is_in_fov(tcodmap, _x, _y);
+                    }
+                }
+
+
                 bool do_hud = params.do_hud;
 
                 if (view_w <= 30 || view_h <= std::max(hud_pips.size(), (size_t)3)) {
@@ -663,13 +671,11 @@ public:
                         unsigned int x = xy.first;
                         unsigned int y = xy.second;
 
-                        bool in_fov = TCOD_map_is_in_fov(tcodmap, x, y);
+                        bool in_fov = gp.in_fov; 
 
                         double d = _dist(xy, pt(px, py));
 
                         const std::vector<skin>& skins = gp.skins;
-
-                        gp.in_fov = in_fov;
 
                         color_t back = black_color;
                         

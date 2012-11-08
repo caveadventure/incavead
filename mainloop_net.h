@@ -231,16 +231,19 @@ struct Main {
 
     }
 
-    void process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input) {
+    bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input) {
 
         if (ticks == oldticks) {
             need_input = true;
-            return;
+            return false;
         }
 
         oldticks = ticks;
 
+        bm _p("process");
+
         game.process_world(state, ticks, done, dead, regen, need_input);
+        return true;
     }
 
     void pump_event(bool need_input, bool& done, bool& dead, bool& regen) {
@@ -273,13 +276,15 @@ struct Main {
                 save(savefile);
             }
 
-            screen.io.write("\r\nPress any key.\r\n");
-
-            state.render.wait_for_anykey(screen, view_w, view_h);
             return true;
         }
 
         return false;
+    }
+
+    void goodbye_message() {
+        screen.io.write("\r\nPress any key.\r\n");
+        state.render.wait_for_anykey(screen, view_w, view_h);
     }
 
     bool mainloop(const std::string& savefile,
@@ -303,23 +308,30 @@ struct Main {
 
             bool need_input = false;
 
-            process(oldticks, done, dead, regen, need_input);
+            do {
+                bool time_passed = process(oldticks, done, dead, regen, need_input);
 
-            if (regen) {
-                regenerate();
-                regen = false;
-            }
+                if (regen) {
+                    regenerate();
+                    regen = false;
+                }
+
+                if (check_done(done, dead, savefile)) {
+                    draw();
+                    goodbye_message();
+                    return dead;
+                }
+
+                if (!time_passed) break;
+            } while (1);
 
             draw();
-
-            if (check_done(done, dead, savefile)) 
-                return dead;
 
             pump_event(need_input, done, dead, regen);
 
             if (check_done(done, dead, savefile)) {
-
                 draw();
+                goodbye_message();
                 return dead;
             }
         }

@@ -390,20 +390,20 @@ struct Game {
         ctx.py = p.py;
         ctx.lightradius = p.lightradius;
 
-        if (p.is_looking) {
+        if (p.state & Player::LOOKING) {
 
-            if (p.look_rangemin >= 0) {
-                ctx.rangemin = p.look_rangemin;
+            if (p.look.rangemin >= 0) {
+                ctx.rangemin = p.look.rangemin;
             }
 
-            if (p.look_rangemax >= 0) {
-                ctx.rangemax = p.look_rangemax;
+            if (p.look.rangemax >= 0) {
+                ctx.rangemax = p.look.rangemax;
             }
 
-            ctx.hlx = p.look_x;
-            ctx.hly = p.look_y;
+            ctx.hlx = p.look.x;
+            ctx.hly = p.look.y;
 
-            drawing_context_center_at(ctx, p.look_x, p.look_y);
+            drawing_context_center_at(ctx, p.look.x, p.look.y);
 
         } else {
             drawing_context_center_at(ctx, p.px, p.py);
@@ -846,63 +846,54 @@ struct Game {
 
     void start_look_plain(mainloop::GameState& state) {
 
-        p.is_looking = true;
-        p.look_x = p.px;
-        p.look_y = p.py;
-        p.look_target = -1;
-        p.look_rangemin = -1;
-        p.look_rangemax = -1;
-        p.look_ok = false;
+        p.state = Player::LOOKING;
+        p.look = Player::look_t(p.px, p.py);
 
         center_draw_text(state.render, p.px, p.py, 
                          "Use arrow keys to look around; <TAB> to cycle targets");
     }
 
     void start_look_cycle(mainloop::GameState& state, maudit::keypress k) {
-        p.is_looking = true;
-        p.look_x = p.px;
-        p.look_y = p.py;
-        p.look_target = -1;
-        p.look_rangemin = -1;
-        p.look_rangemax = -1;
-        p.look_ok = false;
 
+        p.state = Player::LOOKING;
+        p.look = Player::look_t(p.px, p.py);
+        
         handle_input_looking(state, k);
     }
 
     void look_move(mainloop::GameState& state, int dx, int dy) {
-        int nx = p.look_x + dx;
-        int ny = p.look_y + dy;
+        int nx = p.look.x + dx;
+        int ny = p.look.y + dy;
 
         if (nx < 0 || ny < 0) 
             return;
 
-        if (!state.neigh.linked(neighbors::pt(p.look_x, p.look_y), neighbors::pt(nx, ny))) {
+        if (!state.neigh.linked(neighbors::pt(p.look.x, p.look.y), neighbors::pt(nx, ny))) {
 
             return;
         }
 
-        p.look_x = nx;
-        p.look_y = ny;
+        p.look.x = nx;
+        p.look.y = ny;
     }
 
     void look_cycle(mainloop::GameState& state) {
 
-        std::cout << "| " << p.look_target << std::endl;
+        std::cout << "| " << p.look.target << std::endl;
 
-        (p.look_target)++;
+        (p.look.target)++;
 
         int n = 0;
 
         for (const auto& i : state.monsters.mons) {
-            std::cout << "  ., " << i.first.first << "," << i.first.second << " " << state.render.is_in_fov(i.first.first, i.first.second) << std::endl;
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 
-            std::cout << "   = " << n << " " << p.look_target << std::endl;
-            if (n == p.look_target) {
-                p.look_x = i.first.first;
-                p.look_y = i.first.second;
+            const Species& s = species().get(i.second.tag);
+            std::cout << "   = " << n << " " << p.look.target << " " << nlp::message("%s", s) << std::endl;
+            if (n == p.look.target) {
+                p.look.x = i.first.first;
+                p.look.y = i.first.second;
                 return;
             }
 
@@ -910,14 +901,15 @@ struct Game {
         }
 
         for (const auto& i : state.items.stuff) {
-            std::cout << "  .. " << i.first.first << "," << i.first.second << " " << state.render.is_in_fov(i.first.first, i.first.second) << std::endl;
             if (!state.render.is_in_fov(i.first.first, i.first.second))
                 continue;
 
-            std::cout << "   = " << n << " " << p.look_target << std::endl;
-            if (n == p.look_target) {
-                p.look_x = i.first.first;
-                p.look_y = i.first.second;
+            const Design& d = designs().get(i.second.front().tag);
+
+            std::cout << "   = " << n << " " << p.look.target << " " << nlp::message("%s", d) << std::endl;
+            if (n == p.look.target) {
+                p.look.x = i.first.first;
+                p.look.y = i.first.second;
                 return;
             }
 
@@ -926,9 +918,9 @@ struct Game {
 
         std::cout << " | " << std::endl;
 
-        p.look_target = -1;
-        p.look_x = p.px;
-        p.look_y = p.py;
+        p.look.target = -1;
+        p.look.x = p.px;
+        p.look.y = p.py;
 
         if (n > 0) {
             look_cycle(state);
@@ -970,9 +962,10 @@ struct Game {
             break;
 
         case '.':
-            p.is_looking = false;
-            p.look_ok = true;
-            return;
+            if (p.state & Player::TARGET) {
+                p.state = Player::FIRING;
+                return;
+            }
 
         default:
             ++stop;
@@ -999,7 +992,7 @@ struct Game {
         }            
 
         if (stop > 1) {
-            p.is_looking = false;
+            p.state = Player::MAIN;
             return;
         }
 
@@ -1007,8 +1000,8 @@ struct Game {
         monsters::Monster mon;
         items::Item itm;
 
-        unsigned int x = p.look_x;
-        unsigned int y = p.look_y;
+        unsigned int x = p.look.x;
+        unsigned int y = p.look.y;
         size_t n = state.items.stack_size(x, y);
 
         if (!state.render.is_in_fov(x, y)) {
@@ -1027,17 +1020,15 @@ struct Game {
             msg = " This is you";
         }
 
-        state.render.draw_text(p.look_x+1, p.look_y, msg, maudit::color::bright_white, maudit::color::dim_blue);
+        state.render.draw_text(p.look.x+1, p.look.y, msg, maudit::color::bright_white, maudit::color::dim_blue);
     }
 
     void start_look_target(mainloop::GameState& state, int rangemin, int rangemax) {
-        p.is_looking = true;
-        p.look_x = p.px;
-        p.look_y = p.py;
-        p.look_target = -1;
-        p.look_rangemin = rangemin;
-        p.look_rangemax = rangemax;
-        p.look_ok = false;
+
+        p.state = (Player::LOOKING | Player::TARGET);
+        p.look = Player::look_t(p.px, p.py);
+        p.look.rangemin = rangemin;
+        p.look.rangemax = rangemax;
 
         center_draw_text(state.render, p.px, p.py, 
                          "Use <TAB> or arrow keys to select target, '.' to fire");
@@ -1136,7 +1127,7 @@ struct Game {
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
 
-        if (p.is_looking) {
+        if (p.state & Player::LOOKING) {
             handle_input_looking(state, k);
             return;
         }
