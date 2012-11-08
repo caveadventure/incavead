@@ -508,6 +508,12 @@ struct Game {
             return;
         }
 
+        if (p.state & Player::THROWING) {
+
+            end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+            ++ticks;
+        }
+
         state.monsters.process(state.render, 
                                std::bind(&Game::move_monster, this, std::ref(state), 
                                          std::placeholders::_1, std::placeholders::_2, 
