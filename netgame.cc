@@ -19,6 +19,8 @@
 #include "designs_bank.h"
 #include "species_bank.h"
 
+#include "levelskins.h"
+
 #include "nlp.h"
 
 #include "mainloop_net.h"
@@ -92,6 +94,8 @@ void init_statics() {
     configparser::parse_config("designs.cfg");
 
     configparser::parse_config("terrain.cfg");
+
+    configparser::parse_config("levelskins.cfg");
 
     ////
 }
@@ -204,7 +208,6 @@ struct Game {
             std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
 
             for (const auto& j : t) {
-                std::cout << "+++ " << j.first << " " << j.second << std::endl;
                 state.features.generate(state.rng, state.grid, j.first, j.second);
             }
         }
@@ -248,27 +251,6 @@ struct Game {
 
     }
 
-    maudit::color floor_color(double z) {
-
-        if (z <= -9) {
-            return maudit::color::dim_red;
-        } else if (z <= -8) {
-            return maudit::color::bright_red;
-        } else if (z <= -7) {
-            return maudit::color::dim_green;
-        } else if (z <= -6) {
-            return maudit::color::bright_green;
-        } else if (z <= -5) {
-            return maudit::color::dim_yellow;
-        } else if (z <= -4) {
-            return maudit::color::bright_yellow;
-        } else if (z <= -3) {
-            return maudit::color::dim_white;
-        }
-
-        return maudit::color::bright_white;
-    }
-
     void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
 
         bool walkable = state.grid.is_walk(x, y);
@@ -281,24 +263,43 @@ struct Game {
 
         double z = state.grid._get(x, y);
 
+        const Levelskin& lev = levelskins().get(p.worldz);
+
         if (walkable) {
             if (water) {
 
                 if (z <= -5) {
-                    s = grender::Grid::skin("+", maudit::color::bright_blue, maudit::color::bright_black);
+                    s = lev.deep_water;
                 } else {
-                    s = grender::Grid::skin("-", maudit::color::bright_blue, maudit::color::bright_black);
+                    s = lev.shallow_water;
                 }
 
             } else {
-                s = grender::Grid::skin(".", floor_color(z), maudit::color::bright_black);
+
+                if (z <= -8) {
+                    s = lev.floor1;
+                } else if (z <= -7) {
+                    s = lev.floor2;
+                } else if (z <= -6) {
+                    s = lev.floor3;
+                } else if (z <= -5) {
+                    s = lev.floor4;
+                } else if (z <= -4) {
+                    s = lev.floor5;
+                } else if (z <= -3) {
+                    s = lev.floor6;
+                } else if (z <= -2) {
+                    s = lev.floor7;
+                } else {
+                    s = lev.floor8;
+                }
             }
 
         } else {
             if (water) {
-                s = grender::Grid::skin("#", maudit::color::bright_blue, maudit::color::bright_black);
+                s = lev.water_wall;
             } else {
-                s = grender::Grid::skin("#", maudit::color::bright_white, maudit::color::bright_black);
+                s = lev.wall;
             }
         }
 
@@ -384,11 +385,15 @@ struct Game {
         ctx.centery = y;
     }
 
+    unsigned int get_lightradius() {
+        return levelskins().get(p.worldz).lightradius;
+    }
+
     void drawing_context(mainloop::drawing_context_t& ctx) {
 
         ctx.px = p.px;
         ctx.py = p.py;
-        ctx.lightradius = p.lightradius;
+        ctx.lightradius = get_lightradius();
 
         if (p.state & Player::LOOKING) {
 
@@ -459,7 +464,7 @@ struct Game {
 
             case Species::idle_ai_t::random:
 
-                if (dist > p.lightradius + 5)
+                if (dist > get_lightradius() + 5)
                     return false;
 
                 do_random = true;
@@ -617,6 +622,7 @@ struct Game {
 
     void rest(mainloop::GameState& state, size_t& ticks) {
 
+        state.render.do_message(nlp::message("%d", state.grid._get(p.px, p.py)));
         ++ticks;
     }
 

@@ -100,6 +100,7 @@ struct Features {
             if (!get_placement(rng, grid, ter.placement, xy)) 
                 break;
             
+            std::cout << "+++ " << tag << " " << xy.first << " " << xy.second << std::endl;
             feats[xy] = Feature(tag, xy);
         }
     }

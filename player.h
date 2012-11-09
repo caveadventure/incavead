@@ -30,8 +30,6 @@ struct Player {
 
     unsigned int level;
 
-    unsigned int lightradius;
-
     stat_t health;
 
     inventory_t inv;
@@ -58,7 +56,7 @@ struct Player {
 
     look_t look;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0), lightradius(8), 
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
                state(MAIN) {}
 
 };

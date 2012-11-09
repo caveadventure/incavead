@@ -58,6 +58,10 @@ inline void init_terrain(const Terrain& t) {
     init_terrain_copy(t);
 }
 
+inline void init_levelskin_(const Levelskin& l) {
+    init_levelskin(l);
+}
+
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
 }
@@ -87,6 +91,7 @@ void parse_config(const std::string& filename) {
     Species spe;
     Design des;
     Terrain ter;
+    Levelskin lev;
 
     maudit::glyph skin;
 
@@ -214,7 +219,7 @@ void parse_config(const std::string& filename) {
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
             '}'
-            %{ fret; })
+            ${ fret; })
             ;
 
         one_species :=  (ws species_one_data ws ';')+
@@ -227,7 +232,7 @@ void parse_config(const std::string& filename) {
         ;
 
         species = 
-            'species' ${ spe = Species(); }
+            'species' %{ spe = Species(); }
             ws1 species_level ws1 species_tag ws
             '{' ${fcall one_species;} 
             %{ init_species(spe); }
@@ -252,7 +257,7 @@ void parse_config(const std::string& filename) {
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
             design_throwrange |
             '}'
-            %{ fret; })
+            ${ fret; })
             ;
             
         one_design :=  (ws design_one_data ws ';')+
@@ -265,7 +270,7 @@ void parse_config(const std::string& filename) {
         ;
 
         design =
-            'design' ${ des = Design(); }
+            'design' %{ des = Design(); }
             ws1 design_level ws1 design_tag ws
             '{' ${fcall one_design;}
             %{ init_design(des); }
@@ -295,7 +300,7 @@ void parse_config(const std::string& filename) {
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             '}' 
-            %{ fret; })
+            ${ fret; })
             ;
 
         one_terrain := (ws terrain_one_data ws ';')+
@@ -305,7 +310,7 @@ void parse_config(const std::string& filename) {
         ;
 
         terrain = 
-            'terrain' ${ ter = Terrain(); }
+            'terrain' %{ ter = Terrain(); }
             ws1 terrain_tag ws
             '{' ${fcall one_terrain;}
             %{ init_terrain(ter); }
@@ -313,8 +318,47 @@ void parse_config(const std::string& filename) {
 
         ####
 
+        levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water = skin; };
+        levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water = skin; };
+        levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall = skin; };
+        levelskin_water_wall    = 'water_wall'    ws1 skin   %{ lev.water_wall = skin; };
+        levelskin_floor1        = 'floor1'        ws1 skin   %{ lev.floor1 = skin; };
+        levelskin_floor2        = 'floor2'        ws1 skin   %{ lev.floor2 = skin; };
+        levelskin_floor3        = 'floor3'        ws1 skin   %{ lev.floor3 = skin; };
+        levelskin_floor4        = 'floor4'        ws1 skin   %{ lev.floor4 = skin; };
+        levelskin_floor5        = 'floor5'        ws1 skin   %{ lev.floor5 = skin; };
+        levelskin_floor6        = 'floor6'        ws1 skin   %{ lev.floor6 = skin; };
+        levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7 = skin; };
+        levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8 = skin; };
+        levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
 
-        entry = species | design | terrain ;
+        levelskin_one_data =
+            (levelskin_deep_water | levelskin_shallow_water | levelskin_wall | 
+            levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
+            levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
+            levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
+            levelskin_lightradius |
+            '}' 
+            ${ fret; })
+            ;
+
+        one_levelskin := (ws levelskin_one_data ws ';')+
+            ;
+
+        levelskin_level = number %{ lev.level = toint(state.match); } 
+        ;
+
+        levelskin =
+            'levelskin' %{ lev = Levelskin(); }
+            ws1 levelskin_level ws
+            '{' ${fcall one_levelskin;}
+            %{ init_levelskin_(lev); }
+            ;
+
+        ####
+
+
+        entry = species | design | terrain | levelskin ;
             
       main := (ws entry)+ ws ;
         
@@ -354,6 +398,7 @@ void parse_config(const std::string& filename) {
         (void)ConfigParser_en_one_species;
         (void)ConfigParser_en_one_design;
         (void)ConfigParser_en_one_terrain;
+        (void)ConfigParser_en_one_levelskin;
         (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {
