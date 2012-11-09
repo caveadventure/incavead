@@ -12,11 +12,12 @@ typedef std::pair<unsigned int, unsigned int> pt;
 struct Feature {
     std::string tag;
     pt xy;
+    unsigned int decay;
 
-    Feature() : xy(0, 0) {}
+    Feature() : xy(0, 0), decay(0) {}
 
-    Feature(const std::string& _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy) 
+    Feature(const std::string& _tag, const pt& _xy, unsigned int d) : 
+        tag(_tag), xy(_xy), decay(d)
         {}
 };
 
@@ -31,6 +32,7 @@ struct reader<features::Feature> {
     void read(Source& s, features::Feature& m) {
         serialize::read(s, m.tag);
         serialize::read(s, m.xy);
+        serialize::read(s, m.decay);
     }
 };
 
@@ -39,6 +41,7 @@ struct writer<features::Feature> {
     void write(Sink& s, const features::Feature& m) {
         serialize::write(s, m.tag);
         serialize::write(s, m.xy);
+        serialize::write(s, m.decay);
     }
 };
 
@@ -61,10 +64,10 @@ struct Features {
 
     void set(unsigned int x, unsigned int y, const std::string& tag) {
         // Check that the tag exists.
-        const Terrain& tmp __attribute__ ((unused)) = terrain().get(tag);
+        const Terrain& t = terrain().get(tag);
 
         pt xy(x, y);
-        feats[xy] = Feature(tag, xy);
+        feats[xy] = Feature(tag, xy, t.decay);
     }
 
     bool get_placement(rnd::Generator& rng, grid::Map& grid, Terrain::placement_t p, pt& ret) {
@@ -100,8 +103,10 @@ struct Features {
             if (!get_placement(rng, grid, ter.placement, xy)) 
                 break;
             
+            const Terrain& t = terrain().get(tag);
+
             std::cout << "+++ " << tag << " " << xy.first << " " << xy.second << std::endl;
-            feats[xy] = Feature(tag, xy);
+            feats[xy] = Feature(tag, xy, t.decay);
         }
     }
 
@@ -114,6 +119,25 @@ struct Features {
 
         ret = i->second;
         return true;
+    }
+
+    template <typename FUNC>
+    void process(grender::Grid& render, FUNC f) {
+
+        std::unordered_set<pt> wipe;
+
+        for (auto& i : feats) {
+            const Terrain& t = terrain().get(i.second.tag);
+
+            if (!f(i.second, t)) {
+                wipe.insert(i.first);
+            }
+        }
+
+        for (const auto& xy : wipe) {
+            feats.erase(xy);
+            render.invalidate(xy.first, xy.second);
+        }
     }
 
     inline void write(serialize::Sink& s) {

@@ -24,9 +24,11 @@ struct Terrain {
 
     bool viewblock;
     bool walkblock;
+
+    unsigned int decay;
     
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
-                viewblock(false), walkblock(false) {}
+                viewblock(false), walkblock(false), decay(0) {}
 
 };
 

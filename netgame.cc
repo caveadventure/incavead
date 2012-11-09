@@ -70,6 +70,28 @@ void init_statics() {
         orc raider
         lizardman envoy
 
+      1 drow & orcs
+        kobold slave
+        orcish raider
+        orcish slavemaster
+        orcish slave
+        drow flaneur
+        drow noble
+        drow sorceror
+        drow torturer
+        drow puppetmaster
+        orcish sex slave
+        drow warrior
+        drow slaver
+        drow priest of darkness
+        drow priest of insanity
+        drow priestess of lust
+        cave spider
+        spider queen
+        sacred spider
+        drow queen
+        spiderdrow guard
+
       1 lizardmen 
       2 drow & orcs
       3 beholders/d&d
@@ -497,6 +519,18 @@ struct Game {
         }
     }
 
+    bool process_feature(mainloop::GameState& state, const features::Feature& f, const Terrain& t) {
+
+        if (f.decay > 0) {
+            --(f.decay);
+
+            if (f.decay == 0)
+                return false;
+        }
+
+        return true;
+    }
+
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input) {
 
@@ -519,6 +553,9 @@ struct Game {
                                          std::placeholders::_1, std::placeholders::_2, 
                                          std::placeholders::_3, std::placeholders::_4));
 
+        state.features.process(state.render, 
+                               std::bind(&Game::process_feature, this, std::ref(state),
+                                         std::placeholders::_1, std::placeholders::_2));
     }
 
     void move_player(mainloop::GameState& state) {

@@ -287,7 +287,7 @@ struct Main {
     }
 
     void goodbye_message() {
-        screen.io.write("\r\nPress any key.\r\n");
+        //screen.io.write("\r\nPress any key.\r\n");
         state.render.wait_for_anykey(screen, view_w, view_h);
     }
 

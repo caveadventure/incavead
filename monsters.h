@@ -33,6 +33,7 @@ struct reader<monsters::Monster> {
     void read(Source& s, monsters::Monster& m) {
         serialize::read(s, m.tag);
         serialize::read(s, m.xy);
+        serialize::read(s, m.health);
     }
 };
 
@@ -41,6 +42,7 @@ struct writer<monsters::Monster> {
     void write(Sink& s, const monsters::Monster& m) {
         serialize::write(s, m.tag);
         serialize::write(s, m.xy);
+        serialize::write(s, m.health);
     }
 };
 

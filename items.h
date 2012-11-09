@@ -32,6 +32,7 @@ struct reader<items::Item> {
     void read(Source& s, items::Item& m) {
         serialize::read(s, m.tag);
         serialize::read(s, m.xy);
+        serialize::read(s, m.count);
     }
 };
 
@@ -40,6 +41,7 @@ struct writer<items::Item> {
     void write(Sink& s, const items::Item& m) {
         serialize::write(s, m.tag);
         serialize::write(s, m.xy);
+        serialize::write(s, m.count);
     }
 };
 
