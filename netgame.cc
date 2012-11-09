@@ -91,31 +91,9 @@ void init_statics() {
 
     configparser::parse_config("designs.cfg");
 
+    configparser::parse_config("terrain.cfg");
+
     ////
-    /*
-    init_designs("twig", 0, 90, "%{a} twig%(s)", "~", maudit::color::dim_green, "w",
-                 "A twig from a dry, bleached branch.\n"
-                 "Can be used as an extremely ineffective melee weapon.");
-
-    init_designs("rock", 0, 200, "%{a} pebble%(s)", "*", maudit::color::dim_white, "w",
-                 "A fist-sized rock.\n"
-                 "Can be used as an ineffective melee or projectile weapon.");
-
-    init_designs("log", 0, 30, "%{a} log%(s)", "~", maudit::color::bright_green, "",
-                 "Part of a washed up, bleached tree.\n"
-                 "A useless item.");
-
-    init_designs("leaf", 0, 100, "%{a} lea%{f}%(ves)", "~", maudit::color::dim_yellow, "",
-                 "A dry leaf from a tree.\n"
-                 "A useless item.");
-
-    init_designs("sword0", 0, 20, "%{a} rusted sword%(s)", "(", maudit::color::dim_white, "w",
-                 "A discarded, rusty sword.\n"
-                 "Can be used a melee weapon.");
-    */
-    ////
-
-    init_terrain(">", "hole in the floor", ">", maudit::color::bright_white, Terrain::placement_t::floor, 1);
 }
 
 
@@ -144,7 +122,7 @@ struct Game {
 
         state.rng.init(gridseed);
 
-        unsigned int nflatten = std::max(8 - (::abs(p.worldx) + ::abs(p.worldy)), 0);
+        unsigned int nflatten = std::max(0, 4 - 2*(p.worldx + p.worldy));
         unsigned int nunflow = std::min(std::max(0, p.worldz), 8);
 
         //nflatten = 0;
@@ -215,9 +193,21 @@ struct Game {
 
         // Place some dungeon features on the same spots every time.
 
-        unsigned int stairscount = ::fabs(state.rng.gauss(50.0, 2.0));
+        state.terrain_counts = terrain().counts;
 
-        state.features.generate(state.rng, state.grid, ">", stairscount);
+        unsigned int featscount = ::fabs(state.rng.gauss(35.0, 5.0));
+
+        for (unsigned int i = 0; i < featscount; ++i) {
+
+            unsigned int takecount = ::fabs(state.rng.gauss(5.0, 1.0));
+
+            std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+
+            for (const auto& j : t) {
+                std::cout << "+++ " << j.first << " " << j.second << std::endl;
+                state.features.generate(state.rng, state.grid, j.first, j.second);
+            }
+        }
 
         // Place some random items.
 
@@ -322,9 +312,13 @@ struct Game {
 
             const Terrain& t = terrain().get(feat.tag);
             state.render.set_skin(x, y, 1, t.skin);
+            state.render.set_is_viewblock(x, y, 1, t.viewblock);
+            state.render.set_is_walkblock(x, y, 1, t.walkblock);
 
         } else {
             state.render.unset_skin(x, y, 1);
+            state.render.set_is_viewblock(x, y, 1, false);
+            state.render.set_is_walkblock(x, y, 1, false);
         }
 
         // //
@@ -584,40 +578,41 @@ struct Game {
         move_player(state);
     }
 
-    template <typename FUNC>
-    bool toggle_feature(mainloop::GameState& state, size_t& ticks, FUNC f) {
+    void use_terrain(mainloop::GameState& state, size_t& ticks, bool& regen) {
 
         features::Feature feat;
-        if (state.features.get(p.px, p.py, feat)) {
-
-            const Terrain& t = terrain().get(feat.tag);
-
-            if (f(t)) {
-                ticks++;
-                return true;
-            }
+        if (!state.features.get(p.px, p.py, feat)) {
+            state.render.do_message("There is nothing here to use.");
+            return;
         }
 
-        return false;
-    }
+        const Terrain& t = terrain().get(feat.tag);
 
-    bool descend(mainloop::GameState& state, size_t& ticks) {
+        if (t.stairs > 0) {
+            state.render.do_message("You climb down the hole.");
+            p.worldz += t.stairs;
 
-        if (toggle_feature(state, ticks, [&](const Terrain& t) {
-                    
-                    if (t.stairs) {
+            ++ticks;
+            regen = true;
+            return;
+        }
 
-                        state.render.do_message("You climb down the hole.");
-                        p.worldz += t.stairs;
-                        return true;
-                    } 
+        if (t.tunnel_x != 0 || t.tunnel_y != 0) {
+            state.render.do_message("You climb into the tunnel.");
+            p.worldx += t.tunnel_x;
+            p.worldy += t.tunnel_y;
 
-                    return false;
-                }))
-            return true;
+            p.worldx = std::min(p.worldx, 1);
+            p.worldx = std::max(p.worldx, -1);
+            p.worldy = std::min(p.worldy, 1);
+            p.worldy = std::max(p.worldy, -1);
 
-        state.render.do_message("You can't descend here.");
-        return false;
+            ++ticks;
+            regen = true;
+            return;
+        }
+
+        state.render.do_message("There is nothing here to use.");
     }
 
     void rest(mainloop::GameState& state, size_t& ticks) {
@@ -668,9 +663,7 @@ struct Game {
             break;
 
         case '>':
-            if (descend(state, ticks)) {
-                regen = true;
-            }
+            use_terrain(state, ticks, regen);
             break;
 
         case '.':

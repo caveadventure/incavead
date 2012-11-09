@@ -52,11 +52,14 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
 
     double v = distance(p.px, p.py, lx, ly);
 
-    if (d.throwrange == 0 || v > d.throwrange) 
+    if (d.throwrange == 0 || v > d.throwrange) {
+        std::cout << "OOPS " << v << " " << d.throwrange << std::endl;
         return false;
+    }
 
     monsters::Monster mon;
     if (state.monsters.get(lx, ly, mon)) {
+        std::cout << "!! attack" << std::endl;
 
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 

@@ -6,24 +6,28 @@
 struct Terrain {
     enum class placement_t : unsigned int {
         floor,
-        water
+        water,
+        corner
     };
 
     std::string tag;
     std::string name;
     maudit::glyph skin;
 
+    unsigned int count;
+
     placement_t placement;
 
     unsigned int stairs;
-    
-    Terrain() : placement(placement_t::floor), stairs(0) {}
+    int tunnel_x;
+    int tunnel_y;
 
-    Terrain(const std::string& _tag, const std::string& _name, const std::string& _chr, maudit::color _fore,
-            placement_t _placement, unsigned int _stairs) :
-        tag(_tag), name(_name), skin(_chr, _fore, maudit::color::bright_black),
-        placement(_placement), stairs(_stairs)
-        {}
+    bool viewblock;
+    bool walkblock;
+    
+    Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
+                viewblock(false), walkblock(false) {}
+
 };
 
 #endif

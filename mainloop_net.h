@@ -30,6 +30,7 @@ struct GameState {
 
     counters::Counts designs_counts;
     counters::Counts species_counts;
+    counters::Counts terrain_counts;
 
     monsters::Monsters monsters;
     items::Items items;
@@ -119,6 +120,7 @@ struct Main {
             state.moon.read(s);
             state.designs_counts.read(s);
             state.species_counts.read(s);
+            state.terrain_counts.read(s);
             state.features.read(s);
             state.items.read(s);
             state.monsters.read(s);
@@ -145,6 +147,7 @@ struct Main {
         state.moon.write(s);
         state.designs_counts.write(s);
         state.species_counts.write(s);
+        state.terrain_counts.write(s);
         state.features.write(s);
         state.items.write(s);
         state.monsters.write(s);
@@ -177,8 +180,9 @@ struct Main {
         state.camap.init();
         state.moon.init();
 
-        state.species_counts = species().counts;
         state.designs_counts = designs().counts;
+        state.species_counts = species().counts;
+        state.terrain_counts = terrain().counts;
 
         state.features.init();
         state.items.init();

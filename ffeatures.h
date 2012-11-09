@@ -78,6 +78,10 @@ struct Features {
         case Terrain::placement_t::water:
             if (!grid.one_of_lake(rng, ret)) return false;
             break;
+
+        case Terrain::placement_t::corner:
+            if (!grid.one_of_corner(rng, ret)) return false;
+            break;
         }
 
         grid.add_nogen(ret.first, ret.second);

@@ -46,37 +46,28 @@ struct ragel_state {
     std::string match;
 };
 
-inline void print_species(const Species& s) {
-    std::cout << "  tag: " << s.tag << std::endl;
-    std::cout << "  name: " << s.name << std::endl;
-    std::cout << "  skin: " << s.skin.text << " " << (int)s.skin.fore << " " << (int)s.skin.back << std::endl;
-    std::cout << "  level: " << s.level << std::endl;
-    std::cout << "  count: " << s.count << std::endl;
-    std::cout << "  habitat: " << (int)s.habitat << std::endl;
-    std::cout << "  ai: " << (int)s.ai << std::endl;
-    std::cout << "  idle_ai: " << (int)s.idle_ai << std::endl;
-    std::cout << "  move: " << (int)s.move << std::endl;
-    std::cout << "  range: " << s.range << std::endl;
-    std::cout << "  clumpsize: " << s.clumpsize.mean << " " << s.clumpsize.deviation << std::endl;
-
+inline void init_species(const Species& s) {
     init_species_copy(s);
 }
 
-inline void print_design(const Design& d) {
-    std::cout << "  tag: " << d.tag << std::endl;
-    std::cout << "  name: " << d.name << std::endl;
-    std::cout << "  skin: " << d.skin.text << " " << (int)d.skin.fore << " " << (int)d.skin.back << std::endl;
-    std::cout << "  level: " << d.level << std::endl;
-    std::cout << "  count: " << d.count << std::endl;
-    std::cout << "  descr: " << d.descr << std::endl;
-    std::cout << "  attack: " << d.attack << std::endl;
-    std::cout << "  defense: " << d.defense << std::endl;
-
+inline void init_design(const Design& d) {
     init_design_copy(d);
+}
+
+inline void init_terrain(const Terrain& t) {
+    init_terrain_copy(t);
 }
 
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
+}
+
+inline int toint(const std::string& s) {
+    return ::atoi(s.c_str());
+}
+
+inline double toreal(const std::string& s) {
+    return ::atof(s.c_str());
 }
 
 void parse_config(const std::string& filename) {
@@ -95,6 +86,7 @@ void parse_config(const std::string& filename) {
 
     Species spe;
     Design des;
+    Terrain ter;
 
     maudit::glyph skin;
 
@@ -121,6 +113,9 @@ void parse_config(const std::string& filename) {
         sep = '_' | ws;
 
         number = [0-9]+ 
+            >start $push;
+
+        snumber = ('-'? [0-9]+)
             >start $push;
 
         real = (('-'?) (([0-9]+ '\.' [0-9]+) | ([0-9]+)))
@@ -188,30 +183,30 @@ void parse_config(const std::string& filename) {
             'water'  %{ spe.move = Species::move_t::water; }  |
             'corner' %{ spe.move = Species::move_t::corner; } ;
 
-        species_count     = 'count'     ws1 number  %{ spe.count = ::atoi(state.match.c_str()); } ;
+        species_count     = 'count'     ws1 number  %{ spe.count = toint(state.match); } ;
         species_name      = 'name'      ws1 string  %{ spe.name = state.match; } ;
         species_skin      = 'skin'      ws1 skin    %{ spe.skin = skin; };
         species_habitat   = 'habitat'   ws1 habitat ;
         species_ai        = 'ai'        ws1 ai      ;
         species_idle_ai   = 'idle_ai'   ws1 idle_ai ;
         species_move      = 'move'      ws1 move    ;
-        species_range     = 'range'     ws1 number  %{ spe.range = ::atoi(state.match.c_str()); } ;
-        species_attack    = 'attack'    ws1 real %{ spe.attack = ::atof(state.match.c_str()); } ;
-        species_defense   = 'defense'   ws1 real %{ spe.defense = ::atof(state.match.c_str()); } ;
+        species_range     = 'range'     ws1 number  %{ spe.range = toint(state.match); } ;
+        species_attack    = 'attack'    ws1 real %{ spe.attack = toreal(state.match); } ;
+        species_defense   = 'defense'   ws1 real %{ spe.defense = toreal(state.match); } ;
 
         species_clumpsize = 'clumpsize' 
-            ws1 real %{ spe.clumpsize.mean = ::atof(state.match.c_str()); } 
-            ws1 real %{ spe.clumpsize.deviation = ::atof(state.match.c_str()); } 
+            ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
+            ws1 real %{ spe.clumpsize.deviation = toreal(state.match); } 
         ;
 
         species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
             ws1 string %{ spe.companion.back().tag = state.match; }
-            ws1 real   %{ spe.companion.back().chance = ::atof(state.match.c_str()); }
+            ws1 real   %{ spe.companion.back().chance = toreal(state.match); }
             ;
 
         species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }
             ws1 string %{ spe.drop.back().tag = state.match; }
-            ws1 real   %{ spe.drop.back().chance = ::atof(state.match.c_str()); }
+            ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
         species_one_data = 
@@ -225,7 +220,7 @@ void parse_config(const std::string& filename) {
         one_species :=  (ws species_one_data ws ';')+
             ;
 
-        species_level = number %{ spe.level = ::atoi(state.match.c_str()); }
+        species_level = number %{ spe.level = toint(state.match); }
         ;
 
         species_tag   = tag    %{ spe.tag = state.match; }
@@ -235,22 +230,22 @@ void parse_config(const std::string& filename) {
             'species' ${ spe = Species(); }
             ws1 species_level ws1 species_tag ws
             '{' ${fcall one_species;} 
-            %{ std::cout << "species done: " << std::endl; print_species(spe); }
+            %{ init_species(spe); }
             ;
 
         ####
 
-        design_count      = 'count'      ws1 number  %{ des.count = ::atoi(state.match.c_str()); } ;
+        design_count      = 'count'      ws1 number  %{ des.count = toint(state.match); } ;
         design_name       = 'name'       ws1 string  %{ des.name = state.match; } ;
         design_skin       = 'skin'       ws1 skin    %{ des.skin = skin; };
         design_slot       = 'slot'       ws1 string  %{ des.slot = state.match; } ;
         design_descr      = 'descr'      ws1 string  %{ des.descr = state.match; } ;
-        design_attack     = 'attack'     ws1 real    %{ des.attack = ::atof(state.match.c_str()); } ;
-        design_defense    = 'defense'    ws1 real    %{ des.defense = ::atof(state.match.c_str()); } ;
-        design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = ::atoi(state.match.c_str()); };
-        design_heal       = 'heal'       ws1 real    %{ des.heal = ::atof(state.match.c_str()); };
+        design_attack     = 'attack'     ws1 real    %{ des.attack = toreal(state.match); } ;
+        design_defense    = 'defense'    ws1 real    %{ des.defense = toreal(state.match); } ;
+        design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = toint(state.match); };
+        design_heal       = 'heal'       ws1 real    %{ des.heal = toreal(state.match); };
         design_usable     = 'usable'                 %{ des.usable = true; };
-        design_throwrange = 'throwrange' ws1 number  %{ des.throwrange = ::atoi(state.match.c_str()); };
+        design_throwrange = 'throwrange' ws1 number  %{ des.throwrange = toint(state.match); };
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
@@ -263,7 +258,7 @@ void parse_config(const std::string& filename) {
         one_design :=  (ws design_one_data ws ';')+
             ;
 
-        design_level = number %{ des.level = ::atoi(state.match.c_str()); }
+        design_level = number %{ des.level = toint(state.match); }
         ;
 
         design_tag   = tag    %{ des.tag = state.match; }
@@ -273,10 +268,53 @@ void parse_config(const std::string& filename) {
             'design' ${ des = Design(); }
             ws1 design_level ws1 design_tag ws
             '{' ${fcall one_design;}
-            %{ std::cout << "design done: " << std::endl; print_design(des); }
+            %{ init_design(des); }
             ;
 
-        entry = species | design ;
+        ####
+
+        placement = 
+            'floor'   %{ ter.placement = Terrain::placement_t::floor; }     | 
+            'water'   %{ ter.placement = Terrain::placement_t::water; }     | 
+            'corner'  %{ ter.placement = Terrain::placement_t::corner; }    ;
+
+        terrain_tunnel   = 'tunnel' 
+            ws1 snumber %{ ter.tunnel_x = toint(state.match); }
+            ws1 snumber %{ ter.tunnel_y = toint(state.match); } 
+            ;
+
+        terrain_count     = 'count'     ws1 number %{ ter.count = toint(state.match); } ;
+        terrain_name      = 'name'      ws1 string %{ ter.name = state.match; } ;
+        terrain_skin      = 'skin'      ws1 skin   %{ ter.skin = skin; };
+        terrain_placement = 'placement' ws1 placement ;
+        terrain_stairs    = 'stairs'    ws1 number %{ ter.stairs = toint(state.match); } ;
+        terrain_viewblock = 'viewblock'            %{ ter.viewblock = true; } ;
+        terrain_walkblock = 'walkblock'            %{ ter.walkblock = true; } ;
+
+        terrain_one_data =
+            (terrain_count | terrain_name | terrain_skin | terrain_placement |
+            terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
+            '}' 
+            %{ fret; })
+            ;
+
+        one_terrain := (ws terrain_one_data ws ';')+
+            ;
+
+        terrain_tag = tag %{ ter.tag = state.match; }
+        ;
+
+        terrain = 
+            'terrain' ${ ter = Terrain(); }
+            ws1 terrain_tag ws
+            '{' ${fcall one_terrain;}
+            %{ init_terrain(ter); }
+            ;
+
+        ####
+
+
+        entry = species | design | terrain ;
             
       main := (ws entry)+ ws ;
         
@@ -315,6 +353,7 @@ void parse_config(const std::string& filename) {
         (void)ConfigParser_en_strchar_escape;
         (void)ConfigParser_en_one_species;
         (void)ConfigParser_en_one_design;
+        (void)ConfigParser_en_one_terrain;
         (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {
