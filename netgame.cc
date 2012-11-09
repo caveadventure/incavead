@@ -519,7 +519,7 @@ struct Game {
         }
     }
 
-    bool process_feature(mainloop::GameState& state, const features::Feature& f, const Terrain& t) {
+    bool process_feature(mainloop::GameState& state, features::Feature& f, const Terrain& t) {
 
         if (f.decay > 0) {
             --(f.decay);
