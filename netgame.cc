@@ -502,7 +502,7 @@ struct Game {
 
                 bool reach = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
 
-                std<< "!. " << reach << std::endl;
+                std::cout << "!. " << reach << std::endl;
                 if (reach) {
 
                 for (const auto& c : s.cast_cloud) {
