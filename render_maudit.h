@@ -940,10 +940,10 @@ public:
                          bool do_draw, color_t fore, color_t back,
                          FUNC func) {
 
-	TCOD_map_compute_fov(tcodmap, x, y, r, false, FOV_SHADOW);
+        fov::fov_shadowcasting(w, h, grid, x, y, r);
 
         _draw_circle(x, y, r, do_draw, fore, back, 
-                     [this](unsigned int x, unsigned int y) { return TCOD_map_is_in_fov(tcodmap, x, y); },
+                     [this](unsigned int x, unsigned int y) { return _get(pt(x, y)).in_fov; },
                      func);
     }
 

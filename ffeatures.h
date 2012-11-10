@@ -62,12 +62,13 @@ struct Features {
         init();
     }
 
-    void set(unsigned int x, unsigned int y, const std::string& tag) {
+    void set(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
         // Check that the tag exists.
         const Terrain& t = terrain().get(tag);
 
         pt xy(x, y);
         feats[xy] = Feature(tag, xy, t.decay);
+        render.invalidate(x, y);
     }
 
     bool get_placement(rnd::Generator& rng, grid::Map& grid, Terrain::placement_t p, pt& ret) {

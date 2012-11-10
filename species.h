@@ -77,6 +77,18 @@ struct Species {
     double attack;
     double defense;
 
+    struct cloud_t {
+        double chance;
+        std::string terraintag;
+        unsigned int radius;
+        unsigned int turns;
+        std::string name;
+
+        cloud_t() : chance(0), radius(0), turns(0) {}
+    };
+
+    std::vector<cloud_t> cast_cloud;
+
     Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::any), range(0), clumpsize(),
                 attack(0), defense(0) {}

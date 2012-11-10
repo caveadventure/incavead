@@ -457,7 +457,33 @@ struct Game {
                                    4, '+', maudit::color::bright_green);
     }
 
-    bool move_monster(mainloop::GameState& state, const monsters::Monster& m, const Species& s,
+    bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
+        unsigned int _x = ax;
+        unsigned int _y = ay;
+
+        state.render.draw_line(ax, ay, bx, by, false, 
+                               maudit::color::dim_red, maudit::color::bright_white,
+                               [&](unsigned int x, unsigned int y) {
+                                   
+                                   if (x == ax && y == ay)
+                                       return true;
+
+                                   if (state.render.is_walkblock(x, y) ||
+                                       state.render.is_viewblock(x, y))
+                                       return false;
+
+                                   _x = x;
+                                   _y = y;
+                                   std::cout << "    ~ " << x << "," << y << std::endl;
+                                   return true;
+                               });
+
+        std::cout << "  ~~~ " << _x << "," << _y << " " << bx << "," << by << std::endl;
+        if (_x == bx && _y == by) return true;
+        return false;
+    }
+
+    bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy, bool& do_die) {
 
         if (m.health < -3) {
@@ -468,6 +494,40 @@ struct Game {
         bool do_random = false;
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
+
+        if (s.cast_cloud.size() > 0) {
+
+            std::cout << "! " << dist << " " << s.range << std::endl;
+            if (dist < s.range) {
+
+                bool reach = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
+
+                std<< "!. " << reach << std::endl;
+                if (reach) {
+
+                for (const auto& c : s.cast_cloud) {
+
+                    std::cout << "!! " << ticks << " " << c.turns << std::endl;
+
+                    if ((ticks % c.turns) != 0)
+                        continue;
+                    
+                    double v = state.rng.gauss(0.0, 1.0);
+
+                    std::cout << "!!! " << v << " " << c.chance << std::endl;
+                    
+                    if (v <= c.chance)
+                        continue;
+
+                    std::cout << "!!!! " << c.radius << " " << c.terraintag << std::endl;
+
+                    cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
+                    state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+                    return false;
+                }
+                }
+            }
+        }
 
         if (s.ai == Species::ai_t::seek_player &&
             state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
@@ -549,7 +609,7 @@ struct Game {
         }
 
         state.monsters.process(state.render, 
-                               std::bind(&Game::move_monster, this, std::ref(state), 
+                               std::bind(&Game::move_monster, this, std::ref(state), ticks, 
                                          std::placeholders::_1, std::placeholders::_2, 
                                          std::placeholders::_3, std::placeholders::_4));
 
@@ -663,6 +723,21 @@ struct Game {
         ++ticks;
     }
 
+    void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
+                    const std::string& terraintag) {
+
+        state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
+                                 [&](unsigned int _x, unsigned int _y) {
+
+                                     features::Feature tmp;
+                                     if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
+
+                                     if (!state.grid.is_walk(_x, _y)) return;
+
+                                     state.features.set(_x, _y, terraintag, state.render);
+                                 });
+    }
+
     void handle_input_main(mainloop::GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
                            maudit::keypress k) {
@@ -736,6 +811,10 @@ struct Game {
 
         case '\t':
             start_look_cycle(p.state, p.look, p.px, p.py, state, k);
+            break;
+
+        case 'z':
+            cast_cloud(state, p.px, p.py, 5, "cd");
             break;
         }
 

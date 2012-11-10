@@ -214,10 +214,19 @@ void parse_config(const std::string& filename) {
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
+        species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }
+            ws1 real   %{ spe.cast_cloud.back().chance = toreal(state.match); }
+            ws1 string %{ spe.cast_cloud.back().terraintag = state.match; }
+            ws1 number %{ spe.cast_cloud.back().radius = toint(state.match); }
+            ws1 number %{ spe.cast_cloud.back().turns = toint(state.match); }
+            ws1 string %{ spe.cast_cloud.back().name = state.match; }
+            ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
+            species_cast_cloud |
             '}'
             ${ fret; })
             ;
@@ -295,10 +304,12 @@ void parse_config(const std::string& filename) {
         terrain_stairs    = 'stairs'    ws1 number %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'            %{ ter.viewblock = true; } ;
         terrain_walkblock = 'walkblock'            %{ ter.walkblock = true; } ;
+        terrain_decay     = 'decay'     ws1 number %{ ter.decay = toint(state.match); } ;
 
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
+            terrain_decay |
             '}' 
             ${ fret; })
             ;
