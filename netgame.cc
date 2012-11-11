@@ -599,22 +599,6 @@ struct Game {
             return;
         }
 
-        if (p.state & Player::THROWING) {
-
-            end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
-            ++ticks;
-            p.state = Player::MAIN;
-
-        } else {
-
-            if (p.sleep > 0) {
-                ++ticks;
-                --(p.sleep);
-                do_draw = true;
-                need_input = false;
-            }
-        }
-
         state.monsters.process(state.render, 
                                std::bind(&Game::move_monster, this, std::ref(state), ticks, 
                                          std::placeholders::_1, std::placeholders::_2, 
@@ -623,6 +607,12 @@ struct Game {
         state.features.process(state.render, 
                                std::bind(&Game::process_feature, this, std::ref(state),
                                          std::placeholders::_1, std::placeholders::_2));
+
+        if (p.sleep > 0) {
+            ++ticks;
+            --(p.sleep);
+            do_draw = true;
+        }
     }
 
     void move_player(mainloop::GameState& state) {
@@ -859,7 +849,16 @@ struct Game {
                       maudit::keypress k) {
 
         if (p.state & Player::LOOKING) {
+
             handle_input_looking(p.state, p.look, p.px, p.py, state, k);
+
+            if (p.state & Player::THROWING) {
+
+                end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+                ++ticks;
+                p.state = Player::MAIN;
+            }
+
             return;
         }
 

@@ -247,6 +247,11 @@ struct Main {
         bm _p("process");
 
         game.process_world(state, ticks, done, dead, regen, need_input, draw);
+
+        if (ticks != oldticks) {
+            need_input = false;
+        }
+
         return true;
     }
 
