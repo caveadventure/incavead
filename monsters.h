@@ -141,8 +141,6 @@ struct Monsters {
 
         Species::habitat_t h = s.habitat; 
 
-        std::cout << " - " << tag << " " << n << std::endl;
-
         switch (h) {
 
         case Species::habitat_t::walk:
@@ -245,8 +243,6 @@ struct Monsters {
         for (const auto& comp : s.companion) {
 
             double v = rng.gauss(0.0, 1.0);
-
-            std::cout << " ++ " << comp.tag << " " << v << " " << comp.chance << std::endl;
 
             if (v <= comp.chance)
                 continue;

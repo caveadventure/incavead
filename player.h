@@ -32,6 +32,8 @@ struct Player {
 
     stat_t health;
 
+    unsigned int sleep;
+
     inventory_t inv;
 
     static const unsigned int MAIN         = 0x0;
@@ -56,8 +58,8 @@ struct Player {
 
     look_t look;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
-               state(MAIN) {}
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(1), level(1),
+               sleep(0), state(MAIN) {}
 
 };
 

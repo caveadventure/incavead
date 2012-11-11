@@ -235,7 +235,7 @@ struct Main {
 
     }
 
-    bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input) {
+    bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
 
         if (ticks == oldticks) {
             need_input = true;
@@ -246,7 +246,7 @@ struct Main {
 
         bm _p("process");
 
-        game.process_world(state, ticks, done, dead, regen, need_input);
+        game.process_world(state, ticks, done, dead, regen, need_input, draw);
         return true;
     }
 
@@ -313,10 +313,12 @@ struct Main {
             bool need_input = false;
 
             do {
-                bool time_passed = process(oldticks, done, dead, regen, need_input);
+                bool do_draw = false;
+                bool time_passed = process(oldticks, done, dead, regen, need_input, do_draw);
 
                 if (regen) {
                     regenerate();
+                    draw();
                     regen = false;
                 }
 
@@ -324,6 +326,10 @@ struct Main {
                     draw();
                     goodbye_message();
                     return dead;
+                }
+
+                if (do_draw) {
+                    draw();
                 }
 
                 if (!time_passed) break;

@@ -188,16 +188,17 @@ void parse_config(const std::string& filename) {
             'water'  %{ spe.move = Species::move_t::water; }  |
             'corner' %{ spe.move = Species::move_t::corner; } ;
 
-        species_count     = 'count'     ws1 number  %{ spe.count = toint(state.match); } ;
-        species_name      = 'name'      ws1 string  %{ spe.name = state.match; } ;
-        species_skin      = 'skin'      ws1 skin    %{ spe.skin = skin; };
-        species_habitat   = 'habitat'   ws1 habitat ;
-        species_ai        = 'ai'        ws1 ai      ;
-        species_idle_ai   = 'idle_ai'   ws1 idle_ai ;
-        species_move      = 'move'      ws1 move    ;
-        species_range     = 'range'     ws1 number  %{ spe.range = toint(state.match); } ;
-        species_attack    = 'attack'    ws1 real %{ spe.attack = toreal(state.match); } ;
-        species_defense   = 'defense'   ws1 real %{ spe.defense = toreal(state.match); } ;
+        species_count       = 'count'       ws1 number  %{ spe.count = toint(state.match); } ;
+        species_name        = 'name'        ws1 string  %{ spe.name = state.match; } ;
+        species_skin        = 'skin'        ws1 skin    %{ spe.skin = skin; };
+        species_habitat     = 'habitat'     ws1 habitat ;
+        species_ai          = 'ai'          ws1 ai      ;
+        species_idle_ai     = 'idle_ai'     ws1 idle_ai ;
+        species_move        = 'move'        ws1 move    ;
+        species_range       = 'range'       ws1 number  %{ spe.range = toint(state.match); } ;
+        species_attack      = 'attack'      ws1 real %{ spe.attack = toreal(state.match); } ;
+        species_defense     = 'defense'     ws1 real %{ spe.defense = toreal(state.match); } ;
+        species_sleepattack = 'sleepattack' ws1 real %{ spe.sleepattack = toreal(state.match); };
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -226,7 +227,7 @@ void parse_config(const std::string& filename) {
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
-            species_cast_cloud |
+            species_cast_cloud | species_sleepattack |
             '}'
             ${ fret; })
             ;

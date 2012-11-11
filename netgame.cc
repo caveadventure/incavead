@@ -71,11 +71,11 @@ void init_statics() {
         lizardman envoy
 
       1 drow & orcs
-        kobold slave
-        orcish raider
-        orcish slavemaster
-        orcish slave
-        drow flaneur
+        *kobold slave
+        *orcish raider
+        *orcish slavemaster
+        *orcish slave
+        *drow flaneur
         drow noble
         drow sorceror
         drow torturer
@@ -497,13 +497,7 @@ struct Game {
 
         if (s.cast_cloud.size() > 0) {
 
-            std::cout << "! " << dist << " " << s.range << std::endl;
-            if (dist < s.range) {
-
-                bool reach = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
-
-                std::cout << "!. " << reach << std::endl;
-                if (reach) {
+            if (dist < s.range && reachable(state, m.xy.first, m.xy.second, p.px, p.py)) {
 
                 for (const auto& c : s.cast_cloud) {
 
@@ -525,11 +519,15 @@ struct Game {
                     state.render.do_message(nlp::message("%s casts %s!", s, c.name));
                     return false;
                 }
-                }
             }
         }
 
-        if (s.ai == Species::ai_t::seek_player &&
+        // HACK!
+        if (s.sleepattack > 0 && p.sleep > 0) {
+            do_random = true;
+        }
+
+        if (s.ai == Species::ai_t::seek_player && !do_random &&
             state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
             // Nothing, nxy is good.
@@ -592,7 +590,7 @@ struct Game {
     }
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
-                       bool& done, bool& dead, bool& regen, bool& need_input) {
+                       bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
         if (p.health.val <= -3.0) {
             state.render.do_message("You are dead.", true);
@@ -606,6 +604,15 @@ struct Game {
             end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
             ++ticks;
             p.state = Player::MAIN;
+
+        } else {
+
+            if (p.sleep > 0) {
+                ++ticks;
+                --(p.sleep);
+                do_draw = true;
+                need_input = false;
+            }
         }
 
         state.monsters.process(state.render, 
@@ -746,6 +753,7 @@ struct Game {
 
         switch (k.letter) {
         case 'Q':
+            state.render.do_message("You quit the game.", true);
             done = true;
             dead = true;
             break;

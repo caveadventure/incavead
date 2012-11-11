@@ -107,15 +107,32 @@ inline bool attack(Player& p, double attack, unsigned int plevel,
 inline void defend(Player& p, double defense, unsigned int plevel, 
                    mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
-    double v = roll_attack(state.rng, 
-                           defense, plevel+1, s.attack, s.level+1);
+    if (s.attack > 0) {
 
-    if (v > 0) {
-        p.health.dec(v);
+        double v = roll_attack(state.rng, 
+                               defense, plevel+1, s.attack, s.level+1);
 
-        state.render.do_message(nlp::message("%s hits!", s));
-    } else {
-        state.render.do_message(nlp::message("%s attacks but does no damage.", s));
+        if (v > 0) {
+            p.health.dec(v);
+
+            state.render.do_message(nlp::message("%s hits!", s));
+        } else {
+            state.render.do_message(nlp::message("%s attacks but does no damage.", s));
+        }
+    }
+
+    if (s.sleepattack > 0) {
+
+        double v = roll_attack(state.rng, 
+                               defense, plevel+1, s.sleepattack, s.level+1);
+
+        int n = (v * 20) - 15;
+
+        if (n > 0) {
+
+            p.sleep += n;
+            state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
+        }
     }
 }
 

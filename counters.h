@@ -23,6 +23,7 @@ struct Counts {
         while (level >= 0 && n > 0) {
 
             if (data.count(level) == 0) {
+                std::cout << "oops, no more of level " << level << std::endl;
 
                 if (level == 0) {
                     return ret;
@@ -38,6 +39,7 @@ struct Counts {
 
             for (const auto& i : data[level]) {
                 weights.push_back(i.second);
+                std::cout << "  :: " << i.first << " " << i.second << std::endl;
             }
 
             std::discrete_distribution<unsigned int> d(weights.begin(), weights.end());
