@@ -497,7 +497,6 @@ struct Game {
             return false;
         }
 
-        bool do_random = false;
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
@@ -529,20 +528,27 @@ struct Game {
         }
 
         // HACK!
-        if (s.sleepattack > 0 && p.sleep > 0) {
-            do_random = true;
+        bool do_random = false;
+        bool do_seek = false;
+
+        if (s.ai == Species::ai_t::seek_player ||
+            (s.ai == Species::ai_t::seek_nosleep && p.sleep == 0)) {
+
+            do_seek = true;
         }
 
-        if (s.ai == Species::ai_t::seek_player && !do_random &&
-            state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, s.range, nxy.first, nxy.second)) {
 
-            // Nothing, nxy is good.
-
-        } else if (s.ai == Species::ai_t::random) {
+        if (s.ai == Species::ai_t::random) {
             do_random = true;
 
         } else if (s.ai == Species::ai_t::inrange_random && dist <= s.range) {
             do_random = true;
+
+        } else if (do_seek && !do_random &&
+                   state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, 
+                                          s.range, nxy.first, nxy.second)) {
+
+            // Nothing, nxy is good.
 
         } else {
 
@@ -578,7 +584,7 @@ struct Game {
             damage::defenses_t defenses;
             p.inv.get_defense(defenses);
 
-            defend(p, defenses, p.level, state, s);
+            defend(p, defenses, p.level, s, state);
             return false;
 
         } else {
@@ -631,12 +637,12 @@ struct Game {
 
             const Terrain& t = terrain().get(feat.tag);
 
-            if (t.attack) {
+            if (!t.attacks.empty()) {
 
                 damage::defenses_t defenses;
                 p.inv.get_defense(defenses);
 
-                defend(p, defenses, p.level, state, t);
+                defend(p, defenses, p.level, t, state);
             }
         }
         
@@ -694,7 +700,7 @@ struct Game {
         features::Feature feat;
         if (state.features.get(p.px, p.py, feat)) {
 
-            const Terrain& t = terrains().get(feat.tag);
+            const Terrain& t = terrain().get(feat.tag);
 
             if (t.sticky) {
                 state.render.do_message("You are stuck!");

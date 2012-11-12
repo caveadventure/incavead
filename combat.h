@@ -26,14 +26,14 @@ inline unsigned int damage_to_sleepturns(double v) {
     return std::max(0, n);
 }
 
-inline void roll_attack(rng::Generator& rng,
+inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
                         const damage::attacks_t& attacks, unsigned int alevel,
                         damage::attacks_t& out) {
 
 
     for (const auto& v : attacks) {
-        double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.type, alevel);
+        double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
 
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
@@ -131,7 +131,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             state.render.do_message(nlp::message("You mortally wound %s.", s));
         }
 
-        std::cout << "     ----    " << v << " " << s.level << " " << p.level << std::endl;
+        std::cout << "     ----    " << dmg << " " << s.level << " " << p.level << std::endl;
 
         if (s.level == p.level && dmg >= 2.8 && s.ai != Species::ai_t::none) {
 
@@ -164,8 +164,6 @@ inline void defend(Player& p,
             p.health.dec(v.val);
         }
     }
-
-    msg(attack_res);
 }
 
 inline void defend(Player& p, 
@@ -195,10 +193,10 @@ inline void defend(Player& p,
 }
 
 
-inline void defend_env(Player& p, 
-                       const damage::defenses_t& defenses, unsigned int plevel, 
-                       const Terrain& t, 
-                       mainloop::GameState& state) {
+inline void defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Terrain& t, 
+                   mainloop::GameState& state) {
 
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, t.attacks, t.attack_level, state, attack_res);

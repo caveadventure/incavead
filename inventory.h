@@ -169,14 +169,16 @@ struct inventory_t {
     void get_attack(damage::attacks_t& out) {
 
         for (const auto& i : stuff) {
-            out.add(i.second.attacks);
+            const Design& dp = designs().get(i.second.tag);
+            out.add(dp.attacks);
         }
     }
 
     void get_defense(damage::defenses_t& out) {
 
         for (const auto& i : stuff) {
-            out.add(i.second.defenses);
+            const Design& dp = designs().get(i.second.tag);
+            out.add(dp.defenses);
         }
     }
     

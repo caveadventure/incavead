@@ -174,7 +174,7 @@ void parse_config(const std::string& filename) {
             ;
 
         damage_val = 
-            attack_type 
+            damage_type 
             ws1 real %{ dmgval.val = toreal(state.match); }
             ;
 
@@ -192,7 +192,8 @@ void parse_config(const std::string& filename) {
             'none'           %{ spe.ai = Species::ai_t::none; }           |
             'seek_player'    %{ spe.ai = Species::ai_t::seek_player; }    |
             'random'         %{ spe.ai = Species::ai_t::random; }         |
-            'inrange_random' %{ spe.ai = Species::ai_t::inrange_random; } ;
+            'inrange_random' %{ spe.ai = Species::ai_t::inrange_random; } |
+            'seek_nosleep'   %{ spe.ai = Species::ai_t::seek_nosleep; }   ;
 
         idle_ai = 
             'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |

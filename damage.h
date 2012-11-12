@@ -1,5 +1,8 @@
-#ifndef __ATTACK_H
-#define __ATTACK_H
+#ifndef __DAMAGE_H
+#define __DAMAGE_H
+
+#include <vector>
+#include <map>
 
 namespace damage {
 
@@ -14,19 +17,29 @@ struct val_t {
     double val;
     type_t type;
 
-    val_t() : val(0), type(type_t::physical) {} 
+    val_t(double v = 0, type_t t = type_t::physical) : val(v), type(t) {} 
 };
 
 struct attacks_t {
     std::vector<val_t> attacks;
 
     void add(const val_t& a) { 
-        attack.push_back(a);
+        attacks.push_back(a);
     }
 
     void add(const attacks_t& a) {
         attacks.insert(attacks.end(), a.begin(), a.end());
     }
+
+    std::vector<val_t>::const_iterator begin() const {
+        return attacks.begin();
+    }
+
+    std::vector<val_t>::const_iterator end() const {
+        return attacks.end();
+    }
+
+    bool empty() const { return attacks.empty(); }
 };
 
 struct defenses_t {
@@ -37,19 +50,27 @@ struct defenses_t {
     }
 
     void add(const defenses_t& d) {
-        for (const val_t& v : d) {
-            defenses[v.type].val += v.val;
+        for (const auto& v : d) {
+            defenses[v.second.type].val += v.second.val;
         }
     }
 
-    val_t get(const type_t& t) const {
+    double get(const type_t& t) const {
         auto i = defenses.find(t);
 
         if (i == defenses.end()) {
-            return val_t{0, t};
+            return 0;
         }
 
-        return i->second;
+        return i->second.val;
+    }
+
+    std::map<type_t,val_t>::const_iterator begin() const {
+        return defenses.begin();
+    }
+
+    std::map<type_t,val_t>::const_iterator end() const {
+        return defenses.end();
     }
 };
 
