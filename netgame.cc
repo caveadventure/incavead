@@ -78,7 +78,7 @@ void init_statics() {
         *orcish slave
         *drow flaneur
         drow noble
-        drow sorceror
+        *drow sorceror
         drow torturer
         drow puppetmaster
         orcish sex slave
@@ -484,6 +484,12 @@ struct Game {
         return false;
     }
 
+
+    unsigned int summon(mainloop::GameState& state, unsigned int x, unsigned int y, const std::string& tag) {
+
+        return state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, x, y, tag);
+    }
+
     bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy, bool& do_die) {
 
@@ -500,28 +506,43 @@ struct Game {
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
-        if (s.cast_cloud.size() > 0) {
+        if (s.cast_cloud.size() > 0 &&
+            dist < s.range && 
+            reachable(state, m.xy.first, m.xy.second, p.px, p.py)) {
 
-            if (dist < s.range && reachable(state, m.xy.first, m.xy.second, p.px, p.py)) {
+            for (const auto& c : s.cast_cloud) {
 
-                for (const auto& c : s.cast_cloud) {
-
-                    std::cout << "!! " << ticks << " " << c.turns << std::endl;
-
-                    if ((ticks % c.turns) != 0)
-                        continue;
+                if ((ticks % c.turns) != 0) continue;
                     
-                    double v = state.rng.gauss(0.0, 1.0);
+                double v = state.rng.gauss(0.0, 1.0);
+                if (v <= c.chance) continue;
 
-                    std::cout << "!!! " << v << " " << c.chance << std::endl;
-                    
-                    if (v <= c.chance)
-                        continue;
+                cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
+                state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+                return false;
+            }
+        }
 
-                    std::cout << "!!!! " << c.radius << " " << c.terraintag << std::endl;
+        if (s.summon.size() > 0 && 
+            dist < s.range) {
 
-                    cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
-                    state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+            for (const auto& c : s.summon) {
+
+                if ((ticks & c.turns) != 0) continue;
+
+                double v = state.rng.gauss(0.0, 1.0);
+                if (v <= c.chance) continue;
+
+                unsigned int nm = summon(state, m.xy.first, m.xy.second, c.speciestag);
+
+                if (nm > 0) {
+
+                    if (state.render.is_in_fov(m.xy.first, m.xy.second)) {
+
+                        state.render.do_message(nlp::message("%s summons %s!", s, 
+                                                             nlp::count(), species().get(c.speciestag), nm));
+                    }
+
                     return false;
                 }
             }

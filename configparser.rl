@@ -238,11 +238,17 @@ void parse_config(const std::string& filename) {
             ws1 string %{ spe.cast_cloud.back().name = state.match; }
             ;
 
+        species_summon = 'summon' %{ spe.summon.push_back(Species::summon_t()); }
+            ws1 real   %{ spe.summon.back().chance = toreal(state.match); }
+            ws1 string %{ spe.summon.back().speciestag = state.match; }
+            ws1 number %{ spe.summon.back().turns = toint(state.match); }
+            ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
-            species_cast_cloud | 
+            species_cast_cloud | species_summon |
             '}'
             ${ fret; })
             ;

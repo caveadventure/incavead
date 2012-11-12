@@ -90,6 +90,15 @@ struct Species {
 
     std::vector<cloud_t> cast_cloud;
 
+    struct summon_t {
+        double chance;
+        std::string speciestag;
+        unsigned int turns;
+
+        summon_t() : chance(0), turns(0) {}
+    };
+
+    std::vector<summon_t> summon;
 
     Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::any), range(0), clumpsize() {}
