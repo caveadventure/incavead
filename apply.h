@@ -65,7 +65,10 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
 
         unsigned int lev = (1 - v2) * p.level;
 
-        attack(p, d.attack, lev, state, mon);
+        damage::attacks_t attacks;
+        p.inv.get_attack(attacks);
+
+        attack(p, attacks, lev, state, mon);
     }
 
     state.items.place(lx, ly, tmp, state.render);

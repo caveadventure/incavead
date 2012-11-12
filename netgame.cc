@@ -11,6 +11,7 @@
 
 ////
 
+#include "damage.h"
 #include "terrain.h"
 #include "designs.h"
 #include "species.h"
@@ -82,7 +83,7 @@ void init_statics() {
         drow puppetmaster
         orcish sex slave
         drow warrior
-        drow slaver
+        *drow slaver
         drow priest of darkness
         drow priest of insanity
         drow priestess of lust
@@ -491,6 +492,11 @@ struct Game {
             return true;
         }
 
+        if (m.sleep > 0) {
+            state.monsters.change(m, [](monsters::Monster& m) { --(m.sleep); });
+            return false;
+        }
+
         bool do_random = false;
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
@@ -569,7 +575,10 @@ struct Game {
 
         if (nxy.first == p.px && nxy.second == p.py) {
 
-            defend(p, p.inv.get_defense(), p.level, state, m, s);
+            damage::defenses_t defenses;
+            p.inv.get_defense(defenses);
+
+            defend(p, defenses, p.level, state, s);
             return false;
 
         } else {
@@ -616,6 +625,20 @@ struct Game {
     }
 
     void move_player(mainloop::GameState& state) {
+
+        features::Feature feat;
+        if (state.features.get(p.px, p.py, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+
+            if (t.attack) {
+
+                damage::defenses_t defenses;
+                p.inv.get_defense(defenses);
+
+                defend(p, defenses, p.level, state, t);
+            }
+        }
         
         size_t nstack = state.items.stack_size(p.px, p.py);
 
@@ -656,7 +679,10 @@ struct Game {
         monsters::Monster mon;
         if (state.monsters.get(nx, ny, mon)) {
 
-            if (attack(p, p.inv.get_attack(), p.level, state, mon)) {
+            damage::attacks_t attacks;
+            p.inv.get_attack(attacks);
+
+            if (attack(p, attacks, p.level, state, mon)) {
                 ++ticks;
             }
 
@@ -664,6 +690,19 @@ struct Game {
         }
 
         ++ticks;
+
+        features::Feature feat;
+        if (state.features.get(p.px, p.py, feat)) {
+
+            const Terrain& t = terrains().get(feat.tag);
+
+            if (t.sticky) {
+                state.render.do_message("You are stuck!");
+
+                state.features.uncharge(p.px, p.py, state.render);
+                return;
+            }
+        }
 
         state.render.unset_skin(p.px, p.py, 5);
 

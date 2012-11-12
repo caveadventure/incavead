@@ -147,6 +147,7 @@ struct inventory_t {
         return true;
     }
 
+    /*
     template <typename T>
     T get_inv_sum(T Design::* ptr) {
         T ret{};
@@ -163,9 +164,20 @@ struct inventory_t {
     double get_attack() {
         return get_inv_sum(&Design::attack);
     }
-    
-    double get_defense() {
-        return get_inv_sum(&Design::defense);
+    */
+
+    void get_attack(damage::attacks_t& out) {
+
+        for (const auto& i : stuff) {
+            out.add(i.second.attacks);
+        }
+    }
+
+    void get_defense(damage::defenses_t& out) {
+
+        for (const auto& i : stuff) {
+            out.add(i.second.defenses);
+        }
     }
     
 };

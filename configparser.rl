@@ -93,6 +93,8 @@ void parse_config(const std::string& filename) {
     Terrain ter;
     Levelskin lev;
 
+    damage::val_t dmgval;
+
     maudit::glyph skin;
 
     %%{
@@ -165,6 +167,20 @@ void parse_config(const std::string& filename) {
 
         ####
 
+        damage_type = 
+            'physical' %{ dmgval.type = damage::type_t::physical; }
+            'sleep'    %{ dmgval.type = damage::type_t::sleep; }
+            'poison'   %{ dmgval.type = damage::type_t::poison; }
+            ;
+
+        damage_val = 
+            attack_type 
+            ws1 real %{ dmgval.val = toreal(state.match); }
+            ;
+
+
+        ####
+
         habitat = 
             'walk'              %{ spe.habitat = Species::habitat_t::walk; }              | 
             'floor'             %{ spe.habitat = Species::habitat_t::floor; }             | 
@@ -188,17 +204,16 @@ void parse_config(const std::string& filename) {
             'water'  %{ spe.move = Species::move_t::water; }  |
             'corner' %{ spe.move = Species::move_t::corner; } ;
 
-        species_count       = 'count'       ws1 number  %{ spe.count = toint(state.match); } ;
-        species_name        = 'name'        ws1 string  %{ spe.name = state.match; } ;
-        species_skin        = 'skin'        ws1 skin    %{ spe.skin = skin; };
-        species_habitat     = 'habitat'     ws1 habitat ;
-        species_ai          = 'ai'          ws1 ai      ;
-        species_idle_ai     = 'idle_ai'     ws1 idle_ai ;
-        species_move        = 'move'        ws1 move    ;
-        species_range       = 'range'       ws1 number  %{ spe.range = toint(state.match); } ;
-        species_attack      = 'attack'      ws1 real %{ spe.attack = toreal(state.match); } ;
-        species_defense     = 'defense'     ws1 real %{ spe.defense = toreal(state.match); } ;
-        species_sleepattack = 'sleepattack' ws1 real %{ spe.sleepattack = toreal(state.match); };
+        species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
+        species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
+        species_skin        = 'skin'        ws1 skin       %{ spe.skin = skin; };
+        species_habitat     = 'habitat'     ws1 habitat    ;
+        species_ai          = 'ai'          ws1 ai         ;
+        species_idle_ai     = 'idle_ai'     ws1 idle_ai    ;
+        species_move        = 'move'        ws1 move       ;
+        species_range       = 'range'       ws1 number     %{ spe.range = toint(state.match); } ;
+        species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
+        species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -227,7 +242,7 @@ void parse_config(const std::string& filename) {
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
-            species_cast_cloud | species_sleepattack |
+            species_cast_cloud | 
             '}'
             ${ fret; })
             ;
@@ -250,22 +265,24 @@ void parse_config(const std::string& filename) {
 
         ####
 
-        design_count      = 'count'      ws1 number  %{ des.count = toint(state.match); } ;
-        design_name       = 'name'       ws1 string  %{ des.name = state.match; } ;
-        design_skin       = 'skin'       ws1 skin    %{ des.skin = skin; };
-        design_slot       = 'slot'       ws1 string  %{ des.slot = state.match; } ;
-        design_descr      = 'descr'      ws1 string  %{ des.descr = state.match; } ;
-        design_attack     = 'attack'     ws1 real    %{ des.attack = toreal(state.match); } ;
-        design_defense    = 'defense'    ws1 real    %{ des.defense = toreal(state.match); } ;
-        design_stackrange = 'stackrange' ws1 number  %{ des.stackrange = toint(state.match); };
-        design_heal       = 'heal'       ws1 real    %{ des.heal = toreal(state.match); };
-        design_usable     = 'usable'                 %{ des.usable = true; };
-        design_throwrange = 'throwrange' ws1 number  %{ des.throwrange = toint(state.match); };
+        design_count      = 'count'      ws1 number     %{ des.count = toint(state.match); } ;
+        design_name       = 'name'       ws1 string     %{ des.name = state.match; } ;
+        design_skin       = 'skin'       ws1 skin       %{ des.skin = skin; };
+        design_slot       = 'slot'       ws1 string     %{ des.slot = state.match; } ;
+        design_descr      = 'descr'      ws1 string     %{ des.descr = state.match; } ;
+        design_attack     = 'attack'     ws1 damage_val %{ des.attacks.add(dmgval); } ;
+        design_defense    = 'defense'    ws1 damage_val %{ des.defenses.add(dmgval); } ;
+        design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
+        design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
+        design_usable     = 'usable'                    %{ des.usable = true; };
+        design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
+
+        design_poison_defense = 'poison_defense' ws1 real %{ des.poison_defense = toreal(state.match); } ;
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
-            design_throwrange |
+            design_throwrange | design_poison_defense |
             '}'
             ${ fret; })
             ;
@@ -298,19 +315,24 @@ void parse_config(const std::string& filename) {
             ws1 snumber %{ ter.tunnel_y = toint(state.match); } 
             ;
 
-        terrain_count     = 'count'     ws1 number %{ ter.count = toint(state.match); } ;
-        terrain_name      = 'name'      ws1 string %{ ter.name = state.match; } ;
-        terrain_skin      = 'skin'      ws1 skin   %{ ter.skin = skin; };
-        terrain_placement = 'placement' ws1 placement ;
-        terrain_stairs    = 'stairs'    ws1 number %{ ter.stairs = toint(state.match); } ;
-        terrain_viewblock = 'viewblock'            %{ ter.viewblock = true; } ;
-        terrain_walkblock = 'walkblock'            %{ ter.walkblock = true; } ;
-        terrain_decay     = 'decay'     ws1 number %{ ter.decay = toint(state.match); } ;
+        terrain_count     = 'count'     ws1 number     %{ ter.count = toint(state.match); } ;
+        terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
+        terrain_skin      = 'skin'      ws1 skin       %{ ter.skin = skin; };
+        terrain_placement = 'placement' ws1 placement  ;
+        terrain_stairs    = 'stairs'    ws1 number     %{ ter.stairs = toint(state.match); } ;
+        terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
+        terrain_walkblock = 'walkblock'                %{ ter.walkblock = true; } ;
+        terrain_decay     = 'decay'     ws1 number     %{ ter.decay = toint(state.match); } ;
+        terrain_attack    = 'attack'    ws1 damage_val %{ ter.attacks.add(dmgval); } ;
+        terrain_sticky    = 'sticky'                   %{ ter.sticky = true; } ;
+        terrain_charges   = 'charges'   ws1 number     %{ ter.charges = toint(state.match); } ;
+
+        terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
-            terrain_decay |
+            terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             '}' 
             ${ fret; })
             ;

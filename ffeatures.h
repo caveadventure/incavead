@@ -13,11 +13,12 @@ struct Feature {
     std::string tag;
     pt xy;
     unsigned int decay;
+    unsigned int charges;
 
-    Feature() : xy(0, 0), decay(0) {}
+    Feature() : xy(0, 0), decay(0), charges(0) {}
 
-    Feature(const std::string& _tag, const pt& _xy, unsigned int d) : 
-        tag(_tag), xy(_xy), decay(d)
+    Feature(const std::string& _tag, const pt& _xy, unsigned int d, unsigned int c) : 
+        tag(_tag), xy(_xy), decay(d), charges(c)
         {}
 };
 
@@ -33,6 +34,7 @@ struct reader<features::Feature> {
         serialize::read(s, m.tag);
         serialize::read(s, m.xy);
         serialize::read(s, m.decay);
+        serialize::read(s, m.charges);
     }
 };
 
@@ -42,6 +44,7 @@ struct writer<features::Feature> {
         serialize::write(s, m.tag);
         serialize::write(s, m.xy);
         serialize::write(s, m.decay);
+        serialize::write(s, m.charges);
     }
 };
 
@@ -67,7 +70,7 @@ struct Features {
         const Terrain& t = terrain().get(tag);
 
         pt xy(x, y);
-        feats[xy] = Feature(tag, xy, t.decay);
+        feats[xy] = Feature(tag, xy, t.decay, t.charges);
         render.invalidate(x, y);
     }
 
@@ -107,8 +110,27 @@ struct Features {
             const Terrain& t = terrain().get(tag);
 
             std::cout << "+++ " << tag << " " << xy.first << " " << xy.second << std::endl;
-            feats[xy] = Feature(tag, xy, t.decay);
+            feats[xy] = Feature(tag, xy, t.decay, t.charges);
         }
+    }
+
+    bool uncharge(unsigned int x, unsigned int y, grender::Grid& render) {
+        auto i = feats.find(pt(x, y));
+
+        if (i == feats.end())
+            return false;
+
+        if (i->second.charges > 0) {
+            --(i->second.charges);
+
+            if (i->second.charges == 0) {
+                feats.erase(i);
+                render.invalidate(x, y);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     bool get(unsigned int x, unsigned int y, Feature& ret) {

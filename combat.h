@@ -21,6 +21,30 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
+inline unsigned int damage_to_sleepturns(double v) {
+    int n = (v * 20) - 15;
+    return std::max(0, n);
+}
+
+inline void roll_attack(rng::Generator& rng,
+                        const damage::defenses_t& defenses, unsigned int dlevel,
+                        const damage::attacks_t& attacks, unsigned int alevel,
+                        damage::attacks_t& out) {
+
+
+    for (const auto& v : attacks) {
+        double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.type, alevel);
+
+        if (v.type == damage::type_t::sleep) {
+            dmg = damage_to_sleepturns(dmg);
+        }
+
+        if (dmg > 0) {
+            out.add(damage::val_t{dmg, v.type});
+        }
+    }
+}
+
 inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
     for (const auto& drop : s.drop) {
@@ -43,24 +67,42 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
     }
 }
 
-inline bool attack(Player& p, double attack, unsigned int plevel, 
+
+inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
                    mainloop::GameState& state, const monsters::Monster& mon) {
 
     const Species& s = species().get(mon.tag);
         
-    if (attack == 0) {
+    if (attacks.empty()) {
         state.render.do_message("You can't attack without a weapon!", true);
         return false;
     }
 
-    double v = roll_attack(state.rng,
-                           s.defense, s.level+1, attack, plevel+1);
+    damage::attacks_t attack_res;
+    roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
 
-    if (v > 0) {
+    if (attack_res.empty()) {
 
-        state.monsters.change(mon, [v](monsters::Monster& m) { m.health -= v; });
+        state.render.do_message(nlp::message("You attack %s but do no damage.", s));
+        return true;
+    }
 
-        if (mon.health - v < -3) {
+    for (const auto& v : attack_res) {
+
+        if (v.type == damage::type_t::sleep) {
+
+            unsigned int sleepturns = v.val;
+
+            state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
+            state.render.do_message(nlp::message("%s falls asleep.", s));
+            continue;
+        }
+
+        double dmg = v.val;
+
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+
+        if (mon.health - dmg < -3) {
 
             if (s.ai == Species::ai_t::none) {
                 state.render.do_message(nlp::message("You destroyed %s.", s));
@@ -73,16 +115,16 @@ inline bool attack(Player& p, double attack, unsigned int plevel,
         } else if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
 
-        } else if (v < 0.5) {
+        } else if (dmg < 0.5) {
             state.render.do_message(nlp::message("You hit %s.", s));
 
-        } else if (v < 1.0) {
+        } else if (dmg < 1.0) {
             state.render.do_message(nlp::message("You wound %s.", s));
 
-        } else if (v < 2.0) {
+        } else if (dmg < 2.0) {
             state.render.do_message(nlp::message("You heavily wound %s.", s));
 
-        } else if (v < 2.8) {
+        } else if (dmg < 2.8) {
             state.render.do_message(nlp::message("You critically wound %s.", s));
 
         } else {
@@ -91,49 +133,105 @@ inline bool attack(Player& p, double attack, unsigned int plevel,
 
         std::cout << "     ----    " << v << " " << s.level << " " << p.level << std::endl;
 
-        if (s.level == p.level && v >= 2.8 && s.ai != Species::ai_t::none) {
+        if (s.level == p.level && dmg >= 2.8 && s.ai != Species::ai_t::none) {
 
             ++p.level;
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
-
-    } else {
-        state.render.do_message(nlp::message("You attack %s but do no damage.", s));
     }
 
     return true;
 }
 
-inline void defend(Player& p, double defense, unsigned int plevel, 
-                   mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
 
-    if (s.attack > 0) {
+inline void defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const damage::attacks_t& attacks, unsigned int alevel, 
+                   mainloop::GameState& state, damage::attacks_t& attack_res) {
 
-        double v = roll_attack(state.rng, 
-                               defense, plevel+1, s.attack, s.level+1);
 
-        if (v > 0) {
-            p.health.dec(v);
+    if (attacks.empty())
+        return;
 
-            state.render.do_message(nlp::message("%s hits!", s));
+    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, attack_res);
+
+    for (const auto& v : attack_res) {
+
+        if (v.type == damage::type_t::sleep) {
+            p.sleep += v.val;
+
         } else {
-            state.render.do_message(nlp::message("%s attacks but does no damage.", s));
+            p.health.dec(v.val);
         }
     }
 
-    if (s.sleepattack > 0) {
+    msg(attack_res);
+}
 
-        double v = roll_attack(state.rng, 
-                               defense, plevel+1, s.sleepattack, s.level+1);
+inline void defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Species& s,
+                   mainloop::GameState& state) {
 
-        int n = (v * 20) - 15;
 
-        if (n > 0) {
+    damage::attacks_t attack_res;
+    defend(p, defenses, plevel, s.attacks, s.level, state, attack_res);
 
-            p.sleep += n;
-            state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
+    if (attack_res.empty()) {
+
+        state.render.do_message(nlp::message("%s attacks but does no damage.", s));
+
+    } else {
+
+        for (const auto& v : attack_res) {
+
+            if (v.type == damage::type_t::sleep) {
+                state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
+            } else {
+                state.render.do_message(nlp::message("%s hits!", s));
+            }
         }
     }
 }
+
+
+inline void defend_env(Player& p, 
+                       const damage::defenses_t& defenses, unsigned int plevel, 
+                       const Terrain& t, 
+                       mainloop::GameState& state) {
+
+    damage::attacks_t attack_res;
+    defend(p, defenses, plevel, t.attacks, t.attack_level, state, attack_res);
+
+    bool do_sleep = false;
+    bool do_hurt = false;
+    bool do_pois = false;
+
+    for (const auto& v : attack_res) {
+
+        if (v.type == damage::type_t::sleep) {
+            do_sleep = true;
+
+        } else if (v.type == damage::type_t::poison) {
+            do_pois = true;
+
+        } else {
+            do_hurt = true;
+        }
+    }
+
+    if (do_hurt) {
+        state.render.do_message("Ouch, that hurts.");
+    }
+
+    if (do_pois) {
+        state.render.do_message("You feel sick.");
+    }
+
+    if (do_sleep) {
+        state.render.do_message("You fall asleep.");
+    }
+}
+
 
 #endif

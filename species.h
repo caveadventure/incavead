@@ -74,8 +74,8 @@ struct Species {
 
     std::vector<drop_t> drop;
 
-    double attack;
-    double defense;
+    damage::attacks_t attacks;
+    damage::defenses_t defenses;
 
     struct cloud_t {
         double chance;
@@ -89,11 +89,9 @@ struct Species {
 
     std::vector<cloud_t> cast_cloud;
 
-    double sleepattack;
 
     Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::any), range(0), clumpsize(),
-                attack(0), defense(0), sleepattack(0) {}
+                move(move_t::any), range(0), clumpsize() {}
 
 };
 

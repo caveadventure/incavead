@@ -17,8 +17,8 @@ struct Design {
     std::string slot;
     std::string descr;
 
-    double attack;
-    double defense;
+    damage::attacks_t attacks;
+    damage::defenses_t defenses;
 
     unsigned int stackrange;
 
@@ -28,8 +28,10 @@ struct Design {
 
     unsigned int throwrange;
 
-    Design() : level(0), count(0), attack(0), defense(0), stackrange(0), heal(0), usable(false),
-               throwrange(0) {}
+    double poison_defense;
+
+    Design() : level(0), count(0), stackrange(0), heal(0), usable(false),
+               throwrange(0), poison_defense(0) {}
 
 };
 
