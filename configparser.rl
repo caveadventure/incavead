@@ -168,10 +168,9 @@ void parse_config(const std::string& filename) {
         ####
 
         damage_type = 
-            'physical' %{ dmgval.type = damage::type_t::physical; }
-            'sleep'    %{ dmgval.type = damage::type_t::sleep; }
-            'poison'   %{ dmgval.type = damage::type_t::poison; }
-            ;
+            'physical' %{ dmgval.type = damage::type_t::physical; } |
+            'sleep'    %{ dmgval.type = damage::type_t::sleep; }    |
+            'poison'   %{ dmgval.type = damage::type_t::poison; }   ;
 
         damage_val = 
             damage_type 
@@ -334,6 +333,7 @@ void parse_config(const std::string& filename) {
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
+            terrain_charges |
             '}' 
             ${ fret; })
             ;
