@@ -108,7 +108,7 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, int worl
 
         const Design& d = designs().get(tmp.tag);
 
-        m += nlp::message("           \2%c\1) %S\n",
+        m += nlp::message("            \2%c\1) %S\n",
                           letter,
                           nlp::count(), d, tmp.count);
         ++letter;

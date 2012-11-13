@@ -100,8 +100,16 @@ struct Species {
 
     std::vector<summon_t> summon;
 
+    struct flags_t {
+        char undead : 1;
+
+        flags_t() : undead(0) {}
+    };
+
+    flags_t flags;
+
     Species() : level(0), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), range(0), clumpsize() {}
+                move(move_t::walk), range(0), clumpsize(), flags() {}
 
 };
 

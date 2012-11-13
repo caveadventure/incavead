@@ -15,9 +15,6 @@ inline double roll_attack(rnd::Generator& rng,
         d += rng.uniform(0.0, ddefense);
     }
 
-    std::cout << "** " << ddefense << ":" << dlevel << " <- " << aattack << ":" << alevel 
-              << " = " << a << " " << d << std::endl;
-
     return std::max(a - d, 0.0);
 }
 
@@ -35,6 +32,8 @@ inline void roll_attack(rnd::Generator& rng,
     for (const auto& v : attacks) {
         double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
 
+        std::cout << "ROLL " << (int)v.type << " : " << defenses.get(v.type) << " vs " << v.val << std::endl;
+
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
         }
@@ -49,8 +48,6 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
 
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
-
-        std::cout << "?? " << v << " " << drop.chance << std::endl;
 
         if (v <= drop.chance)
             continue;
@@ -87,6 +84,8 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         return true;
     }
 
+    double monhealth = mon.health;
+
     for (const auto& v : attack_res) {
 
         if (v.type == damage::type_t::sleep) {
@@ -100,9 +99,12 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
         double dmg = v.val;
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+        std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
 
-        if (mon.health - dmg < -3) {
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+        monhealth -= dmg;
+
+        if (monhealth < -3) {
 
             if (s.ai == Species::ai_t::none) {
                 state.render.do_message(nlp::message("You destroyed %s.", s));
@@ -111,6 +113,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             }
 
             monster_kill(p, state, mon, s);
+            break;
 
         } else if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
@@ -130,8 +133,6 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         } else {
             state.render.do_message(nlp::message("You mortally wound %s.", s));
         }
-
-        std::cout << "     ----    " << dmg << " " << s.level << " " << p.level << std::endl;
 
         if (s.level == p.level && dmg >= 2.8 && s.ai != Species::ai_t::none) {
 

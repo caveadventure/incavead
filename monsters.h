@@ -133,7 +133,10 @@ struct Monsters {
 
             for (const pt& v : neigh(xy)) {
 
-                if (fp(grid, v.first, v.second) && !grid.is_nogen(v.first, v.second)) {
+                if (fp(grid, v.first, v.second) && 
+                    !grid.is_nogen(v.first, v.second) &&
+                    mons.count(v) == 0) {
+
                     clump.insert(v);
                 }
             }
@@ -184,7 +187,10 @@ struct Monsters {
 
         for (const pt& v : clump) {
 
-            if (f(grid, v.first, v.second) && !grid.is_nogen(v.first, v.second)) {
+            if (f(grid, v.first, v.second) && 
+                !grid.is_nogen(v.first, v.second) && 
+                mons.count(v) == 0) {
+
                 out = v;
                 return true;
             }

@@ -192,7 +192,7 @@ private:
 
         } else if (v <= 0.7) {
             switch (c) {
-            case color_t::bright_black:   return color_t::dim_black;
+            case color_t::bright_black:   return color_t::bright_black;
             case color_t::bright_red:     return color_t::dim_red;
             case color_t::bright_green:   return color_t::dim_green;
             case color_t::bright_yellow:  return color_t::dim_yellow;

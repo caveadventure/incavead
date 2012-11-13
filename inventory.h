@@ -18,11 +18,13 @@ struct inventory_t {
     std::map<char, std::string> slot_keys;
 
     inventory_t() {
-        make_slot(slot_t{"w", "Weapon", 'a'});
-        make_slot(slot_t{"s", "Shield", 'b'});
-        make_slot(slot_t{"a", "Armour", 'c'});
-        make_slot(slot_t{"f", "Edible", 'd'});
-        make_slot(slot_t{"p", "Potion", 'e'});
+        make_slot(slot_t{"w",  " Weapon", 'a'});
+        make_slot(slot_t{"s",  " Shield", 'b'});
+        make_slot(slot_t{"a",  " Armour", 'c'});
+        make_slot(slot_t{"f",  " Edible", 'd'});
+        make_slot(slot_t{"p",  " Potion", 'e'});
+        make_slot(slot_t{"t",  "Missile", 'f'});
+        make_slot(slot_t{"r1", "   Ring", 'g'});
     }
 
     void make_slot(const slot_t& s) {
