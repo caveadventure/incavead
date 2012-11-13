@@ -92,6 +92,13 @@ void init_statics() {
         *sacred spider
         *drow queen
         *spiderdrow guard
+        armor (breastplate, helmet, shield)
+        poison darts
+        poison dagger
+        ring of poison resistance
+        candles
+        glowing crystal
+        lamp
 
       1 lizardmen 
       2 drow & orcs
