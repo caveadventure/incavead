@@ -107,6 +107,7 @@ struct Monsters {
     unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
                              const std::string& tag, unsigned int n,
                              std::unordered_set<pt>& clump, 
+                             std::unordered_set<pt>& placed,
                              FUNC f, FUNCP fp) {
 
         unsigned int ret = 0;
@@ -127,6 +128,7 @@ struct Monsters {
 
             mons[xy] = Monster(tag, xy);
             grid.add_nogen(xy.first, xy.second);
+            placed.insert(xy);
             ++ret;
 
             for (const pt& v : neigh(xy)) {
@@ -142,7 +144,8 @@ struct Monsters {
 
     unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
                              const std::string& tag, unsigned int n,
-                             std::unordered_set<pt>& clump) {
+                             std::unordered_set<pt>& clump,
+                             std::unordered_set<pt>& placed) {
 
 
         const Species& s = species().get(tag);
@@ -152,23 +155,23 @@ struct Monsters {
         switch (h) {
 
         case Species::habitat_t::walk:
-            return place_clump(neigh, rng, grid, tag, n, clump,
+            return place_clump(neigh, rng, grid, tag, n, clump, placed,
                                std::mem_fn(&grid::Map::one_of_walk), std::mem_fn(&grid::Map::is_walk));
 
         case Species::habitat_t::floor:
-            return place_clump(neigh, rng, grid, tag, n, clump,
+            return place_clump(neigh, rng, grid, tag, n, clump, placed,
                                std::mem_fn(&grid::Map::one_of_floor), std::mem_fn(&grid::Map::is_floor));
 
         case Species::habitat_t::water:
-            return place_clump(neigh, rng, grid, tag, n, clump,
+            return place_clump(neigh, rng, grid, tag, n, clump, placed,
                                std::mem_fn(&grid::Map::one_of_lake), std::mem_fn(&grid::Map::is_lake));
 
         case Species::habitat_t::corner:
-            return place_clump(neigh, rng, grid, tag, n, clump,
+            return place_clump(neigh, rng, grid, tag, n, clump, placed,
                                std::mem_fn(&grid::Map::one_of_corner), std::mem_fn(&grid::Map::is_corner));
 
         case Species::habitat_t::shoreline:
-            return place_clump(neigh, rng, grid, tag, n, clump,
+            return place_clump(neigh, rng, grid, tag, n, clump, placed,
                                std::mem_fn(&grid::Map::one_of_shore), std::mem_fn(&grid::Map::is_shore));
 
         }
@@ -214,7 +217,7 @@ struct Monsters {
 
 
     unsigned int place(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
-                       pt* start,
+                       pt* start, std::unordered_set<pt>& placed,
                        unsigned int level, const std::string& tag, unsigned int n) {
 
         const Species& s = species().get(tag);
@@ -244,7 +247,7 @@ struct Monsters {
             clump.insert(*start);
         }
 
-        unsigned int ret = place_clump(neigh, rng, grid, tag, n, clump);
+        unsigned int ret = place_clump(neigh, rng, grid, tag, n, clump, placed);
 
         for (const auto& comp : s.companion) {
 
@@ -261,11 +264,11 @@ struct Monsters {
             pt tmp;
             if (filter_habitat_find_one(grid, clump, tmp, species().get(comp.tag).habitat)) {
 
-                place(neigh, rng, grid, counts, &tmp, level, comp.tag, n2);
+                place(neigh, rng, grid, counts, &tmp, placed, level, comp.tag, n2);
 
             } else {
 
-                place(neigh, rng, grid, counts, nullptr, level, comp.tag, n2);
+                place(neigh, rng, grid, counts, nullptr, placed, level, comp.tag, n2);
             }
         }
 
@@ -274,6 +277,7 @@ struct Monsters {
     }
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
+                        grender::Grid& render,
                         unsigned int x, unsigned int y, const std::string& tag) {
 
 
@@ -295,7 +299,14 @@ struct Monsters {
                 return 0;
             }
 
-            return place(neigh, rng, grid, counts, &start, s.level, tag, n2);
+            std::unordered_set<pt> placed;
+            unsigned int ret = place(neigh, rng, grid, counts, &start, placed, s.level, tag, n2);
+
+            for (const pt& xy : placed) {
+                render.invalidate(xy.first, xy.second);
+            }
+
+            return ret;
         }
 
         std::cout << "[s] no habitat" << std::endl;
@@ -308,10 +319,11 @@ struct Monsters {
                   unsigned int level) {
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, 1);
+        std::unordered_set<pt> placed;
 
         for (auto& i : q) {
             
-            place(neigh, rng, grid, counts, nullptr, level, i.first, i.second);
+            place(neigh, rng, grid, counts, nullptr, placed, level, i.first, i.second);
 
         }
     }
@@ -399,8 +411,9 @@ struct Monsters {
             for (const auto& i : mons) {
                 std::cout << "   | " << i.first.first << "," << i.first.second << std::endl;
             }
-            std::cout << mons.size() << " " << sbefore << std::endl;
-
+            std::cout << mons.size() << " != " << sbefore << " - " << deadcount << std::endl;
+            std::cout << "  " << neuw.size() << " " << wipe.size() << std::endl;
+            
             throw std::runtime_error("Lost a monster in monster::process()!");
         }
     }

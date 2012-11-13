@@ -13,7 +13,10 @@ struct Counts {
     std::map< unsigned int, std::map<std::string, unsigned int> > data;
 
     void init(const std::string& tag, unsigned int level, unsigned int maxc) {
-        data[level][tag] = maxc;
+
+        if (maxc > 0) {
+            data[level][tag] = maxc;
+        }
     }
 
     std::map<std::string, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1) {
@@ -121,7 +124,23 @@ struct Counts {
     }
 
     void replace(unsigned int level, const std::string& tag, unsigned int n = 1) {
-        data[level][tag] += n;
+        if (n > 0) {
+            data[level][tag] += n;
+        }
+    }
+
+    bool has(unsigned int level, const std::string& tag) {
+        auto i = data.find(level);
+
+        if (i == data.end()) return false;
+
+        auto j = i->second.find(tag);
+
+        if (j == i->second.end()) return false;
+
+        if (j->second < 1) return false;
+
+        return true;
     }
 
     inline void write(serialize::Sink& s) {

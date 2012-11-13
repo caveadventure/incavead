@@ -199,7 +199,7 @@ void parse_config(const std::string& filename) {
             'random' %{ spe.idle_ai = Species::idle_ai_t::random; } ;
 
         move = 
-            'any'    %{ spe.move = Species::move_t::any; }    | 
+            'walk'   %{ spe.move = Species::move_t::walk; }    | 
             'floor'  %{ spe.move = Species::move_t::floor; }  | 
             'water'  %{ spe.move = Species::move_t::water; }  |
             'corner' %{ spe.move = Species::move_t::corner; } ;
@@ -221,8 +221,8 @@ void parse_config(const std::string& filename) {
         ;
 
         species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
-            ws1 string %{ spe.companion.back().tag = state.match; }
             ws1 real   %{ spe.companion.back().chance = toreal(state.match); }
+            ws1 string %{ spe.companion.back().tag = state.match; }
             ;
 
         species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }

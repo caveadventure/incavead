@@ -28,7 +28,7 @@ struct Species {
     };
 
     enum class move_t : unsigned int {
-        any,
+        walk,
         floor,
         water,
         corner
@@ -100,8 +100,8 @@ struct Species {
 
     std::vector<summon_t> summon;
 
-    Species() : level(0), count(0), habitat(habitat_t::floor), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::any), range(0), clumpsize() {}
+    Species() : level(0), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
+                move(move_t::walk), range(0), clumpsize() {}
 
 };
 

@@ -77,21 +77,21 @@ void init_statics() {
         *orcish slavemaster
         *orcish slave
         *drow flaneur
-        drow noble
+        *drow noble
         *drow sorceror
-        drow torturer
-        drow puppetmaster
-        orcish sex slave
-        drow warrior
+        *drow torturer
+        *drow necromancer
+        *orcish sex slave
+        *drow warrior
         *drow slaver
-        drow priest of darkness
-        drow priest of insanity
-        drow priestess of lust
-        cave spider
-        spider queen
-        sacred spider
-        drow queen
-        spiderdrow guard
+        *drow priest of darkness
+        *drow priest of insanity
+        *drow priestess of lust
+        *cave spider
+        *spider queen
+        *sacred spider
+        *drow queen
+        *spiderdrow guard
 
       1 lizardmen 
       2 drow & orcs
@@ -128,6 +128,16 @@ void init_statics() {
 struct Game {
 
     Player p;
+
+    // HACK
+    struct summons_t {
+        unsigned int x;
+        unsigned int y;
+        std::string summontag;
+        std::string summonertag;
+    };
+    std::vector<summons_t> summons;
+
 
     static const unsigned int GRID_W = 256;
     static const unsigned int GRID_H = 256;
@@ -485,11 +495,6 @@ struct Game {
     }
 
 
-    unsigned int summon(mainloop::GameState& state, unsigned int x, unsigned int y, const std::string& tag) {
-
-        return state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, x, y, tag);
-    }
-
     bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy, bool& do_die) {
 
@@ -530,21 +535,14 @@ struct Game {
 
                 if ((ticks & c.turns) != 0) continue;
 
+                const Species& s = species().get(c.speciestag);
+                if (!state.species_counts.has(s.level, c.speciestag))
+                    continue;
+
                 double v = state.rng.gauss(0.0, 1.0);
                 if (v <= c.chance) continue;
 
-                unsigned int nm = summon(state, m.xy.first, m.xy.second, c.speciestag);
-
-                if (nm > 0) {
-
-                    if (state.render.is_in_fov(m.xy.first, m.xy.second)) {
-
-                        state.render.do_message(nlp::message("%s summons %s!", s, 
-                                                             nlp::count(), species().get(c.speciestag), nm));
-                    }
-
-                    return false;
-                }
+                summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, m.tag});
             }
         }
 
@@ -635,6 +633,8 @@ struct Game {
             return;
         }
 
+        summons.clear();
+
         state.monsters.process(state.render, 
                                std::bind(&Game::move_monster, this, std::ref(state), ticks, 
                                          std::placeholders::_1, std::placeholders::_2, 
@@ -643,6 +643,19 @@ struct Game {
         state.features.process(state.render, 
                                std::bind(&Game::process_feature, this, std::ref(state),
                                          std::placeholders::_1, std::placeholders::_2));
+
+        for (const auto& i : summons) {
+
+            unsigned int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
+                                                    state.render, i.x, i.y, i.summontag);
+
+            if (nm > 0 && state.render.is_in_fov(i.x, i.y)) {
+
+                state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
+                                                     nlp::count(), species().get(i.summontag), nm));
+            }
+        }
+
 
         if (p.sleep > 0) {
             ++ticks;
