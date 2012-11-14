@@ -283,12 +283,10 @@ void parse_config(const std::string& filename) {
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
 
-        design_poison_defense = 'poison_defense' ws1 real %{ des.poison_defense = toreal(state.match); } ;
-
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
-            design_throwrange | design_poison_defense |
+            design_throwrange | 
             '}'
             ${ fret; })
             ;

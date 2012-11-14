@@ -43,33 +43,38 @@ struct attacks_t {
 };
 
 struct defenses_t {
-    std::map<type_t,val_t> defenses;
+    std::map<type_t,double> defenses;
 
     void add(const val_t& d) {
-        defenses[d.type].val += d.val;
+        std::cout << "add d " << (int)d.type << " " << d.val << std::endl;
+        defenses[d.type] += d.val;
     }
 
     void add(const defenses_t& d) {
         for (const auto& v : d) {
-            defenses[v.second.type].val += v.second.val;
+            defenses[v.first] += v.second;
         }
     }
 
     double get(const type_t& t) const {
+        for (const auto& i : defenses) {
+            std::cout << "DEFEND " << (int)t << " " << (int)i.first << " " << i.second << std::endl;
+        }
+
         auto i = defenses.find(t);
 
         if (i == defenses.end()) {
             return 0;
         }
 
-        return i->second.val;
+        return i->second;
     }
 
-    std::map<type_t,val_t>::const_iterator begin() const {
+    std::map<type_t,double>::const_iterator begin() const {
         return defenses.begin();
     }
 
-    std::map<type_t,val_t>::const_iterator end() const {
+    std::map<type_t,double>::const_iterator end() const {
         return defenses.end();
     }
 };

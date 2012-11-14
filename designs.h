@@ -28,10 +28,8 @@ struct Design {
 
     unsigned int throwrange;
 
-    double poison_defense;
-
     Design() : level(0), count(0), stackrange(0), heal(0), usable(false),
-               throwrange(0), poison_defense(0) {}
+               throwrange(0) {}
 
 };
 
