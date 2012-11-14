@@ -40,6 +40,35 @@ inline bool start_throw_item(Player& p, const std::string& slot, mainloop::GameS
     return true;
 }
 
+inline bool end_cloud_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly, 
+                           mainloop::GameState& state) {
+
+    items::Item tmp;
+        
+    if (!p.inv.take(slot, tmp, 1))
+        return false;
+
+    const Design& d = designs().get(tmp.tag);
+
+    if (distance(p.px, p.py, lx, ly) > d.throwrange) {
+        std::cout << "OOPS " << v << " " << d.throwrange << std::endl;
+        return false;
+    }
+
+    state.render.draw_circle(lx, ly, d.cloudradius, true, d.skin.fore, maudit::color::bright_black,
+                             [&](unsigned int _x, unsigned int _y) {
+                                     
+                                 monsters::Monster mon;
+                                 if (state.monsters.get(_x, _y, mon)) {
+
+                                     attack(p, d.attacks, d.level, state, mon, true);
+                                 }
+                             });
+
+    return true;
+}
+
+
 inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly,
                            mainloop::GameState& state) {
 
@@ -60,7 +89,7 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     monsters::Monster mon;
     if (state.monsters.get(lx, ly, mon)) {
         std::cout << "!! attack" << std::endl;
-
+            
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 
         unsigned int lev = (1 - v2) * p.level;
@@ -69,6 +98,7 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     }
 
     state.items.place(lx, ly, tmp, state.render);
+
     return true;
 }
 

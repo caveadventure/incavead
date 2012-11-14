@@ -520,6 +520,7 @@ struct Game {
 
         if (s.cast_cloud.size() > 0 &&
             dist < s.range && 
+            m.magic > -3.0 &&
             reachable(state, m.xy.first, m.xy.second, p.px, p.py)) {
 
             for (const auto& c : s.cast_cloud) {
@@ -536,7 +537,8 @@ struct Game {
         }
 
         if (s.summon.size() > 0 && 
-            dist < s.range) {
+            dist < s.range &&
+            m.magic > -3.0) {
 
             for (const auto& c : s.summon) {
 
@@ -938,9 +940,15 @@ struct Game {
 
             handle_input_looking(p.state, p.look, p.px, p.py, state, k);
 
-            if (p.state & Player::THROWING) {
+            if (p.state & Player::FIRED) {
 
-                end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+                if (p.state & Player::THROWING) {
+                    end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+
+                } else if (p.state & Player::CLOUDING) {
+                    end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+                }
+
                 ++ticks;
                 p.state = Player::MAIN;
             }

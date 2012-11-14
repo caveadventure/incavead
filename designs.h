@@ -28,9 +28,21 @@ struct Design {
 
     unsigned int throwrange;
 
-    Design() : level(0), count(0), stackrange(0), heal(0), usable(false),
-               throwrange(0) {}
+    unsigned int cloudradius;
 
+    struct mean_deviation_t {
+        double mean;
+        double deviation;
+        
+        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
+    };
+
+    mean_deviation_t gencount;
+
+
+    Design() : level(0), count(0), stackrange(0), heal(0), usable(false), throwrange(0),
+               cloudradius(0), gencount(1, 0) {}
+    
 };
 
 #endif

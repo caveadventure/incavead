@@ -66,7 +66,7 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
 
 
 inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                   mainloop::GameState& state, const monsters::Monster& mon) {
+                   mainloop::GameState& state, const monsters::Monster& mon, bool quiet = false) {
 
     const Species& s = species().get(mon.tag);
         
@@ -80,42 +80,72 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (attack_res.empty()) {
 
-        state.render.do_message(nlp::message("You attack %s but do no damage.", s));
+        if (!quiet)
+            state.render.do_message(nlp::message("You attack %s but do no damage.", s));
+
         return true;
     }
 
-    double monhealth = mon.health;
+    double totdamage = 0.0;
+    double totmagic = 0.0;
+    double totsleep = 0.0;
+    bool mortal = false;
 
     for (const auto& v : attack_res) {
 
-        if (v.type == damage::type_t::sleep) {
-
-            unsigned int sleepturns = v.val;
-
-            state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
-            state.render.do_message(nlp::message("%s falls asleep.", s));
-            continue;
-        }
-
         double dmg = v.val;
 
-        std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
+        if (v.type == damage::type_t::sleep) {
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-        monhealth -= dmg;
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += dmg; });
+            totsleep += dmg;
 
-        if (monhealth < -3) {
+        } else if (v.type == damage::type_t::turn_undead) {
 
-            if (s.ai == Species::ai_t::none) {
-                state.render.do_message(nlp::message("You destroyed %s.", s));
-            } else {
-                state.render.do_message(nlp::message("You killed %s.", s));
+            if (s.flags.undead) {
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+                totdamage += dmg;
             }
 
-            monster_kill(p, state, mon, s);
-            break;
+        } else if (v.type == damage::type_t::cancellation) {
 
-        } else if (s.ai == Species::ai_t::none) {
+            if (s.flags.magic) {
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
+                totmagic += dmg;
+            }
+
+        } else {
+
+            std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
+
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+            totdamage += dmg;
+
+            if (dmg >= 2.8) {
+                mortal = true;
+            }
+        }
+    }
+       
+
+    if (totsleep > 0) {
+
+        state.render.do_message(nlp::message("%s falls asleep.", s));
+    }
+
+    if (mon.health - totdamage < -3) {
+
+        if (s.ai == Species::ai_t::none) {
+            state.render.do_message(nlp::message("You destroyed %s.", s));
+        } else {
+            state.render.do_message(nlp::message("You killed %s.", s));
+        }
+
+        monster_kill(p, state, mon, s);
+
+    } else if (!quiet) {
+
+        if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
 
         } else if (dmg < 0.5) {
@@ -133,12 +163,21 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         } else {
             state.render.do_message(nlp::message("You mortally wound %s.", s));
         }
+    }
 
-        if (s.level == p.level && dmg >= 2.8 && s.ai != Species::ai_t::none) {
+    if (mon.magic - totmagic < -3) {
 
-            ++p.level;
-            state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
-        }
+        state.render.do_message(nlp::message("%s is magically cancelled.", s));
+
+    } else if (mon.magic > 0.5) {
+
+        state.render.do_message(nlp::message("%s is showered in sparkles.", s));
+    }
+
+    if (s.level == p.level && mortal && s.ai != Species::ai_t::none) {
+
+        ++p.level;
+        state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
     }
 
     return true;

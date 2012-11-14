@@ -114,7 +114,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
 
     case '.':
         if (pstate & Player::TARGET) {
-            pstate = Player::THROWING;
+            pstate |= Player::FIRED;
+            pstate &= ~(Player::TARGET | Player::LOOKING);
             return;
         }
 

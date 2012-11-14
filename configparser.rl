@@ -168,9 +168,11 @@ void parse_config(const std::string& filename) {
         ####
 
         damage_type = 
-            'physical' %{ dmgval.type = damage::type_t::physical; } |
-            'sleep'    %{ dmgval.type = damage::type_t::sleep; }    |
-            'poison'   %{ dmgval.type = damage::type_t::poison; }   ;
+            'physical'     %{ dmgval.type = damage::type_t::physical; }     |
+            'sleep'        %{ dmgval.type = damage::type_t::sleep; }        |
+            'poison'       %{ dmgval.type = damage::type_t::poison; }       |
+            'turn_undead'  %{ dmgval.type = damage::type_t::turn_undead; }  |
+            'cancellation' %{ dmgval.type = damage::type_t::cancellation; } ;
 
         damage_val = 
             damage_type 
@@ -244,11 +246,17 @@ void parse_config(const std::string& filename) {
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
             ;
 
+        species_animal = 'animal' %{ spe.flags.animal = true; } ;
+        species_undead = 'undead' %{ spe.flags.undead = true; } ;
+        species_magic  = 'magic'  %{ spe.flags.magic = true; } ;
+        species_plant  = 'plant'  %{ spe.flags.plant = true; } ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon |
+            species_animal | species_undead | species_magic | species_plant |
             '}'
             ${ fret; })
             ;
@@ -281,12 +289,18 @@ void parse_config(const std::string& filename) {
         design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
         design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
-        design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
+        design_throwrange  = 'throwrange'  ws1 number   %{ des.throwrange = toint(state.match); };
+        design_cloudradius = 'cloudradius' ws1 number   %{ des.cloudradius = toint(state.match); };
+
+        design_gencount = 'gencount' 
+            ws1 real %{ des.gencount.mean = toreal(state.match); } 
+            ws1 real %{ des.gencount.deviation = toreal(state.match); } 
+        ;
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
-            design_throwrange | 
+            design_throwrange | design_cloudradius | design_gencount |
             '}'
             ${ fret; })
             ;

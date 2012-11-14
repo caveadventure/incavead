@@ -9,7 +9,9 @@ namespace damage {
 enum class type_t : unsigned int {
     physical,
     sleep,
-    poison
+    poison,
+    turn_undead,
+    cancellation
 };
 
 struct val_t {

@@ -14,12 +14,13 @@ struct Monster {
     pt xy;
 
     double health;
+    double magic;
     unsigned int sleep;
 
-    Monster() : xy(0, 0), health(3.0), sleep(0) {}
+    Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0) {}
 
     Monster(const std::string& _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy), health(3.0), sleep(0)
+        tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0)
         {}
 };
 
@@ -35,6 +36,7 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.tag);
         serialize::read(s, m.xy);
         serialize::read(s, m.health);
+        serialize::read(s, m.magic);
         serialize::read(s, m.sleep);
     }
 };
@@ -45,6 +47,7 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.tag);
         serialize::write(s, m.xy);
         serialize::write(s, m.health);
+        serialize::write(s, m.magic);
         serialize::write(s, m.sleep);
     }
 };

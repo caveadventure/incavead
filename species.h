@@ -101,9 +101,12 @@ struct Species {
     std::vector<summon_t> summon;
 
     struct flags_t {
-        char undead : 1;
+        bool undead;
+        bool animal;
+        bool magic;
+        bool plant;
 
-        flags_t() : undead(0) {}
+        flags_t() : undead(false), animal(false), magic(false), plant(false) {}
     };
 
     flags_t flags;

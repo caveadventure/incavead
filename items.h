@@ -17,7 +17,7 @@ struct Item {
     Item() : xy(0, 0), count(1) {}
 
     Item(const std::string& _tag, const pt& _xy, unsigned int c = 1) : 
-        tag(_tag), xy(_xy), count(1)
+        tag(_tag), xy(_xy), count(c)
         {}
 };
 
@@ -101,7 +101,27 @@ struct Items {
                 }
                 
                 std::cout << "& " << xy.first << "," << xy.second << " " << i.first << std::endl;
-                stuff[xy].push_back(Item(i.first, xy));
+
+                const Design& d = designs().get(i.first);
+
+                int _c = 1;
+
+                {
+                    double mean = d.gencount.mean;
+                    double dev = d.gencount.deviation;
+
+                    if (dev == 0) {
+                        _c = mean;
+
+                    } else {
+                        _c = rng.gauss(mean, dev);
+                    }
+
+                    if (_c <= 0)
+                        _c = 1;
+                }
+
+                stuff[xy].push_back(Item(i.first, xy, _c));
             }
         }
     }
