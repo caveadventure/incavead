@@ -11,7 +11,8 @@ enum class type_t : unsigned int {
     sleep,
     poison,
     turn_undead,
-    cancellation
+    cancellation,
+    scare_animal
 };
 
 struct val_t {

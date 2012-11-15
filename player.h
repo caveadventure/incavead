@@ -41,7 +41,7 @@ struct Player {
     static const unsigned int TARGET       = 0x2;
     static const unsigned int FIRED        = 0x8;
     static const unsigned int THROWING     = 0x10;
-    static const unsigned int CLOUDING     = 0x20;
+    static const unsigned int BLASTING     = 0x20;
 
     unsigned int state;
 

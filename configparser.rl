@@ -172,7 +172,8 @@ void parse_config(const std::string& filename) {
             'sleep'        %{ dmgval.type = damage::type_t::sleep; }        |
             'poison'       %{ dmgval.type = damage::type_t::poison; }       |
             'turn_undead'  %{ dmgval.type = damage::type_t::turn_undead; }  |
-            'cancellation' %{ dmgval.type = damage::type_t::cancellation; } ;
+            'cancellation' %{ dmgval.type = damage::type_t::cancellation; } |
+            'scare_animal' %{ dmgval.type = damage::type_t::scare_animal; } ;
 
         damage_val = 
             damage_type 
@@ -289,8 +290,13 @@ void parse_config(const std::string& filename) {
         design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
         design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
-        design_throwrange  = 'throwrange'  ws1 number   %{ des.throwrange = toint(state.match); };
-        design_cloudradius = 'cloudradius' ws1 number   %{ des.cloudradius = toint(state.match); };
+        design_melee      = 'melee'                     %{ des.melee = true; };
+        design_throwrange = 'throwrange'  ws1 number   %{ des.throwrange = toint(state.match); };
+
+        design_blast      = 'blast' 
+            ws1 number %{ des.blastradius = toint(state.match); }
+            ws1 number %{ des.blastrange = toint(state.match); }
+            ;
 
         design_gencount = 'gencount' 
             ws1 real %{ des.gencount.mean = toreal(state.match); } 
@@ -300,7 +306,7 @@ void parse_config(const std::string& filename) {
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
-            design_throwrange | design_cloudradius | design_gencount |
+            design_throwrange | design_blast | design_gencount | design_melee |
             '}'
             ${ fret; })
             ;

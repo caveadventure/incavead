@@ -25,6 +25,7 @@ struct inventory_t {
         make_slot(slot_t{"p",  " Potion", 'e'});
         make_slot(slot_t{"t",  "Missile", 'f'});
         make_slot(slot_t{"r1", "   Ring", 'g'});
+        make_slot(slot_t{"m1", "Magical", 'h'});
     }
 
     void make_slot(const slot_t& s) {
@@ -172,6 +173,11 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
+
+            // HACK
+            if (!dp.melee)
+                continue;
+
             out.add(dp.attacks);
         }
     }
@@ -180,7 +186,10 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
-            out.add(dp.defenses);
+
+            for (unsigned int j = 0; j < i.second.count; ++j) {
+                out.add(dp.defenses);
+            }
         }
     }
     

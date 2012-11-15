@@ -23,6 +23,11 @@ inline unsigned int damage_to_sleepturns(double v) {
     return std::max(0, n);
 }
 
+inline unsigned int damage_to_scareturns(double v) {
+    int n = (v * 30) - 20;
+    return std::max(0, n);
+}
+
 inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
                         const damage::attacks_t& attacks, unsigned int alevel,
@@ -36,6 +41,9 @@ inline void roll_attack(rnd::Generator& rng,
 
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
+
+        } else if (v.type == damage::type_t::scare_animal) {
+            dmg = damage_to_scareturns(dmg);
         }
 
         if (dmg > 0) {
@@ -89,6 +97,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     double totdamage = 0.0;
     double totmagic = 0.0;
     double totsleep = 0.0;
+    double totfear = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
@@ -105,6 +114,13 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             if (s.flags.undead) {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
                 totdamage += dmg;
+            }
+
+        } else if (v.type == damage::type_t::scare_animal) {
+
+            if (s.flags.animal) {
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
+                totfear += dmg;
             }
 
         } else if (v.type == damage::type_t::cancellation) {
@@ -131,6 +147,10 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     if (totsleep > 0) {
 
         state.render.do_message(nlp::message("%s falls asleep.", s));
+
+    } else if (totfear > 0) {
+
+        state.render.do_message(nlp::message("%s flees in terror.", s));
     }
 
     if (mon.health - totdamage < -3) {
@@ -148,16 +168,16 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
 
-        } else if (dmg < 0.5) {
+        } else if (totdamage < 0.5) {
             state.render.do_message(nlp::message("You hit %s.", s));
 
-        } else if (dmg < 1.0) {
+        } else if (totdamage < 1.0) {
             state.render.do_message(nlp::message("You wound %s.", s));
 
-        } else if (dmg < 2.0) {
+        } else if (totdamage < 2.0) {
             state.render.do_message(nlp::message("You heavily wound %s.", s));
 
-        } else if (dmg < 2.8) {
+        } else if (totdamage < 2.8) {
             state.render.do_message(nlp::message("You critically wound %s.", s));
 
         } else {
@@ -165,13 +185,14 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (mon.magic - totmagic < -3) {
+    if (totmagic > 0.5) {
 
-        state.render.do_message(nlp::message("%s is magically cancelled.", s));
+        if (mon.magic - totmagic < -3) {
+            state.render.do_message(nlp::message("%s is magically cancelled.", s));
 
-    } else if (mon.magic > 0.5) {
-
-        state.render.do_message(nlp::message("%s is showered in sparkles.", s));
+        } else {
+            state.render.do_message(nlp::message("%s is showered in sparkles.", s));
+        }
     }
 
     if (s.level == p.level && mortal && s.ai != Species::ai_t::none) {
@@ -200,7 +221,8 @@ inline void defend(Player& p,
         if (v.type == damage::type_t::sleep) {
             p.sleep += v.val;
 
-        } else {
+        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+
             p.health.dec(v.val);
         }
     }
@@ -225,7 +247,8 @@ inline void defend(Player& p,
 
             if (v.type == damage::type_t::sleep) {
                 state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
-            } else {
+
+            } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
                 state.render.do_message(nlp::message("%s hits!", s));
             }
         }
@@ -253,7 +276,47 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::poison) {
             do_pois = true;
 
-        } else {
+        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+            do_hurt = true;
+        }
+    }
+
+    if (do_hurt) {
+        state.render.do_message("Ouch, that hurts.");
+    }
+
+    if (do_pois) {
+        state.render.do_message("You feel sick.");
+    }
+
+    if (do_sleep) {
+        state.render.do_message("You fall asleep.");
+    }
+}
+
+
+
+inline void defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Design& d, 
+                   mainloop::GameState& state) {
+
+    damage::attacks_t attack_res;
+    defend(p, defenses, plevel, d.attacks, d.level, state, attack_res);
+
+    bool do_sleep = false;
+    bool do_hurt = false;
+    bool do_pois = false;
+
+    for (const auto& v : attack_res) {
+
+        if (v.type == damage::type_t::sleep) {
+            do_sleep = true;
+
+        } else if (v.type == damage::type_t::poison) {
+            do_pois = true;
+
+        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
             do_hurt = true;
         }
     }

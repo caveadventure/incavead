@@ -28,7 +28,8 @@ struct Design {
 
     unsigned int throwrange;
 
-    unsigned int cloudradius;
+    unsigned int blastradius;
+    unsigned int blastrange;
 
     struct mean_deviation_t {
         double mean;
@@ -39,9 +40,10 @@ struct Design {
 
     mean_deviation_t gencount;
 
+    bool melee;
 
     Design() : level(0), count(0), stackrange(0), heal(0), usable(false), throwrange(0),
-               cloudradius(0), gencount(1, 0) {}
+               blastradius(0), blastrange(0), gencount(1, 0), melee(false) {}
     
 };
 

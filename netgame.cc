@@ -515,6 +515,9 @@ struct Game {
             return false;
         }
 
+        if (m.fear > 0) {
+            state.monsters.change(m, [](monsters::Monster& m) { --(m.fear); });
+        }
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
@@ -566,7 +569,7 @@ struct Game {
         }
 
 
-        if (s.ai == Species::ai_t::random) {
+        if (m.fear > 0 || s.ai == Species::ai_t::random) {
             do_random = true;
 
         } else if (s.ai == Species::ai_t::inrange_random && dist <= s.range) {
@@ -945,8 +948,8 @@ struct Game {
                 if (p.state & Player::THROWING) {
                     end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
 
-                } else if (p.state & Player::CLOUDING) {
-                    end_throw_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+                } else if (p.state & Player::BLASTING) {
+                    end_blast_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
                 }
 
                 ++ticks;
