@@ -49,6 +49,8 @@ enum class screens_t : unsigned int {
 void init_statics() {
 
     /*
+      TODO: candles!
+
       0 kobold caves
         *kobold child
         *kobold farmer
