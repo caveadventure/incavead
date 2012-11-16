@@ -60,7 +60,7 @@ struct Player {
 
     look_t look;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(1), level(1),
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
                sleep(0), state(MAIN) {}
 
 };

@@ -401,10 +401,16 @@ struct Game {
     void endgame() {}
 
     template <typename SINK>
-    void save(SINK& s) {}
+    void save(SINK& s) {
+        serialization::write(s, p);
+        serialization::write(s, summons);
+    }
 
     template <typename SOURCE>
-    void load(SOURCE& s) {}
+    void load(SOURCE& s) {
+        serialization::read(s, p);
+        serialization::read(s, summons);
+    }
 
     void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
         
@@ -640,13 +646,6 @@ struct Game {
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
-        if (p.health.val <= -3.0) {
-            state.render.do_message("You are dead.", true);
-            dead = true;
-            done = true;
-            return;
-        }
-
         summons.clear();
 
         state.monsters.process(state.render, 
@@ -670,6 +669,12 @@ struct Game {
             }
         }
 
+        if (p.health.val <= -3.0) {
+            state.render.do_message("You are dead.", true);
+            dead = true;
+            done = true;
+            return;
+        }
 
         if (p.sleep > 0) {
             ++ticks;
@@ -701,7 +706,7 @@ struct Game {
             state.items.get(p.px, p.py, 0, item);
             const Design& d = designs().get(item.tag);
 
-            state.render.do_message(nlp::message("You see %s.", d));
+            state.render.do_message(nlp::message("You see %s.", nlp::count(), d, item.count));
 
         } else if (nstack > 1) {
 

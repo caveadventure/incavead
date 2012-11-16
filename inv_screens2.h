@@ -64,7 +64,18 @@ inline void handle_input_floor_item(Player& p, mainloop::GameState& state,
                                     maudit::keypress k) {
 
     if (k.letter == 't') {
-        if (p.inv.floor_to_inv(p.px, p.py, p.inv.selected_floor_item, state.items, state.render)) {
+                                           
+        items::Item disc;
+        
+        if (p.inv.floor_to_inv(p.px, p.py, p.inv.selected_floor_item, state.items, state.render, disc)) {
+
+            if (!disc.tag.empty()) {
+
+                const Design& d = designs().get(disc.tag);
+
+                // HACK
+                state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, disc.count));
+            }
 
             ticks++;
             state.window_stack.clear();
