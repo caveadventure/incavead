@@ -111,8 +111,10 @@ struct Species {
 
     flags_t flags;
 
+    double karma;
+
     Species() : level(0), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), range(0), clumpsize(), flags() {}
+                move(move_t::walk), range(0), clumpsize(), flags(), karma(0) {}
 
 };
 

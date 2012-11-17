@@ -463,9 +463,9 @@ struct Game {
         }
     }
 
-    void draw_hud(mainloop::GameState& state) {
+    void draw_one_stat(mainloop::GameState& state, const stat_t& s, const std::string& name) {
 
-        double v = p.health.val;
+        double v = s.val;
         int vp = 0;
 
         if (v > 2) vp = 3;
@@ -475,12 +475,21 @@ struct Game {
         else if (v < -1) vp = -2;
         else if (v < 0) vp = -1;
 
-        state.render.push_hud_line("Health", maudit::color::dim_green,
-                                   vp, '-', '+',
-                                   maudit::color::dim_red, maudit::color::dim_green);
+        if (v != 0) {
+            state.render.push_hud_line(name, maudit::color::dim_green,
+                                       vp, '-', '+',
+                                       maudit::color::dim_red, maudit::color::dim_green);
+        }
+    }
 
-        state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
-                                   4, '+', maudit::color::bright_green);
+    void draw_hud(mainloop::GameState& state) {
+
+        draw_one_stat(state, p.health, "Health");
+        draw_one_stat(state, p.hunger, "Hunger");
+        draw_one_stat(state, p.karma, "Karma");
+
+        //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
+        //                           4, '+', maudit::color::bright_green);
     }
 
     bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
@@ -667,6 +676,13 @@ struct Game {
                 state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
                                                      nlp::count(), species().get(i.summontag), nm));
             }
+        }
+
+        p.hunger.dec(0.03);
+
+        if (p.hunger.val <= -3.0) {
+            state.render.do_message("You desperately need something to eat!", true);
+            p.hunger.dec(0.1);
         }
 
         if (p.health.val <= -3.0) {

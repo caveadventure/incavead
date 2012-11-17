@@ -23,6 +23,7 @@ struct Design {
     unsigned int stackrange;
 
     double heal;
+    double feed;
 
     bool usable;
 
@@ -42,7 +43,7 @@ struct Design {
 
     bool melee;
 
-    Design() : level(0), count(0), stackrange(0), heal(0), usable(false), throwrange(0),
+    Design() : level(0), count(0), stackrange(0), heal(0), feed(0), usable(false), throwrange(0),
                blastradius(0), blastrange(0), gencount(1, 0), melee(false) {}
     
 };

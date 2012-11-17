@@ -10,11 +10,13 @@ struct stat_t {
     void inc(double v) {
         val += v;
         if (val > 3) val = 3;
+        else if (val < 3) val = -3;
     }
 
     void dec(double v) {
         val -= v;
         if (val < -3) val = -3;
+        else if (val > 3) val = 3;
     }
 };
 
@@ -31,6 +33,8 @@ struct Player {
     unsigned int level;
 
     stat_t health;
+    stat_t hunger;
+    stat_t karma;
 
     unsigned int sleep;
 
@@ -61,7 +65,10 @@ struct Player {
     look_t look;
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
-               sleep(0), state(MAIN) {}
+               sleep(0), state(MAIN) 
+        {
+            karma.val = 0;
+        }
 
 };
 

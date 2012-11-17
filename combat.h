@@ -142,7 +142,8 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             }
         }
     }
-       
+
+    p.karma.inc(s.karma * totdamage);
 
     if (totsleep > 0) {
 

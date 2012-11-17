@@ -14,14 +14,23 @@ inline bool apply_item(Player& p, const std::string& slot, grender::Grid& render
     if (!d.usable) 
         return false;
 
+    bool ret = false;
+
     if (d.heal > 0) {
 
         p.health.inc(d.heal);
-        render.do_message(nlp::message("You feel better. %d %d", d.heal, p.health.val));
-        return true;
+        render.do_message("You feel better.");
+        ret = true;
     } 
 
-    return false;
+    if (d.feed > 0) {
+
+        p.hunger.dec(d.feed);
+        render.do_message(nlp::message("You eat %s.", d));
+        ret = true;
+    } 
+
+    return ret;
 }
 
 

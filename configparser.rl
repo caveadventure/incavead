@@ -217,6 +217,7 @@ void parse_config(const std::string& filename) {
         species_range       = 'range'       ws1 number     %{ spe.range = toint(state.match); } ;
         species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
         species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
+        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); };
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -258,6 +259,7 @@ void parse_config(const std::string& filename) {
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon |
             species_animal | species_undead | species_magic | species_plant |
+            species_karma |
             '}'
             ${ fret; })
             ;
@@ -289,6 +291,7 @@ void parse_config(const std::string& filename) {
         design_defense    = 'defense'    ws1 damage_val %{ des.defenses.add(dmgval); } ;
         design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
         design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
+        design_feed       = 'feed'       ws1 real       %{ des.feed = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_melee      = 'melee'                     %{ des.melee = true; };
         design_throwrange = 'throwrange'  ws1 number   %{ des.throwrange = toint(state.match); };
@@ -306,7 +309,7 @@ void parse_config(const std::string& filename) {
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
-            design_throwrange | design_blast | design_gencount | design_melee |
+            design_throwrange | design_blast | design_gencount | design_melee | design_feed |
             '}'
             ${ fret; })
             ;
