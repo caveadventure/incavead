@@ -143,16 +143,27 @@ struct Counts {
         return true;
     }
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, data);
-    }
-
-    inline void read(serialize::Source& s) {
-        serialize::read(s, data);
-    }
-
 };
 
 }
+
+namespace serialize {
+
+template <>
+struct reader<counters::Counts> {
+    void read(Source& s, counters::Counts& t) {
+        serialize::read(s, t.data);
+    }
+};
+
+template <>
+struct writer<counters::Counts> {
+    void write(Sink& s, const counters::Counts& t) {
+        serialize::write(s, t.data);
+    }
+};
+
+}
+
 
 #endif

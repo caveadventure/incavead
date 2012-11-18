@@ -53,6 +53,72 @@ struct GameState {
     }
 };
 
+}
+
+namespace serialize {
+
+template <>
+struct reader<mainloop::GameState::window_t> {
+    void read(Source& s, mainloop::GameState::window_t& w) {
+
+        serialize::read(s, w.message);
+        serialize::read(s, w.type);
+    }
+};
+
+template <>
+struct reader<mainloop::GameState> {
+    void read(Source& s, mainloop::GameState& state) {
+
+        serialize::read(s, state.rng);
+        serialize::read(s, state.neigh);
+        serialize::read(s, state.camap);
+        serialize::read(s, state.grid);
+        serialize::read(s, state.render);
+        serialize::read(s, state.moon);
+        serialize::read(s, state.designs_counts);
+        serialize::read(s, state.species_counts);
+        serialize::read(s, state.terrain_counts);
+        serialize::read(s, state.monsters);
+        serialize::read(s, state.items);
+        serialize::read(s, state.features);
+
+        serialize::read(s, state.window_stack);
+    }
+};
+
+template <>
+struct writer<mainloop::GameState::window_t> {
+    void write(Sink& s, const mainloop::GameState::window_t& w) {
+        serialize::write(s, w.message);
+        serialize::write(s, w.type);
+    }
+};
+
+template <>
+struct writer<mainloop::GameState> {
+    void write(Sink& s, const mainloop::GameState& state) {
+
+        serialize::write(s, state.rng);
+        serialize::write(s, state.neigh);
+        serialize::write(s, state.camap);
+        serialize::write(s, state.grid);
+        serialize::write(s, state.render);
+        serialize::write(s, state.moon);
+        serialize::write(s, state.designs_counts);
+        serialize::write(s, state.species_counts);
+        serialize::write(s, state.terrain_counts);
+        serialize::write(s, state.monsters);
+        serialize::write(s, state.items);
+        serialize::write(s, state.features);
+
+        serialize::write(s, state.window_stack);
+    }
+};
+
+}
+
+namespace mainloop {
 
 struct drawing_context_t {
     unsigned int view_w;
@@ -112,20 +178,10 @@ struct Main {
         try {
             serialize::Source s(filename);
 
-            state.rng.read(s);
-            state.neigh.read(s);
-            state.grid.read(s);
-            state.render.read(s);
-            state.camap.read(s);
-            state.moon.read(s);
-            state.designs_counts.read(s);
-            state.species_counts.read(s);
-            state.terrain_counts.read(s);
-            state.features.read(s);
-            state.items.read(s);
-            state.monsters.read(s);
-
+            serialize::read(s, state);
             serialize::read(s, ticks);
+            serialize::read(s, view_w);
+            serialize::read(s, view_h);
 
             game.load(s);
 
@@ -139,20 +195,10 @@ struct Main {
 
         serialize::Sink s(filename);
 
-        state.rng.write(s);
-        state.neigh.write(s);
-        state.grid.write(s);
-        state.render.write(s);
-        state.camap.write(s);
-        state.moon.write(s);
-        state.designs_counts.write(s);
-        state.species_counts.write(s);
-        state.terrain_counts.write(s);
-        state.features.write(s);
-        state.items.write(s);
-        state.monsters.write(s);
-
+        serialize::write(s, state);
         serialize::write(s, ticks);
+        serialize::write(s, view_w);
+        serialize::write(s, view_h);
 
         game.save(s);
     }

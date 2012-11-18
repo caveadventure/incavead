@@ -163,15 +163,25 @@ struct Features {
         }
     }
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, feats);
-    }
+};
 
-    inline void read(serialize::Source& s) {
-        serialize::read(s, feats);
+}
+
+namespace serialize {
+
+template <>
+struct reader<features::Features> {
+    void read(Source& s, features::Features& t) {
+        serialize::read(s, t.feats);
     }
 };
 
+template <>
+struct writer<features::Features> {
+    void write(Sink& s, const features::Features& t) {
+        serialize::write(s, t.feats);
+    }
+};
 
 }
 

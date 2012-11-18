@@ -430,16 +430,27 @@ struct Monsters {
         }
     }
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, mons);
-    }
+};
 
-    inline void read(serialize::Source& s) {
-        serialize::read(s, mons);
+}
+
+namespace serialize {
+
+template <>
+struct reader<monsters::Monsters> {
+    void read(Source& s, monsters::Monsters& t) {
+        serialize::read(s, t.mons);
     }
 };
 
+template <>
+struct writer<monsters::Monsters> {
+    void write(Sink& s, const monsters::Monsters& t) {
+        serialize::write(s, t.mons);
+    }
+};
 
 }
+
 
 #endif

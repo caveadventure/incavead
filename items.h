@@ -212,16 +212,27 @@ struct Items {
         }
     }
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, stuff);
-    }
+};
 
-    inline void read(serialize::Source& s) {
-        serialize::read(s, stuff);
+}
+
+namespace serialize {
+
+template <>
+struct reader<items::Items> {
+    void read(Source& s, items::Items& t) {
+        serialize::read(s, t.stuff);
     }
 };
 
+template <>
+struct writer<items::Items> {
+    void write(Sink& s, const items::Items& t) {
+        serialize::write(s, t.stuff);
+    }
+};
 
 }
+
 
 #endif

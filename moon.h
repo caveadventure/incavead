@@ -327,35 +327,43 @@ struct Moon {
         pi = phase();
     }
 
-    //***  ***//
+};
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, pi.phase_n);
-        serialize::write(s, pi.illuminated);
-        serialize::write(s, pi.age);
-        serialize::write(s, pi.distance);
-        serialize::write(s, pi.angular_diameter);
-        serialize::write(s, pi.sun_distance);
-        serialize::write(s, pi.sun_angular_diameter);
-        serialize::write(s, (unsigned int)pi.phase);
-        serialize::write(s, pi.phase_str);
-    }
+}
 
-    inline void read(serialize::Source& s) {
-        serialize::read(s, pi.phase_n);
-        serialize::read(s, pi.illuminated);
-        serialize::read(s, pi.age);
-        serialize::read(s, pi.distance);
-        serialize::read(s, pi.angular_diameter);
-        serialize::read(s, pi.sun_distance);
-        serialize::read(s, pi.sun_angular_diameter);
+namespace serialize {
+
+template <>
+struct reader<moon::Moon> {
+    void read(Source& s, moon::Moon& t) {
+        serialize::read(s, t.pi.phase_n);
+        serialize::read(s, t.pi.illuminated);
+        serialize::read(s, t.pi.age);
+        serialize::read(s, t.pi.distance);
+        serialize::read(s, t.pi.angular_diameter);
+        serialize::read(s, t.pi.sun_distance);
+        serialize::read(s, t.pi.sun_angular_diameter);
         unsigned int phase;
         serialize::read(s, phase);
-        pi.phase = (PHASE)phase;
-        serialize::read(s, pi.phase_str);
+        t.pi.phase = (PHASE)phase;
+        serialize::read(s, t.pi.phase_str);
     }
 };
 
+template <>
+struct writer<moon::Moon> {
+    void write(Sink& s, const moon::Moon& t) {
+        serialize::write(s, t.pi.phase_n);
+        serialize::write(s, t.pi.illuminated);
+        serialize::write(s, t.pi.age);
+        serialize::write(s, t.pi.distance);
+        serialize::write(s, t.pi.angular_diameter);
+        serialize::write(s, t.pi.sun_distance);
+        serialize::write(s, t.pi.sun_angular_diameter);
+        serialize::write(s, (unsigned int)t.pi.phase);
+        serialize::write(s, t.pi.phase_str);
+    }
+};
 
 }
 

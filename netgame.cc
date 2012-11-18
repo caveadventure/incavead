@@ -402,14 +402,32 @@ struct Game {
 
     template <typename SINK>
     void save(SINK& s) {
-        serialization::write(s, p);
-        serialization::write(s, summons);
+        serialize::write(s, p);
+
+        serialize::write(s, summons.size());
+        for (const auto& v : summons) {
+            serialize::write(s, v.x);
+            serialize::write(s, v.y);
+            serialize::write(s, v.summontag);
+            serialize::write(s, v.summonertag);
+        }
     }
 
     template <typename SOURCE>
     void load(SOURCE& s) {
-        serialization::read(s, p);
-        serialization::read(s, summons);
+        serialize::read(s, p);
+
+        size_t n;
+        serialize::read(s, n);
+        summons.resize(n);
+
+        for (size_t i = 0; i < n; ++i) {
+            auto& v = summons[i];
+            serialize::read(s, v.x);
+            serialize::read(s, v.y);
+            serialize::read(s, v.summontag);
+            serialize::read(s, v.summonertag);
+        }
     }
 
     void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {

@@ -200,24 +200,22 @@ struct CaMap {
 
     }
 
+};
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, camap.size());
-        for (const auto& t : camap) {
-            serialize::write(s, t.first);
-            serialize::write(s, t.second.rul->id);
-            serialize::write(s, t.second.age);
-            serialize::write(s, t.second.age_add);
-        }
-    }
+}
 
-    inline void read(serialize::Source& s) {
+namespace serialize {
+
+template <>
+struct reader<celauto::CaMap> {
+    void read(Source& s, celauto::CaMap& t) {
+
         size_t sz;
         serialize::read(s, sz);
 
         for (size_t i = 0; i < sz; ++i) {
-            pt key;
-            ca_element ca;
+            celauto::pt key;
+            celauto::ca_element ca;
             size_t id;
 
             serialize::read(s, key);
@@ -225,16 +223,28 @@ struct CaMap {
             serialize::read(s, ca.age);
             serialize::read(s, ca.age_add);
 
-            ca.rul = get_rule(id);
+            ca.rul = t.get_rule(id);
 
-            camap[key] = ca;
+            t.camap[key] = ca;
         }
     }
 };
 
+template <>
+struct writer<celauto::CaMap> {
+    void write(Sink& s, const celauto::CaMap& m) {
+
+        serialize::write(s, m.camap.size());
+        for (const auto& t : m.camap) {
+            serialize::write(s, t.first);
+            serialize::write(s, t.second.rul->id);
+            serialize::write(s, t.second.age);
+            serialize::write(s, t.second.age_add);
+        }
+    }
+};
 
 }
-
 
 
 #endif

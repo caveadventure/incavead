@@ -271,5 +271,27 @@ inline void read(Source& s, T& t) {
 
 }
 
+/**
+
+namespace serialize {
+
+template <>
+struct reader<> {
+    void read(Source& s, & t) {
+        serialize::read(s, t.);
+    }
+};
+
+template <>
+struct writer<> {
+    void write(Sink& s, const & t) {
+        serialize::write(s, t.);
+    }
+};
+
+}
+
+**/
+
 
 #endif

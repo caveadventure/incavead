@@ -67,22 +67,29 @@ struct Neighbors {
         return operator()(xy1).count(xy2);
     }
 
-    //***  ***//
-
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, w);
-        serialize::write(s, h);
-    }
-
-    inline void read(serialize::Source& s) {
-        serialize::read(s, w);
-        serialize::read(s, h);
-        init(w, h);
-    }
-
 };
 
+}
 
+
+namespace serialize {
+
+template <>
+struct reader<neighbors::Neighbors> {
+    void read(Source& s, neighbors::Neighbors& t) {
+        serialize::read(s, t.w);
+        serialize::read(s, t.h);
+        t.init(t.w, t.h);
+    }
+};
+
+template <>
+struct writer<neighbors::Neighbors> {
+    void write(Sink& s, const neighbors::Neighbors& t) {
+        serialize::write(s, t.w);
+        serialize::write(s, t.h);
+    }
+};
 
 }
 

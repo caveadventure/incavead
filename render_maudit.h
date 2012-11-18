@@ -1080,15 +1080,62 @@ public:
         return true;
     }
 
+};
+
+}
 
 
-    //***  ***//
+namespace serialize {
 
-    inline void write(serialize::Sink& s) {
-	serialize::write(s, w);
-	serialize::write(s, h);
+template <>
+struct reader<grender::Grid> {
+    inline void read(serialize::Source& s, grender::Grid& g) {
+        unsigned int _w;
+        unsigned int _h;
 
-        for (const auto& t : grid) {
+        serialize::read(s, _w);
+        serialize::read(s, _h);
+
+        g.init(_w, _h);
+
+	for (size_t i = 0; i < g.grid.size(); ++i) {
+
+	    gridpoint& p = g.grid[i];
+
+            serialize::read(s, p.skins);
+            serialize::read(s, p.is_lit);
+            serialize::read(s, p.in_fov);
+            serialize::read(s, p.is_viewblock);
+            serialize::read(s, p.is_walkblock);
+
+            TCOD_map_set_properties(g.tcodmap, i % _w, i / _w, 
+                                    (p.is_viewblock == 0), (p.is_walkblock == 0));
+        }
+
+	serialize::read(s, g.keylog);
+
+        size_t messages_size;
+        serialize::read(s, messages_size);
+
+        g.messages.clear();
+
+        for (size_t i = 0; i < messages_size; ++i) {
+            g.messages.emplace_back();
+            message& m = g.messages.back();
+            serialize::read(s, m.text);
+            serialize::read(s, m.important);
+            serialize::read(s, m.timestamp);
+        }
+    }
+};
+
+template <>
+struct writer<grender::Grid> {
+    inline void write(serialize::Sink& s, const grender::Grid& g) {
+	serialize::write(s, g.w);
+	serialize::write(s, g.h);
+
+        for (const auto& t : g.grid) {
 
             serialize::write(s, t.skins);
             serialize::write(s, t.is_lit);
@@ -1097,59 +1144,17 @@ public:
             serialize::write(s, t.is_walkblock);
         }
 
-	serialize::write(s, keylog);
+	serialize::write(s, g.keylog);
 
-        serialize::write(s, messages.size());
-        for (const auto& m : messages) {
+        serialize::write(s, g.messages.size());
+        for (const auto& m : g.messages) {
             serialize::write(s, m.text);
             serialize::write(s, m.important);
             serialize::write(s, m.timestamp);
         }
     }
-
-    inline void read(serialize::Source& s) {
-        unsigned int _w;
-        unsigned int _h;
-
-        serialize::read(s, _w);
-        serialize::read(s, _h);
-
-        init(_w, _h);
-
-	for (size_t i = 0; i < grid.size(); ++i) {
-
-	    gridpoint& p = grid[i];
-
-            serialize::read(s, p.skins);
-            serialize::read(s, p.is_lit);
-            serialize::read(s, p.in_fov);
-            serialize::read(s, p.is_viewblock);
-            serialize::read(s, p.is_walkblock);
-
-            TCOD_map_set_properties(tcodmap, i % w, i / w, 
-                                    (p.is_viewblock == 0), (p.is_walkblock == 0));
-        }
-
-	serialize::read(s, keylog);
-
-        size_t messages_size;
-        serialize::read(s, messages_size);
-
-        messages.clear();
-
-        for (size_t i = 0; i < messages_size; ++i) {
-            messages.emplace_back();
-            message& m = messages.back();
-            serialize::read(s, m.text);
-            serialize::read(s, m.important);
-            serialize::read(s, m.timestamp);
-        }
-    }
-
 };
 
-
 }
-
 
 #endif

@@ -578,31 +578,43 @@ struct Map {
         return _one_of(rng, lakemap, ret);
     }
 
-    inline void write(serialize::Sink& s) {
-        serialize::write(s, w);
-        serialize::write(s, h);
-        serialize::write(s, grid);
-        serialize::write(s, walkmap);
-        serialize::write(s, watermap);
-        serialize::write(s, floormap);
-        serialize::write(s, cornermap);
-        serialize::write(s, shoremap);
-        serialize::write(s, lakemap);
-    }
+};
 
-    inline void read(serialize::Source& s) {
-        serialize::read(s, w);
-        serialize::read(s, h);
-        serialize::read(s, grid);
-        serialize::read(s, walkmap);
-        serialize::read(s, watermap);
-        serialize::read(s, floormap);
-        serialize::read(s, cornermap);
-        serialize::read(s, shoremap);
-        serialize::read(s, lakemap);
+
+}
+
+
+namespace serialize {
+
+template <>
+struct reader<grid::Map> {
+    void read(Source& s, grid::Map& t) {
+        serialize::read(s, t.w);
+        serialize::read(s, t.h);
+        serialize::read(s, t.grid);
+        serialize::read(s, t.walkmap);
+        serialize::read(s, t.watermap);
+        serialize::read(s, t.floormap);
+        serialize::read(s, t.cornermap);
+        serialize::read(s, t.shoremap);
+        serialize::read(s, t.lakemap);
     }
 };
 
+template <>
+struct writer<grid::Map> {
+    void write(Sink& s, const grid::Map& t) {
+        serialize::write(s, t.w);
+        serialize::write(s, t.h);
+        serialize::write(s, t.grid);
+        serialize::write(s, t.walkmap);
+        serialize::write(s, t.watermap);
+        serialize::write(s, t.floormap);
+        serialize::write(s, t.cornermap);
+        serialize::write(s, t.shoremap);
+        serialize::write(s, t.lakemap);
+    }
+};
 
 }
 

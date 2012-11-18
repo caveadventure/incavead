@@ -73,5 +73,55 @@ struct Player {
 };
 
 
+namespace serialize {
+
+template <>
+struct reader<Player> {
+    void read(Source& s, Player& p) {
+        serialize::read(s, p.px);
+        serialize::read(s, p.py);
+        serialize::read(s, p.worldx);
+        serialize::read(s, p.worldy);
+        serialize::read(s, p.worldz);
+        serialize::read(s, p.level);
+        serialize::read(s, p.health.val);
+        serialize::read(s, p.hunger.val);
+        serialize::read(s, p.karma.val);
+        serialize::read(s, p.sleep);
+        serialize::read(s, p.inv);
+        serialize::read(s, p.state);
+        serialize::read(s, p.look.x);
+        serialize::read(s, p.look.y);
+        serialize::read(s, p.look.target);
+        serialize::read(s, p.look.rangemin);
+        serialize::read(s, p.look.rangemax);
+    }
+};
+
+template <>
+struct writer<Player> {
+    void write(Sink& s, const Player& p) {
+        serialize::write(s, p.px);
+        serialize::write(s, p.py);
+        serialize::write(s, p.worldx);
+        serialize::write(s, p.worldy);
+        serialize::write(s, p.worldz);
+        serialize::write(s, p.level);
+        serialize::write(s, p.health.val);
+        serialize::write(s, p.hunger.val);
+        serialize::write(s, p.karma.val);
+        serialize::write(s, p.sleep);
+        serialize::write(s, p.inv);
+        serialize::write(s, p.state);
+        serialize::write(s, p.look.x);
+        serialize::write(s, p.look.y);
+        serialize::write(s, p.look.target);
+        serialize::write(s, p.look.rangemin);
+        serialize::write(s, p.look.rangemax);
+    }
+};
+
+}
+
 
 #endif
