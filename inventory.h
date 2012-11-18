@@ -194,4 +194,26 @@ struct inventory_t {
     
 };
 
+namespace serialize {
+
+template <>
+struct reader<inventory_t> {
+    void read(Source& s, inventory_t& t) {
+        serialize::read(s, t.stuff);
+        serialize::read(s, t.selected_slot);
+        serialize::read(s, t.selected_floor_item);
+    }
+};
+
+template <>
+struct writer<inventory_t> {
+    void write(Sink& s, const inventory_t& t) {
+        serialize::write(s, t.stuff);
+        serialize::write(s, t.selected_slot);
+        serialize::write(s, t.selected_floor_item);
+    }
+};
+
+}
+
 #endif

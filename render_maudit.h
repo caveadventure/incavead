@@ -1100,7 +1100,7 @@ struct reader<grender::Grid> {
 
 	for (size_t i = 0; i < g.grid.size(); ++i) {
 
-	    gridpoint& p = g.grid[i];
+            grender::Grid::gridpoint& p = g.grid[i];
 
             serialize::read(s, p.skins);
             serialize::read(s, p.is_lit);
@@ -1121,7 +1121,7 @@ struct reader<grender::Grid> {
 
         for (size_t i = 0; i < messages_size; ++i) {
             g.messages.emplace_back();
-            message& m = g.messages.back();
+            grender::Grid::message& m = g.messages.back();
             serialize::read(s, m.text);
             serialize::read(s, m.important);
             serialize::read(s, m.timestamp);

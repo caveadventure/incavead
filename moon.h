@@ -345,7 +345,7 @@ struct reader<moon::Moon> {
         serialize::read(s, t.pi.sun_angular_diameter);
         unsigned int phase;
         serialize::read(s, phase);
-        t.pi.phase = (PHASE)phase;
+        t.pi.phase = (moon::PHASE)phase;
         serialize::read(s, t.pi.phase_str);
     }
 };

@@ -193,7 +193,7 @@ struct Game {
         std::cout << "Writing grid... " << cached_grid << std::endl;
 
         serialize::Sink sink(cached_grid);
-        state.grid.write(sink);
+        serialize::write(sink, state.grid);
 
         std::cout << "Writing OK" << std::endl;
     }
@@ -215,7 +215,7 @@ struct Game {
             std::cout << "Reading grid... " << cached_grid.str() << std::endl;
 
             serialize::Source source(cached_grid.str());
-            state.grid.read(source);
+            serialize::read(source, state.grid);
 
             std::cout << "Reading grid OK" << std::endl;
 
