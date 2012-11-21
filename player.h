@@ -10,7 +10,7 @@ struct stat_t {
     void inc(double v) {
         val += v;
         if (val > 3) val = 3;
-        else if (val < 3) val = -3;
+        else if (val < -3) val = -3;
     }
 
     void dec(double v) {

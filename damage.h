@@ -49,7 +49,6 @@ struct defenses_t {
     std::map<type_t,double> defenses;
 
     void add(const val_t& d) {
-        std::cout << "add d " << (int)d.type << " " << d.val << std::endl;
         defenses[d.type] += d.val;
     }
 
@@ -60,9 +59,6 @@ struct defenses_t {
     }
 
     double get(const type_t& t) const {
-        for (const auto& i : defenses) {
-            std::cout << "DEFEND " << (int)t << " " << (int)i.first << " " << i.second << std::endl;
-        }
 
         auto i = defenses.find(t);
 

@@ -284,7 +284,6 @@ struct Monsters {
             }
         }
 
-        std::cout << "[s] placed " << ret << std::endl;
         return ret;
     }
 
@@ -307,7 +306,6 @@ struct Monsters {
             unsigned int n2 = counts.take(s.level, tag, 1);
 
             if (n2 == 0) {
-                std::cout << "[s] no counts" << std::endl;
                 return 0;
             }
 
@@ -320,8 +318,6 @@ struct Monsters {
 
             return ret;
         }
-
-        std::cout << "[s] no habitat" << std::endl;
 
         return 0;
     }

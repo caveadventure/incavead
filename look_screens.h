@@ -29,8 +29,6 @@ inline void look_move(Player::look_t& look, mainloop::GameState& state, int dx, 
 inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
                        mainloop::GameState& state) {
 
-    std::cout << "| " << look.target << std::endl;
-
     (look.target)++;
 
     int n = 0;
@@ -39,8 +37,6 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;
 
-        const Species& s = species().get(i.second.tag);
-        std::cout << "   = " << n << " " << look.target << " " << nlp::message("%s", s) << std::endl;
         if (n == look.target) {
             look.x = i.first.first;
             look.y = i.first.second;
@@ -54,9 +50,6 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;
 
-        const Design& d = designs().get(i.second.front().tag);
-
-        std::cout << "   = " << n << " " << look.target << " " << nlp::message("%s", d) << std::endl;
         if (n == look.target) {
             look.x = i.first.first;
             look.y = i.first.second;
@@ -65,8 +58,6 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
 
         ++n;
     }
-
-    std::cout << " | " << std::endl;
 
     look.target = -1;
     look.x = px;

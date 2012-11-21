@@ -109,7 +109,6 @@ struct Features {
             
             const Terrain& t = terrain().get(tag);
 
-            std::cout << "+++ " << tag << " " << xy.first << " " << xy.second << std::endl;
             feats[xy] = Feature(tag, xy, t.decay, t.charges);
         }
     }

@@ -527,11 +527,9 @@ struct Game {
 
                                    _x = x;
                                    _y = y;
-                                   std::cout << "    ~ " << x << "," << y << std::endl;
                                    return true;
                                });
 
-        std::cout << "  ~~~ " << _x << "," << _y << " " << bx << "," << by << std::endl;
         if (_x == bx && _y == by) return true;
         return false;
     }
@@ -696,7 +694,7 @@ struct Game {
             }
         }
 
-        p.hunger.dec(0.03);
+        p.hunger.dec(0.003);
 
         if (p.hunger.val <= -3.0) {
             state.render.do_message("You desperately need something to eat!", true);

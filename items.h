@@ -66,15 +66,11 @@ struct Items {
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                   unsigned int level, unsigned int n) {
 
-        std::cout << "~~~ " << level << " " << n << std::endl;
-
         std::map<std::string, unsigned int> q = counts.take(rng, level, n);
 
         bm _z("item placement");
 
         for (const auto& i : q) {
-
-            std::cout << " - " << i.first << " " << i.second << std::endl;
 
             std::unordered_set<pt> queue;
 
@@ -100,8 +96,6 @@ struct Items {
                     }
                 }
                 
-                std::cout << "& " << xy.first << "," << xy.second << " " << i.first << std::endl;
-
                 const Design& d = designs().get(i.first);
 
                 int _c = 1;
