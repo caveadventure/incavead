@@ -227,6 +227,8 @@ struct Game {
             make_map(state, gridseed, cached_grid.str());
         }
 
+        grid::Map::genmaps_t maps(state.grid);
+
         // Place the player on the same starting point every time.
 
         state.rng.init(gridseed);
@@ -235,13 +237,13 @@ struct Game {
             bm _gg("feature generation");
         
             grid::pt xy;
-            if (!state.grid.one_of_floor(state.rng, xy))
+            if (!maps.one_of_floor(state.rng, xy))
                 throw std::runtime_error("Failed to generate grid");
 
             p.px = xy.first;
             p.py = xy.second;
 
-            state.grid.add_nogen(p.px, p.py);
+            maps.add_nogen(p.px, p.py);
 
             // Place some dungeon features on the same spots every time.
 
@@ -256,7 +258,7 @@ struct Game {
                 std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
 
                 for (const auto& j : t) {
-                    state.features.generate(state.rng, state.grid, j.first, j.second);
+                    state.features.generate(state.rng, state.grid, maps, j.first, j.second);
                 }
             }
         }
@@ -276,8 +278,8 @@ struct Game {
                 unsigned int itemcount = std::max(1.0, state.rng.gauss(1.5, 1.0));
                 unsigned int itemlevel = p.worldz;
 
-                state.items.generate(state.neigh, state.rng, state.grid, state.designs_counts, 
-                                     itemlevel, itemcount);
+                state.items.generate(state.neigh, state.rng, state.grid, maps,
+                                     state.designs_counts, itemlevel, itemcount);
             }
         }
 
@@ -292,8 +294,8 @@ struct Game {
 
                 unsigned int monlevel = p.worldz;
 
-                state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
-                                    monlevel);
+                state.monsters.generate(state.neigh, state.rng, state.grid, maps,
+                                        state.species_counts, monlevel);
             }
         }
     }

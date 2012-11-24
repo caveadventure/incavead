@@ -48,7 +48,77 @@ struct Map {
     std::unordered_set<pt> shoremap;
     std::unordered_set<pt> lakemap;
 
-    std::unordered_set<pt> nogens;
+    struct genmaps_t {
+        
+        std::vector<pt> walkmap;
+        std::vector<pt> watermap;
+        std::vector<pt> floormap;
+        std::vector<pt> cornermap;
+        std::vector<pt> shoremap;
+        std::vector<pt> lakemap;
+
+        std::unordered_set<pt> nogens;
+
+        bool is_nogen(unsigned int x, unsigned int y) {
+            return nogens.count(pt(x, y));
+        }
+
+        void add_nogen(unsigned int x, unsigned int y) {
+            nogens.insert(pt(x, y));
+        }
+
+        bool _one_of(rnd::Generator& rng, const std::vector<pt>& map, pt& ret) const {
+
+            if (map.empty())
+                return false;
+
+            for (unsigned int i = 0; i < 10; ++i) {
+
+                ret = map[rng.n(map.size())];
+
+                if (nogens.count(ret) != 0)
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool one_of_walk(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, walkmap, ret);
+        }
+
+        bool one_of_floor(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, floormap, ret);
+        }
+
+        bool one_of_corner(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, cornermap, ret);
+        }
+
+        bool one_of_shore(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, shoremap, ret);
+        }
+
+        bool one_of_water(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, watermap, ret);
+        }
+
+        bool one_of_lake(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, lakemap, ret);
+        }
+
+        template <typename T>
+        genmaps_t(const T& g) {
+            walkmap.assign(g.walkmap.begin(), g.walkmap.end());
+            floormap.assign(g.floormap.begin(), g.floormap.end());
+            cornermap.assign(g.cornermap.begin(), g.cornermap.end());
+            shoremap.assign(g.shoremap.begin(), g.shoremap.end());
+            watermap.assign(g.watermap.begin(), g.watermap.end());
+            lakemap.assign(g.lakemap.begin(), g.lakemap.end());
+        }
+    };
 
     void init(unsigned int _w, unsigned int _h) {
         w = _w;
@@ -61,7 +131,6 @@ struct Map {
         cornermap.clear();
         shoremap.clear();
         lakemap.clear();
-        nogens.clear();
 
         for (size_t i = 0; i < w*h; ++i) {
             grid[i] = 10.0;
@@ -467,10 +536,6 @@ struct Map {
     bool is_shore(unsigned int x, unsigned int y) const {
         return (shoremap.count(pt(x, y)) != 0);
     }
-
-    bool is_nogen(unsigned int x, unsigned int y) const {
-        return (nogens.count(pt(x, y)) != 0);
-    }
     
     void set_walk(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
         pt tmp(x, y);
@@ -500,10 +565,8 @@ struct Map {
         }
     }
 
-    void add_nogen(unsigned int x, unsigned int y) {
-        nogens.insert(pt(x, y));
-    }
 
+    /*
     void add_nogen_expand(neighbors::Neighbors& neigh,
                           unsigned int x, unsigned int y, unsigned int depth) {
 
@@ -530,29 +593,24 @@ struct Map {
 
         nogens.insert(ng.begin(), ng.end());
     }
-
-
-    bool _one_of(rnd::Generator& rng, std::vector<pt>& tmp, pt& ret) {
-        if (tmp.size() == 0) {
-            return false;
-        }
-
-        std::sort(tmp.begin(), tmp.end());
-        ret = tmp[rng.range(0, (int)tmp.size()-1)];
-        return true;
-    }
+    */
 
     bool _one_of(rnd::Generator& rng, const std::unordered_set<pt>& s, pt& ret) {
-        std::vector<pt> tmp;
 
-        for (const pt& v : s) {
-            if (nogens.count(v) != 0)
-                continue;
+        if (s.size() == 0)
+            return false;
 
-            tmp.push_back(v);
+        size_t n = rng.n(s.size());
+
+        auto i = s.begin();
+
+        while (n > 0) {
+            ++i;
+            --n;
         }
 
-        return _one_of(rng, tmp, ret);
+        ret = *i;
+        return true;
     }
 
     bool one_of_walk(rnd::Generator& rng, pt& ret) {
@@ -578,6 +636,12 @@ struct Map {
     bool one_of_lake(rnd::Generator& rng, pt& ret) {
         return _one_of(rng, lakemap, ret);
     }
+
+    // Fake functions to adhere to a template interface.
+
+    bool is_nogen(unsigned int x, unsigned int y) { return false; }
+
+    void add_nogen(unsigned int x, unsigned int y) { }
 
 };
 

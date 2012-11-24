@@ -94,7 +94,7 @@ inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameS
 
     const Design& d = designs().get(tmp.tag);
 
-    if (d.blastradius == 0)
+    if (d.blastradius == 0 && d.blastrange == 0)
         return false;
 
     if (d.blastrange > 0) {

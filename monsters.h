@@ -109,8 +109,8 @@ struct Monsters {
         return ret;
     }
     
-    template <typename FUNC, typename FUNCP>
-    unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
+    template <typename T, typename FUNC, typename FUNCP>
+    unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                              const std::string& tag, unsigned int n,
                              std::unordered_set<pt>& clump, 
                              std::unordered_set<pt>& placed,
@@ -123,7 +123,7 @@ struct Monsters {
             if (clump.empty()) {
 
                 pt tmp;
-                if (!f(grid, rng, tmp)) 
+                if (!f(ptsource, rng, tmp)) 
                     break;
 
                 clump.insert(tmp);
@@ -133,14 +133,14 @@ struct Monsters {
             clump.erase(clump.begin());
 
             mons[xy] = Monster(tag, xy);
-            grid.add_nogen(xy.first, xy.second);
+            ptsource.add_nogen(xy.first, xy.second);
             placed.insert(xy);
             ++ret;
 
             for (const pt& v : neigh(xy)) {
 
                 if (fp(grid, v.first, v.second) && 
-                    !grid.is_nogen(v.first, v.second) &&
+                    !ptsource.is_nogen(v.first, v.second) &&
                     mons.count(v) == 0) {
 
                     clump.insert(v);
@@ -151,7 +151,8 @@ struct Monsters {
         return ret;
     }
 
-    unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid,
+    template <typename T>
+    unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                              const std::string& tag, unsigned int n,
                              std::unordered_set<pt>& clump,
                              std::unordered_set<pt>& placed) {
@@ -164,37 +165,37 @@ struct Monsters {
         switch (h) {
 
         case Species::habitat_t::walk:
-            return place_clump(neigh, rng, grid, tag, n, clump, placed,
-                               std::mem_fn(&grid::Map::one_of_walk), std::mem_fn(&grid::Map::is_walk));
+            return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
+                               std::mem_fn(&T::one_of_walk), std::mem_fn(&grid::Map::is_walk));
 
         case Species::habitat_t::floor:
-            return place_clump(neigh, rng, grid, tag, n, clump, placed,
-                               std::mem_fn(&grid::Map::one_of_floor), std::mem_fn(&grid::Map::is_floor));
+            return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
+                               std::mem_fn(&T::one_of_floor), std::mem_fn(&grid::Map::is_floor));
 
         case Species::habitat_t::water:
-            return place_clump(neigh, rng, grid, tag, n, clump, placed,
-                               std::mem_fn(&grid::Map::one_of_lake), std::mem_fn(&grid::Map::is_lake));
+            return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
+                               std::mem_fn(&T::one_of_lake), std::mem_fn(&grid::Map::is_lake));
 
         case Species::habitat_t::corner:
-            return place_clump(neigh, rng, grid, tag, n, clump, placed,
-                               std::mem_fn(&grid::Map::one_of_corner), std::mem_fn(&grid::Map::is_corner));
+            return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
+                               std::mem_fn(&T::one_of_corner), std::mem_fn(&grid::Map::is_corner));
 
         case Species::habitat_t::shoreline:
-            return place_clump(neigh, rng, grid, tag, n, clump, placed,
-                               std::mem_fn(&grid::Map::one_of_shore), std::mem_fn(&grid::Map::is_shore));
+            return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
+                               std::mem_fn(&T::one_of_shore), std::mem_fn(&grid::Map::is_shore));
 
         }
 
         return 0;
     }
 
-    template <typename FUNC>
-    bool filter_habitat_find_one(grid::Map& grid, const std::unordered_set<pt>& clump, pt& out, FUNC f) {
+    template <typename T, typename FUNC>
+    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, pt& out, FUNC f) {
 
         for (const pt& v : clump) {
 
             if (f(grid, v.first, v.second) && 
-                !grid.is_nogen(v.first, v.second) && 
+                !ptsource.is_nogen(v.first, v.second) && 
                 mons.count(v) == 0) {
 
                 out = v;
@@ -205,31 +206,34 @@ struct Monsters {
         return false;
     }
 
-    bool filter_habitat_find_one(grid::Map& grid, const std::unordered_set<pt>& clump, pt& out, Species::habitat_t h) {
+    template <typename T>
+    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, 
+                                 pt& out, Species::habitat_t h) {
 
         switch (h) {
         case Species::habitat_t::walk: 
-            return filter_habitat_find_one(grid, clump, out, std::mem_fn(&grid::Map::is_walk));
+            return filter_habitat_find_one(grid, ptsource, clump, out, std::mem_fn(&grid::Map::is_walk));
 
         case Species::habitat_t::floor:
-            return filter_habitat_find_one(grid, clump, out, std::mem_fn(&grid::Map::is_floor));
+            return filter_habitat_find_one(grid, ptsource, clump, out, std::mem_fn(&grid::Map::is_floor));
 
         case Species::habitat_t::water:
-            return filter_habitat_find_one(grid, clump, out, std::mem_fn(&grid::Map::is_lake));
+            return filter_habitat_find_one(grid, ptsource, clump, out, std::mem_fn(&grid::Map::is_lake));
 
         case Species::habitat_t::corner:
-            return filter_habitat_find_one(grid, clump, out, std::mem_fn(&grid::Map::is_corner));
+            return filter_habitat_find_one(grid, ptsource, clump, out, std::mem_fn(&grid::Map::is_corner));
 
         case Species::habitat_t::shoreline:
-            return filter_habitat_find_one(grid, clump, out, std::mem_fn(&grid::Map::is_shore));
+            return filter_habitat_find_one(grid, ptsource, clump, out, std::mem_fn(&grid::Map::is_shore));
         }
 
         return false;
     }
 
 
-    unsigned int place(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
-                       pt* start, std::unordered_set<pt>& placed,
+    template <typename T>
+    unsigned int place(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
+                       counters::Counts& counts, pt* start, std::unordered_set<pt>& placed,
                        unsigned int level, const std::string& tag, unsigned int n) {
 
         const Species& s = species().get(tag);
@@ -259,7 +263,7 @@ struct Monsters {
             clump.insert(*start);
         }
 
-        unsigned int ret = place_clump(neigh, rng, grid, tag, n, clump, placed);
+        unsigned int ret = place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed);
 
         for (const auto& comp : s.companion) {
 
@@ -274,13 +278,13 @@ struct Monsters {
                 continue;
 
             pt tmp;
-            if (filter_habitat_find_one(grid, clump, tmp, species().get(comp.tag).habitat)) {
+            if (filter_habitat_find_one(grid, ptsource, clump, tmp, species().get(comp.tag).habitat)) {
 
-                place(neigh, rng, grid, counts, &tmp, placed, level, comp.tag, n2);
+                place(neigh, rng, grid, ptsource, counts, &tmp, placed, level, comp.tag, n2);
 
             } else {
 
-                place(neigh, rng, grid, counts, nullptr, placed, level, comp.tag, n2);
+                place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, comp.tag, n2);
             }
         }
 
@@ -288,8 +292,7 @@ struct Monsters {
     }
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
-                        grender::Grid& render,
-                        unsigned int x, unsigned int y, const std::string& tag) {
+                        grender::Grid& render, unsigned int x, unsigned int y, const std::string& tag) {
 
 
         std::unordered_set<pt> n;
@@ -301,7 +304,7 @@ struct Monsters {
         const Species& s = species().get(tag);
 
         pt start;
-        if (filter_habitat_find_one(grid, n, start, s.habitat)) {
+        if (filter_habitat_find_one(grid, grid, n, start, s.habitat)) {
 
             unsigned int n2 = counts.take(s.level, tag, 1);
 
@@ -310,7 +313,7 @@ struct Monsters {
             }
 
             std::unordered_set<pt> placed;
-            unsigned int ret = place(neigh, rng, grid, counts, &start, placed, s.level, tag, n2);
+            unsigned int ret = place(neigh, rng, grid, grid, counts, &start, placed, s.level, tag, n2);
 
             for (const pt& xy : placed) {
                 render.invalidate(xy.first, xy.second);
@@ -323,15 +326,16 @@ struct Monsters {
     }
 
 
-    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
-                  unsigned int level) {
+    template <typename T>
+    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
+                  counters::Counts& counts, unsigned int level) {
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, 1);
         std::unordered_set<pt> placed;
 
         for (auto& i : q) {
             
-            place(neigh, rng, grid, counts, nullptr, placed, level, i.first, i.second);
+            place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, i.first, i.second);
 
         }
     }

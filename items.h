@@ -63,40 +63,21 @@ struct Items {
     }
 
 
-    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
-                  unsigned int level, unsigned int n) {
+    template <typename T>
+    void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
+                  counters::Counts& counts, unsigned int level, unsigned int n) {
+
+        bm _z("items::generate");
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, n);
 
         for (const auto& i : q) {
 
-            //std::unordered_set<pt> queue;
-
             for (unsigned int j = 0; j < i.second; ++j) {
 
                 pt xy;
-                if (!grid.one_of_floor(rng, xy))
+                if (!ptsource.one_of_floor(rng, xy))
                     return;
-
-                /*
-                if (queue.empty()) {
-                    if (!grid.one_of_floor(rng, xy)) {
-                        return;
-                    }
-
-                    queue.insert(xy);
-                }
-
-                xy = *(queue.begin());
-                queue.erase(queue.begin());
-
-                for (const pt& v : neigh(xy)) {
-
-                    if (grid.is_floor(xy.first, xy.second) && stack_size(xy.first, xy.second) < 5) {
-                        queue.insert(v);
-                    }
-                }
-                */
                 
                 const Design& d = designs().get(i.first);
 
