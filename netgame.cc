@@ -200,6 +200,8 @@ struct Game {
 
     void generate(mainloop::GameState& state) {
 
+        bm _zz("level generation");
+
         // Read or generate cached map.
 
         std::ostringstream cached_grid;
@@ -211,6 +213,7 @@ struct Game {
                              ((uint64_t)p.worldz << 32)) + 1;
 
         try {
+            bm _rg("reading grid");
 
             std::cout << "Reading grid... " << cached_grid.str() << std::endl;
 
@@ -228,29 +231,33 @@ struct Game {
 
         state.rng.init(gridseed);
 
-        grid::pt xy;
-        if (!state.grid.one_of_floor(state.rng, xy))
-            throw std::runtime_error("Failed to generate grid");
+        {
+            bm _gg("feature generation");
+        
+            grid::pt xy;
+            if (!state.grid.one_of_floor(state.rng, xy))
+                throw std::runtime_error("Failed to generate grid");
 
-        p.px = xy.first;
-        p.py = xy.second;
+            p.px = xy.first;
+            p.py = xy.second;
 
-        state.grid.add_nogen(p.px, p.py);
+            state.grid.add_nogen(p.px, p.py);
 
-        // Place some dungeon features on the same spots every time.
+            // Place some dungeon features on the same spots every time.
 
-        state.terrain_counts = terrain().counts;
+            state.terrain_counts = terrain().counts;
 
-        unsigned int featscount = ::fabs(state.rng.gauss(35.0, 5.0));
+            unsigned int featscount = ::fabs(state.rng.gauss(35.0, 5.0));
 
-        for (unsigned int i = 0; i < featscount; ++i) {
+            for (unsigned int i = 0; i < featscount; ++i) {
 
-            unsigned int takecount = ::fabs(state.rng.gauss(5.0, 1.0));
+                unsigned int takecount = ::fabs(state.rng.gauss(5.0, 1.0));
 
-            std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+                std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
 
-            for (const auto& j : t) {
-                state.features.generate(state.rng, state.grid, j.first, j.second);
+                for (const auto& j : t) {
+                    state.features.generate(state.rng, state.grid, j.first, j.second);
+                }
             }
         }
 
@@ -258,31 +265,36 @@ struct Game {
 
         state.rng.init(::time(NULL));
 
-        bm _y("item generation");
+        {
+            bm _y("item generation");
 
-        unsigned int itemgroups = ::fabs(state.rng.gauss(200.0, 10.0));
+            unsigned int itemgroups = ::fabs(state.rng.gauss(300.0, 50.0));
 
-        for (unsigned int i = 0; i < itemgroups; ++i) {
+            for (unsigned int i = 0; i < itemgroups; ++i) {
+                bm _yy("one item gen");
 
-            unsigned int itemcount = std::max(1.0, state.rng.gauss(1.0, 0.25));
-            unsigned int itemlevel = p.worldz;
+                unsigned int itemcount = std::max(1.0, state.rng.gauss(1.5, 1.0));
+                unsigned int itemlevel = p.worldz;
 
-            state.items.generate(state.neigh, state.rng, state.grid, state.designs_counts, 
-                                 itemlevel, itemcount);
+                state.items.generate(state.neigh, state.rng, state.grid, state.designs_counts, 
+                                     itemlevel, itemcount);
+            }
         }
 
         // Place some random monsters.
 
-        bm _z("monster generation");
+        {
+            bm _z("monster generation");
 
-        unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
+            unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
 
-        for (unsigned int i = 0; i < mongroups; ++i) {
+            for (unsigned int i = 0; i < mongroups; ++i) {
 
-            unsigned int monlevel = p.worldz;
+                unsigned int monlevel = p.worldz;
 
-            state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
+                state.monsters.generate(state.neigh, state.rng, state.grid, state.species_counts, 
                                     monlevel);
+            }
         }
     }
 
@@ -503,8 +515,8 @@ struct Game {
     void draw_hud(mainloop::GameState& state) {
 
         draw_one_stat(state, p.health, "Health");
-        draw_one_stat(state, p.hunger, "Hunger");
-        draw_one_stat(state, p.karma, "Karma");
+        draw_one_stat(state, p.food,   "Food");
+        draw_one_stat(state, p.karma,  "Karma");
 
         //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
         //                           4, '+', maudit::color::bright_green);
@@ -694,11 +706,11 @@ struct Game {
             }
         }
 
-        p.hunger.dec(0.003);
+        p.food.dec(0.003);
 
-        if (p.hunger.val <= -3.0) {
+        if (p.food.val <= -3.0) {
             state.render.do_message("You desperately need something to eat!", true);
-            p.hunger.dec(0.1);
+            p.food.dec(0.1);
         }
 
         if (p.health.val <= -3.0) {
@@ -879,6 +891,7 @@ struct Game {
             break;
 
         case 'S':
+            state.render.do_message("Your game has been saved. Press any key.", true);
             done = true;
             dead = false;
             break;
@@ -914,6 +927,10 @@ struct Game {
 
         case '.':
             rest(state, ticks);
+            break;
+
+        case 'T':
+            take_item(p.px, p.py, 0, p, state, ticks);
             break;
 
         case ',':

@@ -60,6 +60,7 @@ struct Map {
         floormap.clear();
         cornermap.clear();
         shoremap.clear();
+        lakemap.clear();
         nogens.clear();
 
         for (size_t i = 0; i < w*h; ++i) {

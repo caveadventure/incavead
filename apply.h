@@ -25,7 +25,7 @@ inline bool apply_item(Player& p, const std::string& slot, grender::Grid& render
 
     if (d.feed > 0) {
 
-        p.hunger.dec(d.feed);
+        p.food.inc(d.feed);
         render.do_message(nlp::message("You eat %s.", d));
         ret = true;
     } 
@@ -162,6 +162,28 @@ inline bool start_throw_item(Player& p, const std::string& slot, mainloop::GameS
     p.state |= Player::THROWING;
 
     return true;
+}
+
+inline bool take_item(unsigned int x, unsigned int y, unsigned int z, 
+                      Player& p, mainloop::GameState& state, size_t& ticks) {
+
+    items::Item disc;
+        
+    if (p.inv.floor_to_inv(x, y, z, state.items, state.render, disc)) {
+
+        if (!disc.tag.empty()) {
+
+            const Design& d = designs().get(disc.tag);
+
+            // HACK
+            state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, disc.count));
+        }
+
+        ticks++;
+        return true;
+    }
+
+    return false;
 }
 
 #endif

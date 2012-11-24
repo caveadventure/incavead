@@ -176,6 +176,8 @@ struct Main {
 
     bool load(const std::string& filename) {
         try {
+            bm _l("loading savefile");
+
             serialize::Source s(filename);
 
             serialize::read(s, state);
@@ -192,6 +194,7 @@ struct Main {
     }
 
     void save(const std::string& filename) {
+        bm _s("saving savefile");
 
         serialize::Sink s(filename);
 

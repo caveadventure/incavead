@@ -33,7 +33,7 @@ struct Player {
     unsigned int level;
 
     stat_t health;
-    stat_t hunger;
+    stat_t food;
     stat_t karma;
 
     unsigned int sleep;
@@ -85,7 +85,7 @@ struct reader<Player> {
         serialize::read(s, p.worldz);
         serialize::read(s, p.level);
         serialize::read(s, p.health.val);
-        serialize::read(s, p.hunger.val);
+        serialize::read(s, p.food.val);
         serialize::read(s, p.karma.val);
         serialize::read(s, p.sleep);
         serialize::read(s, p.inv);
@@ -108,7 +108,7 @@ struct writer<Player> {
         serialize::write(s, p.worldz);
         serialize::write(s, p.level);
         serialize::write(s, p.health.val);
-        serialize::write(s, p.hunger.val);
+        serialize::write(s, p.food.val);
         serialize::write(s, p.karma.val);
         serialize::write(s, p.sleep);
         serialize::write(s, p.inv);

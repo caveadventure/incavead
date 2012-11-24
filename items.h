@@ -68,16 +68,17 @@ struct Items {
 
         std::map<std::string, unsigned int> q = counts.take(rng, level, n);
 
-        bm _z("item placement");
-
         for (const auto& i : q) {
 
-            std::unordered_set<pt> queue;
+            //std::unordered_set<pt> queue;
 
             for (unsigned int j = 0; j < i.second; ++j) {
 
                 pt xy;
+                if (!grid.one_of_floor(rng, xy))
+                    return;
 
+                /*
                 if (queue.empty()) {
                     if (!grid.one_of_floor(rng, xy)) {
                         return;
@@ -95,6 +96,7 @@ struct Items {
                         queue.insert(v);
                     }
                 }
+                */
                 
                 const Design& d = designs().get(i.first);
 

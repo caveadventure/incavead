@@ -189,7 +189,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
 
     } else if (n == 1 && state.items.get(x, y, 0, itm)) {
             
-        msg = nlp::message(" %s", designs().get(itm.tag));
+        msg = nlp::message(" %s", nlp::count(), designs().get(itm.tag), itm.count);
 
     } else if (x == px && y == py) {
         msg = " This is you";
