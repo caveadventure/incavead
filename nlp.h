@@ -39,6 +39,10 @@ struct parsed_name {
                     state = MANY;
                     when_many.push_back(std::make_pair(base.size(), ""));
 
+                } else if (c == '#') {
+                    state = TEXT;
+                    when_many.push_back(std::make_pair(base.size(), ""));
+
                 } else {
                     state = TEXT;
                     base += c;
@@ -67,7 +71,7 @@ struct parsed_name {
     }
 
     template <typename T>
-    std::string make_(const T& when_) {
+    std::string make_(const T& when_, const char* ntxt = "") {
         std::string ret;
 
         auto woi = when_.begin();
@@ -75,7 +79,13 @@ struct parsed_name {
         for (size_t i = 0; i <= base.size(); ++i) {
 
             if (woi != when_.end() && i == woi->first) {
-                ret += woi->second;
+
+                if (woi->second.empty()) {
+                    ret += ntxt;
+                } else {
+                    ret += woi->second;
+                }
+
                 ++woi;
                 --i;
                 continue;
@@ -93,8 +103,8 @@ struct parsed_name {
         return make_(when_one);
     }
 
-    std::string make_many() {
-        return make_(when_many);
+    std::string make_many(const char* n) {
+        return make_(when_many, n);
     }
 
     std::string make(size_t n, bool capitals) {
@@ -109,8 +119,7 @@ struct parsed_name {
             char tmp[256];
             ::snprintf(tmp, 255, "%zu", n);
 
-            ret = tmp;
-            ret += make_many();
+            ret = make_many(tmp);
         }
 
         if (capitals && ret.size() > 0) {
