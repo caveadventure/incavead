@@ -51,7 +51,7 @@ void init_statics() {
     /*
       TODO: candles!
 
-      0 kobold caves
+      0 
         *kobold child
         *kobold farmer
         *kobold warrior
@@ -73,7 +73,7 @@ void init_statics() {
         orc raider
         lizardman envoy
 
-      1 drow & orcs
+      1 
         *kobold slave
         *orcish raider
         *orcish slavemaster
@@ -102,9 +102,32 @@ void init_statics() {
         glowing crystal
         lamp
 
-      1 lizardmen 
-      2 drow & orcs
-      3 beholders/d&d
+      2
+        illithid mindflayer
+        illithid lord
+        illithid slavemaster
+        illithid elderbrain
+        aboleth
+        aboleth larva
+        beholder
+        elder beholder
+        beholder hive mother
+        carrion crawler
+        carrion crawler larva
+        purple worm
+        grimlock slave
+        grimlock cannibal
+        grimlock savage
+        drow zombie
+        drow slave
+        orcish zombie
+        humanoid zombie
+        kobold zombie
+        gnoll zombie
+        gnome zombie
+        grimlock zombie
+
+
       4 mutants/psi
       5 dinosaur/megafauna
       6 dragon
