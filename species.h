@@ -113,6 +113,18 @@ struct Species {
 
     double karma;
 
+    struct blast_t {
+        double chance;
+        unsigned int radius;
+        unsigned int range;
+        unsigned int turns;
+        damage::attacks_t attacks;
+
+        blast_t() : chance(0), radius(0), range(0), turns(0) {}
+    }; 
+
+    std::vector<blast_t> blast;
+
     Species() : level(0), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::walk), range(0), clumpsize(), flags(), karma(0) {}
 

@@ -223,7 +223,9 @@ inline void defend(Player& p,
         if (v.type == damage::type_t::sleep) {
             p.sleep += v.val;
 
-        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+        } else if (v.type == damage::type_t::physical || 
+                   v.type == damage::type_t::poison ||
+                   v.type == damage::type_t::psi) {
 
             p.health.dec(v.val);
         }
@@ -250,7 +252,12 @@ inline void defend(Player& p,
             if (v.type == damage::type_t::sleep) {
                 state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
 
-            } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+            } else if (v.type == damage::type_t::psi) {
+                state.render.do_message(nlp::message("%s is destroying your mind!", s));
+
+            } else if (v.type == damage::type_t::physical || 
+                       v.type == damage::type_t::poison) {
+
                 state.render.do_message(nlp::message("%s hits!", s));
             }
         }
@@ -269,6 +276,7 @@ inline void defend(Player& p,
     bool do_sleep = false;
     bool do_hurt = false;
     bool do_pois = false;
+    bool do_psi = false;
 
     for (const auto& v : attack_res) {
 
@@ -278,13 +286,20 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::poison) {
             do_pois = true;
 
-        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+        } else if (v.type == damage::type_t::psi) {
+            do_psi = true;
+
+        } else if (v.type == damage::type_t::physical) {
             do_hurt = true;
         }
     }
 
     if (do_hurt) {
         state.render.do_message("Ouch, that hurts.");
+    }
+
+    if (do_psi) {
+        state.render.do_message("You feel a cosmic existential madness.");
     }
 
     if (do_pois) {
@@ -309,6 +324,7 @@ inline void defend(Player& p,
     bool do_sleep = false;
     bool do_hurt = false;
     bool do_pois = false;
+    bool do_psi = false;
 
     for (const auto& v : attack_res) {
 
@@ -318,13 +334,20 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::poison) {
             do_pois = true;
 
-        } else if (v.type == damage::type_t::physical || v.type == damage::type_t::poison) {
+        } else if (v.type == damage::type_t::psi) {
+            do_psi = true;
+
+        } else if (v.type == damage::type_t::physical) {
             do_hurt = true;
         }
     }
 
     if (do_hurt) {
         state.render.do_message("Ouch, that hurts.");
+    }
+
+    if (do_psi) {
+        state.render.do_message("You feel a cosmic existential madness.");
     }
 
     if (do_pois) {

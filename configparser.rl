@@ -173,7 +173,8 @@ void parse_config(const std::string& filename) {
             'poison'       %{ dmgval.type = damage::type_t::poison; }       |
             'turn_undead'  %{ dmgval.type = damage::type_t::turn_undead; }  |
             'cancellation' %{ dmgval.type = damage::type_t::cancellation; } |
-            'scare_animal' %{ dmgval.type = damage::type_t::scare_animal; } ;
+            'scare_animal' %{ dmgval.type = damage::type_t::scare_animal; } |
+            'psi'          %{ dmgval.type = damage::type_t::psi; }          ;
 
         damage_val = 
             damage_type 
@@ -248,6 +249,17 @@ void parse_config(const std::string& filename) {
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
             ;
 
+        species_blast = 'blast' %{ spe.blast.push_back(Species::blast_t()); }
+            ws1 real %{ spe.blast.back().chance = toreal(state.match); }
+            ws1 number %{ spe.blast.back().radius = toint(state.match); }
+            ws1 number %{ spe.blast.back().range = toint(state.match); }
+            ws1 number %{ spe.blast.back().turns = toint(state.match); }
+            (ws1 'attack' 
+             ws1 damage_val 
+             %{ spe.blast.back().attacks.add(dmgval); })+
+            ;
+        
+
         species_animal = 'animal' %{ spe.flags.animal = true; } ;
         species_undead = 'undead' %{ spe.flags.undead = true; } ;
         species_magic  = 'magic'  %{ spe.flags.magic = true; } ;
@@ -259,7 +271,7 @@ void parse_config(const std::string& filename) {
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon |
             species_animal | species_undead | species_magic | species_plant |
-            species_karma |
+            species_karma | species_blast |
             '}'
             ${ fret; })
             ;
