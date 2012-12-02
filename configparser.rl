@@ -174,7 +174,8 @@ void parse_config(const std::string& filename) {
             'turn_undead'  %{ dmgval.type = damage::type_t::turn_undead; }  |
             'cancellation' %{ dmgval.type = damage::type_t::cancellation; } |
             'scare_animal' %{ dmgval.type = damage::type_t::scare_animal; } |
-            'psi'          %{ dmgval.type = damage::type_t::psi; }          ;
+            'psi'          %{ dmgval.type = damage::type_t::psi; }          |
+            'eat_brain'    %{ dmgval.type = damage::type_t::eat_brain; }    ;
 
         damage_val = 
             damage_type 

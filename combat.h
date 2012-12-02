@@ -52,7 +52,8 @@ inline void roll_attack(rnd::Generator& rng,
     }
 }
 
-inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::Monster& mon, const Species& s) {
+inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::Monster& mon, 
+                         const Species& s, bool fromplayer) {
 
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
@@ -63,7 +64,7 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
-    if (s.ai == Species::ai_t::none)
+    if (s.ai == Species::ai_t::none || !fromplayer)
         return;
 
     if (s.level > p.level) {
@@ -74,12 +75,17 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
 
 
 inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                   mainloop::GameState& state, const monsters::Monster& mon, bool quiet = false) {
+                   mainloop::GameState& state, const monsters::Monster& mon, 
+                   bool quiet = false, bool fromplayer = true) {
 
     const Species& s = species().get(mon.tag);
         
     if (attacks.empty()) {
-        state.render.do_message("You can't attack without a weapon!", true);
+
+        if (fromplayer) {
+            state.render.do_message("You can't attack without a weapon!", true);
+        }
+
         return false;
     }
 
@@ -88,7 +94,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (attack_res.empty()) {
 
-        if (!quiet)
+        if (!quiet && fromplayer)
             state.render.do_message(nlp::message("You attack %s but do no damage.", s));
 
         return true;
@@ -143,8 +149,10 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    std::cout << "karma " << s.karma << " " << totdamage << std::endl;
-    p.karma.inc(s.karma * totdamage);
+    if (fromplayer) {
+        std::cout << "karma " << s.karma << " " << totdamage << std::endl;
+        p.karma.inc(s.karma * totdamage);
+    }
 
     if (totsleep > 0) {
 
@@ -157,15 +165,24 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (mon.health - totdamage < -3) {
 
-        if (s.ai == Species::ai_t::none) {
-            state.render.do_message(nlp::message("You destroyed %s.", s));
+        if (!fromplayer) {
+            if (s.ai == Species::ai_t::none) {
+                state.render.do_message(nlp::message("%s is destroyed.", s));
+            } else {
+                state.render.do_message(nlp::message("%s dies.", s));
+            }
+
         } else {
-            state.render.do_message(nlp::message("You killed %s.", s));
+            if (s.ai == Species::ai_t::none) {
+                state.render.do_message(nlp::message("You destroyed %s.", s));
+            } else {
+                state.render.do_message(nlp::message("You killed %s.", s));
+            }
         }
 
-        monster_kill(p, state, mon, s);
+        monster_kill(p, state, mon, s, fromplayer);
 
-    } else if (!quiet) {
+    } else if (!quiet && fromplayer) {
 
         if (s.ai == Species::ai_t::none) {
             state.render.do_message(nlp::message("You smash %s.", s));
@@ -197,7 +214,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (s.level == p.level && mortal && s.ai != Species::ai_t::none) {
+    if (s.level == p.level && mortal && s.ai != Species::ai_t::none && fromplayer) {
 
         ++p.level;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
@@ -225,7 +242,8 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
-                   v.type == damage::type_t::psi) {
+                   v.type == damage::type_t::psi ||
+                   v.type == damage::type_t::eat_brain) {
 
             p.health.dec(v.val);
         }
@@ -234,12 +252,12 @@ inline void defend(Player& p,
 
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
-                   const Species& s,
+                   const Species& s, const damage::attacks_t& attacks,
                    mainloop::GameState& state) {
 
 
     damage::attacks_t attack_res;
-    defend(p, defenses, plevel, s.attacks, s.level, state, attack_res);
+    defend(p, defenses, plevel, attacks, s.level, state, attack_res);
 
     if (attack_res.empty()) {
 
@@ -255,6 +273,9 @@ inline void defend(Player& p,
             } else if (v.type == damage::type_t::psi) {
                 state.render.do_message(nlp::message("%s is destroying your mind!", s));
 
+            } else if (v.type == damage::type_t::eat_brain) {
+                state.render.do_message(nlp::message("%s is eating your brain!", s));
+
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison) {
 
@@ -264,6 +285,13 @@ inline void defend(Player& p,
     }
 }
 
+inline void defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Species& s,
+                   mainloop::GameState& state) {
+
+    defend(p, defenses, plevel, s, s.attacks, state);
+}
 
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
@@ -289,7 +317,8 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::psi) {
             do_psi = true;
 
-        } else if (v.type == damage::type_t::physical) {
+        } else if (v.type == damage::type_t::physical ||
+                   v.type == damage::type_t::eat_brain) {
             do_hurt = true;
         }
     }
@@ -337,7 +366,8 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::psi) {
             do_psi = true;
 
-        } else if (v.type == damage::type_t::physical) {
+        } else if (v.type == damage::type_t::physical ||
+                   v.type == damage::type_t::eat_brain) {
             do_hurt = true;
         }
     }

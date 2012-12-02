@@ -64,7 +64,7 @@ struct Player {
 
     look_t look;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(2), level(0),
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(2), level(2),
                sleep(0), state(MAIN) 
         {
             karma.val = 0;

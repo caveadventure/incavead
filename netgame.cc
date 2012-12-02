@@ -571,6 +571,105 @@ struct Game {
         return false;
     }
 
+    
+    void monster_blast_process_point(mainloop::GameState& state, const Species& s,
+                                     unsigned int _x, unsigned int _y, const damage::attacks_t& attacks) {
+
+        if (_x == p.px && _y == p.py) {
+
+            damage::defenses_t defenses;
+            p.inv.get_defense(defenses);
+
+            defend(p, defenses, p.level, s, attacks, state);
+
+        } else {
+
+            monsters::Monster mon;
+            if (state.monsters.get(_x, _y, mon)) {
+
+                attack(p, attacks, s.level, state, mon, true, false);
+            }
+        }
+    }
+
+    void do_monster_blast(mainloop::GameState& state, const Species& s, 
+                          unsigned int tx, unsigned int ty, unsigned int rad, const damage::attacks_t& attacks) {
+
+        if (rad == 0) {
+
+            monster_blast_process_point(state, s, tx, ty, attacks);
+
+        } else {
+
+            state.render.draw_circle(tx, ty, rad, true, s.skin.fore, maudit::color::bright_black,
+                                     [&](unsigned int _x, unsigned int _y) {
+                                 
+                                         monster_blast_process_point(state, s, _x, _y, attacks);
+                                     });
+        }
+    }
+
+
+    bool do_monster_magic(mainloop::GameState& state, size_t ticks, double dist, 
+                          const monsters::Monster& m, const Species& s) {
+
+        bool reachd = false;
+
+        if (dist < s.range && 
+            (s.blast.size() > 0 || s.cast_cloud.size() > 0)) {
+
+            reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
+        }
+
+        if (reachd) {
+
+            for (const auto& b : s.blast) {
+
+                if (dist >= b.range) 
+                    continue;
+
+                if ((ticks % b.turns) != 0)
+                    continue;
+
+                double v = state.rng.gauss(0.0, 1.0);
+                if (v <= b.chance) continue;
+
+                do_monster_blast(state, s, p.px, p.py, b.radius, b.attacks);
+                return true;
+            }
+
+            for (const auto& c : s.cast_cloud) {
+
+                if ((ticks % c.turns) != 0) continue;
+                    
+                double v = state.rng.gauss(0.0, 1.0);
+                if (v <= c.chance) continue;
+
+                cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
+                state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+                return true;
+            }
+        }
+
+        if (s.summon.size() > 0 && dist < s.range) {
+
+            for (const auto& c : s.summon) {
+
+                if ((ticks & c.turns) != 0) continue;
+
+                const Species& s = species().get(c.speciestag);
+                if (!state.species_counts.has(s.level, c.speciestag))
+                    continue;
+
+                double v = state.rng.gauss(0.0, 1.0);
+                if (v <= c.chance) continue;
+
+                summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, m.tag});
+            }
+        }
+
+        return false;
+    }
 
     bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy, bool& do_die) {
@@ -591,41 +690,10 @@ struct Game {
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
-        if (s.cast_cloud.size() > 0 &&
-            dist < s.range && 
-            m.magic > -3.0 &&
-            reachable(state, m.xy.first, m.xy.second, p.px, p.py)) {
+        if (m.magic > -3.0) {
 
-            for (const auto& c : s.cast_cloud) {
-
-                if ((ticks % c.turns) != 0) continue;
-                    
-                double v = state.rng.gauss(0.0, 1.0);
-                if (v <= c.chance) continue;
-
-                cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
-                state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+            if (do_monster_magic(state, ticks, dist, m, s)) 
                 return false;
-            }
-        }
-
-        if (s.summon.size() > 0 && 
-            dist < s.range &&
-            m.magic > -3.0) {
-
-            for (const auto& c : s.summon) {
-
-                if ((ticks & c.turns) != 0) continue;
-
-                const Species& s = species().get(c.speciestag);
-                if (!state.species_counts.has(s.level, c.speciestag))
-                    continue;
-
-                double v = state.rng.gauss(0.0, 1.0);
-                if (v <= c.chance) continue;
-
-                summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, m.tag});
-            }
         }
 
         // HACK!
