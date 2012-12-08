@@ -17,10 +17,11 @@ struct Levelskin {
     maudit::glyph floor8;
 
     unsigned int lightradius;
+    unsigned int lightradius_max;
 
     unsigned int level;
 
-    Levelskin() : lightradius(8), level(0) {}
+    Levelskin() : lightradius(8), lightradius_max(8), level(0) {}
 };
 
 struct Levelskins {

@@ -23,6 +23,8 @@ struct Counts {
 
         std::map<std::string, unsigned int> ret;
 
+        std::cout << "+++ " << level << " " << data.size() << std::endl;
+
         while (level >= 0 && n > 0) {
 
             if (data.count(level) == 0) {
@@ -40,6 +42,7 @@ struct Counts {
             std::vector<double> weights;
 
             for (const auto& i : data[level]) {
+                std::cout << "||| " << level << " : " << i.first << "," << i.second << std::endl;
                 weights.push_back(i.second);
             }
 

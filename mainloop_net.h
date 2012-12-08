@@ -78,6 +78,9 @@ struct reader<mainloop::GameState> {
         serialize::read(s, state.moon);
         serialize::read(s, state.designs_counts);
         serialize::read(s, state.species_counts);
+        // REMOVEME
+        state.designs_counts = designs().counts;
+        state.species_counts = species().counts;
         serialize::read(s, state.terrain_counts);
         serialize::read(s, state.monsters);
         serialize::read(s, state.items);

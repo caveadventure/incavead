@@ -197,7 +197,8 @@ void parse_config(const std::string& filename) {
             'seek_player'    %{ spe.ai = Species::ai_t::seek_player; }    |
             'random'         %{ spe.ai = Species::ai_t::random; }         |
             'inrange_random' %{ spe.ai = Species::ai_t::inrange_random; } |
-            'seek_nosleep'   %{ spe.ai = Species::ai_t::seek_nosleep; }   ;
+            'seek_nosleep'   %{ spe.ai = Species::ai_t::seek_nosleep; }   |
+            'none_nosleep'   %{ spe.ai = Species::ai_t::none_nosleep; }   ;
 
         idle_ai = 
             'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |
@@ -307,7 +308,8 @@ void parse_config(const std::string& filename) {
         design_feed       = 'feed'       ws1 real       %{ des.feed = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_melee      = 'melee'                     %{ des.melee = true; };
-        design_throwrange = 'throwrange'  ws1 number   %{ des.throwrange = toint(state.match); };
+        design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
+        design_lightradius = 'lightradius' ws1 number   %{ des.lightradius = toint(state.match); };
 
         design_blast      = 'blast' 
             ws1 number %{ des.blastradius = toint(state.match); }
@@ -323,6 +325,7 @@ void parse_config(const std::string& filename) {
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed |
+            design_lightradius |
             '}'
             ${ fret; })
             ;
@@ -406,13 +409,14 @@ void parse_config(const std::string& filename) {
         levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7 = skin; };
         levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8 = skin; };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
+        levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
 
         levelskin_one_data =
             (levelskin_deep_water | levelskin_shallow_water | levelskin_wall | 
             levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
-            levelskin_lightradius |
+            levelskin_lightradius | levelskin_lightradius_max |
             '}' 
             ${ fret; })
             ;

@@ -64,7 +64,7 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
-    if (s.ai == Species::ai_t::none || !fromplayer)
+    if (!s.flags.plant || !fromplayer)
         return;
 
     if (s.level > p.level) {
@@ -166,14 +166,14 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     if (mon.health - totdamage < -3) {
 
         if (!fromplayer) {
-            if (s.ai == Species::ai_t::none) {
+            if (s.flags.plant) {
                 state.render.do_message(nlp::message("%s is destroyed.", s));
             } else {
                 state.render.do_message(nlp::message("%s dies.", s));
             }
 
         } else {
-            if (s.ai == Species::ai_t::none) {
+            if (s.flags.plant) {
                 state.render.do_message(nlp::message("You destroyed %s.", s));
             } else {
                 state.render.do_message(nlp::message("You killed %s.", s));
@@ -184,7 +184,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     } else if (!quiet && fromplayer) {
 
-        if (s.ai == Species::ai_t::none) {
+        if (s.flags.plant) {
             state.render.do_message(nlp::message("You smash %s.", s));
 
         } else if (totdamage < 0.5) {
@@ -214,7 +214,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (s.level == p.level && mortal && s.ai != Species::ai_t::none && fromplayer) {
+    if (s.level == p.level && mortal && !s.flags.plant && fromplayer) {
 
         ++p.level;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);

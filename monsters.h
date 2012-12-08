@@ -238,6 +238,8 @@ struct Monsters {
 
         const Species& s = species().get(tag);
 
+        std::cout << "PLACING: " << s.name << std::endl;
+
         {
             double m = s.clumpsize.mean;
             double d = s.clumpsize.deviation;

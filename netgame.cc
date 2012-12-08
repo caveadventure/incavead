@@ -103,29 +103,29 @@ void init_statics() {
         lamp
 
       2
-        illithid mindflayer
-        illithid lord
-        illithid slavemaster
-        illithid elderbrain
-        aboleth
-        aboleth larva
-        beholder
-        elder beholder
-        beholder hive mother
-        carrion crawler
-        carrion crawler larva
+        *illithid mindflayer
+        *illithid lord
+        *illithid slavemaster
+        *illithid elderbrain
+        *aboleth
+        *aboleth larva
+        *beholder
+        *elder beholder
+        *beholder hive mother
+        *carrion crawler
+        *carrion crawler larva
         purple worm
-        grimlock slave
-        grimlock cannibal
-        grimlock savage
-        drow zombie
-        drow slave
-        orcish zombie
-        humanoid zombie
-        kobold zombie
-        gnoll zombie
-        gnome zombie
-        grimlock zombie
+        *grimlock slave
+        *grimlock cannibal
+        *grimlock savage
+        *drow slave
+        *drow zombie
+        *orcish zombie
+        *humanoid zombie
+        *kobold zombie
+        *dwarven zombie
+        *gnome zombie
+        *grimlock zombie
 
 
       4 mutants/psi
@@ -489,7 +489,10 @@ struct Game {
     }
 
     unsigned int get_lightradius() {
-        return levelskins().get(p.worldz).lightradius;
+
+        const Levelskin& ls = levelskins().get(p.worldz);
+
+        return std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
     }
 
     void drawing_context(mainloop::drawing_context_t& ctx) {
@@ -542,6 +545,12 @@ struct Game {
         draw_one_stat(state, p.health, "Health");
         draw_one_stat(state, p.food,   "Food");
         draw_one_stat(state, p.karma,  "Karma");
+
+        if (p.sleep > 0) {
+            state.render_push_hud_line("Sleep", maudit::color::bright_red,
+                                       std::max(p.sleep / 15 + 1, 6), 
+                                       '+', maudit::color::dim_green);
+        }
 
         //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
         //                           4, '+', maudit::color::bright_green);
@@ -690,7 +699,7 @@ struct Game {
 
         double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
-        if (m.magic > -3.0) {
+        if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
 
             if (do_monster_magic(state, ticks, dist, m, s)) 
                 return false;

@@ -19,7 +19,8 @@ struct Species {
         seek_player,
         random,
         inrange_random,
-        seek_nosleep
+        seek_nosleep,
+        none_nosleep
     };
 
     enum class idle_ai_t : unsigned int {
