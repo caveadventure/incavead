@@ -40,6 +40,7 @@ struct Player {
 
     unsigned int dig_x;
     unsigned int dig_y;
+    bool digging;
 
     inventory_t inv;
 
@@ -70,7 +71,7 @@ struct Player {
     look_t look;
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
-               sleep(0), dig_x(0), dig_y(0), state(MAIN) 
+               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN) 
         {
             karma.val = 0;
         }
@@ -95,6 +96,7 @@ struct reader<Player> {
         serialize::read(s, p.sleep);
         serialize::read(s, p.dig_x);
         serialize::read(s, p.dig_y);
+        // TODO
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -120,6 +122,7 @@ struct writer<Player> {
         serialize::write(s, p.sleep);
         serialize::write(s, p.dig_x);
         serialize::write(s, p.dig_y);
+        // TODO
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);

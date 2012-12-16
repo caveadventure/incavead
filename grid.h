@@ -449,7 +449,6 @@ struct Map {
 
             floormap.insert(xy);
 
-
             for (const auto& v : neigh(xy)) {
                 if (watermap.count(v) != 0) {
                     shoremap.insert(xy);

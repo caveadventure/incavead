@@ -588,7 +588,7 @@ struct Game {
                                        '+', maudit::color::dim_green);
         }
 
-        if (p.state & Player::DIGGING) {
+        if (p.digging) {
 
             double q = state.grid._get(p.dig_x, p.dig_y);
 
@@ -597,6 +597,8 @@ struct Game {
             state.render.push_hud_line("Tunnel", maudit::color::dim_green,
                                        std::max(q, 0.0),
                                        '+', maudit::color::bright_blue);
+
+            std::cout << "DIG " << q << std::endl;
         }
 
         //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
@@ -876,14 +878,19 @@ struct Game {
             return;
         }
 
-        if (p.state & Player::DIGGING) {
+        if (p.digging) {
+
+            std::cout << "digging .. " << p.dig_x << "," << p.dig_y << std::endl;
 
             if (state.grid.is_walk(p.dig_x, p.dig_y)) {
-                p.state = Player::MAIN;
+                state.render.do_message("OOPS");
+                p.digging = false;
                 return;
             }
 
             ++ticks;
+
+            
 
             double digspeed = p.inv.get_digging();
 
@@ -893,7 +900,10 @@ struct Game {
 
             if (height < 0) {
                 state.grid.set_walk(state.neigh, p.dig_x, p.dig_y, true);
-                p.state = Player::MAIN;
+                state.render.invalidate(p.dig_x, p.dig_y);
+
+                p.digging = false;
+                state.render.do_message("Digging done.");
             }
         }
     }
@@ -1210,22 +1220,36 @@ struct Game {
         case maudit::keycode::down:
             ny++;
             break;
+
         default:
             break;
         }            
 
+        std::cout << "PD " << k.letter << " " << (int)k.key << " : " 
+                  << px << "," << py << " " << nx << "," << ny << std::endl;
+
         if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny))) {
 
+            std::cout << "Not linked" << std::endl;
             pstate = Player::MAIN;
             return;
         }
 
         if (pstate & Player::DIGGING) {
 
+            std::cout << "Dig ok" << std::endl;
+
             if (state.grid.is_walk(nx, ny)) {
-                pstate = Player::MAIN;
-                return;
+                state.render.do_message("There is nothing to dig there.");
+
+            } else {
+                state.render.do_message("You start digging.");
+                p.digging = true;
+                p.dig_x = nx;
+                p.dig_y = ny;
             }
+
+            pstate = Player::MAIN;
         }
     }
 
@@ -1260,6 +1284,7 @@ struct Game {
 
         if (p.state & Player::PICK_DIRECTION) {
 
+            std::cout << "PICK DIRECTION" << std::endl;
             handle_input_pick_direction(p.state, p.px, p.py, state, k);
             return;
         }
