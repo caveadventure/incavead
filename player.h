@@ -38,14 +38,19 @@ struct Player {
 
     unsigned int sleep;
 
+    unsigned int dig_x;
+    unsigned int dig_y;
+
     inventory_t inv;
 
-    static const unsigned int MAIN         = 0x0;
-    static const unsigned int LOOKING      = 0x1;
-    static const unsigned int TARGET       = 0x2;
-    static const unsigned int FIRED        = 0x8;
-    static const unsigned int THROWING     = 0x10;
-    static const unsigned int BLASTING     = 0x20;
+    static const unsigned int MAIN           = 0x0;
+    static const unsigned int LOOKING        = 0x1;
+    static const unsigned int TARGET         = 0x2;
+    static const unsigned int FIRED          = 0x8;
+    static const unsigned int THROWING       = 0x10;
+    static const unsigned int BLASTING       = 0x20;
+    static const unsigned int DIGGING        = 0x40;
+    static const unsigned int PICK_DIRECTION = 0x80;
 
     unsigned int state;
 
@@ -65,7 +70,7 @@ struct Player {
     look_t look;
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
-               sleep(0), state(MAIN) 
+               sleep(0), dig_x(0), dig_y(0), state(MAIN) 
         {
             karma.val = 0;
         }
@@ -88,6 +93,8 @@ struct reader<Player> {
         serialize::read(s, p.food.val);
         serialize::read(s, p.karma.val);
         serialize::read(s, p.sleep);
+        serialize::read(s, p.dig_x);
+        serialize::read(s, p.dig_y);
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -111,6 +118,8 @@ struct writer<Player> {
         serialize::write(s, p.food.val);
         serialize::write(s, p.karma.val);
         serialize::write(s, p.sleep);
+        serialize::write(s, p.dig_x);
+        serialize::write(s, p.dig_y);
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);

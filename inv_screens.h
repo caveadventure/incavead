@@ -34,6 +34,10 @@ inline std::string select_inv_item(inventory_t& inv, const std::string& slot) {
         window += nlp::message("  \2f)\1 Fire.\n");
     }
 
+    if (d.digging > 0) {
+        window += nlp::message("  \2T)\1 Tunnel into rock.\n");
+    }
+
     inv.selected_slot = slot;
 
     return window;

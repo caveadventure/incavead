@@ -164,6 +164,23 @@ inline bool start_throw_item(Player& p, const std::string& slot, mainloop::GameS
     return true;
 }
 
+inline bool start_digging(Player& p, const std::string& slot, mainloop::GameState& state) {
+
+    items::Item tmp;
+    if (!p.inv.get(slot, tmp))
+        return false;
+
+    const Design& d = designs().get(tmp.tag);
+
+    if (d.digging <= 0)
+        return false;
+    
+    p.state |= (Player::DIGGING | Player::PICK_DIRECTION);
+
+    return true;
+}
+
+
 inline bool take_item(unsigned int x, unsigned int y, unsigned int z, 
                       Player& p, mainloop::GameState& state, size_t& ticks) {
 

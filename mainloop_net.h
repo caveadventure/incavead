@@ -345,7 +345,14 @@ struct Main {
 
     void goodbye_message() {
         //screen.io.write("\r\nPress any key.\r\n");
-        state.render.wait_for_anykey(screen, view_w, view_h);
+        //state.render.wait_for_anykey(screen, view_w, view_h);
+
+        while (1) {
+            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
+
+            if (k.letter == ' ')
+                break;
+        }
     }
 
     bool mainloop(const std::string& savefile,

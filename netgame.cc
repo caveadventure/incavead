@@ -114,7 +114,7 @@ void init_statics() {
         *beholder hive mother
         *carrion crawler
         *carrion crawler larva
-        purple worm
+        *purple worm
         *grimlock slave
         *grimlock cannibal
         *grimlock savage
@@ -127,8 +127,44 @@ void init_statics() {
         *gnome zombie
         *grimlock zombie
 
+      4 cave
+        giant crab
+        giant catfish
+        giant pirahna
+        medusoid
+        cephalopod
+        giant octopus
+        bull shark
+        giant squid
+        narwhal
 
-      4 mutants/psi
+        giant killer bee
+        giant centipede
+        fungal grove
+        gray ooze
+        pod plant
+        vomit fly
+        giant ant
+
+        albino ape
+        gamma wyrm
+        land squid
+        giant rat
+        carnivorous sheep
+
+        brain lasher
+        narcolep
+        humanoid mass
+        fungoid
+        homo erectus
+        morlock
+        eloi
+        pigman
+        mutant tribesman
+        mutant lord
+        mutant seer
+
+
       5 dinosaur/megafauna
       6 dragon
       7 south asian/oriental
@@ -260,7 +296,7 @@ struct Game {
             bm _gg("feature generation");
         
             grid::pt xy;
-            if (!maps.one_of_floor(state.rng, xy))
+            if (!maps.one_of_shore(state.rng, xy))
                 throw std::runtime_error("Failed to generate grid");
 
             p.px = xy.first;
@@ -547,9 +583,20 @@ struct Game {
         draw_one_stat(state, p.karma,  "Karma");
 
         if (p.sleep > 0) {
-            state.render_push_hud_line("Sleep", maudit::color::bright_red,
-                                       std::max(p.sleep / 15 + 1, 6), 
+            state.render.push_hud_line("Sleep", maudit::color::bright_red,
+                                       std::max(p.sleep / 15 + 1, (unsigned int)6), 
                                        '+', maudit::color::dim_green);
+        }
+
+        if (p.state & Player::DIGGING) {
+
+            double q = state.grid._get(p.dig_x, p.dig_y);
+
+            q = (q / 2.0) + 1.0;
+            
+            state.render.push_hud_line("Tunnel", maudit::color::dim_green,
+                                       std::max(q, 0.0),
+                                       '+', maudit::color::bright_blue);
         }
 
         //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
@@ -816,7 +863,7 @@ struct Game {
         }
 
         if (p.health.val <= -3.0) {
-            state.render.do_message("You are dead.", true);
+            state.render.do_message("You are dead. (Press space to quit.)", true);
             dead = true;
             done = true;
             return;
@@ -826,6 +873,28 @@ struct Game {
             ++ticks;
             --(p.sleep);
             do_draw = true;
+            return;
+        }
+
+        if (p.state & Player::DIGGING) {
+
+            if (state.grid.is_walk(p.dig_x, p.dig_y)) {
+                p.state = Player::MAIN;
+                return;
+            }
+
+            ++ticks;
+
+            double digspeed = p.inv.get_digging();
+
+            double& height = state.grid._get(p.dig_x, p.dig_y);
+
+            height -= digspeed;
+
+            if (height < 0) {
+                state.grid.set_walk(state.neigh, p.dig_x, p.dig_y, true);
+                p.state = Player::MAIN;
+            }
         }
     }
 
@@ -1088,6 +1157,78 @@ struct Game {
     }
 
 
+    void handle_input_pick_direction(unsigned int& pstate, unsigned int px, unsigned int py, 
+                                     mainloop::GameState& state, maudit::keypress k) {
+
+        unsigned int nx = px;
+        unsigned int ny = py;
+
+        switch (k.letter) {
+        case 'h':
+            nx--;
+            break;
+        case 'j':
+            ny++;
+            break;
+        case 'k':
+            ny--;
+            break;
+        case 'l':
+            nx++;
+            break;
+        case 'y':
+            nx--;
+            ny--;
+            break;
+        case 'u':
+            nx++;
+            ny--;
+            break;
+        case 'b':
+            nx--;
+            ny++;
+            break;
+        case 'n':
+            nx++;
+            ny++;
+            break;
+
+        default:
+            break;
+        }
+
+        switch (k.key) {
+        case maudit::keycode::up:
+            ny--;
+            break;
+        case maudit::keycode::left:
+            nx--;
+            break;
+        case maudit::keycode::right:
+            nx++;
+            break;
+        case maudit::keycode::down:
+            ny++;
+            break;
+        default:
+            break;
+        }            
+
+        if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny))) {
+
+            pstate = Player::MAIN;
+            return;
+        }
+
+        if (pstate & Player::DIGGING) {
+
+            if (state.grid.is_walk(nx, ny)) {
+                pstate = Player::MAIN;
+                return;
+            }
+        }
+    }
+
     void handle_input_messages(mainloop::GameState& state, maudit::keypress k) {
 
         state.window_stack.pop_back();
@@ -1114,6 +1255,12 @@ struct Game {
                 p.state = Player::MAIN;
             }
 
+            return;
+        }
+
+        if (p.state & Player::PICK_DIRECTION) {
+
+            handle_input_pick_direction(p.state, p.px, p.py, state, k);
             return;
         }
 

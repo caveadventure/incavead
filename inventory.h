@@ -19,6 +19,7 @@ struct inventory_t {
 
     inventory_t() {
         make_slot(slot_t{"a",  " Armour", 'a'});
+        make_slot(slot_t{"d",  "   Tool", 't'});
         make_slot(slot_t{"e",  " Edible", 'e'});
         make_slot(slot_t{"f",  "   Food", 'f'});
         make_slot(slot_t{"h",  " Helmet", 'h'});
@@ -204,7 +205,19 @@ struct inventory_t {
         }
 
         return ret;
-    }    
+    }
+
+
+    double get_digging() {
+        double ret = 0;
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+            ret += dp.digging;
+        }
+
+        return ret;
+    }
 };
 
 namespace serialize {
