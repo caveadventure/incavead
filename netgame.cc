@@ -889,7 +889,7 @@ struct Game {
             }
 
             ++ticks;
-
+            do_draw = true;
             
 
             double digspeed = p.inv.get_digging();
@@ -1167,7 +1167,7 @@ struct Game {
     }
 
 
-    void handle_input_pick_direction(unsigned int& pstate, unsigned int px, unsigned int py, 
+    void handle_input_pick_direction(unsigned int& pstate, unsigned int px, unsigned int py, size_t& ticks,
                                      mainloop::GameState& state, maudit::keypress k) {
 
         unsigned int nx = px;
@@ -1247,6 +1247,7 @@ struct Game {
                 p.digging = true;
                 p.dig_x = nx;
                 p.dig_y = ny;
+                ++ticks;
             }
 
             pstate = Player::MAIN;
@@ -1285,7 +1286,7 @@ struct Game {
         if (p.state & Player::PICK_DIRECTION) {
 
             std::cout << "PICK DIRECTION" << std::endl;
-            handle_input_pick_direction(p.state, p.px, p.py, state, k);
+            handle_input_pick_direction(p.state, p.px, p.py, ticks, state, k);
             return;
         }
 

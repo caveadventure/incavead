@@ -300,6 +300,8 @@ struct Main {
 
         game.process_world(state, ticks, done, dead, regen, need_input, draw);
 
+        std::cout << "| " << ticks << " " << oldticks << std::endl;
+
         if (ticks != oldticks) {
             need_input = false;
         }
