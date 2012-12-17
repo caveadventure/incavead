@@ -296,7 +296,7 @@ struct Game {
             bm _gg("feature generation");
         
             grid::pt xy;
-            if (!maps.one_of_shore(state.rng, xy))
+            if (!maps.one_of_lowlands(state.rng, xy))
                 throw std::runtime_error("Failed to generate grid");
 
             p.px = xy.first;
@@ -584,7 +584,7 @@ struct Game {
 
         if (p.sleep > 0) {
             state.render.push_hud_line("Sleep", maudit::color::bright_red,
-                                       std::max(p.sleep / 15 + 1, (unsigned int)6), 
+                                       std::min(p.sleep / 15 + 1, (unsigned int)6), 
                                        '+', maudit::color::dim_green);
         }
 

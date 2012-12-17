@@ -47,6 +47,7 @@ struct Map {
     std::unordered_set<pt> cornermap;
     std::unordered_set<pt> shoremap;
     std::unordered_set<pt> lakemap;
+    std::unordered_set<pt> lowlands;
 
     struct genmaps_t {
         
@@ -56,6 +57,7 @@ struct Map {
         std::vector<pt> cornermap;
         std::vector<pt> shoremap;
         std::vector<pt> lakemap;
+        std::vector<pt> lowlands;
 
         std::unordered_set<pt> nogens;
 
@@ -109,6 +111,10 @@ struct Map {
             return _one_of(rng, lakemap, ret);
         }
 
+        bool one_of_lowlands(rnd::Generator& rng, pt& ret) const {
+            return _one_of(rng, lowlands, ret);
+        }
+
         template <typename T>
         genmaps_t(const T& g) {
             walkmap.assign(g.walkmap.begin(), g.walkmap.end());
@@ -117,6 +123,7 @@ struct Map {
             shoremap.assign(g.shoremap.begin(), g.shoremap.end());
             watermap.assign(g.watermap.begin(), g.watermap.end());
             lakemap.assign(g.lakemap.begin(), g.lakemap.end());
+            lowlands.assign(g.lowlands.begin(), g.lowlands.end());
         }
     };
 
@@ -131,6 +138,7 @@ struct Map {
         cornermap.clear();
         shoremap.clear();
         lakemap.clear();
+        lowlands.clear();
 
         for (size_t i = 0; i < w*h; ++i) {
             grid[i] = 10.0;
@@ -337,12 +345,35 @@ struct Map {
             makeflow(neigh, rng, gout, watr, N2, 1);
         }
 
+        std::vector< std::pair<double,pt> > walk_r;
+
         for (const pt& xy : gout) {
 
-            if (_get(xy) <= 0) {
+            double h = _get(xy);
+
+            if (h <= 0) {
                 walkmap.insert(xy);
+
+                walk_r.push_back(std::make_pair(h, xy));
             }
         }
+
+        ///
+
+        std::sort(walk_r.begin(), walk_r.end());
+
+        size_t walk_r_n = walk_r.size() / 10;
+        if (walk_r_n == 0 && walk_r.size() >= 1) {
+            walk_r_n = 1;
+        }
+
+        walk_r.resize(walk_r_n);
+
+        for (const auto& xy : walk_r) {
+            lowlands.insert(xy.second);
+        }
+
+        ///
         
         std::vector< std::pair<int,pt> > watr_r;
 
@@ -535,6 +566,10 @@ struct Map {
     bool is_shore(unsigned int x, unsigned int y) const {
         return (shoremap.count(pt(x, y)) != 0);
     }
+
+    bool is_lowlands(unsigned int x, unsigned int y) const {
+        return (lowlands.count(pt(x, y)) != 0);
+    }
     
     void set_walk(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
         pt tmp(x, y);
@@ -548,6 +583,7 @@ struct Map {
             floormap.erase(tmp);
             cornermap.erase(tmp);
             shoremap.erase(tmp);
+            lowlands.erase(tmp);
         }
     }
 
@@ -636,6 +672,10 @@ struct Map {
         return _one_of(rng, lakemap, ret);
     }
 
+    bool one_of_lowlands(rnd::Generator& rng, pt& ret) {
+        return _one_of(rng, lowlands, ret);
+    }
+
     // Fake functions to adhere to a template interface.
 
     bool is_nogen(unsigned int x, unsigned int y) { return false; }
@@ -662,6 +702,7 @@ struct reader<grid::Map> {
         serialize::read(s, t.cornermap);
         serialize::read(s, t.shoremap);
         serialize::read(s, t.lakemap);
+        serialize::read(s, t.lowlands);
     }
 };
 
@@ -677,6 +718,7 @@ struct writer<grid::Map> {
         serialize::write(s, t.cornermap);
         serialize::write(s, t.shoremap);
         serialize::write(s, t.lakemap);
+        serialize::write(s, t.lowlands);
     }
 };
 
