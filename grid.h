@@ -247,6 +247,7 @@ struct Map {
 
 
     void flow(neighbors::Neighbors& neigh,
+              rnd::Generator& rng,
               const pt& xy,
               std::unordered_set<pt>& out, 
               double n) {
@@ -261,17 +262,23 @@ struct Map {
         out.insert(xy);
 
         double v0 = _get(xy);
+
+        //std::vector<double> l_w;
+        //std::vector<pt> l_pt;
+
         std::vector< std::pair<double, pt> > l;
+        double vtotal = 0.0;
 
         for (const auto& xy_ : neigh(xy)) {
 
             double v = _get(xy_);
 
-            double pressure = 0.0; //n / 10.0;
+            if (out.count(xy_) == 0 && v <= v0) {
 
-            if (out.count(xy_) == 0 && v + pressure <= v0) {
-                //fabs(v - v0) <= pressure /*1.0*/) {
                 l.push_back(std::make_pair(v, xy_));
+                //l_w.push_back(v);
+                //l_pt.push_back(xy_);
+                vtotal += v;
             }
         }
 
@@ -279,22 +286,8 @@ struct Map {
             return;
         }
 
-        std::sort(l.begin(), l.end());
-        std::reverse(l.begin(), l.end());
-
-        unsigned int culln = 4;
-
-        if (l.size() > culln) {
-            l.resize(culln);
-        }
-
-        double vtotal = 0.0;
         for (auto& i : l) {
-            vtotal += i.first;
-        }
-
-        for (auto& i : l) {
-            flow(neigh, i.second, out, n * (i.first / vtotal));
+            flow(neigh, rng, i.second, out, n * (i.first / vtotal));
         }
     }
 
@@ -307,7 +300,7 @@ struct Map {
         std::vector<double> grid_norm;
 
         for (double v : grid) {
-            grid_norm.push_back((v + 10.0) * 5);
+            grid_norm.push_back((v + 10.0) * 15); //5);
         }
 
         std::discrete_distribution<size_t> ddist(grid_norm.begin(), grid_norm.end());
@@ -317,7 +310,7 @@ struct Map {
         unsigned int x = index % w;
 
         std::unordered_set<pt> out;
-        flow(neigh, pt(x, y), out, n);
+        flow(neigh, rng, pt(x, y), out, n);
 
         for (const pt& xy : out) {
 
