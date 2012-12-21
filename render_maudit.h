@@ -9,7 +9,7 @@
 
 #include "celauto.h"
 
-#include "maudit.h"
+#include "libmaudit/maudit.h"
 
 extern "C" {
 #include "talgo.h"

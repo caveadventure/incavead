@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include "maudit.h"
+#include "libmaudit/maudit.h"
 
 #include "debug_benchmark.h"
 

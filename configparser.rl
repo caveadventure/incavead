@@ -14,7 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "maudit.h"
+#include "libmaudit/maudit.h"
 #include "species.h"
 #include "species_bank.h"
 
