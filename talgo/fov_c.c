@@ -98,40 +98,6 @@ void TCOD_map_delete(TCOD_map_t map) {
 	free(m);
 }
 
-void TCOD_map_compute_fov(TCOD_map_t map, int player_x, int player_y, int max_radius, bool light_walls, TCOD_fov_algorithm_t algo) {
-	TCOD_IFNOT(map != NULL) return;
-	switch(algo) {
-		case FOV_BASIC : TCOD_map_compute_fov_circular_raycasting(map,player_x,player_y,max_radius,light_walls); break;
-		case FOV_DIAMOND : TCOD_map_compute_fov_diamond_raycasting(map,player_x,player_y,max_radius,light_walls); break;
-		case FOV_SHADOW : TCOD_map_compute_fov_recursive_shadowcasting(map,player_x,player_y,max_radius,light_walls); break;
-		case FOV_PERMISSIVE_0 :
-		case FOV_PERMISSIVE_1 :
-		case FOV_PERMISSIVE_2 :
-		case FOV_PERMISSIVE_3 :
-		case FOV_PERMISSIVE_4 :
-		case FOV_PERMISSIVE_5 :
-		case FOV_PERMISSIVE_6 :
-		case FOV_PERMISSIVE_7 :
-		case FOV_PERMISSIVE_8 :
-			TCOD_map_compute_fov_permissive2(map,player_x,player_y,max_radius,light_walls, algo-FOV_PERMISSIVE_0);
-		break;
-		case FOV_RESTRICTIVE : TCOD_map_compute_fov_restrictive_shadowcasting(map,player_x,player_y,max_radius,light_walls); break;
-		default:break;
-	}
-}
-
-bool TCOD_map_is_in_fov(TCOD_map_t map, int x, int y) {
-	map_t *m = (map_t *)map;
-	TCOD_IFNOT(map != NULL && (unsigned)x < (unsigned)m->width && (unsigned)y < (unsigned)m->height) return false;
-	return m->cells[x+y*m->width].fov == 1;
-}
-
-void TCOD_map_set_in_fov(TCOD_map_t map, int x, int y, bool fov) {
-	map_t *m = (map_t *)map;
-	TCOD_IFNOT(map != NULL && (unsigned)x < (unsigned)m->width && (unsigned)y < (unsigned)m->height) return;
-	m->cells[x+y*m->width].fov = fov ? 1:0;
-}
-
 bool TCOD_map_is_transparent(TCOD_map_t map, int x, int y) {
 	map_t *m = (map_t *)map;
 	TCOD_IFNOT(map != NULL && (unsigned)x < (unsigned)m->width && (unsigned)y < (unsigned)m->height) return false;
