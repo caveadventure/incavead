@@ -100,7 +100,7 @@ void parse_config(const std::string& filename) {
     maudit::glyph skin;
 
     
-#line 445 "configparser.rl"
+#line 447 "configparser.rl"
 
 /*
 
@@ -109,18 +109,18 @@ void parse_config(const std::string& filename) {
     
 #line 111 "configparser.h"
 static const int ConfigParser_start = 1;
-static const int ConfigParser_first_final = 1925;
+static const int ConfigParser_first_final = 1928;
 static const int ConfigParser_error = 0;
 
 static const int ConfigParser_en_strchar_escape = 47;
 static const int ConfigParser_en_one_species = 48;
 static const int ConfigParser_en_one_design = 615;
-static const int ConfigParser_en_one_terrain = 956;
-static const int ConfigParser_en_one_levelskin = 1196;
+static const int ConfigParser_en_one_terrain = 959;
+static const int ConfigParser_en_one_levelskin = 1199;
 static const int ConfigParser_en_main = 1;
 
 
-#line 451 "configparser.rl"
+#line 453 "configparser.rl"
     
 #line 126 "configparser.h"
 	{
@@ -128,7 +128,7 @@ static const int ConfigParser_en_main = 1;
 	 state.top = 0;
 	}
 
-#line 452 "configparser.rl"
+#line 454 "configparser.rl"
 
     bool done = false;
     int have = 0;
@@ -172,8 +172,8 @@ _again:
 		case 10: goto st10;
 		case 11: goto st11;
 		case 12: goto st12;
-		case 1925: goto st1925;
-		case 1926: goto st1926;
+		case 1928: goto st1928;
+		case 1929: goto st1929;
 		case 13: goto st13;
 		case 14: goto st14;
 		case 15: goto st15;
@@ -186,7 +186,7 @@ _again:
 		case 22: goto st22;
 		case 23: goto st23;
 		case 24: goto st24;
-		case 1927: goto st1927;
+		case 1930: goto st1930;
 		case 25: goto st25;
 		case 26: goto st26;
 		case 27: goto st27;
@@ -199,7 +199,7 @@ _again:
 		case 34: goto st34;
 		case 35: goto st35;
 		case 36: goto st36;
-		case 1928: goto st1928;
+		case 1931: goto st1931;
 		case 37: goto st37;
 		case 38: goto st38;
 		case 39: goto st39;
@@ -210,9 +210,9 @@ _again:
 		case 44: goto st44;
 		case 45: goto st45;
 		case 46: goto st46;
-		case 1929: goto st1929;
+		case 1932: goto st1932;
 		case 47: goto st47;
-		case 1930: goto st1930;
+		case 1933: goto st1933;
 		case 48: goto st48;
 		case 49: goto st49;
 		case 50: goto st50;
@@ -232,7 +232,7 @@ _again:
 		case 64: goto st64;
 		case 65: goto st65;
 		case 66: goto st66;
-		case 1931: goto st1931;
+		case 1934: goto st1934;
 		case 67: goto st67;
 		case 68: goto st68;
 		case 69: goto st69;
@@ -805,7 +805,7 @@ _again:
 		case 636: goto st636;
 		case 637: goto st637;
 		case 638: goto st638;
-		case 1932: goto st1932;
+		case 1935: goto st1935;
 		case 639: goto st639;
 		case 640: goto st640;
 		case 641: goto st641;
@@ -1147,10 +1147,10 @@ _again:
 		case 977: goto st977;
 		case 978: goto st978;
 		case 979: goto st979;
-		case 1933: goto st1933;
 		case 980: goto st980;
 		case 981: goto st981;
 		case 982: goto st982;
+		case 1936: goto st1936;
 		case 983: goto st983;
 		case 984: goto st984;
 		case 985: goto st985;
@@ -1392,10 +1392,10 @@ _again:
 		case 1221: goto st1221;
 		case 1222: goto st1222;
 		case 1223: goto st1223;
-		case 1934: goto st1934;
 		case 1224: goto st1224;
 		case 1225: goto st1225;
 		case 1226: goto st1226;
+		case 1937: goto st1937;
 		case 1227: goto st1227;
 		case 1228: goto st1228;
 		case 1229: goto st1229;
@@ -2094,6 +2094,9 @@ _again:
 		case 1922: goto st1922;
 		case 1923: goto st1923;
 		case 1924: goto st1924;
+		case 1925: goto st1925;
+		case 1926: goto st1926;
+		case 1927: goto st1927;
 	default: break;
 	}
 
@@ -2120,27 +2123,27 @@ case 1:
 st0:
  state.cs = 0;
 	goto _out;
-tr2761:
-#line 347 "configparser.rl"
+tr2766:
+#line 349 "configparser.rl"
 	{ init_design(des); }
 	goto st2;
-tr2767:
-#line 435 "configparser.rl"
+tr2772:
+#line 437 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st2;
-tr2772:
+tr2777:
 #line 294 "configparser.rl"
 	{ init_species(spe); }
 	goto st2;
-tr2777:
-#line 395 "configparser.rl"
+tr2782:
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st2;
 st2:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof2;
 case 2:
-#line 2144 "configparser.h"
+#line 2147 "configparser.h"
 	if ( (*( state.p)) == 101 )
 		goto st3;
 	goto st0;
@@ -2184,14 +2187,14 @@ case 7:
 		goto tr11;
 	goto st0;
 tr11:
-#line 344 "configparser.rl"
+#line 346 "configparser.rl"
 	{ des = Design(); }
 	goto st8;
 st8:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof8;
 case 8:
-#line 2195 "configparser.h"
+#line 2198 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st8;
 		case 32: goto st8;
@@ -2222,7 +2225,7 @@ st9:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof9;
 case 9:
-#line 2226 "configparser.h"
+#line 2229 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr14;
 		case 32: goto tr14;
@@ -2234,14 +2237,14 @@ case 9:
 		goto tr14;
 	goto st0;
 tr14:
-#line 337 "configparser.rl"
+#line 339 "configparser.rl"
 	{ des.level = toint(state.match); }
 	goto st10;
 st10:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof10;
 case 10:
-#line 2245 "configparser.h"
+#line 2248 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st10;
 		case 32: goto st10;
@@ -2279,7 +2282,7 @@ st11:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof11;
 case 11:
-#line 2283 "configparser.h"
+#line 2286 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr18;
 		case 32: goto tr18;
@@ -2299,14 +2302,14 @@ case 11:
 		goto tr19;
 	goto st0;
 tr18:
-#line 340 "configparser.rl"
+#line 342 "configparser.rl"
 	{ des.tag = state.match; }
 	goto st12;
 st12:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof12;
 case 12:
-#line 2310 "configparser.h"
+#line 2313 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st12;
 		case 32: goto st12;
@@ -2316,84 +2319,84 @@ case 12:
 		goto st12;
 	goto st0;
 tr20:
-#line 340 "configparser.rl"
+#line 342 "configparser.rl"
 	{ des.tag = state.match; }
-#line 346 "configparser.rl"
-	{{ state.stack[ state.top++] = 1925; goto st615;}}
-	goto st1925;
+#line 348 "configparser.rl"
+	{{ state.stack[ state.top++] = 1928; goto st615;}}
+	goto st1928;
 tr22:
-#line 346 "configparser.rl"
-	{{ state.stack[ state.top++] = 1925; goto st615;}}
-	goto st1925;
-st1925:
+#line 348 "configparser.rl"
+	{{ state.stack[ state.top++] = 1928; goto st615;}}
+	goto st1928;
+st1928:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1925;
-case 1925:
-#line 2333 "configparser.h"
+		goto _test_eof1928;
+case 1928:
+#line 2336 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2760;
-		case 32: goto tr2760;
-		case 100: goto tr2761;
-		case 108: goto tr2762;
-		case 115: goto tr2763;
-		case 116: goto tr2764;
+		case 13: goto tr2765;
+		case 32: goto tr2765;
+		case 100: goto tr2766;
+		case 108: goto tr2767;
+		case 115: goto tr2768;
+		case 116: goto tr2769;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2760;
+		goto tr2765;
 	goto st0;
-tr2760:
-#line 347 "configparser.rl"
+tr2765:
+#line 349 "configparser.rl"
 	{ init_design(des); }
-	goto st1926;
-tr2766:
-#line 435 "configparser.rl"
-	{ init_levelskin_(lev); }
-	goto st1926;
+	goto st1929;
 tr2771:
+#line 437 "configparser.rl"
+	{ init_levelskin_(lev); }
+	goto st1929;
+tr2776:
 #line 294 "configparser.rl"
 	{ init_species(spe); }
-	goto st1926;
-tr2776:
-#line 395 "configparser.rl"
+	goto st1929;
+tr2781:
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
-	goto st1926;
-st1926:
+	goto st1929;
+st1929:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1926;
-case 1926:
-#line 2365 "configparser.h"
+		goto _test_eof1929;
+case 1929:
+#line 2368 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto st1926;
-		case 32: goto st1926;
+		case 13: goto st1929;
+		case 32: goto st1929;
 		case 100: goto st2;
 		case 108: goto st13;
 		case 115: goto st25;
 		case 116: goto st37;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1926;
+		goto st1929;
 	goto st0;
-tr2762:
-#line 347 "configparser.rl"
+tr2767:
+#line 349 "configparser.rl"
 	{ init_design(des); }
 	goto st13;
-tr2768:
-#line 435 "configparser.rl"
+tr2773:
+#line 437 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st13;
-tr2773:
+tr2778:
 #line 294 "configparser.rl"
 	{ init_species(spe); }
 	goto st13;
-tr2778:
-#line 395 "configparser.rl"
+tr2783:
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st13;
 st13:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof13;
 case 13:
-#line 2397 "configparser.h"
+#line 2400 "configparser.h"
 	if ( (*( state.p)) == 101 )
 		goto st14;
 	goto st0;
@@ -2458,14 +2461,14 @@ case 21:
 		goto tr31;
 	goto st0;
 tr31:
-#line 432 "configparser.rl"
+#line 434 "configparser.rl"
 	{ lev = Levelskin(); }
 	goto st22;
 st22:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof22;
 case 22:
-#line 2469 "configparser.h"
+#line 2472 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st22;
 		case 32: goto st22;
@@ -2496,7 +2499,7 @@ st23:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof23;
 case 23:
-#line 2500 "configparser.h"
+#line 2503 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr34;
 		case 32: goto tr34;
@@ -2509,14 +2512,14 @@ case 23:
 		goto tr34;
 	goto st0;
 tr34:
-#line 428 "configparser.rl"
+#line 430 "configparser.rl"
 	{ lev.level = toint(state.match); }
 	goto st24;
 st24:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof24;
 case 24:
-#line 2520 "configparser.h"
+#line 2523 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st24;
 		case 32: goto st24;
@@ -2526,52 +2529,52 @@ case 24:
 		goto st24;
 	goto st0;
 tr36:
-#line 428 "configparser.rl"
+#line 430 "configparser.rl"
 	{ lev.level = toint(state.match); }
-#line 434 "configparser.rl"
-	{{ state.stack[ state.top++] = 1927; goto st1196;}}
-	goto st1927;
+#line 436 "configparser.rl"
+	{{ state.stack[ state.top++] = 1930; goto st1199;}}
+	goto st1930;
 tr38:
-#line 434 "configparser.rl"
-	{{ state.stack[ state.top++] = 1927; goto st1196;}}
-	goto st1927;
-st1927:
+#line 436 "configparser.rl"
+	{{ state.stack[ state.top++] = 1930; goto st1199;}}
+	goto st1930;
+st1930:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1927;
-case 1927:
-#line 2543 "configparser.h"
+		goto _test_eof1930;
+case 1930:
+#line 2546 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2766;
-		case 32: goto tr2766;
-		case 100: goto tr2767;
-		case 108: goto tr2768;
-		case 115: goto tr2769;
-		case 116: goto tr2770;
+		case 13: goto tr2771;
+		case 32: goto tr2771;
+		case 100: goto tr2772;
+		case 108: goto tr2773;
+		case 115: goto tr2774;
+		case 116: goto tr2775;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2766;
+		goto tr2771;
 	goto st0;
-tr2763:
-#line 347 "configparser.rl"
+tr2768:
+#line 349 "configparser.rl"
 	{ init_design(des); }
 	goto st25;
-tr2769:
-#line 435 "configparser.rl"
+tr2774:
+#line 437 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st25;
-tr2774:
+tr2779:
 #line 294 "configparser.rl"
 	{ init_species(spe); }
 	goto st25;
-tr2779:
-#line 395 "configparser.rl"
+tr2784:
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st25;
 st25:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof25;
 case 25:
-#line 2575 "configparser.h"
+#line 2578 "configparser.h"
 	if ( (*( state.p)) == 112 )
 		goto st26;
 	goto st0;
@@ -2629,7 +2632,7 @@ st32:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof32;
 case 32:
-#line 2633 "configparser.h"
+#line 2636 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st32;
 		case 32: goto st32;
@@ -2660,7 +2663,7 @@ st33:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof33;
 case 33:
-#line 2664 "configparser.h"
+#line 2667 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr48;
 		case 32: goto tr48;
@@ -2679,7 +2682,7 @@ st34:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof34;
 case 34:
-#line 2683 "configparser.h"
+#line 2686 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st34;
 		case 32: goto st34;
@@ -2717,7 +2720,7 @@ st35:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof35;
 case 35:
-#line 2721 "configparser.h"
+#line 2724 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr52;
 		case 32: goto tr52;
@@ -2744,7 +2747,7 @@ st36:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof36;
 case 36:
-#line 2748 "configparser.h"
+#line 2751 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st36;
 		case 32: goto st36;
@@ -2757,49 +2760,49 @@ tr54:
 #line 287 "configparser.rl"
 	{ spe.tag = state.match; }
 #line 293 "configparser.rl"
-	{{ state.stack[ state.top++] = 1928; goto st48;}}
-	goto st1928;
+	{{ state.stack[ state.top++] = 1931; goto st48;}}
+	goto st1931;
 tr56:
 #line 293 "configparser.rl"
-	{{ state.stack[ state.top++] = 1928; goto st48;}}
-	goto st1928;
-st1928:
+	{{ state.stack[ state.top++] = 1931; goto st48;}}
+	goto st1931;
+st1931:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1928;
-case 1928:
-#line 2771 "configparser.h"
+		goto _test_eof1931;
+case 1931:
+#line 2774 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2771;
-		case 32: goto tr2771;
-		case 100: goto tr2772;
-		case 108: goto tr2773;
-		case 115: goto tr2774;
-		case 116: goto tr2775;
+		case 13: goto tr2776;
+		case 32: goto tr2776;
+		case 100: goto tr2777;
+		case 108: goto tr2778;
+		case 115: goto tr2779;
+		case 116: goto tr2780;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2771;
+		goto tr2776;
 	goto st0;
-tr2764:
-#line 347 "configparser.rl"
+tr2769:
+#line 349 "configparser.rl"
 	{ init_design(des); }
 	goto st37;
-tr2770:
-#line 435 "configparser.rl"
+tr2775:
+#line 437 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st37;
-tr2775:
+tr2780:
 #line 294 "configparser.rl"
 	{ init_species(spe); }
 	goto st37;
-tr2780:
-#line 395 "configparser.rl"
+tr2785:
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st37;
 st37:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof37;
 case 37:
-#line 2803 "configparser.h"
+#line 2806 "configparser.h"
 	if ( (*( state.p)) == 101 )
 		goto st38;
 	goto st0;
@@ -2850,14 +2853,14 @@ case 43:
 		goto tr63;
 	goto st0;
 tr63:
-#line 392 "configparser.rl"
+#line 394 "configparser.rl"
 	{ ter = Terrain(); }
 	goto st44;
 st44:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof44;
 case 44:
-#line 2861 "configparser.h"
+#line 2864 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st44;
 		case 32: goto st44;
@@ -2895,7 +2898,7 @@ st45:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof45;
 case 45:
-#line 2899 "configparser.h"
+#line 2902 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr66;
 		case 32: goto tr66;
@@ -2915,14 +2918,14 @@ case 45:
 		goto tr67;
 	goto st0;
 tr66:
-#line 388 "configparser.rl"
+#line 390 "configparser.rl"
 	{ ter.tag = state.match; }
 	goto st46;
 st46:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof46;
 case 46:
-#line 2926 "configparser.h"
+#line 2929 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st46;
 		case 32: goto st46;
@@ -2932,30 +2935,30 @@ case 46:
 		goto st46;
 	goto st0;
 tr68:
-#line 388 "configparser.rl"
+#line 390 "configparser.rl"
 	{ ter.tag = state.match; }
-#line 394 "configparser.rl"
-	{{ state.stack[ state.top++] = 1929; goto st956;}}
-	goto st1929;
+#line 396 "configparser.rl"
+	{{ state.stack[ state.top++] = 1932; goto st959;}}
+	goto st1932;
 tr70:
-#line 394 "configparser.rl"
-	{{ state.stack[ state.top++] = 1929; goto st956;}}
-	goto st1929;
-st1929:
+#line 396 "configparser.rl"
+	{{ state.stack[ state.top++] = 1932; goto st959;}}
+	goto st1932;
+st1932:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1929;
-case 1929:
-#line 2949 "configparser.h"
+		goto _test_eof1932;
+case 1932:
+#line 2952 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2776;
-		case 32: goto tr2776;
-		case 100: goto tr2777;
-		case 108: goto tr2778;
-		case 115: goto tr2779;
-		case 116: goto tr2780;
+		case 13: goto tr2781;
+		case 32: goto tr2781;
+		case 100: goto tr2782;
+		case 108: goto tr2783;
+		case 115: goto tr2784;
+		case 116: goto tr2785;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2776;
+		goto tr2781;
 	goto st0;
 st47:
 	if ( ++( state.p) == ( state.pe) )
@@ -2970,20 +2973,20 @@ case 47:
 tr71:
 #line 138 "configparser.rl"
 	{ state.match += '"';  { state.cs =  state.stack[-- state.top];goto _again;} }
-	goto st1930;
+	goto st1933;
 tr72:
 #line 140 "configparser.rl"
 	{ state.match += '\\'; { state.cs =  state.stack[-- state.top];goto _again;} }
-	goto st1930;
+	goto st1933;
 tr73:
 #line 139 "configparser.rl"
 	{ state.match += '\n'; { state.cs =  state.stack[-- state.top];goto _again;} }
-	goto st1930;
-st1930:
+	goto st1933;
+st1933:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1930;
-case 1930:
-#line 2987 "configparser.h"
+		goto _test_eof1933;
+case 1933:
+#line 2990 "configparser.h"
 	goto st0;
 st48:
 	if ( ++( state.p) == ( state.pe) )
@@ -3335,11 +3338,11 @@ st66:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof66;
 case 66:
-#line 3339 "configparser.h"
+#line 3342 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st66;
 		case 32: goto st66;
-		case 59: goto st1931;
+		case 59: goto st1934;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st66;
@@ -3347,192 +3350,192 @@ case 66:
 tr111:
 #line 199 "configparser.rl"
 	{ spe.ai = Species::ai_t::inrange_random; }
-	goto st1931;
+	goto st1934;
 tr168:
 #line 182 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 #line 261 "configparser.rl"
 	{ spe.blast.back().attacks.add(dmgval); }
-	goto st1931;
+	goto st1934;
 tr264:
 #line 245 "configparser.rl"
 	{ spe.cast_cloud.back().name = state.match; }
-	goto st1931;
+	goto st1934;
 tr285:
 #line 227 "configparser.rl"
 	{ spe.clumpsize.deviation = toreal(state.match); }
-	goto st1931;
+	goto st1934;
 tr309:
 #line 232 "configparser.rl"
 	{ spe.companion.back().tag = state.match; }
-	goto st1931;
+	goto st1934;
 tr317:
 #line 213 "configparser.rl"
 	{ spe.count = toint(state.match); }
-	goto st1931;
+	goto st1934;
 tr349:
 #line 182 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 #line 222 "configparser.rl"
 	{ spe.defenses.add(dmgval); }
-	goto st1931;
+	goto st1934;
 tr420:
 #line 237 "configparser.rl"
 	{ spe.drop.back().chance = toreal(state.match); }
-	goto st1931;
+	goto st1934;
 tr439:
 #line 192 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::corner; }
-	goto st1931;
+	goto st1934;
 tr445:
 #line 190 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::floor; }
-	goto st1931;
+	goto st1934;
 tr455:
 #line 193 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::shoreline; }
-	goto st1931;
+	goto st1934;
 tr461:
 #line 189 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::walk; }
-	goto st1931;
+	goto st1934;
 tr465:
 #line 191 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::water; }
-	goto st1931;
+	goto st1934;
 tr479:
 #line 204 "configparser.rl"
 	{ spe.idle_ai = Species::idle_ai_t::none; }
-	goto st1931;
+	goto st1934;
 tr486:
 #line 205 "configparser.rl"
 	{ spe.idle_ai = Species::idle_ai_t::random; }
-	goto st1931;
+	goto st1934;
 tr497:
 #line 223 "configparser.rl"
 	{ spe.karma = toreal(state.match); }
-	goto st1931;
+	goto st1934;
 tr505:
 #line 267 "configparser.rl"
 	{ spe.flags.magic = true; }
-	goto st1931;
+	goto st1934;
 tr518:
 #line 211 "configparser.rl"
 	{ spe.move = Species::move_t::corner; }
-	goto st1931;
+	goto st1934;
 tr524:
 #line 209 "configparser.rl"
 	{ spe.move = Species::move_t::floor; }
-	goto st1931;
+	goto st1934;
 tr530:
 #line 208 "configparser.rl"
 	{ spe.move = Species::move_t::walk; }
-	goto st1931;
+	goto st1934;
 tr534:
 #line 210 "configparser.rl"
 	{ spe.move = Species::move_t::water; }
-	goto st1931;
+	goto st1934;
 tr544:
 #line 214 "configparser.rl"
 	{ spe.name = state.match; }
-	goto st1931;
+	goto st1934;
 tr550:
 #line 268 "configparser.rl"
 	{ spe.flags.plant = true; }
-	goto st1931;
+	goto st1934;
 tr559:
 #line 220 "configparser.rl"
 	{ spe.range = toint(state.match); }
-	goto st1931;
+	goto st1934;
 tr602:
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr605:
 #line 156 "configparser.rl"
 	{ add_color(skin.fore, 4); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr610:
 #line 158 "configparser.rl"
 	{ add_color(skin.fore, 6); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr616:
 #line 154 "configparser.rl"
 	{ add_color(skin.fore, 2); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr624:
 #line 157 "configparser.rl"
 	{ add_color(skin.fore, 5); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr628:
 #line 153 "configparser.rl"
 	{ add_color(skin.fore, 1); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr634:
 #line 159 "configparser.rl"
 	{ add_color(skin.fore, 7); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr641:
 #line 155 "configparser.rl"
 	{ add_color(skin.fore, 3); }
 #line 215 "configparser.rl"
 	{ spe.skin = skin; }
-	goto st1931;
+	goto st1934;
 tr676:
 #line 251 "configparser.rl"
 	{ spe.summon.back().turns = toint(state.match); }
-	goto st1931;
+	goto st1934;
 tr684:
 #line 266 "configparser.rl"
 	{ spe.flags.undead = true; }
-	goto st1931;
+	goto st1934;
 tr689:
 #line 196 "configparser.rl"
 	{ spe.ai = Species::ai_t::none; }
-	goto st1931;
+	goto st1934;
 tr699:
 #line 201 "configparser.rl"
 	{ spe.ai = Species::ai_t::none_nosleep; }
-	goto st1931;
+	goto st1934;
 tr706:
 #line 198 "configparser.rl"
 	{ spe.ai = Species::ai_t::random; }
-	goto st1931;
+	goto st1934;
 tr720:
 #line 200 "configparser.rl"
 	{ spe.ai = Species::ai_t::seek_nosleep; }
-	goto st1931;
+	goto st1934;
 tr727:
 #line 197 "configparser.rl"
 	{ spe.ai = Species::ai_t::seek_player; }
-	goto st1931;
+	goto st1934;
 tr733:
 #line 265 "configparser.rl"
 	{ spe.flags.animal = true; }
-	goto st1931;
+	goto st1934;
 tr762:
 #line 182 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 #line 221 "configparser.rl"
 	{ spe.attacks.add(dmgval); }
-	goto st1931;
-st1931:
+	goto st1934;
+st1934:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1931;
-case 1931:
-#line 3536 "configparser.h"
+		goto _test_eof1934;
+case 1934:
+#line 3539 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st48;
 		case 32: goto st48;
@@ -3601,7 +3604,7 @@ st72:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof72;
 case 72:
-#line 3605 "configparser.h"
+#line 3608 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st72;
 		case 32: goto st72;
@@ -3627,7 +3630,7 @@ st73:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof73;
 case 73:
-#line 3631 "configparser.h"
+#line 3634 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr122;
 	goto st0;
@@ -3651,7 +3654,7 @@ st74:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof74;
 case 74:
-#line 3655 "configparser.h"
+#line 3658 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr123;
 		case 32: goto tr123;
@@ -3671,7 +3674,7 @@ st75:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof75;
 case 75:
-#line 3675 "configparser.h"
+#line 3678 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st75;
 		case 32: goto st75;
@@ -3702,7 +3705,7 @@ st76:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof76;
 case 76:
-#line 3706 "configparser.h"
+#line 3709 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr127;
 		case 32: goto tr127;
@@ -3721,7 +3724,7 @@ st77:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof77;
 case 77:
-#line 3725 "configparser.h"
+#line 3728 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st77;
 		case 32: goto st77;
@@ -3752,7 +3755,7 @@ st78:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof78;
 case 78:
-#line 3756 "configparser.h"
+#line 3759 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr131;
 		case 32: goto tr131;
@@ -3771,7 +3774,7 @@ st79:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof79;
 case 79:
-#line 3775 "configparser.h"
+#line 3778 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st79;
 		case 32: goto st79;
@@ -3802,7 +3805,7 @@ st80:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof80;
 case 80:
-#line 3806 "configparser.h"
+#line 3809 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr135;
 		case 32: goto tr135;
@@ -3821,7 +3824,7 @@ st81:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof81;
 case 81:
-#line 3825 "configparser.h"
+#line 3828 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st81;
 		case 32: goto st81;
@@ -4016,7 +4019,7 @@ st101:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof101;
 case 101:
-#line 4020 "configparser.h"
+#line 4023 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st101;
 		case 32: goto st101;
@@ -4042,7 +4045,7 @@ st102:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof102;
 case 102:
-#line 4046 "configparser.h"
+#line 4049 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr165;
 	goto st0;
@@ -4066,7 +4069,7 @@ st103:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof103;
 case 103:
-#line 4070 "configparser.h"
+#line 4073 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr166;
 		case 32: goto tr166;
@@ -4089,11 +4092,11 @@ st104:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof104;
 case 104:
-#line 4093 "configparser.h"
+#line 4096 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st104;
 		case 32: goto st104;
-		case 59: goto st1931;
+		case 59: goto st1934;
 		case 97: goto st82;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
@@ -4109,7 +4112,7 @@ st105:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof105;
 case 105:
-#line 4113 "configparser.h"
+#line 4116 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr170;
 	goto st0;
@@ -4123,7 +4126,7 @@ st106:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof106;
 case 106:
-#line 4127 "configparser.h"
+#line 4130 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr166;
 		case 32: goto tr166;
@@ -4535,7 +4538,7 @@ st158:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof158;
 case 158:
-#line 4539 "configparser.h"
+#line 4542 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr225;
 	goto st0;
@@ -4549,7 +4552,7 @@ st159:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof159;
 case 159:
-#line 4553 "configparser.h"
+#line 4556 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr123;
 		case 32: goto tr123;
@@ -4645,7 +4648,7 @@ st170:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof170;
 case 170:
-#line 4649 "configparser.h"
+#line 4652 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st170;
 		case 32: goto st170;
@@ -4671,7 +4674,7 @@ st171:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof171;
 case 171:
-#line 4675 "configparser.h"
+#line 4678 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr241;
 	goto st0;
@@ -4695,7 +4698,7 @@ st172:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof172;
 case 172:
-#line 4699 "configparser.h"
+#line 4702 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr242;
 		case 32: goto tr242;
@@ -4715,7 +4718,7 @@ st173:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof173;
 case 173:
-#line 4719 "configparser.h"
+#line 4722 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st173;
 		case 32: goto st173;
@@ -4744,7 +4747,7 @@ st174:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof174;
 case 174:
-#line 4748 "configparser.h"
+#line 4751 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st175;
 		case 92: goto tr248;
@@ -4769,7 +4772,7 @@ st176:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof176;
 case 176:
-#line 4773 "configparser.h"
+#line 4776 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st176;
 		case 32: goto st176;
@@ -4800,7 +4803,7 @@ st177:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof177;
 case 177:
-#line 4804 "configparser.h"
+#line 4807 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr252;
 		case 32: goto tr252;
@@ -4819,7 +4822,7 @@ st178:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof178;
 case 178:
-#line 4823 "configparser.h"
+#line 4826 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st178;
 		case 32: goto st178;
@@ -4850,7 +4853,7 @@ st179:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof179;
 case 179:
-#line 4854 "configparser.h"
+#line 4857 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr256;
 		case 32: goto tr256;
@@ -4869,7 +4872,7 @@ st180:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof180;
 case 180:
-#line 4873 "configparser.h"
+#line 4876 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st180;
 		case 32: goto st180;
@@ -4898,7 +4901,7 @@ st181:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof181;
 case 181:
-#line 4902 "configparser.h"
+#line 4905 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st182;
 		case 92: goto tr262;
@@ -4926,7 +4929,7 @@ st183:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof183;
 case 183:
-#line 4930 "configparser.h"
+#line 4933 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr265;
 	goto st0;
@@ -4940,7 +4943,7 @@ st184:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof184;
 case 184:
-#line 4944 "configparser.h"
+#line 4947 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr242;
 		case 32: goto tr242;
@@ -5040,7 +5043,7 @@ st194:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof194;
 case 194:
-#line 5044 "configparser.h"
+#line 5047 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr276;
 	goto st0;
@@ -5064,7 +5067,7 @@ st195:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof195;
 case 195:
-#line 5068 "configparser.h"
+#line 5071 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr277;
 		case 32: goto tr277;
@@ -5084,7 +5087,7 @@ st196:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof196;
 case 196:
-#line 5088 "configparser.h"
+#line 5091 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st196;
 		case 32: goto st196;
@@ -5110,7 +5113,7 @@ st197:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof197;
 case 197:
-#line 5114 "configparser.h"
+#line 5117 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr282;
 	goto st0;
@@ -5134,7 +5137,7 @@ st198:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof198;
 case 198:
-#line 5138 "configparser.h"
+#line 5141 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr283;
 		case 32: goto tr283;
@@ -5157,7 +5160,7 @@ st199:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof199;
 case 199:
-#line 5161 "configparser.h"
+#line 5164 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr286;
 	goto st0;
@@ -5171,7 +5174,7 @@ st200:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof200;
 case 200:
-#line 5175 "configparser.h"
+#line 5178 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr283;
 		case 32: goto tr283;
@@ -5193,7 +5196,7 @@ st201:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof201;
 case 201:
-#line 5197 "configparser.h"
+#line 5200 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr287;
 	goto st0;
@@ -5207,7 +5210,7 @@ st202:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof202;
 case 202:
-#line 5211 "configparser.h"
+#line 5214 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr277;
 		case 32: goto tr277;
@@ -5288,7 +5291,7 @@ st211:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof211;
 case 211:
-#line 5292 "configparser.h"
+#line 5295 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st211;
 		case 32: goto st211;
@@ -5314,7 +5317,7 @@ st212:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof212;
 case 212:
-#line 5318 "configparser.h"
+#line 5321 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr300;
 	goto st0;
@@ -5338,7 +5341,7 @@ st213:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof213;
 case 213:
-#line 5342 "configparser.h"
+#line 5345 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr301;
 		case 32: goto tr301;
@@ -5358,7 +5361,7 @@ st214:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof214;
 case 214:
-#line 5362 "configparser.h"
+#line 5365 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st214;
 		case 32: goto st214;
@@ -5387,7 +5390,7 @@ st215:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof215;
 case 215:
-#line 5391 "configparser.h"
+#line 5394 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st216;
 		case 92: goto tr307;
@@ -5415,7 +5418,7 @@ st217:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof217;
 case 217:
-#line 5419 "configparser.h"
+#line 5422 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr310;
 	goto st0;
@@ -5429,7 +5432,7 @@ st218:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof218;
 case 218:
-#line 5433 "configparser.h"
+#line 5436 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr301;
 		case 32: goto tr301;
@@ -5499,7 +5502,7 @@ st223:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof223;
 case 223:
-#line 5503 "configparser.h"
+#line 5506 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr315;
 		case 32: goto tr315;
@@ -5706,7 +5709,7 @@ st244:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof244;
 case 244:
-#line 5710 "configparser.h"
+#line 5713 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st244;
 		case 32: goto st244;
@@ -5732,7 +5735,7 @@ st245:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof245;
 case 245:
-#line 5736 "configparser.h"
+#line 5739 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr346;
 	goto st0;
@@ -5756,7 +5759,7 @@ st246:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof246;
 case 246:
-#line 5760 "configparser.h"
+#line 5763 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr347;
 		case 32: goto tr347;
@@ -5779,7 +5782,7 @@ st247:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof247;
 case 247:
-#line 5783 "configparser.h"
+#line 5786 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr350;
 	goto st0;
@@ -5793,7 +5796,7 @@ st248:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof248;
 case 248:
-#line 5797 "configparser.h"
+#line 5800 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr347;
 		case 32: goto tr347;
@@ -6228,7 +6231,7 @@ st303:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof303;
 case 303:
-#line 6232 "configparser.h"
+#line 6235 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st303;
 		case 32: goto st303;
@@ -6257,7 +6260,7 @@ st304:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof304;
 case 304:
-#line 6261 "configparser.h"
+#line 6264 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st305;
 		case 92: goto tr412;
@@ -6282,7 +6285,7 @@ st306:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof306;
 case 306:
-#line 6286 "configparser.h"
+#line 6289 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st306;
 		case 32: goto st306;
@@ -6308,7 +6311,7 @@ st307:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof307;
 case 307:
-#line 6312 "configparser.h"
+#line 6315 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr417;
 	goto st0;
@@ -6332,7 +6335,7 @@ st308:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof308;
 case 308:
-#line 6336 "configparser.h"
+#line 6339 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr418;
 		case 32: goto tr418;
@@ -6355,7 +6358,7 @@ st309:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof309;
 case 309:
-#line 6359 "configparser.h"
+#line 6362 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr421;
 	goto st0;
@@ -6369,7 +6372,7 @@ st310:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof310;
 case 310:
-#line 6373 "configparser.h"
+#line 6376 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr418;
 		case 32: goto tr418;
@@ -6879,7 +6882,7 @@ st370:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof370;
 case 370:
-#line 6883 "configparser.h"
+#line 6886 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr494;
 	goto st0;
@@ -6903,7 +6906,7 @@ st371:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof371;
 case 371:
-#line 6907 "configparser.h"
+#line 6910 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr495;
 		case 32: goto tr495;
@@ -6926,7 +6929,7 @@ st372:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof372;
 case 372:
-#line 6930 "configparser.h"
+#line 6933 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr498;
 	goto st0;
@@ -6940,7 +6943,7 @@ st373:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof373;
 case 373:
-#line 6944 "configparser.h"
+#line 6947 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr495;
 		case 32: goto tr495;
@@ -7245,7 +7248,7 @@ st406:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof406;
 case 406:
-#line 7249 "configparser.h"
+#line 7252 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st407;
 		case 92: goto tr542;
@@ -7376,7 +7379,7 @@ st419:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof419;
 case 419:
-#line 7380 "configparser.h"
+#line 7383 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr557;
 		case 32: goto tr557;
@@ -7454,7 +7457,7 @@ st425:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof425;
 case 425:
-#line 7458 "configparser.h"
+#line 7461 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st426;
 		case 92: goto tr568;
@@ -7479,7 +7482,7 @@ st427:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof427;
 case 427:
-#line 7483 "configparser.h"
+#line 7486 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st427;
 		case 32: goto st427;
@@ -7556,7 +7559,7 @@ st434:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof434;
 case 434:
-#line 7560 "configparser.h"
+#line 7563 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st434;
 		case 32: goto st434;
@@ -7583,7 +7586,7 @@ st435:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof435;
 case 435:
-#line 7587 "configparser.h"
+#line 7590 "configparser.h"
 	if ( (*( state.p)) == 108 )
 		goto st436;
 	goto st0;
@@ -7653,7 +7656,7 @@ st442:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof442;
 case 442:
-#line 7657 "configparser.h"
+#line 7660 "configparser.h"
 	if ( (*( state.p)) == 121 )
 		goto st443;
 	goto st0;
@@ -7695,7 +7698,7 @@ st446:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof446;
 case 446:
-#line 7699 "configparser.h"
+#line 7702 "configparser.h"
 	if ( (*( state.p)) == 114 )
 		goto st447;
 	goto st0;
@@ -7744,7 +7747,7 @@ st451:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof451;
 case 451:
-#line 7748 "configparser.h"
+#line 7751 "configparser.h"
 	if ( (*( state.p)) == 97 )
 		goto st452;
 	goto st0;
@@ -7807,7 +7810,7 @@ st458:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof458;
 case 458:
-#line 7811 "configparser.h"
+#line 7814 "configparser.h"
 	if ( (*( state.p)) == 101 )
 		goto st459;
 	goto st0;
@@ -7842,7 +7845,7 @@ st461:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof461;
 case 461:
-#line 7846 "configparser.h"
+#line 7849 "configparser.h"
 	if ( (*( state.p)) == 104 )
 		goto st462;
 	goto st0;
@@ -7891,7 +7894,7 @@ st466:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof466;
 case 466:
-#line 7895 "configparser.h"
+#line 7898 "configparser.h"
 	if ( (*( state.p)) == 101 )
 		goto st467;
 	goto st0;
@@ -7947,7 +7950,7 @@ st472:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof472;
 case 472:
-#line 7951 "configparser.h"
+#line 7954 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 98: goto st435;
 		case 99: goto st442;
@@ -8059,7 +8062,7 @@ st484:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof484;
 case 484:
-#line 8063 "configparser.h"
+#line 8066 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st484;
 		case 32: goto st484;
@@ -8085,7 +8088,7 @@ st485:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof485;
 case 485:
-#line 8089 "configparser.h"
+#line 8092 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr663;
 	goto st0;
@@ -8109,7 +8112,7 @@ st486:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof486;
 case 486:
-#line 8113 "configparser.h"
+#line 8116 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr664;
 		case 32: goto tr664;
@@ -8129,7 +8132,7 @@ st487:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof487;
 case 487:
-#line 8133 "configparser.h"
+#line 8136 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st487;
 		case 32: goto st487;
@@ -8158,7 +8161,7 @@ st488:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof488;
 case 488:
-#line 8162 "configparser.h"
+#line 8165 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 34: goto st489;
 		case 92: goto tr670;
@@ -8183,7 +8186,7 @@ st490:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof490;
 case 490:
-#line 8187 "configparser.h"
+#line 8190 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st490;
 		case 32: goto st490;
@@ -8214,7 +8217,7 @@ st491:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof491;
 case 491:
-#line 8218 "configparser.h"
+#line 8221 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr674;
 		case 32: goto tr674;
@@ -8236,7 +8239,7 @@ st492:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof492;
 case 492:
-#line 8240 "configparser.h"
+#line 8243 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr677;
 	goto st0;
@@ -8250,7 +8253,7 @@ st493:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof493;
 case 493:
-#line 8254 "configparser.h"
+#line 8257 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr664;
 		case 32: goto tr664;
@@ -8807,7 +8810,7 @@ st559:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof559;
 case 559:
-#line 8811 "configparser.h"
+#line 8814 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st559;
 		case 32: goto st559;
@@ -8833,7 +8836,7 @@ st560:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof560;
 case 560:
-#line 8837 "configparser.h"
+#line 8840 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr759;
 	goto st0;
@@ -8857,7 +8860,7 @@ st561:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof561;
 case 561:
-#line 8861 "configparser.h"
+#line 8864 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr760;
 		case 32: goto tr760;
@@ -8880,7 +8883,7 @@ st562:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof562;
 case 562:
-#line 8884 "configparser.h"
+#line 8887 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr763;
 	goto st0;
@@ -8894,7 +8897,7 @@ st563:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof563;
 case 563:
-#line 8898 "configparser.h"
+#line 8901 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr760;
 		case 32: goto tr760;
@@ -9305,17 +9308,17 @@ case 615:
 		case 32: goto st615;
 		case 97: goto st616;
 		case 98: goto st639;
-		case 99: goto st648;
-		case 100: goto st655;
-		case 102: goto st748;
-		case 103: goto st757;
-		case 104: goto st775;
-		case 108: goto st784;
-		case 109: goto st797;
-		case 110: goto st802;
-		case 115: goto st809;
-		case 116: goto st885;
-		case 117: goto st897;
+		case 99: goto st651;
+		case 100: goto st658;
+		case 102: goto st751;
+		case 103: goto st760;
+		case 104: goto st778;
+		case 108: goto st787;
+		case 109: goto st800;
+		case 110: goto st805;
+		case 115: goto st812;
+		case 116: goto st888;
+		case 117: goto st900;
 		case 125: goto tr832;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
@@ -9375,10 +9378,10 @@ case 622:
 		case 13: goto st622;
 		case 32: goto st622;
 		case 99: goto st623;
-		case 101: goto st905;
-		case 112: goto st914;
-		case 115: goto st929;
-		case 116: goto st945;
+		case 101: goto st908;
+		case 112: goto st917;
+		case 115: goto st932;
+		case 116: goto st948;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st622;
@@ -9475,31 +9478,31 @@ tr855:
 #line 175 "configparser.rl"
 	{ dmgval.type = damage::type_t::cancellation; }
 	goto st635;
-tr1220:
+tr1225:
 #line 178 "configparser.rl"
 	{ dmgval.type = damage::type_t::eat_brain; }
 	goto st635;
-tr1230:
+tr1235:
 #line 171 "configparser.rl"
 	{ dmgval.type = damage::type_t::physical; }
 	goto st635;
-tr1235:
+tr1240:
 #line 173 "configparser.rl"
 	{ dmgval.type = damage::type_t::poison; }
 	goto st635;
-tr1237:
+tr1242:
 #line 177 "configparser.rl"
 	{ dmgval.type = damage::type_t::psi; }
 	goto st635;
-tr1250:
+tr1255:
 #line 176 "configparser.rl"
 	{ dmgval.type = damage::type_t::scare_animal; }
 	goto st635;
-tr1254:
+tr1259:
 #line 172 "configparser.rl"
 	{ dmgval.type = damage::type_t::sleep; }
 	goto st635;
-tr1265:
+tr1270:
 #line 174 "configparser.rl"
 	{ dmgval.type = damage::type_t::turn_undead; }
 	goto st635;
@@ -9507,7 +9510,7 @@ st635:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof635;
 case 635:
-#line 9511 "configparser.h"
+#line 9514 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st635;
 		case 32: goto st635;
@@ -9533,7 +9536,7 @@ st636:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof636;
 case 636:
-#line 9537 "configparser.h"
+#line 9540 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr859;
 	goto st0;
@@ -9557,7 +9560,7 @@ st637:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof637;
 case 637:
-#line 9561 "configparser.h"
+#line 9564 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr860;
 		case 32: goto tr860;
@@ -9571,7 +9574,7 @@ case 637:
 		goto tr860;
 	goto st0;
 tr832:
-#line 331 "configparser.rl"
+#line 333 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st638;
 tr860:
@@ -9580,111 +9583,115 @@ tr860:
 #line 304 "configparser.rl"
 	{ des.attacks.add(dmgval); }
 	goto st638;
-tr875:
-#line 317 "configparser.rl"
+tr876:
+#line 319 "configparser.rl"
 	{ des.blastrange = toint(state.match); }
 	goto st638;
-tr884:
+tr881:
+#line 315 "configparser.rl"
+	{ des.flags.blink = true; }
+	goto st638;
+tr889:
 #line 299 "configparser.rl"
 	{ des.count = toint(state.match); }
 	goto st638;
-tr917:
+tr922:
 #line 182 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 #line 305 "configparser.rl"
 	{ des.defenses.add(dmgval); }
 	goto st638;
-tr982:
+tr987:
 #line 303 "configparser.rl"
 	{ des.descr = state.match; }
 	goto st638;
-tr993:
+tr998:
 #line 313 "configparser.rl"
 	{ des.digging = toreal(state.match); }
 	goto st638;
-tr1004:
+tr1009:
 #line 308 "configparser.rl"
 	{ des.feed = toreal(state.match); }
 	goto st638;
-tr1025:
-#line 322 "configparser.rl"
+tr1030:
+#line 324 "configparser.rl"
 	{ des.gencount.deviation = toreal(state.match); }
 	goto st638;
-tr1037:
+tr1042:
 #line 307 "configparser.rl"
 	{ des.heal = toreal(state.match); }
 	goto st638;
-tr1053:
+tr1058:
 #line 312 "configparser.rl"
 	{ des.lightradius = toint(state.match); }
 	goto st638;
-tr1060:
+tr1065:
 #line 310 "configparser.rl"
 	{ des.melee = true; }
 	goto st638;
-tr1070:
+tr1075:
 #line 300 "configparser.rl"
 	{ des.name = state.match; }
 	goto st638;
-tr1114:
+tr1119:
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1117:
+tr1122:
 #line 156 "configparser.rl"
 	{ add_color(skin.fore, 4); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1122:
+tr1127:
 #line 158 "configparser.rl"
 	{ add_color(skin.fore, 6); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1128:
+tr1133:
 #line 154 "configparser.rl"
 	{ add_color(skin.fore, 2); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1136:
+tr1141:
 #line 157 "configparser.rl"
 	{ add_color(skin.fore, 5); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1140:
+tr1145:
 #line 153 "configparser.rl"
 	{ add_color(skin.fore, 1); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1146:
+tr1151:
 #line 159 "configparser.rl"
 	{ add_color(skin.fore, 7); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1153:
+tr1158:
 #line 155 "configparser.rl"
 	{ add_color(skin.fore, 3); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
 	goto st638;
-tr1175:
+tr1180:
 #line 302 "configparser.rl"
 	{ des.slot = state.match; }
 	goto st638;
-tr1187:
+tr1192:
 #line 306 "configparser.rl"
 	{ des.stackrange = toint(state.match); }
 	goto st638;
-tr1201:
+tr1206:
 #line 311 "configparser.rl"
 	{ des.throwrange = toint(state.match); }
 	goto st638;
-tr1209:
+tr1214:
 #line 309 "configparser.rl"
 	{ des.usable = true; }
 	goto st638;
@@ -9692,11 +9699,11 @@ st638:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof638;
 case 638:
-#line 9696 "configparser.h"
+#line 9703 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st638;
 		case 32: goto st638;
-		case 59: goto st1932;
+		case 59: goto st1935;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st638;
@@ -9706,136 +9713,140 @@ tr862:
 	{ dmgval.val = toreal(state.match); }
 #line 304 "configparser.rl"
 	{ des.attacks.add(dmgval); }
-	goto st1932;
-tr877:
-#line 317 "configparser.rl"
+	goto st1935;
+tr878:
+#line 319 "configparser.rl"
 	{ des.blastrange = toint(state.match); }
-	goto st1932;
-tr886:
+	goto st1935;
+tr882:
+#line 315 "configparser.rl"
+	{ des.flags.blink = true; }
+	goto st1935;
+tr891:
 #line 299 "configparser.rl"
 	{ des.count = toint(state.match); }
-	goto st1932;
-tr919:
+	goto st1935;
+tr924:
 #line 182 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 #line 305 "configparser.rl"
 	{ des.defenses.add(dmgval); }
-	goto st1932;
-tr983:
+	goto st1935;
+tr988:
 #line 303 "configparser.rl"
 	{ des.descr = state.match; }
-	goto st1932;
-tr995:
+	goto st1935;
+tr1000:
 #line 313 "configparser.rl"
 	{ des.digging = toreal(state.match); }
-	goto st1932;
-tr1006:
+	goto st1935;
+tr1011:
 #line 308 "configparser.rl"
 	{ des.feed = toreal(state.match); }
-	goto st1932;
-tr1027:
-#line 322 "configparser.rl"
+	goto st1935;
+tr1032:
+#line 324 "configparser.rl"
 	{ des.gencount.deviation = toreal(state.match); }
-	goto st1932;
-tr1039:
+	goto st1935;
+tr1044:
 #line 307 "configparser.rl"
 	{ des.heal = toreal(state.match); }
-	goto st1932;
-tr1055:
+	goto st1935;
+tr1060:
 #line 312 "configparser.rl"
 	{ des.lightradius = toint(state.match); }
-	goto st1932;
-tr1061:
+	goto st1935;
+tr1066:
 #line 310 "configparser.rl"
 	{ des.melee = true; }
-	goto st1932;
-tr1071:
+	goto st1935;
+tr1076:
 #line 300 "configparser.rl"
 	{ des.name = state.match; }
-	goto st1932;
-tr1115:
+	goto st1935;
+tr1120:
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1118:
+	goto st1935;
+tr1123:
 #line 156 "configparser.rl"
 	{ add_color(skin.fore, 4); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1123:
+	goto st1935;
+tr1128:
 #line 158 "configparser.rl"
 	{ add_color(skin.fore, 6); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1129:
+	goto st1935;
+tr1134:
 #line 154 "configparser.rl"
 	{ add_color(skin.fore, 2); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1137:
+	goto st1935;
+tr1142:
 #line 157 "configparser.rl"
 	{ add_color(skin.fore, 5); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1141:
+	goto st1935;
+tr1146:
 #line 153 "configparser.rl"
 	{ add_color(skin.fore, 1); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1147:
+	goto st1935;
+tr1152:
 #line 159 "configparser.rl"
 	{ add_color(skin.fore, 7); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1154:
+	goto st1935;
+tr1159:
 #line 155 "configparser.rl"
 	{ add_color(skin.fore, 3); }
 #line 301 "configparser.rl"
 	{ des.skin = skin; }
-	goto st1932;
-tr1176:
+	goto st1935;
+tr1181:
 #line 302 "configparser.rl"
 	{ des.slot = state.match; }
-	goto st1932;
-tr1189:
+	goto st1935;
+tr1194:
 #line 306 "configparser.rl"
 	{ des.stackrange = toint(state.match); }
-	goto st1932;
-tr1203:
+	goto st1935;
+tr1208:
 #line 311 "configparser.rl"
 	{ des.throwrange = toint(state.match); }
-	goto st1932;
-tr1210:
+	goto st1935;
+tr1215:
 #line 309 "configparser.rl"
 	{ des.usable = true; }
-	goto st1932;
-st1932:
+	goto st1935;
+st1935:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1932;
-case 1932:
-#line 9823 "configparser.h"
+		goto _test_eof1935;
+case 1935:
+#line 9834 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st615;
 		case 32: goto st615;
 		case 97: goto st616;
 		case 98: goto st639;
-		case 99: goto st648;
-		case 100: goto st655;
-		case 102: goto st748;
-		case 103: goto st757;
-		case 104: goto st775;
-		case 108: goto st784;
-		case 109: goto st797;
-		case 110: goto st802;
-		case 115: goto st809;
-		case 116: goto st885;
-		case 117: goto st897;
+		case 99: goto st651;
+		case 100: goto st658;
+		case 102: goto st751;
+		case 103: goto st760;
+		case 104: goto st778;
+		case 108: goto st787;
+		case 109: goto st800;
+		case 110: goto st805;
+		case 115: goto st812;
+		case 116: goto st888;
+		case 117: goto st900;
 		case 125: goto tr832;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
@@ -9852,8 +9863,10 @@ st640:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof640;
 case 640:
-	if ( (*( state.p)) == 97 )
-		goto st641;
+	switch( (*( state.p)) ) {
+		case 97: goto st641;
+		case 105: goto st648;
+	}
 	goto st0;
 st641:
 	if ( ++( state.p) == ( state.pe) )
@@ -9890,11 +9903,11 @@ case 644:
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr870;
+			goto tr871;
 	} else if ( (*( state.p)) >= 9 )
 		goto st644;
 	goto st0;
-tr870:
+tr871:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -9904,7 +9917,7 @@ tr870:
             state.match += (*( state.p));
         }
 	goto st645;
-tr872:
+tr873:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -9914,37 +9927,37 @@ st645:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof645;
 case 645:
-#line 9918 "configparser.h"
+#line 9931 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr871;
-		case 32: goto tr871;
+		case 13: goto tr872;
+		case 32: goto tr872;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr872;
+			goto tr873;
 	} else if ( (*( state.p)) >= 9 )
-		goto tr871;
+		goto tr872;
 	goto st0;
-tr871:
-#line 316 "configparser.rl"
+tr872:
+#line 318 "configparser.rl"
 	{ des.blastradius = toint(state.match); }
 	goto st646;
 st646:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof646;
 case 646:
-#line 9937 "configparser.h"
+#line 9950 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st646;
 		case 32: goto st646;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr874;
+			goto tr875;
 	} else if ( (*( state.p)) >= 9 )
 		goto st646;
 	goto st0;
-tr874:
+tr875:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -9954,7 +9967,7 @@ tr874:
             state.match += (*( state.p));
         }
 	goto st647;
-tr876:
+tr877:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -9964,72 +9977,98 @@ st647:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof647;
 case 647:
-#line 9968 "configparser.h"
+#line 9981 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr875;
-		case 32: goto tr875;
-		case 59: goto tr877;
+		case 13: goto tr876;
+		case 32: goto tr876;
+		case 59: goto tr878;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr876;
+			goto tr877;
 	} else if ( (*( state.p)) >= 9 )
-		goto tr875;
+		goto tr876;
 	goto st0;
 st648:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof648;
 case 648:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 110 )
 		goto st649;
 	goto st0;
 st649:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof649;
 case 649:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 107 )
 		goto st650;
 	goto st0;
 st650:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof650;
 case 650:
-	if ( (*( state.p)) == 110 )
-		goto st651;
+	switch( (*( state.p)) ) {
+		case 13: goto tr881;
+		case 32: goto tr881;
+		case 59: goto tr882;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr881;
 	goto st0;
 st651:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof651;
 case 651:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 111 )
 		goto st652;
 	goto st0;
 st652:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof652;
 case 652:
-	switch( (*( state.p)) ) {
-		case 13: goto st653;
-		case 32: goto st653;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 117 )
 		goto st653;
 	goto st0;
 st653:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof653;
 case 653:
+	if ( (*( state.p)) == 110 )
+		goto st654;
+	goto st0;
+st654:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof654;
+case 654:
+	if ( (*( state.p)) == 116 )
+		goto st655;
+	goto st0;
+st655:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof655;
+case 655:
 	switch( (*( state.p)) ) {
-		case 13: goto st653;
-		case 32: goto st653;
+		case 13: goto st656;
+		case 32: goto st656;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st656;
+	goto st0;
+st656:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof656;
+case 656:
+	switch( (*( state.p)) ) {
+		case 13: goto st656;
+		case 32: goto st656;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr883;
+			goto tr888;
 	} else if ( (*( state.p)) >= 9 )
-		goto st653;
+		goto st656;
 	goto st0;
-tr883:
+tr888:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -10038,67 +10077,46 @@ tr883:
 	{
             state.match += (*( state.p));
         }
-	goto st654;
-tr885:
+	goto st657;
+tr890:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st654;
-st654:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof654;
-case 654:
-#line 10053 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr884;
-		case 32: goto tr884;
-		case 59: goto tr886;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr885;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr884;
-	goto st0;
-st655:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof655;
-case 655:
-	switch( (*( state.p)) ) {
-		case 101: goto st656;
-		case 105: goto st737;
-	}
-	goto st0;
-st656:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof656;
-case 656:
-	switch( (*( state.p)) ) {
-		case 102: goto st657;
-		case 115: goto st731;
-	}
-	goto st0;
+	goto st657;
 st657:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof657;
 case 657:
-	if ( (*( state.p)) == 101 )
-		goto st658;
+#line 10092 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr889;
+		case 32: goto tr889;
+		case 59: goto tr891;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr890;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr889;
 	goto st0;
 st658:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof658;
 case 658:
-	if ( (*( state.p)) == 110 )
-		goto st659;
+	switch( (*( state.p)) ) {
+		case 101: goto st659;
+		case 105: goto st740;
+	}
 	goto st0;
 st659:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof659;
 case 659:
-	if ( (*( state.p)) == 115 )
-		goto st660;
+	switch( (*( state.p)) ) {
+		case 102: goto st660;
+		case 115: goto st734;
+	}
 	goto st0;
 st660:
 	if ( ++( state.p) == ( state.pe) )
@@ -10111,231 +10129,191 @@ st661:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof661;
 case 661:
-	switch( (*( state.p)) ) {
-		case 13: goto st662;
-		case 32: goto st662;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 110 )
 		goto st662;
 	goto st0;
 st662:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof662;
 case 662:
-	switch( (*( state.p)) ) {
-		case 13: goto st662;
-		case 32: goto st662;
-		case 99: goto st663;
-		case 101: goto st680;
-		case 112: goto st689;
-		case 115: goto st704;
-		case 116: goto st720;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st662;
+	if ( (*( state.p)) == 115 )
+		goto st663;
 	goto st0;
 st663:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof663;
 case 663:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st664;
 	goto st0;
 st664:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof664;
 case 664:
-	if ( (*( state.p)) == 110 )
+	switch( (*( state.p)) ) {
+		case 13: goto st665;
+		case 32: goto st665;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st665;
 	goto st0;
 st665:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof665;
 case 665:
-	if ( (*( state.p)) == 99 )
-		goto st666;
+	switch( (*( state.p)) ) {
+		case 13: goto st665;
+		case 32: goto st665;
+		case 99: goto st666;
+		case 101: goto st683;
+		case 112: goto st692;
+		case 115: goto st707;
+		case 116: goto st723;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st665;
 	goto st0;
 st666:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof666;
 case 666:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st667;
 	goto st0;
 st667:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof667;
 case 667:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 110 )
 		goto st668;
 	goto st0;
 st668:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof668;
 case 668:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 99 )
 		goto st669;
 	goto st0;
 st669:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof669;
 case 669:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st670;
 	goto st0;
 st670:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof670;
 case 670:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 108 )
 		goto st671;
 	goto st0;
 st671:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof671;
 case 671:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 108 )
 		goto st672;
 	goto st0;
 st672:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof672;
 case 672:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 97 )
 		goto st673;
 	goto st0;
 st673:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof673;
 case 673:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 116 )
 		goto st674;
 	goto st0;
 st674:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof674;
 case 674:
-	switch( (*( state.p)) ) {
-		case 13: goto tr912;
-		case 32: goto tr912;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr912;
+	if ( (*( state.p)) == 105 )
+		goto st675;
 	goto st0;
-tr912:
-#line 175 "configparser.rl"
-	{ dmgval.type = damage::type_t::cancellation; }
-	goto st675;
-tr929:
-#line 178 "configparser.rl"
-	{ dmgval.type = damage::type_t::eat_brain; }
-	goto st675;
-tr939:
-#line 171 "configparser.rl"
-	{ dmgval.type = damage::type_t::physical; }
-	goto st675;
-tr944:
-#line 173 "configparser.rl"
-	{ dmgval.type = damage::type_t::poison; }
-	goto st675;
-tr946:
-#line 177 "configparser.rl"
-	{ dmgval.type = damage::type_t::psi; }
-	goto st675;
-tr959:
-#line 176 "configparser.rl"
-	{ dmgval.type = damage::type_t::scare_animal; }
-	goto st675;
-tr963:
-#line 172 "configparser.rl"
-	{ dmgval.type = damage::type_t::sleep; }
-	goto st675;
-tr974:
-#line 174 "configparser.rl"
-	{ dmgval.type = damage::type_t::turn_undead; }
-	goto st675;
 st675:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof675;
 case 675:
-#line 10262 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st675;
-		case 32: goto st675;
-		case 45: goto tr914;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr915;
-	} else if ( (*( state.p)) >= 9 )
-		goto st675;
+	if ( (*( state.p)) == 111 )
+		goto st676;
 	goto st0;
-tr914:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st676;
 st676:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof676;
 case 676:
-#line 10288 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr916;
+	if ( (*( state.p)) == 110 )
+		goto st677;
 	goto st0;
-tr915:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st677;
-tr916:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st677;
 st677:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof677;
 case 677:
-#line 10312 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr917;
 		case 32: goto tr917;
-		case 46: goto tr918;
-		case 59: goto tr919;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr916;
-	} else if ( (*( state.p)) >= 9 )
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr917;
 	goto st0;
-tr918:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
+tr917:
+#line 175 "configparser.rl"
+	{ dmgval.type = damage::type_t::cancellation; }
+	goto st678;
+tr934:
+#line 178 "configparser.rl"
+	{ dmgval.type = damage::type_t::eat_brain; }
+	goto st678;
+tr944:
+#line 171 "configparser.rl"
+	{ dmgval.type = damage::type_t::physical; }
+	goto st678;
+tr949:
+#line 173 "configparser.rl"
+	{ dmgval.type = damage::type_t::poison; }
+	goto st678;
+tr951:
+#line 177 "configparser.rl"
+	{ dmgval.type = damage::type_t::psi; }
+	goto st678;
+tr964:
+#line 176 "configparser.rl"
+	{ dmgval.type = damage::type_t::scare_animal; }
+	goto st678;
+tr968:
+#line 172 "configparser.rl"
+	{ dmgval.type = damage::type_t::sleep; }
+	goto st678;
+tr979:
+#line 174 "configparser.rl"
+	{ dmgval.type = damage::type_t::turn_undead; }
 	goto st678;
 st678:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof678;
 case 678:
-#line 10335 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr920;
+#line 10301 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st678;
+		case 32: goto st678;
+		case 45: goto tr919;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr920;
+	} else if ( (*( state.p)) >= 9 )
+		goto st678;
 	goto st0;
-tr920:
+tr919:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -10345,180 +10323,202 @@ st679:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof679;
 case 679:
-#line 10349 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr917;
-		case 32: goto tr917;
-		case 59: goto tr919;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr920;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr917;
+#line 10327 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr921;
 	goto st0;
+tr920:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st680;
+tr921:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st680;
 st680:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof680;
 case 680:
-	if ( (*( state.p)) == 97 )
-		goto st681;
+#line 10351 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr922;
+		case 32: goto tr922;
+		case 46: goto tr923;
+		case 59: goto tr924;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr921;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr922;
 	goto st0;
+tr923:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st681;
 st681:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof681;
 case 681:
-	if ( (*( state.p)) == 116 )
-		goto st682;
+#line 10374 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr925;
 	goto st0;
+tr925:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st682;
 st682:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof682;
 case 682:
-	if ( (*( state.p)) == 95 )
-		goto st683;
+#line 10388 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr922;
+		case 32: goto tr922;
+		case 59: goto tr924;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr925;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr922;
 	goto st0;
 st683:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof683;
 case 683:
-	if ( (*( state.p)) == 98 )
+	if ( (*( state.p)) == 97 )
 		goto st684;
 	goto st0;
 st684:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof684;
 case 684:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 116 )
 		goto st685;
 	goto st0;
 st685:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof685;
 case 685:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 95 )
 		goto st686;
 	goto st0;
 st686:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof686;
 case 686:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 98 )
 		goto st687;
 	goto st0;
 st687:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof687;
 case 687:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 114 )
 		goto st688;
 	goto st0;
 st688:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof688;
 case 688:
-	switch( (*( state.p)) ) {
-		case 13: goto tr929;
-		case 32: goto tr929;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr929;
+	if ( (*( state.p)) == 97 )
+		goto st689;
 	goto st0;
 st689:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof689;
 case 689:
-	switch( (*( state.p)) ) {
-		case 104: goto st690;
-		case 111: goto st697;
-		case 115: goto st702;
-	}
+	if ( (*( state.p)) == 105 )
+		goto st690;
 	goto st0;
 st690:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof690;
 case 690:
-	if ( (*( state.p)) == 121 )
+	if ( (*( state.p)) == 110 )
 		goto st691;
 	goto st0;
 st691:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof691;
 case 691:
-	if ( (*( state.p)) == 115 )
-		goto st692;
+	switch( (*( state.p)) ) {
+		case 13: goto tr934;
+		case 32: goto tr934;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr934;
 	goto st0;
 st692:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof692;
 case 692:
-	if ( (*( state.p)) == 105 )
-		goto st693;
+	switch( (*( state.p)) ) {
+		case 104: goto st693;
+		case 111: goto st700;
+		case 115: goto st705;
+	}
 	goto st0;
 st693:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof693;
 case 693:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 121 )
 		goto st694;
 	goto st0;
 st694:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof694;
 case 694:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 115 )
 		goto st695;
 	goto st0;
 st695:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof695;
 case 695:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st696;
 	goto st0;
 st696:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof696;
 case 696:
-	switch( (*( state.p)) ) {
-		case 13: goto tr939;
-		case 32: goto tr939;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr939;
+	if ( (*( state.p)) == 99 )
+		goto st697;
 	goto st0;
 st697:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof697;
 case 697:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 97 )
 		goto st698;
 	goto st0;
 st698:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof698;
 case 698:
-	if ( (*( state.p)) == 115 )
+	if ( (*( state.p)) == 108 )
 		goto st699;
 	goto st0;
 st699:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof699;
 case 699:
-	if ( (*( state.p)) == 111 )
-		goto st700;
-	goto st0;
-st700:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof700;
-case 700:
-	if ( (*( state.p)) == 110 )
-		goto st701;
-	goto st0;
-st701:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof701;
-case 701:
 	switch( (*( state.p)) ) {
 		case 13: goto tr944;
 		case 32: goto tr944;
@@ -10526,179 +10526,197 @@ case 701:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr944;
 	goto st0;
+st700:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof700;
+case 700:
+	if ( (*( state.p)) == 105 )
+		goto st701;
+	goto st0;
+st701:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof701;
+case 701:
+	if ( (*( state.p)) == 115 )
+		goto st702;
+	goto st0;
 st702:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof702;
 case 702:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 111 )
 		goto st703;
 	goto st0;
 st703:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof703;
 case 703:
-	switch( (*( state.p)) ) {
-		case 13: goto tr946;
-		case 32: goto tr946;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr946;
+	if ( (*( state.p)) == 110 )
+		goto st704;
 	goto st0;
 st704:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof704;
 case 704:
 	switch( (*( state.p)) ) {
-		case 99: goto st705;
-		case 108: goto st716;
+		case 13: goto tr949;
+		case 32: goto tr949;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr949;
 	goto st0;
 st705:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof705;
 case 705:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 105 )
 		goto st706;
 	goto st0;
 st706:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof706;
 case 706:
-	if ( (*( state.p)) == 114 )
-		goto st707;
+	switch( (*( state.p)) ) {
+		case 13: goto tr951;
+		case 32: goto tr951;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr951;
 	goto st0;
 st707:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof707;
 case 707:
-	if ( (*( state.p)) == 101 )
-		goto st708;
+	switch( (*( state.p)) ) {
+		case 99: goto st708;
+		case 108: goto st719;
+	}
 	goto st0;
 st708:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof708;
 case 708:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 97 )
 		goto st709;
 	goto st0;
 st709:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof709;
 case 709:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 114 )
 		goto st710;
 	goto st0;
 st710:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof710;
 case 710:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 101 )
 		goto st711;
 	goto st0;
 st711:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof711;
 case 711:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 95 )
 		goto st712;
 	goto st0;
 st712:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof712;
 case 712:
-	if ( (*( state.p)) == 109 )
+	if ( (*( state.p)) == 97 )
 		goto st713;
 	goto st0;
 st713:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof713;
 case 713:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st714;
 	goto st0;
 st714:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof714;
 case 714:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st715;
 	goto st0;
 st715:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof715;
 case 715:
-	switch( (*( state.p)) ) {
-		case 13: goto tr959;
-		case 32: goto tr959;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr959;
+	if ( (*( state.p)) == 109 )
+		goto st716;
 	goto st0;
 st716:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof716;
 case 716:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st717;
 	goto st0;
 st717:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof717;
 case 717:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 108 )
 		goto st718;
 	goto st0;
 st718:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof718;
 case 718:
-	if ( (*( state.p)) == 112 )
-		goto st719;
+	switch( (*( state.p)) ) {
+		case 13: goto tr964;
+		case 32: goto tr964;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr964;
 	goto st0;
 st719:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof719;
 case 719:
-	switch( (*( state.p)) ) {
-		case 13: goto tr963;
-		case 32: goto tr963;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr963;
+	if ( (*( state.p)) == 101 )
+		goto st720;
 	goto st0;
 st720:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof720;
 case 720:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 101 )
 		goto st721;
 	goto st0;
 st721:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof721;
 case 721:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 112 )
 		goto st722;
 	goto st0;
 st722:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof722;
 case 722:
-	if ( (*( state.p)) == 110 )
-		goto st723;
+	switch( (*( state.p)) ) {
+		case 13: goto tr968;
+		case 32: goto tr968;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr968;
 	goto st0;
 st723:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof723;
 case 723:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 117 )
 		goto st724;
 	goto st0;
 st724:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof724;
 case 724:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 114 )
 		goto st725;
 	goto st0;
 st725:
@@ -10712,21 +10730,21 @@ st726:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof726;
 case 726:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 95 )
 		goto st727;
 	goto st0;
 st727:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof727;
 case 727:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 117 )
 		goto st728;
 	goto st0;
 st728:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof728;
 case 728:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st729;
 	goto st0;
 st729:
@@ -10740,25 +10758,21 @@ st730:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof730;
 case 730:
-	switch( (*( state.p)) ) {
-		case 13: goto tr974;
-		case 32: goto tr974;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr974;
+	if ( (*( state.p)) == 101 )
+		goto st731;
 	goto st0;
 st731:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof731;
 case 731:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 97 )
 		goto st732;
 	goto st0;
 st732:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof732;
 case 732:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 100 )
 		goto st733;
 	goto st0;
 st733:
@@ -10766,88 +10780,92 @@ st733:
 		goto _test_eof733;
 case 733:
 	switch( (*( state.p)) ) {
-		case 13: goto st734;
-		case 32: goto st734;
+		case 13: goto tr979;
+		case 32: goto tr979;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st734;
+		goto tr979;
 	goto st0;
 st734:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof734;
 case 734:
-	switch( (*( state.p)) ) {
-		case 13: goto st734;
-		case 32: goto st734;
-		case 34: goto tr978;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st734;
+	if ( (*( state.p)) == 99 )
+		goto st735;
 	goto st0;
-tr979:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st735;
-tr978:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st735;
-tr981:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 735; goto st47;}}
-	goto st735;
 st735:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof735;
 case 735:
-#line 10808 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st736;
-		case 92: goto tr981;
-	}
-	goto tr979;
+	if ( (*( state.p)) == 114 )
+		goto st736;
+	goto st0;
 st736:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof736;
 case 736:
 	switch( (*( state.p)) ) {
-		case 13: goto tr982;
-		case 32: goto tr982;
-		case 59: goto tr983;
+		case 13: goto st737;
+		case 32: goto st737;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr982;
+		goto st737;
 	goto st0;
 st737:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof737;
 case 737:
-	if ( (*( state.p)) == 103 )
-		goto st738;
+	switch( (*( state.p)) ) {
+		case 13: goto st737;
+		case 32: goto st737;
+		case 34: goto tr983;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st737;
 	goto st0;
+tr984:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st738;
+tr983:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st738;
+tr986:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 738; goto st47;}}
+	goto st738;
 st738:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof738;
 case 738:
-	if ( (*( state.p)) == 103 )
-		goto st739;
-	goto st0;
+#line 10847 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st739;
+		case 92: goto tr986;
+	}
+	goto tr984;
 st739:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof739;
 case 739:
-	if ( (*( state.p)) == 105 )
-		goto st740;
+	switch( (*( state.p)) ) {
+		case 13: goto tr987;
+		case 32: goto tr987;
+		case 59: goto tr988;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr987;
 	goto st0;
 st740:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof740;
 case 740:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 103 )
 		goto st741;
 	goto st0;
 st741:
@@ -10861,94 +10879,54 @@ st742:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof742;
 case 742:
-	switch( (*( state.p)) ) {
-		case 13: goto st743;
-		case 32: goto st743;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 105 )
 		goto st743;
 	goto st0;
 st743:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof743;
 case 743:
-	switch( (*( state.p)) ) {
-		case 13: goto st743;
-		case 32: goto st743;
-		case 45: goto tr990;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr991;
-	} else if ( (*( state.p)) >= 9 )
-		goto st743;
+	if ( (*( state.p)) == 110 )
+		goto st744;
 	goto st0;
-tr990:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st744;
 st744:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof744;
 case 744:
-#line 10901 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr992;
+	if ( (*( state.p)) == 103 )
+		goto st745;
 	goto st0;
-tr991:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st745;
-tr992:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st745;
 st745:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof745;
 case 745:
-#line 10925 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr993;
-		case 32: goto tr993;
-		case 46: goto tr994;
-		case 59: goto tr995;
+		case 13: goto st746;
+		case 32: goto st746;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr992;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr993;
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st746;
 	goto st0;
-tr994:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st746;
 st746:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof746;
 case 746:
-#line 10948 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr996;
+	switch( (*( state.p)) ) {
+		case 13: goto st746;
+		case 32: goto st746;
+		case 45: goto tr995;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr996;
+	} else if ( (*( state.p)) >= 9 )
+		goto st746;
 	goto st0;
-tr996:
+tr995:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -10958,131 +10936,131 @@ st747:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof747;
 case 747:
-#line 10962 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr993;
-		case 32: goto tr993;
-		case 59: goto tr995;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr996;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr993;
+#line 10940 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr997;
 	goto st0;
+tr996:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st748;
+tr997:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st748;
 st748:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof748;
 case 748:
-	if ( (*( state.p)) == 101 )
-		goto st749;
+#line 10964 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr998;
+		case 32: goto tr998;
+		case 46: goto tr999;
+		case 59: goto tr1000;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr997;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr998;
 	goto st0;
+tr999:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st749;
 st749:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof749;
 case 749:
-	if ( (*( state.p)) == 101 )
-		goto st750;
+#line 10987 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1001;
 	goto st0;
+tr1001:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st750;
 st750:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof750;
 case 750:
-	if ( (*( state.p)) == 100 )
-		goto st751;
+#line 11001 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr998;
+		case 32: goto tr998;
+		case 59: goto tr1000;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1001;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr998;
 	goto st0;
 st751:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof751;
 case 751:
-	switch( (*( state.p)) ) {
-		case 13: goto st752;
-		case 32: goto st752;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 101 )
 		goto st752;
 	goto st0;
 st752:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof752;
 case 752:
-	switch( (*( state.p)) ) {
-		case 13: goto st752;
-		case 32: goto st752;
-		case 45: goto tr1001;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1002;
-	} else if ( (*( state.p)) >= 9 )
-		goto st752;
+	if ( (*( state.p)) == 101 )
+		goto st753;
 	goto st0;
-tr1001:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st753;
 st753:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof753;
 case 753:
-#line 11035 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1003;
+	if ( (*( state.p)) == 100 )
+		goto st754;
 	goto st0;
-tr1002:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st754;
-tr1003:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st754;
 st754:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof754;
 case 754:
-#line 11059 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1004;
-		case 32: goto tr1004;
-		case 46: goto tr1005;
-		case 59: goto tr1006;
+		case 13: goto st755;
+		case 32: goto st755;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1003;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1004;
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st755;
 	goto st0;
-tr1005:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st755;
 st755:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof755;
 case 755:
-#line 11082 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1007;
+	switch( (*( state.p)) ) {
+		case 13: goto st755;
+		case 32: goto st755;
+		case 45: goto tr1006;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1007;
+	} else if ( (*( state.p)) >= 9 )
+		goto st755;
 	goto st0;
-tr1007:
+tr1006:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11092,164 +11070,155 @@ st756:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof756;
 case 756:
-#line 11096 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1004;
-		case 32: goto tr1004;
-		case 59: goto tr1006;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1007;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1004;
+#line 11074 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1008;
 	goto st0;
+tr1007:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st757;
+tr1008:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st757;
 st757:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof757;
 case 757:
-	if ( (*( state.p)) == 101 )
-		goto st758;
+#line 11098 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1009;
+		case 32: goto tr1009;
+		case 46: goto tr1010;
+		case 59: goto tr1011;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1008;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1009;
 	goto st0;
+tr1010:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st758;
 st758:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof758;
 case 758:
-	if ( (*( state.p)) == 110 )
-		goto st759;
+#line 11121 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1012;
 	goto st0;
+tr1012:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st759;
 st759:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof759;
 case 759:
-	if ( (*( state.p)) == 99 )
-		goto st760;
+#line 11135 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1009;
+		case 32: goto tr1009;
+		case 59: goto tr1011;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1012;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1009;
 	goto st0;
 st760:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof760;
 case 760:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 101 )
 		goto st761;
 	goto st0;
 st761:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof761;
 case 761:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 110 )
 		goto st762;
 	goto st0;
 st762:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof762;
 case 762:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 99 )
 		goto st763;
 	goto st0;
 st763:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof763;
 case 763:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 111 )
 		goto st764;
 	goto st0;
 st764:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof764;
 case 764:
-	switch( (*( state.p)) ) {
-		case 13: goto st765;
-		case 32: goto st765;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 117 )
 		goto st765;
 	goto st0;
 st765:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof765;
 case 765:
-	switch( (*( state.p)) ) {
-		case 13: goto st765;
-		case 32: goto st765;
-		case 45: goto tr1016;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1017;
-	} else if ( (*( state.p)) >= 9 )
-		goto st765;
+	if ( (*( state.p)) == 110 )
+		goto st766;
 	goto st0;
-tr1016:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st766;
 st766:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof766;
 case 766:
-#line 11197 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1018;
+	if ( (*( state.p)) == 116 )
+		goto st767;
 	goto st0;
-tr1017:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st767;
-tr1018:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st767;
 st767:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof767;
 case 767:
-#line 11221 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1019;
-		case 32: goto tr1019;
-		case 46: goto tr1020;
+		case 13: goto st768;
+		case 32: goto st768;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1018;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1019;
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st768;
 	goto st0;
-tr1019:
-#line 321 "configparser.rl"
-	{ des.gencount.mean = toreal(state.match); }
-	goto st768;
 st768:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof768;
 case 768:
-#line 11241 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st768;
 		case 32: goto st768;
-		case 45: goto tr1022;
+		case 45: goto tr1021;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1023;
+			goto tr1022;
 	} else if ( (*( state.p)) >= 9 )
 		goto st768;
 	goto st0;
-tr1022:
+tr1021:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -11263,11 +11232,11 @@ st769:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof769;
 case 769:
-#line 11267 "configparser.h"
+#line 11236 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1024;
+		goto tr1023;
 	goto st0;
-tr1023:
+tr1022:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -11277,7 +11246,7 @@ tr1023:
             state.match += (*( state.p));
         }
 	goto st770;
-tr1024:
+tr1023:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11287,34 +11256,43 @@ st770:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof770;
 case 770:
-#line 11291 "configparser.h"
+#line 11260 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1025;
-		case 32: goto tr1025;
-		case 46: goto tr1026;
-		case 59: goto tr1027;
+		case 13: goto tr1024;
+		case 32: goto tr1024;
+		case 46: goto tr1025;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1024;
+			goto tr1023;
 	} else if ( (*( state.p)) >= 9 )
-		goto tr1025;
+		goto tr1024;
 	goto st0;
-tr1026:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
+tr1024:
+#line 323 "configparser.rl"
+	{ des.gencount.mean = toreal(state.match); }
 	goto st771;
 st771:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof771;
 case 771:
-#line 11314 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1028;
+#line 11280 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st771;
+		case 32: goto st771;
+		case 45: goto tr1027;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1028;
+	} else if ( (*( state.p)) >= 9 )
+		goto st771;
 	goto st0;
-tr1028:
+tr1027:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11324,19 +11302,21 @@ st772:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof772;
 case 772:
-#line 11328 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1025;
-		case 32: goto tr1025;
-		case 59: goto tr1027;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1028;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1025;
+#line 11306 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1029;
 	goto st0;
-tr1020:
+tr1028:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st773;
+tr1029:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11346,11 +11326,20 @@ st773:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof773;
 case 773:
-#line 11350 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1029;
+#line 11330 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1030;
+		case 32: goto tr1030;
+		case 46: goto tr1031;
+		case 59: goto tr1032;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1029;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1030;
 	goto st0;
-tr1029:
+tr1031:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11360,130 +11349,119 @@ st774:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof774;
 case 774:
-#line 11364 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1019;
-		case 32: goto tr1019;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1029;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1019;
+#line 11353 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1033;
 	goto st0;
+tr1033:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st775;
 st775:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof775;
 case 775:
-	if ( (*( state.p)) == 101 )
-		goto st776;
+#line 11367 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1030;
+		case 32: goto tr1030;
+		case 59: goto tr1032;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1033;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1030;
 	goto st0;
+tr1025:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st776;
 st776:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof776;
 case 776:
-	if ( (*( state.p)) == 97 )
-		goto st777;
+#line 11389 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1034;
 	goto st0;
+tr1034:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st777;
 st777:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof777;
 case 777:
-	if ( (*( state.p)) == 108 )
-		goto st778;
+#line 11403 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1024;
+		case 32: goto tr1024;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1034;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1024;
 	goto st0;
 st778:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof778;
 case 778:
-	switch( (*( state.p)) ) {
-		case 13: goto st779;
-		case 32: goto st779;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 101 )
 		goto st779;
 	goto st0;
 st779:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof779;
 case 779:
-	switch( (*( state.p)) ) {
-		case 13: goto st779;
-		case 32: goto st779;
-		case 45: goto tr1034;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1035;
-	} else if ( (*( state.p)) >= 9 )
-		goto st779;
+	if ( (*( state.p)) == 97 )
+		goto st780;
 	goto st0;
-tr1034:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st780;
 st780:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof780;
 case 780:
-#line 11436 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1036;
+	if ( (*( state.p)) == 108 )
+		goto st781;
 	goto st0;
-tr1035:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st781;
-tr1036:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st781;
 st781:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof781;
 case 781:
-#line 11460 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1037;
-		case 32: goto tr1037;
-		case 46: goto tr1038;
-		case 59: goto tr1039;
+		case 13: goto st782;
+		case 32: goto st782;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1036;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1037;
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st782;
 	goto st0;
-tr1038:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st782;
 st782:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof782;
 case 782:
-#line 11483 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1040;
+	switch( (*( state.p)) ) {
+		case 13: goto st782;
+		case 32: goto st782;
+		case 45: goto tr1039;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1040;
+	} else if ( (*( state.p)) >= 9 )
+		goto st782;
 	goto st0;
-tr1040:
+tr1039:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
@@ -11493,114 +11471,11 @@ st783:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof783;
 case 783:
-#line 11497 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1037;
-		case 32: goto tr1037;
-		case 59: goto tr1039;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1040;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1037;
+#line 11475 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1041;
 	goto st0;
-st784:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof784;
-case 784:
-	if ( (*( state.p)) == 105 )
-		goto st785;
-	goto st0;
-st785:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof785;
-case 785:
-	if ( (*( state.p)) == 103 )
-		goto st786;
-	goto st0;
-st786:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof786;
-case 786:
-	if ( (*( state.p)) == 104 )
-		goto st787;
-	goto st0;
-st787:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof787;
-case 787:
-	if ( (*( state.p)) == 116 )
-		goto st788;
-	goto st0;
-st788:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof788;
-case 788:
-	if ( (*( state.p)) == 114 )
-		goto st789;
-	goto st0;
-st789:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof789;
-case 789:
-	if ( (*( state.p)) == 97 )
-		goto st790;
-	goto st0;
-st790:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof790;
-case 790:
-	if ( (*( state.p)) == 100 )
-		goto st791;
-	goto st0;
-st791:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof791;
-case 791:
-	if ( (*( state.p)) == 105 )
-		goto st792;
-	goto st0;
-st792:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof792;
-case 792:
-	if ( (*( state.p)) == 117 )
-		goto st793;
-	goto st0;
-st793:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof793;
-case 793:
-	if ( (*( state.p)) == 115 )
-		goto st794;
-	goto st0;
-st794:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof794;
-case 794:
-	switch( (*( state.p)) ) {
-		case 13: goto st795;
-		case 32: goto st795;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st795;
-	goto st0;
-st795:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof795;
-case 795:
-	switch( (*( state.p)) ) {
-		case 13: goto st795;
-		case 32: goto st795;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1052;
-	} else if ( (*( state.p)) >= 9 )
-		goto st795;
-	goto st0;
-tr1052:
+tr1040:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -11609,49 +11484,192 @@ tr1052:
 	{
             state.match += (*( state.p));
         }
-	goto st796;
-tr1054:
+	goto st784;
+tr1041:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st796;
+	goto st784;
+st784:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof784;
+case 784:
+#line 11499 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1042;
+		case 32: goto tr1042;
+		case 46: goto tr1043;
+		case 59: goto tr1044;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1041;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1042;
+	goto st0;
+tr1043:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st785;
+st785:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof785;
+case 785:
+#line 11522 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1045;
+	goto st0;
+tr1045:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st786;
+st786:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof786;
+case 786:
+#line 11536 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1042;
+		case 32: goto tr1042;
+		case 59: goto tr1044;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1045;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1042;
+	goto st0;
+st787:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof787;
+case 787:
+	if ( (*( state.p)) == 105 )
+		goto st788;
+	goto st0;
+st788:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof788;
+case 788:
+	if ( (*( state.p)) == 103 )
+		goto st789;
+	goto st0;
+st789:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof789;
+case 789:
+	if ( (*( state.p)) == 104 )
+		goto st790;
+	goto st0;
+st790:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof790;
+case 790:
+	if ( (*( state.p)) == 116 )
+		goto st791;
+	goto st0;
+st791:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof791;
+case 791:
+	if ( (*( state.p)) == 114 )
+		goto st792;
+	goto st0;
+st792:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof792;
+case 792:
+	if ( (*( state.p)) == 97 )
+		goto st793;
+	goto st0;
+st793:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof793;
+case 793:
+	if ( (*( state.p)) == 100 )
+		goto st794;
+	goto st0;
+st794:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof794;
+case 794:
+	if ( (*( state.p)) == 105 )
+		goto st795;
+	goto st0;
+st795:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof795;
+case 795:
+	if ( (*( state.p)) == 117 )
+		goto st796;
+	goto st0;
 st796:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof796;
 case 796:
-#line 11624 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1053;
-		case 32: goto tr1053;
-		case 59: goto tr1055;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1054;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1053;
+	if ( (*( state.p)) == 115 )
+		goto st797;
 	goto st0;
 st797:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof797;
 case 797:
-	if ( (*( state.p)) == 101 )
+	switch( (*( state.p)) ) {
+		case 13: goto st798;
+		case 32: goto st798;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st798;
 	goto st0;
 st798:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof798;
 case 798:
-	if ( (*( state.p)) == 108 )
-		goto st799;
+	switch( (*( state.p)) ) {
+		case 13: goto st798;
+		case 32: goto st798;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1057;
+	} else if ( (*( state.p)) >= 9 )
+		goto st798;
 	goto st0;
+tr1057:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st799;
+tr1059:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st799;
 st799:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof799;
 case 799:
-	if ( (*( state.p)) == 101 )
-		goto st800;
+#line 11663 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1058;
+		case 32: goto tr1058;
+		case 59: goto tr1060;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1059;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1058;
 	goto st0;
 st800:
 	if ( ++( state.p) == ( state.pe) )
@@ -11664,294 +11682,253 @@ st801:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof801;
 case 801:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1060;
-		case 32: goto tr1060;
-		case 59: goto tr1061;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1060;
+	if ( (*( state.p)) == 108 )
+		goto st802;
 	goto st0;
 st802:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof802;
 case 802:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st803;
 	goto st0;
 st803:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof803;
 case 803:
-	if ( (*( state.p)) == 109 )
+	if ( (*( state.p)) == 101 )
 		goto st804;
 	goto st0;
 st804:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof804;
 case 804:
-	if ( (*( state.p)) == 101 )
-		goto st805;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1065;
+		case 32: goto tr1065;
+		case 59: goto tr1066;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1065;
 	goto st0;
 st805:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof805;
 case 805:
-	switch( (*( state.p)) ) {
-		case 13: goto st806;
-		case 32: goto st806;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 97 )
 		goto st806;
 	goto st0;
 st806:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof806;
 case 806:
-	switch( (*( state.p)) ) {
-		case 13: goto st806;
-		case 32: goto st806;
-		case 34: goto tr1066;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st806;
+	if ( (*( state.p)) == 109 )
+		goto st807;
 	goto st0;
-tr1067:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st807;
-tr1066:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st807;
-tr1069:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 807; goto st47;}}
-	goto st807;
 st807:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof807;
 case 807:
-#line 11740 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st808;
-		case 92: goto tr1069;
-	}
-	goto tr1067;
+	if ( (*( state.p)) == 101 )
+		goto st808;
+	goto st0;
 st808:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof808;
 case 808:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1070;
-		case 32: goto tr1070;
-		case 59: goto tr1071;
+		case 13: goto st809;
+		case 32: goto st809;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1070;
+		goto st809;
 	goto st0;
 st809:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof809;
 case 809:
 	switch( (*( state.p)) ) {
-		case 107: goto st810;
-		case 108: goto st868;
-		case 116: goto st874;
+		case 13: goto st809;
+		case 32: goto st809;
+		case 34: goto tr1071;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st809;
 	goto st0;
+tr1072:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st810;
+tr1071:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st810;
+tr1074:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 810; goto st47;}}
+	goto st810;
 st810:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof810;
 case 810:
-	if ( (*( state.p)) == 105 )
-		goto st811;
-	goto st0;
+#line 11779 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st811;
+		case 92: goto tr1074;
+	}
+	goto tr1072;
 st811:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof811;
 case 811:
-	if ( (*( state.p)) == 110 )
-		goto st812;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1075;
+		case 32: goto tr1075;
+		case 59: goto tr1076;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1075;
 	goto st0;
 st812:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof812;
 case 812:
 	switch( (*( state.p)) ) {
-		case 13: goto st813;
-		case 32: goto st813;
+		case 107: goto st813;
+		case 108: goto st871;
+		case 116: goto st877;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st813;
 	goto st0;
 st813:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof813;
 case 813:
-	switch( (*( state.p)) ) {
-		case 13: goto st813;
-		case 32: goto st813;
-		case 34: goto tr1078;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st813;
+	if ( (*( state.p)) == 105 )
+		goto st814;
 	goto st0;
-tr1079:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st814;
-tr1078:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st814;
-tr1081:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 814; goto st47;}}
-	goto st814;
 st814:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof814;
 case 814:
-#line 11825 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st815;
-		case 92: goto tr1081;
-	}
-	goto tr1079;
+	if ( (*( state.p)) == 110 )
+		goto st815;
+	goto st0;
 st815:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof815;
 case 815:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1082;
-		case 32: goto tr1082;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1082;
-	goto st0;
-tr1082:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st816;
-st816:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof816;
-case 816:
-#line 11850 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st816;
 		case 32: goto st816;
-		case 98: goto st817;
-		case 100: goto st862;
-		case 110: goto st865;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st816;
 	goto st0;
+st816:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof816;
+case 816:
+	switch( (*( state.p)) ) {
+		case 13: goto st816;
+		case 32: goto st816;
+		case 34: goto tr1083;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st816;
+	goto st0;
+tr1084:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st817;
+tr1083:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st817;
+tr1086:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 817; goto st47;}}
+	goto st817;
 st817:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof817;
 case 817:
-	if ( (*( state.p)) == 114 )
-		goto st818;
-	goto st0;
+#line 11864 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st818;
+		case 92: goto tr1086;
+	}
+	goto tr1084;
 st818:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof818;
 case 818:
-	if ( (*( state.p)) == 105 )
-		goto st819;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1087;
+		case 32: goto tr1087;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1087;
 	goto st0;
+tr1087:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st819;
 st819:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof819;
 case 819:
-	if ( (*( state.p)) == 103 )
-		goto st820;
+#line 11889 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st819;
+		case 32: goto st819;
+		case 98: goto st820;
+		case 100: goto st865;
+		case 110: goto st868;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st819;
 	goto st0;
 st820:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof820;
 case 820:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st821;
 	goto st0;
 st821:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof821;
 case 821:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st822;
 	goto st0;
 st822:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof822;
 case 822:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1092;
-		case 32: goto tr1092;
-		case 95: goto tr1093;
-		case 98: goto tr1094;
-		case 99: goto tr1095;
-		case 103: goto tr1096;
-		case 109: goto tr1097;
-		case 114: goto tr1098;
-		case 119: goto tr1099;
-		case 121: goto tr1100;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1092;
+	if ( (*( state.p)) == 103 )
+		goto st823;
 	goto st0;
-tr1092:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st823;
-tr1157:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st823;
 st823:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof823;
 case 823:
-#line 11927 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st823;
-		case 32: goto st823;
-		case 98: goto st824;
-		case 99: goto st831;
-		case 103: goto st835;
-		case 109: goto st840;
-		case 114: goto st847;
-		case 119: goto st850;
-		case 121: goto st855;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st823;
+	if ( (*( state.p)) == 104 )
+		goto st824;
 	goto st0;
-tr1094:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st824;
-tr1159:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st824;
 st824:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof824;
 case 824:
-#line 11954 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st825;
 	goto st0;
 st825:
@@ -11959,22 +11936,61 @@ st825:
 		goto _test_eof825;
 case 825:
 	switch( (*( state.p)) ) {
-		case 97: goto st826;
-		case 117: goto st829;
+		case 13: goto tr1097;
+		case 32: goto tr1097;
+		case 95: goto tr1098;
+		case 98: goto tr1099;
+		case 99: goto tr1100;
+		case 103: goto tr1101;
+		case 109: goto tr1102;
+		case 114: goto tr1103;
+		case 119: goto tr1104;
+		case 121: goto tr1105;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1097;
 	goto st0;
+tr1097:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st826;
+tr1162:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st826;
 st826:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof826;
 case 826:
-	if ( (*( state.p)) == 99 )
-		goto st827;
+#line 11966 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st826;
+		case 32: goto st826;
+		case 98: goto st827;
+		case 99: goto st834;
+		case 103: goto st838;
+		case 109: goto st843;
+		case 114: goto st850;
+		case 119: goto st853;
+		case 121: goto st858;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st826;
 	goto st0;
+tr1099:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st827;
+tr1164:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st827;
 st827:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof827;
 case 827:
-	if ( (*( state.p)) == 107 )
+#line 11993 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st828;
 	goto st0;
 st828:
@@ -11982,66 +11998,47 @@ st828:
 		goto _test_eof828;
 case 828:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1114;
-		case 32: goto tr1114;
-		case 59: goto tr1115;
+		case 97: goto st829;
+		case 117: goto st832;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1114;
 	goto st0;
 st829:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof829;
 case 829:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st830;
 	goto st0;
 st830:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof830;
 case 830:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1117;
-		case 32: goto tr1117;
-		case 59: goto tr1118;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1117;
+	if ( (*( state.p)) == 107 )
+		goto st831;
 	goto st0;
-tr1095:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st831;
-tr1160:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st831;
 st831:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof831;
 case 831:
-#line 12024 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st832;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1119;
+		case 32: goto tr1119;
+		case 59: goto tr1120;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1119;
 	goto st0;
 st832:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof832;
 case 832:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st833;
 	goto st0;
 st833:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof833;
 case 833:
-	if ( (*( state.p)) == 110 )
-		goto st834;
-	goto st0;
-st834:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof834;
-case 834:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1122;
 		case 32: goto tr1122;
@@ -12050,139 +12047,146 @@ case 834:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1122;
 	goto st0;
-tr1096:
+tr1100:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st835;
-tr1161:
+	goto st834;
+tr1165:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st835;
+	goto st834;
+st834:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof834;
+case 834:
+#line 12063 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st835;
+	goto st0;
 st835:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof835;
 case 835:
-#line 12066 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st836;
 	goto st0;
 st836:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof836;
 case 836:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st837;
 	goto st0;
 st837:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof837;
 case 837:
-	if ( (*( state.p)) == 101 )
-		goto st838;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1127;
+		case 32: goto tr1127;
+		case 59: goto tr1128;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1127;
 	goto st0;
+tr1101:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st838;
+tr1166:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st838;
 st838:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof838;
 case 838:
-	if ( (*( state.p)) == 110 )
+#line 12105 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st839;
 	goto st0;
 st839:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof839;
 case 839:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1128;
-		case 32: goto tr1128;
-		case 59: goto tr1129;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1128;
+	if ( (*( state.p)) == 101 )
+		goto st840;
 	goto st0;
-tr1097:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st840;
-tr1162:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st840;
 st840:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof840;
 case 840:
-#line 12115 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st841;
 	goto st0;
 st841:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof841;
 case 841:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st842;
 	goto st0;
 st842:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof842;
 case 842:
-	if ( (*( state.p)) == 101 )
-		goto st843;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1133;
+		case 32: goto tr1133;
+		case 59: goto tr1134;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1133;
 	goto st0;
+tr1102:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st843;
+tr1167:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st843;
 st843:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof843;
 case 843:
-	if ( (*( state.p)) == 110 )
+#line 12154 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st844;
 	goto st0;
 st844:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof844;
 case 844:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st845;
 	goto st0;
 st845:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof845;
 case 845:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st846;
 	goto st0;
 st846:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof846;
 case 846:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1136;
-		case 32: goto tr1136;
-		case 59: goto tr1137;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1136;
+	if ( (*( state.p)) == 110 )
+		goto st847;
 	goto st0;
-tr1098:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st847;
-tr1163:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st847;
 st847:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof847;
 case 847:
-#line 12178 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st848;
 	goto st0;
 st848:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof848;
 case 848:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st849;
 	goto st0;
 st849:
@@ -12190,18 +12194,18 @@ st849:
 		goto _test_eof849;
 case 849:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1140;
-		case 32: goto tr1140;
-		case 59: goto tr1141;
+		case 13: goto tr1141;
+		case 32: goto tr1141;
+		case 59: goto tr1142;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1140;
+		goto tr1141;
 	goto st0;
-tr1099:
+tr1103:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st850;
-tr1164:
+tr1168:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st850;
@@ -12209,175 +12213,189 @@ st850:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof850;
 case 850:
-#line 12213 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 12217 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st851;
 	goto st0;
 st851:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof851;
 case 851:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st852;
 	goto st0;
 st852:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof852;
 case 852:
-	if ( (*( state.p)) == 116 )
-		goto st853;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1145;
+		case 32: goto tr1145;
+		case 59: goto tr1146;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1145;
 	goto st0;
+tr1104:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st853;
+tr1169:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st853;
 st853:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof853;
 case 853:
-	if ( (*( state.p)) == 101 )
+#line 12252 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st854;
 	goto st0;
 st854:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof854;
 case 854:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1146;
-		case 32: goto tr1146;
-		case 59: goto tr1147;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1146;
+	if ( (*( state.p)) == 105 )
+		goto st855;
 	goto st0;
-tr1100:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st855;
-tr1165:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st855;
 st855:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof855;
 case 855:
-#line 12262 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st856;
 	goto st0;
 st856:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof856;
 case 856:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st857;
 	goto st0;
 st857:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof857;
 case 857:
-	if ( (*( state.p)) == 108 )
-		goto st858;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1151;
+		case 32: goto tr1151;
+		case 59: goto tr1152;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1151;
 	goto st0;
+tr1105:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st858;
+tr1170:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st858;
 st858:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof858;
 case 858:
-	if ( (*( state.p)) == 111 )
+#line 12301 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st859;
 	goto st0;
 st859:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof859;
 case 859:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st860;
 	goto st0;
 st860:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof860;
 case 860:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1153;
-		case 32: goto tr1153;
-		case 59: goto tr1154;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1153;
+	if ( (*( state.p)) == 108 )
+		goto st861;
 	goto st0;
-tr1093:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st861;
-tr1158:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st861;
 st861:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof861;
 case 861:
-#line 12318 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st824;
-		case 99: goto st831;
-		case 103: goto st835;
-		case 109: goto st840;
-		case 114: goto st847;
-		case 119: goto st850;
-		case 121: goto st855;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st862;
 	goto st0;
 st862:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof862;
 case 862:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st863;
 	goto st0;
 st863:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof863;
 case 863:
-	if ( (*( state.p)) == 109 )
-		goto st864;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1158;
+		case 32: goto tr1158;
+		case 59: goto tr1159;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1158;
 	goto st0;
+tr1098:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st864;
+tr1163:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st864;
 st864:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof864;
 case 864:
+#line 12357 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1157;
-		case 32: goto tr1157;
-		case 95: goto tr1158;
-		case 98: goto tr1159;
-		case 99: goto tr1160;
-		case 103: goto tr1161;
-		case 109: goto tr1162;
-		case 114: goto tr1163;
-		case 119: goto tr1164;
-		case 121: goto tr1165;
+		case 98: goto st827;
+		case 99: goto st834;
+		case 103: goto st838;
+		case 109: goto st843;
+		case 114: goto st850;
+		case 119: goto st853;
+		case 121: goto st858;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1157;
 	goto st0;
 st865:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof865;
 case 865:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st866;
 	goto st0;
 st866:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof866;
 case 866:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st867;
 	goto st0;
 st867:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof867;
 case 867:
-	if ( (*( state.p)) == 101 )
-		goto st828;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1162;
+		case 32: goto tr1162;
+		case 95: goto tr1163;
+		case 98: goto tr1164;
+		case 99: goto tr1165;
+		case 103: goto tr1166;
+		case 109: goto tr1167;
+		case 114: goto tr1168;
+		case 119: goto tr1169;
+		case 121: goto tr1170;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1162;
 	goto st0;
 st868:
 	if ( ++( state.p) == ( state.pe) )
@@ -12390,152 +12408,173 @@ st869:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof869;
 case 869:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 110 )
 		goto st870;
 	goto st0;
 st870:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof870;
 case 870:
-	switch( (*( state.p)) ) {
-		case 13: goto st871;
-		case 32: goto st871;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st871;
+	if ( (*( state.p)) == 101 )
+		goto st831;
 	goto st0;
 st871:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof871;
 case 871:
-	switch( (*( state.p)) ) {
-		case 13: goto st871;
-		case 32: goto st871;
-		case 34: goto tr1171;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st871;
+	if ( (*( state.p)) == 111 )
+		goto st872;
 	goto st0;
-tr1172:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st872;
-tr1171:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st872;
-tr1174:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 872; goto st47;}}
-	goto st872;
 st872:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof872;
 case 872:
-#line 12440 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st873;
-		case 92: goto tr1174;
-	}
-	goto tr1172;
+	if ( (*( state.p)) == 116 )
+		goto st873;
+	goto st0;
 st873:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof873;
 case 873:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1175;
-		case 32: goto tr1175;
-		case 59: goto tr1176;
+		case 13: goto st874;
+		case 32: goto st874;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1175;
+		goto st874;
 	goto st0;
 st874:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof874;
 case 874:
-	if ( (*( state.p)) == 97 )
-		goto st875;
+	switch( (*( state.p)) ) {
+		case 13: goto st874;
+		case 32: goto st874;
+		case 34: goto tr1176;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st874;
 	goto st0;
+tr1177:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st875;
+tr1176:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st875;
+tr1179:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 875; goto st47;}}
+	goto st875;
 st875:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof875;
 case 875:
-	if ( (*( state.p)) == 99 )
-		goto st876;
-	goto st0;
+#line 12479 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st876;
+		case 92: goto tr1179;
+	}
+	goto tr1177;
 st876:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof876;
 case 876:
-	if ( (*( state.p)) == 107 )
-		goto st877;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1180;
+		case 32: goto tr1180;
+		case 59: goto tr1181;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1180;
 	goto st0;
 st877:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof877;
 case 877:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st878;
 	goto st0;
 st878:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof878;
 case 878:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 99 )
 		goto st879;
 	goto st0;
 st879:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof879;
 case 879:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 107 )
 		goto st880;
 	goto st0;
 st880:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof880;
 case 880:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 114 )
 		goto st881;
 	goto st0;
 st881:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof881;
 case 881:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st882;
 	goto st0;
 st882:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof882;
 case 882:
-	switch( (*( state.p)) ) {
-		case 13: goto st883;
-		case 32: goto st883;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 110 )
 		goto st883;
 	goto st0;
 st883:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof883;
 case 883:
+	if ( (*( state.p)) == 103 )
+		goto st884;
+	goto st0;
+st884:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof884;
+case 884:
+	if ( (*( state.p)) == 101 )
+		goto st885;
+	goto st0;
+st885:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof885;
+case 885:
 	switch( (*( state.p)) ) {
-		case 13: goto st883;
-		case 32: goto st883;
+		case 13: goto st886;
+		case 32: goto st886;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st886;
+	goto st0;
+st886:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof886;
+case 886:
+	switch( (*( state.p)) ) {
+		case 13: goto st886;
+		case 32: goto st886;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1186;
+			goto tr1191;
 	} else if ( (*( state.p)) >= 9 )
-		goto st883;
+		goto st886;
 	goto st0;
-tr1186:
+tr1191:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -12544,55 +12583,34 @@ tr1186:
 	{
             state.match += (*( state.p));
         }
-	goto st884;
-tr1188:
+	goto st887;
+tr1193:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st884;
-st884:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof884;
-case 884:
-#line 12559 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1187;
-		case 32: goto tr1187;
-		case 59: goto tr1189;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1188;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1187;
-	goto st0;
-st885:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof885;
-case 885:
-	if ( (*( state.p)) == 104 )
-		goto st886;
-	goto st0;
-st886:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof886;
-case 886:
-	if ( (*( state.p)) == 114 )
-		goto st887;
-	goto st0;
+	goto st887;
 st887:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof887;
 case 887:
-	if ( (*( state.p)) == 111 )
-		goto st888;
+#line 12598 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1192;
+		case 32: goto tr1192;
+		case 59: goto tr1194;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1193;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1192;
 	goto st0;
 st888:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof888;
 case 888:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 104 )
 		goto st889;
 	goto st0;
 st889:
@@ -12606,56 +12624,77 @@ st890:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof890;
 case 890:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 111 )
 		goto st891;
 	goto st0;
 st891:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof891;
 case 891:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 119 )
 		goto st892;
 	goto st0;
 st892:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof892;
 case 892:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 114 )
 		goto st893;
 	goto st0;
 st893:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof893;
 case 893:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st894;
 	goto st0;
 st894:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof894;
 case 894:
-	switch( (*( state.p)) ) {
-		case 13: goto st895;
-		case 32: goto st895;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 110 )
 		goto st895;
 	goto st0;
 st895:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof895;
 case 895:
+	if ( (*( state.p)) == 103 )
+		goto st896;
+	goto st0;
+st896:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof896;
+case 896:
+	if ( (*( state.p)) == 101 )
+		goto st897;
+	goto st0;
+st897:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof897;
+case 897:
 	switch( (*( state.p)) ) {
-		case 13: goto st895;
-		case 32: goto st895;
+		case 13: goto st898;
+		case 32: goto st898;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st898;
+	goto st0;
+st898:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof898;
+case 898:
+	switch( (*( state.p)) ) {
+		case 13: goto st898;
+		case 32: goto st898;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1200;
+			goto tr1205;
 	} else if ( (*( state.p)) >= 9 )
-		goto st895;
+		goto st898;
 	goto st0;
-tr1200:
+tr1205:
 #line 109 "configparser.rl"
 	{
             state.match.clear();
@@ -12664,101 +12703,101 @@ tr1200:
 	{
             state.match += (*( state.p));
         }
-	goto st896;
-tr1202:
+	goto st899;
+tr1207:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st896;
-st896:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof896;
-case 896:
-#line 12679 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1201;
-		case 32: goto tr1201;
-		case 59: goto tr1203;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1202;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1201;
-	goto st0;
-st897:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof897;
-case 897:
-	if ( (*( state.p)) == 115 )
-		goto st898;
-	goto st0;
-st898:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof898;
-case 898:
-	if ( (*( state.p)) == 97 )
-		goto st899;
-	goto st0;
+	goto st899;
 st899:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof899;
 case 899:
-	if ( (*( state.p)) == 98 )
-		goto st900;
+#line 12718 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1206;
+		case 32: goto tr1206;
+		case 59: goto tr1208;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1207;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1206;
 	goto st0;
 st900:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof900;
 case 900:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 115 )
 		goto st901;
 	goto st0;
 st901:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof901;
 case 901:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st902;
 	goto st0;
 st902:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof902;
 case 902:
+	if ( (*( state.p)) == 98 )
+		goto st903;
+	goto st0;
+st903:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof903;
+case 903:
+	if ( (*( state.p)) == 108 )
+		goto st904;
+	goto st0;
+st904:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof904;
+case 904:
+	if ( (*( state.p)) == 101 )
+		goto st905;
+	goto st0;
+st905:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof905;
+case 905:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1209;
-		case 32: goto tr1209;
-		case 59: goto tr1210;
+		case 13: goto tr1214;
+		case 32: goto tr1214;
+		case 59: goto tr1215;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1209;
+		goto tr1214;
 	goto st0;
 tr861:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st903;
-st903:
+	goto st906;
+st906:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof903;
-case 903:
-#line 12748 "configparser.h"
+		goto _test_eof906;
+case 906:
+#line 12787 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1211;
+		goto tr1216;
 	goto st0;
-tr1211:
+tr1216:
 #line 113 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
-	goto st904;
-st904:
+	goto st907;
+st907:
 	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof904;
-case 904:
-#line 12762 "configparser.h"
+		goto _test_eof907;
+case 907:
+#line 12801 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr860;
 		case 32: goto tr860;
@@ -12766,172 +12805,133 @@ case 904:
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1211;
+			goto tr1216;
 	} else if ( (*( state.p)) >= 9 )
 		goto tr860;
-	goto st0;
-st905:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof905;
-case 905:
-	if ( (*( state.p)) == 97 )
-		goto st906;
-	goto st0;
-st906:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof906;
-case 906:
-	if ( (*( state.p)) == 116 )
-		goto st907;
-	goto st0;
-st907:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof907;
-case 907:
-	if ( (*( state.p)) == 95 )
-		goto st908;
 	goto st0;
 st908:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof908;
 case 908:
-	if ( (*( state.p)) == 98 )
+	if ( (*( state.p)) == 97 )
 		goto st909;
 	goto st0;
 st909:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof909;
 case 909:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 116 )
 		goto st910;
 	goto st0;
 st910:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof910;
 case 910:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 95 )
 		goto st911;
 	goto st0;
 st911:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof911;
 case 911:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 98 )
 		goto st912;
 	goto st0;
 st912:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof912;
 case 912:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 114 )
 		goto st913;
 	goto st0;
 st913:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof913;
 case 913:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1220;
-		case 32: goto tr1220;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1220;
+	if ( (*( state.p)) == 97 )
+		goto st914;
 	goto st0;
 st914:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof914;
 case 914:
-	switch( (*( state.p)) ) {
-		case 104: goto st915;
-		case 111: goto st922;
-		case 115: goto st927;
-	}
+	if ( (*( state.p)) == 105 )
+		goto st915;
 	goto st0;
 st915:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof915;
 case 915:
-	if ( (*( state.p)) == 121 )
+	if ( (*( state.p)) == 110 )
 		goto st916;
 	goto st0;
 st916:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof916;
 case 916:
-	if ( (*( state.p)) == 115 )
-		goto st917;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1225;
+		case 32: goto tr1225;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1225;
 	goto st0;
 st917:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof917;
 case 917:
-	if ( (*( state.p)) == 105 )
-		goto st918;
+	switch( (*( state.p)) ) {
+		case 104: goto st918;
+		case 111: goto st925;
+		case 115: goto st930;
+	}
 	goto st0;
 st918:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof918;
 case 918:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 121 )
 		goto st919;
 	goto st0;
 st919:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof919;
 case 919:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 115 )
 		goto st920;
 	goto st0;
 st920:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof920;
 case 920:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st921;
 	goto st0;
 st921:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof921;
 case 921:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1230;
-		case 32: goto tr1230;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1230;
+	if ( (*( state.p)) == 99 )
+		goto st922;
 	goto st0;
 st922:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof922;
 case 922:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 97 )
 		goto st923;
 	goto st0;
 st923:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof923;
 case 923:
-	if ( (*( state.p)) == 115 )
+	if ( (*( state.p)) == 108 )
 		goto st924;
 	goto st0;
 st924:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof924;
 case 924:
-	if ( (*( state.p)) == 111 )
-		goto st925;
-	goto st0;
-st925:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof925;
-case 925:
-	if ( (*( state.p)) == 110 )
-		goto st926;
-	goto st0;
-st926:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof926;
-case 926:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1235;
 		case 32: goto tr1235;
@@ -12939,179 +12939,197 @@ case 926:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1235;
 	goto st0;
+st925:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof925;
+case 925:
+	if ( (*( state.p)) == 105 )
+		goto st926;
+	goto st0;
+st926:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof926;
+case 926:
+	if ( (*( state.p)) == 115 )
+		goto st927;
+	goto st0;
 st927:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof927;
 case 927:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 111 )
 		goto st928;
 	goto st0;
 st928:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof928;
 case 928:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1237;
-		case 32: goto tr1237;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1237;
+	if ( (*( state.p)) == 110 )
+		goto st929;
 	goto st0;
 st929:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof929;
 case 929:
 	switch( (*( state.p)) ) {
-		case 99: goto st930;
-		case 108: goto st941;
+		case 13: goto tr1240;
+		case 32: goto tr1240;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1240;
 	goto st0;
 st930:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof930;
 case 930:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 105 )
 		goto st931;
 	goto st0;
 st931:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof931;
 case 931:
-	if ( (*( state.p)) == 114 )
-		goto st932;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1242;
+		case 32: goto tr1242;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1242;
 	goto st0;
 st932:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof932;
 case 932:
-	if ( (*( state.p)) == 101 )
-		goto st933;
+	switch( (*( state.p)) ) {
+		case 99: goto st933;
+		case 108: goto st944;
+	}
 	goto st0;
 st933:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof933;
 case 933:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 97 )
 		goto st934;
 	goto st0;
 st934:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof934;
 case 934:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 114 )
 		goto st935;
 	goto st0;
 st935:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof935;
 case 935:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 101 )
 		goto st936;
 	goto st0;
 st936:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof936;
 case 936:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 95 )
 		goto st937;
 	goto st0;
 st937:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof937;
 case 937:
-	if ( (*( state.p)) == 109 )
+	if ( (*( state.p)) == 97 )
 		goto st938;
 	goto st0;
 st938:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof938;
 case 938:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st939;
 	goto st0;
 st939:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof939;
 case 939:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st940;
 	goto st0;
 st940:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof940;
 case 940:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1250;
-		case 32: goto tr1250;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1250;
+	if ( (*( state.p)) == 109 )
+		goto st941;
 	goto st0;
 st941:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof941;
 case 941:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st942;
 	goto st0;
 st942:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof942;
 case 942:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 108 )
 		goto st943;
 	goto st0;
 st943:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof943;
 case 943:
-	if ( (*( state.p)) == 112 )
-		goto st944;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1255;
+		case 32: goto tr1255;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1255;
 	goto st0;
 st944:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof944;
 case 944:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1254;
-		case 32: goto tr1254;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1254;
+	if ( (*( state.p)) == 101 )
+		goto st945;
 	goto st0;
 st945:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof945;
 case 945:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 101 )
 		goto st946;
 	goto st0;
 st946:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof946;
 case 946:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 112 )
 		goto st947;
 	goto st0;
 st947:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof947;
 case 947:
-	if ( (*( state.p)) == 110 )
-		goto st948;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1259;
+		case 32: goto tr1259;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1259;
 	goto st0;
 st948:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof948;
 case 948:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 117 )
 		goto st949;
 	goto st0;
 st949:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof949;
 case 949:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 114 )
 		goto st950;
 	goto st0;
 st950:
@@ -13125,21 +13143,21 @@ st951:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof951;
 case 951:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 95 )
 		goto st952;
 	goto st0;
 st952:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof952;
 case 952:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 117 )
 		goto st953;
 	goto st0;
 st953:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof953;
 case 953:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st954;
 	goto st0;
 st954:
@@ -13153,984 +13171,984 @@ st955:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof955;
 case 955:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1265;
-		case 32: goto tr1265;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1265;
+	if ( (*( state.p)) == 101 )
+		goto st956;
 	goto st0;
 st956:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof956;
 case 956:
-	switch( (*( state.p)) ) {
-		case 13: goto st956;
-		case 32: goto st956;
-		case 97: goto st957;
-		case 99: goto st980;
-		case 100: goto st995;
-		case 110: goto st1002;
-		case 112: goto st1009;
-		case 115: goto st1035;
-		case 116: goto st1105;
-		case 118: goto st1117;
-		case 119: goto st1126;
-		case 125: goto tr1276;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st956;
+	if ( (*( state.p)) == 97 )
+		goto st957;
 	goto st0;
 st957:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof957;
 case 957:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 100 )
 		goto st958;
 	goto st0;
 st958:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof958;
 case 958:
-	if ( (*( state.p)) == 116 )
-		goto st959;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1270;
+		case 32: goto tr1270;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1270;
 	goto st0;
 st959:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof959;
 case 959:
-	if ( (*( state.p)) == 97 )
-		goto st960;
+	switch( (*( state.p)) ) {
+		case 13: goto st959;
+		case 32: goto st959;
+		case 97: goto st960;
+		case 99: goto st983;
+		case 100: goto st998;
+		case 110: goto st1005;
+		case 112: goto st1012;
+		case 115: goto st1038;
+		case 116: goto st1108;
+		case 118: goto st1120;
+		case 119: goto st1129;
+		case 125: goto tr1281;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st959;
 	goto st0;
 st960:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof960;
 case 960:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 116 )
 		goto st961;
 	goto st0;
 st961:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof961;
 case 961:
-	if ( (*( state.p)) == 107 )
+	if ( (*( state.p)) == 116 )
 		goto st962;
 	goto st0;
 st962:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof962;
 case 962:
-	switch( (*( state.p)) ) {
-		case 13: goto st963;
-		case 32: goto st963;
-		case 95: goto st1188;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 97 )
 		goto st963;
 	goto st0;
 st963:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof963;
 case 963:
-	switch( (*( state.p)) ) {
-		case 13: goto st963;
-		case 32: goto st963;
-		case 99: goto st964;
-		case 101: goto st1137;
-		case 112: goto st1146;
-		case 115: goto st1161;
-		case 116: goto st1177;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st963;
+	if ( (*( state.p)) == 99 )
+		goto st964;
 	goto st0;
 st964:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof964;
 case 964:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 107 )
 		goto st965;
 	goto st0;
 st965:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof965;
 case 965:
-	if ( (*( state.p)) == 110 )
+	switch( (*( state.p)) ) {
+		case 13: goto st966;
+		case 32: goto st966;
+		case 95: goto st1191;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st966;
 	goto st0;
 st966:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof966;
 case 966:
-	if ( (*( state.p)) == 99 )
-		goto st967;
+	switch( (*( state.p)) ) {
+		case 13: goto st966;
+		case 32: goto st966;
+		case 99: goto st967;
+		case 101: goto st1140;
+		case 112: goto st1149;
+		case 115: goto st1164;
+		case 116: goto st1180;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st966;
 	goto st0;
 st967:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof967;
 case 967:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st968;
 	goto st0;
 st968:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof968;
 case 968:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 110 )
 		goto st969;
 	goto st0;
 st969:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof969;
 case 969:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 99 )
 		goto st970;
 	goto st0;
 st970:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof970;
 case 970:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st971;
 	goto st0;
 st971:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof971;
 case 971:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 108 )
 		goto st972;
 	goto st0;
 st972:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof972;
 case 972:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 108 )
 		goto st973;
 	goto st0;
 st973:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof973;
 case 973:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 97 )
 		goto st974;
 	goto st0;
 st974:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof974;
 case 974:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 116 )
 		goto st975;
 	goto st0;
 st975:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof975;
 case 975:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1300;
-		case 32: goto tr1300;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1300;
+	if ( (*( state.p)) == 105 )
+		goto st976;
 	goto st0;
-tr1300:
-#line 175 "configparser.rl"
-	{ dmgval.type = damage::type_t::cancellation; }
-	goto st976;
-tr1535:
-#line 178 "configparser.rl"
-	{ dmgval.type = damage::type_t::eat_brain; }
-	goto st976;
-tr1545:
-#line 171 "configparser.rl"
-	{ dmgval.type = damage::type_t::physical; }
-	goto st976;
-tr1550:
-#line 173 "configparser.rl"
-	{ dmgval.type = damage::type_t::poison; }
-	goto st976;
-tr1552:
-#line 177 "configparser.rl"
-	{ dmgval.type = damage::type_t::psi; }
-	goto st976;
-tr1565:
-#line 176 "configparser.rl"
-	{ dmgval.type = damage::type_t::scare_animal; }
-	goto st976;
-tr1569:
-#line 172 "configparser.rl"
-	{ dmgval.type = damage::type_t::sleep; }
-	goto st976;
-tr1580:
-#line 174 "configparser.rl"
-	{ dmgval.type = damage::type_t::turn_undead; }
-	goto st976;
 st976:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof976;
 case 976:
-#line 13372 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st976;
-		case 32: goto st976;
-		case 45: goto tr1302;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1303;
-	} else if ( (*( state.p)) >= 9 )
-		goto st976;
+	if ( (*( state.p)) == 111 )
+		goto st977;
 	goto st0;
-tr1302:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st977;
 st977:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof977;
 case 977:
-#line 13398 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1304;
+	if ( (*( state.p)) == 110 )
+		goto st978;
 	goto st0;
-tr1303:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st978;
-tr1304:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st978;
 st978:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof978;
 case 978:
-#line 13422 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr1305;
 		case 32: goto tr1305;
-		case 46: goto tr1306;
-		case 59: goto tr1307;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1304;
-	} else if ( (*( state.p)) >= 9 )
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1305;
 	goto st0;
-tr1276:
-#line 382 "configparser.rl"
-	{ { state.cs =  state.stack[-- state.top];goto _again;} }
-	goto st979;
 tr1305:
-#line 182 "configparser.rl"
-	{ dmgval.val = toreal(state.match); }
-#line 370 "configparser.rl"
-	{ ter.attacks.add(dmgval); }
+#line 175 "configparser.rl"
+	{ dmgval.type = damage::type_t::cancellation; }
 	goto st979;
-tr1319:
-#line 372 "configparser.rl"
-	{ ter.charges = toint(state.match); }
+tr1540:
+#line 178 "configparser.rl"
+	{ dmgval.type = damage::type_t::eat_brain; }
 	goto st979;
-tr1327:
-#line 362 "configparser.rl"
-	{ ter.count = toint(state.match); }
+tr1550:
+#line 171 "configparser.rl"
+	{ dmgval.type = damage::type_t::physical; }
 	goto st979;
-tr1336:
-#line 369 "configparser.rl"
-	{ ter.decay = toint(state.match); }
+tr1555:
+#line 173 "configparser.rl"
+	{ dmgval.type = damage::type_t::poison; }
 	goto st979;
-tr1347:
-#line 363 "configparser.rl"
-	{ ter.name = state.match; }
+tr1557:
+#line 177 "configparser.rl"
+	{ dmgval.type = damage::type_t::psi; }
 	goto st979;
-tr1366:
-#line 355 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::corner; }
+tr1570:
+#line 176 "configparser.rl"
+	{ dmgval.type = damage::type_t::scare_animal; }
 	goto st979;
-tr1372:
-#line 353 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::floor; }
+tr1574:
+#line 172 "configparser.rl"
+	{ dmgval.type = damage::type_t::sleep; }
 	goto st979;
-tr1378:
-#line 354 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::water; }
-	goto st979;
-tr1421:
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1424:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1429:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1435:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1443:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1447:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1453:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1460:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st979;
-tr1482:
-#line 366 "configparser.rl"
-	{ ter.stairs = toint(state.match); }
-	goto st979;
-tr1488:
-#line 371 "configparser.rl"
-	{ ter.sticky = true; }
-	goto st979;
-tr1504:
-#line 359 "configparser.rl"
-	{ ter.tunnel_y = toint(state.match); }
-	goto st979;
-tr1514:
-#line 367 "configparser.rl"
-	{ ter.viewblock = true; }
-	goto st979;
-tr1524:
-#line 368 "configparser.rl"
-	{ ter.walkblock = true; }
-	goto st979;
-tr1588:
-#line 374 "configparser.rl"
-	{ ter.attack_level = toint(state.match); }
+tr1585:
+#line 174 "configparser.rl"
+	{ dmgval.type = damage::type_t::turn_undead; }
 	goto st979;
 st979:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof979;
 case 979:
-#line 13547 "configparser.h"
+#line 13411 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st979;
 		case 32: goto st979;
-		case 59: goto st1933;
+		case 45: goto tr1307;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1308;
+	} else if ( (*( state.p)) >= 9 )
 		goto st979;
 	goto st0;
 tr1307:
-#line 182 "configparser.rl"
-	{ dmgval.val = toreal(state.match); }
-#line 370 "configparser.rl"
-	{ ter.attacks.add(dmgval); }
-	goto st1933;
-tr1321:
-#line 372 "configparser.rl"
-	{ ter.charges = toint(state.match); }
-	goto st1933;
-tr1329:
-#line 362 "configparser.rl"
-	{ ter.count = toint(state.match); }
-	goto st1933;
-tr1338:
-#line 369 "configparser.rl"
-	{ ter.decay = toint(state.match); }
-	goto st1933;
-tr1348:
-#line 363 "configparser.rl"
-	{ ter.name = state.match; }
-	goto st1933;
-tr1367:
-#line 355 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::corner; }
-	goto st1933;
-tr1373:
-#line 353 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::floor; }
-	goto st1933;
-tr1379:
-#line 354 "configparser.rl"
-	{ ter.placement = Terrain::placement_t::water; }
-	goto st1933;
-tr1422:
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1425:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1430:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1436:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1444:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1448:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1454:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1461:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 364 "configparser.rl"
-	{ ter.skin = skin; }
-	goto st1933;
-tr1484:
-#line 366 "configparser.rl"
-	{ ter.stairs = toint(state.match); }
-	goto st1933;
-tr1489:
-#line 371 "configparser.rl"
-	{ ter.sticky = true; }
-	goto st1933;
-tr1505:
-#line 359 "configparser.rl"
-	{ ter.tunnel_y = toint(state.match); }
-	goto st1933;
-tr1515:
-#line 367 "configparser.rl"
-	{ ter.viewblock = true; }
-	goto st1933;
-tr1525:
-#line 368 "configparser.rl"
-	{ ter.walkblock = true; }
-	goto st1933;
-tr1590:
-#line 374 "configparser.rl"
-	{ ter.attack_level = toint(state.match); }
-	goto st1933;
-st1933:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1933;
-case 1933:
-#line 13664 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st956;
-		case 32: goto st956;
-		case 97: goto st957;
-		case 99: goto st980;
-		case 100: goto st995;
-		case 110: goto st1002;
-		case 112: goto st1009;
-		case 115: goto st1035;
-		case 116: goto st1105;
-		case 118: goto st1117;
-		case 119: goto st1126;
-		case 125: goto tr1276;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st956;
-	goto st0;
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st980;
 st980:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof980;
 case 980:
-	switch( (*( state.p)) ) {
-		case 104: goto st981;
-		case 111: goto st989;
-	}
+#line 13437 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1309;
 	goto st0;
+tr1308:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st981;
+tr1309:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st981;
 st981:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof981;
 case 981:
-	if ( (*( state.p)) == 97 )
-		goto st982;
+#line 13461 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1310;
+		case 32: goto tr1310;
+		case 46: goto tr1311;
+		case 59: goto tr1312;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1309;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1310;
 	goto st0;
+tr1281:
+#line 384 "configparser.rl"
+	{ { state.cs =  state.stack[-- state.top];goto _again;} }
+	goto st982;
+tr1310:
+#line 182 "configparser.rl"
+	{ dmgval.val = toreal(state.match); }
+#line 372 "configparser.rl"
+	{ ter.attacks.add(dmgval); }
+	goto st982;
+tr1324:
+#line 374 "configparser.rl"
+	{ ter.charges = toint(state.match); }
+	goto st982;
+tr1332:
+#line 364 "configparser.rl"
+	{ ter.count = toint(state.match); }
+	goto st982;
+tr1341:
+#line 371 "configparser.rl"
+	{ ter.decay = toint(state.match); }
+	goto st982;
+tr1352:
+#line 365 "configparser.rl"
+	{ ter.name = state.match; }
+	goto st982;
+tr1371:
+#line 357 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::corner; }
+	goto st982;
+tr1377:
+#line 355 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::floor; }
+	goto st982;
+tr1383:
+#line 356 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::water; }
+	goto st982;
+tr1426:
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1429:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1434:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1440:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1448:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1452:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1458:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1465:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st982;
+tr1487:
+#line 368 "configparser.rl"
+	{ ter.stairs = toint(state.match); }
+	goto st982;
+tr1493:
+#line 373 "configparser.rl"
+	{ ter.sticky = true; }
+	goto st982;
+tr1509:
+#line 361 "configparser.rl"
+	{ ter.tunnel_y = toint(state.match); }
+	goto st982;
+tr1519:
+#line 369 "configparser.rl"
+	{ ter.viewblock = true; }
+	goto st982;
+tr1529:
+#line 370 "configparser.rl"
+	{ ter.walkblock = true; }
+	goto st982;
+tr1593:
+#line 376 "configparser.rl"
+	{ ter.attack_level = toint(state.match); }
+	goto st982;
 st982:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof982;
 case 982:
-	if ( (*( state.p)) == 114 )
-		goto st983;
+#line 13586 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st982;
+		case 32: goto st982;
+		case 59: goto st1936;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st982;
+	goto st0;
+tr1312:
+#line 182 "configparser.rl"
+	{ dmgval.val = toreal(state.match); }
+#line 372 "configparser.rl"
+	{ ter.attacks.add(dmgval); }
+	goto st1936;
+tr1326:
+#line 374 "configparser.rl"
+	{ ter.charges = toint(state.match); }
+	goto st1936;
+tr1334:
+#line 364 "configparser.rl"
+	{ ter.count = toint(state.match); }
+	goto st1936;
+tr1343:
+#line 371 "configparser.rl"
+	{ ter.decay = toint(state.match); }
+	goto st1936;
+tr1353:
+#line 365 "configparser.rl"
+	{ ter.name = state.match; }
+	goto st1936;
+tr1372:
+#line 357 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::corner; }
+	goto st1936;
+tr1378:
+#line 355 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::floor; }
+	goto st1936;
+tr1384:
+#line 356 "configparser.rl"
+	{ ter.placement = Terrain::placement_t::water; }
+	goto st1936;
+tr1427:
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1430:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1435:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1441:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1449:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1453:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1459:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1466:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 366 "configparser.rl"
+	{ ter.skin = skin; }
+	goto st1936;
+tr1489:
+#line 368 "configparser.rl"
+	{ ter.stairs = toint(state.match); }
+	goto st1936;
+tr1494:
+#line 373 "configparser.rl"
+	{ ter.sticky = true; }
+	goto st1936;
+tr1510:
+#line 361 "configparser.rl"
+	{ ter.tunnel_y = toint(state.match); }
+	goto st1936;
+tr1520:
+#line 369 "configparser.rl"
+	{ ter.viewblock = true; }
+	goto st1936;
+tr1530:
+#line 370 "configparser.rl"
+	{ ter.walkblock = true; }
+	goto st1936;
+tr1595:
+#line 376 "configparser.rl"
+	{ ter.attack_level = toint(state.match); }
+	goto st1936;
+st1936:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1936;
+case 1936:
+#line 13703 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st959;
+		case 32: goto st959;
+		case 97: goto st960;
+		case 99: goto st983;
+		case 100: goto st998;
+		case 110: goto st1005;
+		case 112: goto st1012;
+		case 115: goto st1038;
+		case 116: goto st1108;
+		case 118: goto st1120;
+		case 119: goto st1129;
+		case 125: goto tr1281;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st959;
 	goto st0;
 st983:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof983;
 case 983:
-	if ( (*( state.p)) == 103 )
-		goto st984;
+	switch( (*( state.p)) ) {
+		case 104: goto st984;
+		case 111: goto st992;
+	}
 	goto st0;
 st984:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof984;
 case 984:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st985;
 	goto st0;
 st985:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof985;
 case 985:
-	if ( (*( state.p)) == 115 )
+	if ( (*( state.p)) == 114 )
 		goto st986;
 	goto st0;
 st986:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof986;
 case 986:
-	switch( (*( state.p)) ) {
-		case 13: goto st987;
-		case 32: goto st987;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 103 )
 		goto st987;
 	goto st0;
 st987:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof987;
 case 987:
-	switch( (*( state.p)) ) {
-		case 13: goto st987;
-		case 32: goto st987;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1318;
-	} else if ( (*( state.p)) >= 9 )
-		goto st987;
+	if ( (*( state.p)) == 101 )
+		goto st988;
 	goto st0;
-tr1318:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st988;
-tr1320:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st988;
 st988:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof988;
 case 988:
-#line 13771 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1319;
-		case 32: goto tr1319;
-		case 59: goto tr1321;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1320;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1319;
+	if ( (*( state.p)) == 115 )
+		goto st989;
 	goto st0;
 st989:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof989;
 case 989:
-	if ( (*( state.p)) == 117 )
+	switch( (*( state.p)) ) {
+		case 13: goto st990;
+		case 32: goto st990;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st990;
 	goto st0;
 st990:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof990;
 case 990:
-	if ( (*( state.p)) == 110 )
-		goto st991;
+	switch( (*( state.p)) ) {
+		case 13: goto st990;
+		case 32: goto st990;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1323;
+	} else if ( (*( state.p)) >= 9 )
+		goto st990;
 	goto st0;
+tr1323:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st991;
+tr1325:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st991;
 st991:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof991;
 case 991:
-	if ( (*( state.p)) == 116 )
-		goto st992;
+#line 13810 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1324;
+		case 32: goto tr1324;
+		case 59: goto tr1326;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1325;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1324;
 	goto st0;
 st992:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof992;
 case 992:
-	switch( (*( state.p)) ) {
-		case 13: goto st993;
-		case 32: goto st993;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 117 )
 		goto st993;
 	goto st0;
 st993:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof993;
 case 993:
-	switch( (*( state.p)) ) {
-		case 13: goto st993;
-		case 32: goto st993;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1326;
-	} else if ( (*( state.p)) >= 9 )
-		goto st993;
+	if ( (*( state.p)) == 110 )
+		goto st994;
 	goto st0;
-tr1326:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st994;
-tr1328:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st994;
 st994:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof994;
 case 994:
-#line 13849 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1327;
-		case 32: goto tr1327;
-		case 59: goto tr1329;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1328;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1327;
+	if ( (*( state.p)) == 116 )
+		goto st995;
 	goto st0;
 st995:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof995;
 case 995:
-	if ( (*( state.p)) == 101 )
+	switch( (*( state.p)) ) {
+		case 13: goto st996;
+		case 32: goto st996;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st996;
 	goto st0;
 st996:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof996;
 case 996:
-	if ( (*( state.p)) == 99 )
-		goto st997;
+	switch( (*( state.p)) ) {
+		case 13: goto st996;
+		case 32: goto st996;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1331;
+	} else if ( (*( state.p)) >= 9 )
+		goto st996;
 	goto st0;
+tr1331:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st997;
+tr1333:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st997;
 st997:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof997;
 case 997:
-	if ( (*( state.p)) == 97 )
-		goto st998;
+#line 13888 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1332;
+		case 32: goto tr1332;
+		case 59: goto tr1334;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1333;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1332;
 	goto st0;
 st998:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof998;
 case 998:
-	if ( (*( state.p)) == 121 )
+	if ( (*( state.p)) == 101 )
 		goto st999;
 	goto st0;
 st999:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof999;
 case 999:
-	switch( (*( state.p)) ) {
-		case 13: goto st1000;
-		case 32: goto st1000;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 99 )
 		goto st1000;
 	goto st0;
 st1000:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1000;
 case 1000:
-	switch( (*( state.p)) ) {
-		case 13: goto st1000;
-		case 32: goto st1000;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1335;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1000;
+	if ( (*( state.p)) == 97 )
+		goto st1001;
 	goto st0;
-tr1335:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1001;
-tr1337:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1001;
 st1001:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1001;
 case 1001:
-#line 13934 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1336;
-		case 32: goto tr1336;
-		case 59: goto tr1338;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1337;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1336;
+	if ( (*( state.p)) == 121 )
+		goto st1002;
 	goto st0;
 st1002:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1002;
 case 1002:
-	if ( (*( state.p)) == 97 )
+	switch( (*( state.p)) ) {
+		case 13: goto st1003;
+		case 32: goto st1003;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1003;
 	goto st0;
 st1003:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1003;
 case 1003:
-	if ( (*( state.p)) == 109 )
-		goto st1004;
+	switch( (*( state.p)) ) {
+		case 13: goto st1003;
+		case 32: goto st1003;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1340;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1003;
 	goto st0;
+tr1340:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1004;
+tr1342:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1004;
 st1004:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1004;
 case 1004:
-	if ( (*( state.p)) == 101 )
-		goto st1005;
+#line 13973 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1341;
+		case 32: goto tr1341;
+		case 59: goto tr1343;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1342;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1341;
 	goto st0;
 st1005:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1005;
 case 1005:
-	switch( (*( state.p)) ) {
-		case 13: goto st1006;
-		case 32: goto st1006;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 97 )
 		goto st1006;
 	goto st0;
 st1006:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1006;
 case 1006:
-	switch( (*( state.p)) ) {
-		case 13: goto st1006;
-		case 32: goto st1006;
-		case 34: goto tr1343;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1006;
+	if ( (*( state.p)) == 109 )
+		goto st1007;
 	goto st0;
-tr1344:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1007;
-tr1343:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1007;
-tr1346:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1007; goto st47;}}
-	goto st1007;
 st1007:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1007;
 case 1007:
-#line 14010 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1008;
-		case 92: goto tr1346;
-	}
-	goto tr1344;
+	if ( (*( state.p)) == 101 )
+		goto st1008;
+	goto st0;
 st1008:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1008;
 case 1008:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1347;
-		case 32: goto tr1347;
-		case 59: goto tr1348;
+		case 13: goto st1009;
+		case 32: goto st1009;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1347;
+		goto st1009;
 	goto st0;
 st1009:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1009;
 case 1009:
-	if ( (*( state.p)) == 108 )
-		goto st1010;
+	switch( (*( state.p)) ) {
+		case 13: goto st1009;
+		case 32: goto st1009;
+		case 34: goto tr1348;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1009;
 	goto st0;
+tr1349:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1010;
+tr1348:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1010;
+tr1351:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1010; goto st47;}}
+	goto st1010;
 st1010:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1010;
 case 1010:
-	if ( (*( state.p)) == 97 )
-		goto st1011;
-	goto st0;
+#line 14049 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1011;
+		case 92: goto tr1351;
+	}
+	goto tr1349;
 st1011:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1011;
 case 1011:
-	if ( (*( state.p)) == 99 )
-		goto st1012;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1352;
+		case 32: goto tr1352;
+		case 59: goto tr1353;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1352;
 	goto st0;
 st1012:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1012;
 case 1012:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 108 )
 		goto st1013;
 	goto st0;
 st1013:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1013;
 case 1013:
-	if ( (*( state.p)) == 109 )
+	if ( (*( state.p)) == 97 )
 		goto st1014;
 	goto st0;
 st1014:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1014;
 case 1014:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1015;
 	goto st0;
 st1015:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1015;
 case 1015:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 101 )
 		goto st1016;
 	goto st0;
 st1016:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1016;
 case 1016:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 109 )
 		goto st1017;
 	goto st0;
 st1017:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1017;
 case 1017:
-	switch( (*( state.p)) ) {
-		case 13: goto st1018;
-		case 32: goto st1018;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 101 )
 		goto st1018;
 	goto st0;
 st1018:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1018;
 case 1018:
-	switch( (*( state.p)) ) {
-		case 13: goto st1018;
-		case 32: goto st1018;
-		case 99: goto st1019;
-		case 102: goto st1025;
-		case 119: goto st1030;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1018;
+	if ( (*( state.p)) == 110 )
+		goto st1019;
 	goto st0;
 st1019:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1019;
 case 1019:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 116 )
 		goto st1020;
 	goto st0;
 st1020:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1020;
 case 1020:
-	if ( (*( state.p)) == 114 )
+	switch( (*( state.p)) ) {
+		case 13: goto st1021;
+		case 32: goto st1021;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1021;
 	goto st0;
 st1021:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1021;
 case 1021:
-	if ( (*( state.p)) == 110 )
-		goto st1022;
+	switch( (*( state.p)) ) {
+		case 13: goto st1021;
+		case 32: goto st1021;
+		case 99: goto st1022;
+		case 102: goto st1028;
+		case 119: goto st1033;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1021;
 	goto st0;
 st1022:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1022;
 case 1022:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 111 )
 		goto st1023;
 	goto st0;
 st1023:
@@ -14144,291 +14162,250 @@ st1024:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1024;
 case 1024:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1366;
-		case 32: goto tr1366;
-		case 59: goto tr1367;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1366;
+	if ( (*( state.p)) == 110 )
+		goto st1025;
 	goto st0;
 st1025:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1025;
 case 1025:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1026;
 	goto st0;
 st1026:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1026;
 case 1026:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 114 )
 		goto st1027;
 	goto st0;
 st1027:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1027;
 case 1027:
-	if ( (*( state.p)) == 111 )
-		goto st1028;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1371;
+		case 32: goto tr1371;
+		case 59: goto tr1372;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1371;
 	goto st0;
 st1028:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1028;
 case 1028:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 108 )
 		goto st1029;
 	goto st0;
 st1029:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1029;
 case 1029:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1372;
-		case 32: goto tr1372;
-		case 59: goto tr1373;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1372;
+	if ( (*( state.p)) == 111 )
+		goto st1030;
 	goto st0;
 st1030:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1030;
 case 1030:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 111 )
 		goto st1031;
 	goto st0;
 st1031:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1031;
 case 1031:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 114 )
 		goto st1032;
 	goto st0;
 st1032:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1032;
 case 1032:
-	if ( (*( state.p)) == 101 )
-		goto st1033;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1377;
+		case 32: goto tr1377;
+		case 59: goto tr1378;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1377;
 	goto st0;
 st1033:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1033;
 case 1033:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1034;
 	goto st0;
 st1034:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1034;
 case 1034:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1378;
-		case 32: goto tr1378;
-		case 59: goto tr1379;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1378;
+	if ( (*( state.p)) == 116 )
+		goto st1035;
 	goto st0;
 st1035:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1035;
 case 1035:
-	switch( (*( state.p)) ) {
-		case 107: goto st1036;
-		case 116: goto st1094;
-	}
+	if ( (*( state.p)) == 101 )
+		goto st1036;
 	goto st0;
 st1036:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1036;
 case 1036:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 114 )
 		goto st1037;
 	goto st0;
 st1037:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1037;
 case 1037:
-	if ( (*( state.p)) == 110 )
-		goto st1038;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1383;
+		case 32: goto tr1383;
+		case 59: goto tr1384;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1383;
 	goto st0;
 st1038:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1038;
 case 1038:
 	switch( (*( state.p)) ) {
-		case 13: goto st1039;
-		case 32: goto st1039;
+		case 107: goto st1039;
+		case 116: goto st1097;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1039;
 	goto st0;
 st1039:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1039;
 case 1039:
-	switch( (*( state.p)) ) {
-		case 13: goto st1039;
-		case 32: goto st1039;
-		case 34: goto tr1385;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1039;
+	if ( (*( state.p)) == 105 )
+		goto st1040;
 	goto st0;
-tr1386:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1040;
-tr1385:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1040;
-tr1388:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1040; goto st47;}}
-	goto st1040;
 st1040:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1040;
 case 1040:
-#line 14302 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1041;
-		case 92: goto tr1388;
-	}
-	goto tr1386;
+	if ( (*( state.p)) == 110 )
+		goto st1041;
+	goto st0;
 st1041:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1041;
 case 1041:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1389;
-		case 32: goto tr1389;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1389;
-	goto st0;
-tr1389:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1042;
-st1042:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1042;
-case 1042:
-#line 14327 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1042;
 		case 32: goto st1042;
-		case 98: goto st1043;
-		case 100: goto st1088;
-		case 110: goto st1091;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1042;
 	goto st0;
+st1042:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1042;
+case 1042:
+	switch( (*( state.p)) ) {
+		case 13: goto st1042;
+		case 32: goto st1042;
+		case 34: goto tr1390;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1042;
+	goto st0;
+tr1391:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1043;
+tr1390:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1043;
+tr1393:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1043; goto st47;}}
+	goto st1043;
 st1043:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1043;
 case 1043:
-	if ( (*( state.p)) == 114 )
-		goto st1044;
-	goto st0;
+#line 14341 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1044;
+		case 92: goto tr1393;
+	}
+	goto tr1391;
 st1044:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1044;
 case 1044:
-	if ( (*( state.p)) == 105 )
-		goto st1045;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1394;
+		case 32: goto tr1394;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1394;
 	goto st0;
+tr1394:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1045;
 st1045:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1045;
 case 1045:
-	if ( (*( state.p)) == 103 )
-		goto st1046;
+#line 14366 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1045;
+		case 32: goto st1045;
+		case 98: goto st1046;
+		case 100: goto st1091;
+		case 110: goto st1094;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1045;
 	goto st0;
 st1046:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1046;
 case 1046:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1047;
 	goto st0;
 st1047:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1047;
 case 1047:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1048;
 	goto st0;
 st1048:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1048;
 case 1048:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1399;
-		case 32: goto tr1399;
-		case 95: goto tr1400;
-		case 98: goto tr1401;
-		case 99: goto tr1402;
-		case 103: goto tr1403;
-		case 109: goto tr1404;
-		case 114: goto tr1405;
-		case 119: goto tr1406;
-		case 121: goto tr1407;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1399;
+	if ( (*( state.p)) == 103 )
+		goto st1049;
 	goto st0;
-tr1399:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1049;
-tr1464:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1049;
 st1049:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1049;
 case 1049:
-#line 14404 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1049;
-		case 32: goto st1049;
-		case 98: goto st1050;
-		case 99: goto st1057;
-		case 103: goto st1061;
-		case 109: goto st1066;
-		case 114: goto st1073;
-		case 119: goto st1076;
-		case 121: goto st1081;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1049;
+	if ( (*( state.p)) == 104 )
+		goto st1050;
 	goto st0;
-tr1401:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1050;
-tr1466:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1050;
 st1050:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1050;
 case 1050:
-#line 14431 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1051;
 	goto st0;
 st1051:
@@ -14436,22 +14413,61 @@ st1051:
 		goto _test_eof1051;
 case 1051:
 	switch( (*( state.p)) ) {
-		case 97: goto st1052;
-		case 117: goto st1055;
+		case 13: goto tr1404;
+		case 32: goto tr1404;
+		case 95: goto tr1405;
+		case 98: goto tr1406;
+		case 99: goto tr1407;
+		case 103: goto tr1408;
+		case 109: goto tr1409;
+		case 114: goto tr1410;
+		case 119: goto tr1411;
+		case 121: goto tr1412;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1404;
 	goto st0;
+tr1404:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1052;
+tr1469:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1052;
 st1052:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1052;
 case 1052:
-	if ( (*( state.p)) == 99 )
-		goto st1053;
+#line 14443 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1052;
+		case 32: goto st1052;
+		case 98: goto st1053;
+		case 99: goto st1060;
+		case 103: goto st1064;
+		case 109: goto st1069;
+		case 114: goto st1076;
+		case 119: goto st1079;
+		case 121: goto st1084;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1052;
 	goto st0;
+tr1406:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1053;
+tr1471:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1053;
 st1053:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1053;
 case 1053:
-	if ( (*( state.p)) == 107 )
+#line 14470 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1054;
 	goto st0;
 st1054:
@@ -14459,66 +14475,47 @@ st1054:
 		goto _test_eof1054;
 case 1054:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1421;
-		case 32: goto tr1421;
-		case 59: goto tr1422;
+		case 97: goto st1055;
+		case 117: goto st1058;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1421;
 	goto st0;
 st1055:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1055;
 case 1055:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1056;
 	goto st0;
 st1056:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1056;
 case 1056:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1424;
-		case 32: goto tr1424;
-		case 59: goto tr1425;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1424;
+	if ( (*( state.p)) == 107 )
+		goto st1057;
 	goto st0;
-tr1402:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1057;
-tr1467:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1057;
 st1057:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1057;
 case 1057:
-#line 14501 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1058;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1426;
+		case 32: goto tr1426;
+		case 59: goto tr1427;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1426;
 	goto st0;
 st1058:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1058;
 case 1058:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1059;
 	goto st0;
 st1059:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1059;
 case 1059:
-	if ( (*( state.p)) == 110 )
-		goto st1060;
-	goto st0;
-st1060:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1060;
-case 1060:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1429;
 		case 32: goto tr1429;
@@ -14527,139 +14524,146 @@ case 1060:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1429;
 	goto st0;
-tr1403:
+tr1407:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1061;
-tr1468:
+	goto st1060;
+tr1472:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1061;
+	goto st1060;
+st1060:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1060;
+case 1060:
+#line 14540 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1061;
+	goto st0;
 st1061:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1061;
 case 1061:
-#line 14543 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1062;
 	goto st0;
 st1062:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1062;
 case 1062:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1063;
 	goto st0;
 st1063:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1063;
 case 1063:
-	if ( (*( state.p)) == 101 )
-		goto st1064;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1434;
+		case 32: goto tr1434;
+		case 59: goto tr1435;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1434;
 	goto st0;
+tr1408:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1064;
+tr1473:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1064;
 st1064:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1064;
 case 1064:
-	if ( (*( state.p)) == 110 )
+#line 14582 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1065;
 	goto st0;
 st1065:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1065;
 case 1065:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1435;
-		case 32: goto tr1435;
-		case 59: goto tr1436;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1435;
+	if ( (*( state.p)) == 101 )
+		goto st1066;
 	goto st0;
-tr1404:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1066;
-tr1469:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1066;
 st1066:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1066;
 case 1066:
-#line 14592 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1067;
 	goto st0;
 st1067:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1067;
 case 1067:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1068;
 	goto st0;
 st1068:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1068;
 case 1068:
-	if ( (*( state.p)) == 101 )
-		goto st1069;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1440;
+		case 32: goto tr1440;
+		case 59: goto tr1441;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1440;
 	goto st0;
+tr1409:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1069;
+tr1474:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1069;
 st1069:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1069;
 case 1069:
-	if ( (*( state.p)) == 110 )
+#line 14631 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1070;
 	goto st0;
 st1070:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1070;
 case 1070:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1071;
 	goto st0;
 st1071:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1071;
 case 1071:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1072;
 	goto st0;
 st1072:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1072;
 case 1072:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1443;
-		case 32: goto tr1443;
-		case 59: goto tr1444;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1443;
+	if ( (*( state.p)) == 110 )
+		goto st1073;
 	goto st0;
-tr1405:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1073;
-tr1470:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1073;
 st1073:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1073;
 case 1073:
-#line 14655 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1074;
 	goto st0;
 st1074:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1074;
 case 1074:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1075;
 	goto st0;
 st1075:
@@ -14667,18 +14671,18 @@ st1075:
 		goto _test_eof1075;
 case 1075:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1447;
-		case 32: goto tr1447;
-		case 59: goto tr1448;
+		case 13: goto tr1448;
+		case 32: goto tr1448;
+		case 59: goto tr1449;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1447;
+		goto tr1448;
 	goto st0;
-tr1406:
+tr1410:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1076;
-tr1471:
+tr1475:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1076;
@@ -14686,415 +14690,381 @@ st1076:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1076;
 case 1076:
-#line 14690 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 14694 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1077;
 	goto st0;
 st1077:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1077;
 case 1077:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1078;
 	goto st0;
 st1078:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1078;
 case 1078:
-	if ( (*( state.p)) == 116 )
-		goto st1079;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1452;
+		case 32: goto tr1452;
+		case 59: goto tr1453;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1452;
 	goto st0;
+tr1411:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1079;
+tr1476:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1079;
 st1079:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1079;
 case 1079:
-	if ( (*( state.p)) == 101 )
+#line 14729 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1080;
 	goto st0;
 st1080:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1080;
 case 1080:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1453;
-		case 32: goto tr1453;
-		case 59: goto tr1454;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1453;
+	if ( (*( state.p)) == 105 )
+		goto st1081;
 	goto st0;
-tr1407:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1081;
-tr1472:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1081;
 st1081:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1081;
 case 1081:
-#line 14739 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1082;
 	goto st0;
 st1082:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1082;
 case 1082:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1083;
 	goto st0;
 st1083:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1083;
 case 1083:
-	if ( (*( state.p)) == 108 )
-		goto st1084;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1458;
+		case 32: goto tr1458;
+		case 59: goto tr1459;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1458;
 	goto st0;
+tr1412:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1084;
+tr1477:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1084;
 st1084:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1084;
 case 1084:
-	if ( (*( state.p)) == 111 )
+#line 14778 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1085;
 	goto st0;
 st1085:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1085;
 case 1085:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1086;
 	goto st0;
 st1086:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1086;
 case 1086:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1460;
-		case 32: goto tr1460;
-		case 59: goto tr1461;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1460;
+	if ( (*( state.p)) == 108 )
+		goto st1087;
 	goto st0;
-tr1400:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1087;
-tr1465:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1087;
 st1087:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1087;
 case 1087:
-#line 14795 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1050;
-		case 99: goto st1057;
-		case 103: goto st1061;
-		case 109: goto st1066;
-		case 114: goto st1073;
-		case 119: goto st1076;
-		case 121: goto st1081;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1088;
 	goto st0;
 st1088:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1088;
 case 1088:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1089;
 	goto st0;
 st1089:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1089;
 case 1089:
-	if ( (*( state.p)) == 109 )
-		goto st1090;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1465;
+		case 32: goto tr1465;
+		case 59: goto tr1466;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1465;
 	goto st0;
+tr1405:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1090;
+tr1470:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1090;
 st1090:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1090;
 case 1090:
+#line 14834 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1464;
-		case 32: goto tr1464;
-		case 95: goto tr1465;
-		case 98: goto tr1466;
-		case 99: goto tr1467;
-		case 103: goto tr1468;
-		case 109: goto tr1469;
-		case 114: goto tr1470;
-		case 119: goto tr1471;
-		case 121: goto tr1472;
+		case 98: goto st1053;
+		case 99: goto st1060;
+		case 103: goto st1064;
+		case 109: goto st1069;
+		case 114: goto st1076;
+		case 119: goto st1079;
+		case 121: goto st1084;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1464;
 	goto st0;
 st1091:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1091;
 case 1091:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1092;
 	goto st0;
 st1092:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1092;
 case 1092:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1093;
 	goto st0;
 st1093:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1093;
 case 1093:
-	if ( (*( state.p)) == 101 )
-		goto st1054;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1469;
+		case 32: goto tr1469;
+		case 95: goto tr1470;
+		case 98: goto tr1471;
+		case 99: goto tr1472;
+		case 103: goto tr1473;
+		case 109: goto tr1474;
+		case 114: goto tr1475;
+		case 119: goto tr1476;
+		case 121: goto tr1477;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1469;
 	goto st0;
 st1094:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1094;
 case 1094:
-	switch( (*( state.p)) ) {
-		case 97: goto st1095;
-		case 105: goto st1101;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1095;
 	goto st0;
 st1095:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1095;
 case 1095:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 110 )
 		goto st1096;
 	goto st0;
 st1096:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1096;
 case 1096:
-	if ( (*( state.p)) == 114 )
-		goto st1097;
+	if ( (*( state.p)) == 101 )
+		goto st1057;
 	goto st0;
 st1097:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1097;
 case 1097:
-	if ( (*( state.p)) == 115 )
-		goto st1098;
+	switch( (*( state.p)) ) {
+		case 97: goto st1098;
+		case 105: goto st1104;
+	}
 	goto st0;
 st1098:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1098;
 case 1098:
-	switch( (*( state.p)) ) {
-		case 13: goto st1099;
-		case 32: goto st1099;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 105 )
 		goto st1099;
 	goto st0;
 st1099:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1099;
 case 1099:
-	switch( (*( state.p)) ) {
-		case 13: goto st1099;
-		case 32: goto st1099;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1481;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1099;
+	if ( (*( state.p)) == 114 )
+		goto st1100;
 	goto st0;
-tr1481:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1100;
-tr1483:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1100;
 st1100:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1100;
 case 1100:
-#line 14935 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1482;
-		case 32: goto tr1482;
-		case 59: goto tr1484;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1483;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1482;
+	if ( (*( state.p)) == 115 )
+		goto st1101;
 	goto st0;
 st1101:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1101;
 case 1101:
-	if ( (*( state.p)) == 99 )
+	switch( (*( state.p)) ) {
+		case 13: goto st1102;
+		case 32: goto st1102;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1102;
 	goto st0;
 st1102:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1102;
 case 1102:
-	if ( (*( state.p)) == 107 )
-		goto st1103;
+	switch( (*( state.p)) ) {
+		case 13: goto st1102;
+		case 32: goto st1102;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1486;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1102;
 	goto st0;
+tr1486:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1103;
+tr1488:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1103;
 st1103:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1103;
 case 1103:
-	if ( (*( state.p)) == 121 )
-		goto st1104;
+#line 14974 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1487;
+		case 32: goto tr1487;
+		case 59: goto tr1489;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1488;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1487;
 	goto st0;
 st1104:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1104;
 case 1104:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1488;
-		case 32: goto tr1488;
-		case 59: goto tr1489;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1488;
+	if ( (*( state.p)) == 99 )
+		goto st1105;
 	goto st0;
 st1105:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1105;
 case 1105:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 107 )
 		goto st1106;
 	goto st0;
 st1106:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1106;
 case 1106:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 121 )
 		goto st1107;
 	goto st0;
 st1107:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1107;
 case 1107:
-	if ( (*( state.p)) == 110 )
-		goto st1108;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1493;
+		case 32: goto tr1493;
+		case 59: goto tr1494;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1493;
 	goto st0;
 st1108:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1108;
 case 1108:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 117 )
 		goto st1109;
 	goto st0;
 st1109:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1109;
 case 1109:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 110 )
 		goto st1110;
 	goto st0;
 st1110:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1110;
 case 1110:
-	switch( (*( state.p)) ) {
-		case 13: goto st1111;
-		case 32: goto st1111;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 110 )
 		goto st1111;
 	goto st0;
 st1111:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1111;
 case 1111:
-	switch( (*( state.p)) ) {
-		case 13: goto st1111;
-		case 32: goto st1111;
-		case 45: goto tr1496;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1497;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1111;
+	if ( (*( state.p)) == 101 )
+		goto st1112;
 	goto st0;
-tr1496:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1112;
 st1112:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1112;
 case 1112:
-#line 15055 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1498;
+	if ( (*( state.p)) == 108 )
+		goto st1113;
 	goto st0;
-tr1497:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1113;
-tr1498:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1113;
 st1113:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1113;
 case 1113:
-#line 15079 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1499;
-		case 32: goto tr1499;
+		case 13: goto st1114;
+		case 32: goto st1114;
 	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1498;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1499;
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1114;
 	goto st0;
-tr1499:
-#line 358 "configparser.rl"
-	{ ter.tunnel_x = toint(state.match); }
-	goto st1114;
 st1114:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1114;
 case 1114:
-#line 15098 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto st1114;
 		case 32: goto st1114;
@@ -15120,7 +15090,7 @@ st1115:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1115;
 case 1115:
-#line 15124 "configparser.h"
+#line 15094 "configparser.h"
 	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
 		goto tr1503;
 	goto st0;
@@ -15144,11 +15114,10 @@ st1116:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1116;
 case 1116:
-#line 15148 "configparser.h"
+#line 15118 "configparser.h"
 	switch( (*( state.p)) ) {
 		case 13: goto tr1504;
 		case 32: goto tr1504;
-		case 59: goto tr1505;
 	}
 	if ( (*( state.p)) > 10 ) {
 		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
@@ -15156,100 +15125,149 @@ case 1116:
 	} else if ( (*( state.p)) >= 9 )
 		goto tr1504;
 	goto st0;
+tr1504:
+#line 360 "configparser.rl"
+	{ ter.tunnel_x = toint(state.match); }
+	goto st1117;
 st1117:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1117;
 case 1117:
-	if ( (*( state.p)) == 105 )
-		goto st1118;
+#line 15137 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1117;
+		case 32: goto st1117;
+		case 45: goto tr1506;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1507;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1117;
 	goto st0;
+tr1506:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1118;
 st1118:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1118;
 case 1118:
-	if ( (*( state.p)) == 101 )
-		goto st1119;
+#line 15163 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1508;
 	goto st0;
+tr1507:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1119;
+tr1508:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1119;
 st1119:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1119;
 case 1119:
-	if ( (*( state.p)) == 119 )
-		goto st1120;
+#line 15187 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1509;
+		case 32: goto tr1509;
+		case 59: goto tr1510;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1508;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1509;
 	goto st0;
 st1120:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1120;
 case 1120:
-	if ( (*( state.p)) == 98 )
+	if ( (*( state.p)) == 105 )
 		goto st1121;
 	goto st0;
 st1121:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1121;
 case 1121:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1122;
 	goto st0;
 st1122:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1122;
 case 1122:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 119 )
 		goto st1123;
 	goto st0;
 st1123:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1123;
 case 1123:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 98 )
 		goto st1124;
 	goto st0;
 st1124:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1124;
 case 1124:
-	if ( (*( state.p)) == 107 )
+	if ( (*( state.p)) == 108 )
 		goto st1125;
 	goto st0;
 st1125:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1125;
 case 1125:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1514;
-		case 32: goto tr1514;
-		case 59: goto tr1515;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1514;
+	if ( (*( state.p)) == 111 )
+		goto st1126;
 	goto st0;
 st1126:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1126;
 case 1126:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 99 )
 		goto st1127;
 	goto st0;
 st1127:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1127;
 case 1127:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 107 )
 		goto st1128;
 	goto st0;
 st1128:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1128;
 case 1128:
-	if ( (*( state.p)) == 107 )
-		goto st1129;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1519;
+		case 32: goto tr1519;
+		case 59: goto tr1520;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1519;
 	goto st0;
 st1129:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1129;
 case 1129:
-	if ( (*( state.p)) == 98 )
+	if ( (*( state.p)) == 97 )
 		goto st1130;
 	goto st0;
 st1130:
@@ -15263,233 +15281,215 @@ st1131:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1131;
 case 1131:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 107 )
 		goto st1132;
 	goto st0;
 st1132:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1132;
 case 1132:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 98 )
 		goto st1133;
 	goto st0;
 st1133:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1133;
 case 1133:
-	if ( (*( state.p)) == 107 )
+	if ( (*( state.p)) == 108 )
 		goto st1134;
 	goto st0;
 st1134:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1134;
 case 1134:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1524;
-		case 32: goto tr1524;
-		case 59: goto tr1525;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1524;
+	if ( (*( state.p)) == 111 )
+		goto st1135;
 	goto st0;
-tr1306:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1135;
 st1135:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1135;
 case 1135:
-#line 15306 "configparser.h"
-	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-		goto tr1526;
+	if ( (*( state.p)) == 99 )
+		goto st1136;
 	goto st0;
-tr1526:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1136;
 st1136:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1136;
 case 1136:
-#line 15320 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1305;
-		case 32: goto tr1305;
-		case 59: goto tr1307;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1526;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1305;
+	if ( (*( state.p)) == 107 )
+		goto st1137;
 	goto st0;
 st1137:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1137;
 case 1137:
-	if ( (*( state.p)) == 97 )
-		goto st1138;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1529;
+		case 32: goto tr1529;
+		case 59: goto tr1530;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1529;
 	goto st0;
+tr1311:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1138;
 st1138:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1138;
 case 1138:
-	if ( (*( state.p)) == 116 )
-		goto st1139;
+#line 15345 "configparser.h"
+	if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+		goto tr1531;
 	goto st0;
+tr1531:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1139;
 st1139:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1139;
 case 1139:
-	if ( (*( state.p)) == 95 )
-		goto st1140;
+#line 15359 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1310;
+		case 32: goto tr1310;
+		case 59: goto tr1312;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1531;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1310;
 	goto st0;
 st1140:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1140;
 case 1140:
-	if ( (*( state.p)) == 98 )
+	if ( (*( state.p)) == 97 )
 		goto st1141;
 	goto st0;
 st1141:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1141;
 case 1141:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 116 )
 		goto st1142;
 	goto st0;
 st1142:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1142;
 case 1142:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 95 )
 		goto st1143;
 	goto st0;
 st1143:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1143;
 case 1143:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 98 )
 		goto st1144;
 	goto st0;
 st1144:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1144;
 case 1144:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 114 )
 		goto st1145;
 	goto st0;
 st1145:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1145;
 case 1145:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1535;
-		case 32: goto tr1535;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1535;
+	if ( (*( state.p)) == 97 )
+		goto st1146;
 	goto st0;
 st1146:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1146;
 case 1146:
-	switch( (*( state.p)) ) {
-		case 104: goto st1147;
-		case 111: goto st1154;
-		case 115: goto st1159;
-	}
+	if ( (*( state.p)) == 105 )
+		goto st1147;
 	goto st0;
 st1147:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1147;
 case 1147:
-	if ( (*( state.p)) == 121 )
+	if ( (*( state.p)) == 110 )
 		goto st1148;
 	goto st0;
 st1148:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1148;
 case 1148:
-	if ( (*( state.p)) == 115 )
-		goto st1149;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1540;
+		case 32: goto tr1540;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1540;
 	goto st0;
 st1149:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1149;
 case 1149:
-	if ( (*( state.p)) == 105 )
-		goto st1150;
+	switch( (*( state.p)) ) {
+		case 104: goto st1150;
+		case 111: goto st1157;
+		case 115: goto st1162;
+	}
 	goto st0;
 st1150:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1150;
 case 1150:
-	if ( (*( state.p)) == 99 )
+	if ( (*( state.p)) == 121 )
 		goto st1151;
 	goto st0;
 st1151:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1151;
 case 1151:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 115 )
 		goto st1152;
 	goto st0;
 st1152:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1152;
 case 1152:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st1153;
 	goto st0;
 st1153:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1153;
 case 1153:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1545;
-		case 32: goto tr1545;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1545;
+	if ( (*( state.p)) == 99 )
+		goto st1154;
 	goto st0;
 st1154:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1154;
 case 1154:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 97 )
 		goto st1155;
 	goto st0;
 st1155:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1155;
 case 1155:
-	if ( (*( state.p)) == 115 )
+	if ( (*( state.p)) == 108 )
 		goto st1156;
 	goto st0;
 st1156:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1156;
 case 1156:
-	if ( (*( state.p)) == 111 )
-		goto st1157;
-	goto st0;
-st1157:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1157;
-case 1157:
-	if ( (*( state.p)) == 110 )
-		goto st1158;
-	goto st0;
-st1158:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1158;
-case 1158:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1550;
 		case 32: goto tr1550;
@@ -15497,179 +15497,197 @@ case 1158:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1550;
 	goto st0;
+st1157:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1157;
+case 1157:
+	if ( (*( state.p)) == 105 )
+		goto st1158;
+	goto st0;
+st1158:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1158;
+case 1158:
+	if ( (*( state.p)) == 115 )
+		goto st1159;
+	goto st0;
 st1159:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1159;
 case 1159:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 111 )
 		goto st1160;
 	goto st0;
 st1160:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1160;
 case 1160:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1552;
-		case 32: goto tr1552;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1552;
+	if ( (*( state.p)) == 110 )
+		goto st1161;
 	goto st0;
 st1161:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1161;
 case 1161:
 	switch( (*( state.p)) ) {
-		case 99: goto st1162;
-		case 108: goto st1173;
+		case 13: goto tr1555;
+		case 32: goto tr1555;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1555;
 	goto st0;
 st1162:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1162;
 case 1162:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 105 )
 		goto st1163;
 	goto st0;
 st1163:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1163;
 case 1163:
-	if ( (*( state.p)) == 114 )
-		goto st1164;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1557;
+		case 32: goto tr1557;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1557;
 	goto st0;
 st1164:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1164;
 case 1164:
-	if ( (*( state.p)) == 101 )
-		goto st1165;
+	switch( (*( state.p)) ) {
+		case 99: goto st1165;
+		case 108: goto st1176;
+	}
 	goto st0;
 st1165:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1165;
 case 1165:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 97 )
 		goto st1166;
 	goto st0;
 st1166:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1166;
 case 1166:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 114 )
 		goto st1167;
 	goto st0;
 st1167:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1167;
 case 1167:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 101 )
 		goto st1168;
 	goto st0;
 st1168:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1168;
 case 1168:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 95 )
 		goto st1169;
 	goto st0;
 st1169:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1169;
 case 1169:
-	if ( (*( state.p)) == 109 )
+	if ( (*( state.p)) == 97 )
 		goto st1170;
 	goto st0;
 st1170:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1170;
 case 1170:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st1171;
 	goto st0;
 st1171:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1171;
 case 1171:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 105 )
 		goto st1172;
 	goto st0;
 st1172:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1172;
 case 1172:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1565;
-		case 32: goto tr1565;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1565;
+	if ( (*( state.p)) == 109 )
+		goto st1173;
 	goto st0;
 st1173:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1173;
 case 1173:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 97 )
 		goto st1174;
 	goto st0;
 st1174:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1174;
 case 1174:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 108 )
 		goto st1175;
 	goto st0;
 st1175:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1175;
 case 1175:
-	if ( (*( state.p)) == 112 )
-		goto st1176;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1570;
+		case 32: goto tr1570;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1570;
 	goto st0;
 st1176:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1176;
 case 1176:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1569;
-		case 32: goto tr1569;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1569;
+	if ( (*( state.p)) == 101 )
+		goto st1177;
 	goto st0;
 st1177:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1177;
 case 1177:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 101 )
 		goto st1178;
 	goto st0;
 st1178:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1178;
 case 1178:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 112 )
 		goto st1179;
 	goto st0;
 st1179:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1179;
 case 1179:
-	if ( (*( state.p)) == 110 )
-		goto st1180;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1574;
+		case 32: goto tr1574;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1574;
 	goto st0;
 st1180:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1180;
 case 1180:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 117 )
 		goto st1181;
 	goto st0;
 st1181:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1181;
 case 1181:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 114 )
 		goto st1182;
 	goto st0;
 st1182:
@@ -15683,21 +15701,21 @@ st1183:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1183;
 case 1183:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 95 )
 		goto st1184;
 	goto st0;
 st1184:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1184;
 case 1184:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 117 )
 		goto st1185;
 	goto st0;
 st1185:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1185;
 case 1185:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 110 )
 		goto st1186;
 	goto st0;
 st1186:
@@ -15711,359 +15729,318 @@ st1187:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1187;
 case 1187:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1580;
-		case 32: goto tr1580;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1580;
+	if ( (*( state.p)) == 101 )
+		goto st1188;
 	goto st0;
 st1188:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1188;
 case 1188:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 97 )
 		goto st1189;
 	goto st0;
 st1189:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1189;
 case 1189:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 100 )
 		goto st1190;
 	goto st0;
 st1190:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1190;
 case 1190:
-	if ( (*( state.p)) == 118 )
-		goto st1191;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1585;
+		case 32: goto tr1585;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1585;
 	goto st0;
 st1191:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1191;
 case 1191:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 108 )
 		goto st1192;
 	goto st0;
 st1192:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1192;
 case 1192:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1193;
 	goto st0;
 st1193:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1193;
 case 1193:
-	switch( (*( state.p)) ) {
-		case 13: goto st1194;
-		case 32: goto st1194;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 118 )
 		goto st1194;
 	goto st0;
 st1194:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1194;
 case 1194:
-	switch( (*( state.p)) ) {
-		case 13: goto st1194;
-		case 32: goto st1194;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1587;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1194;
+	if ( (*( state.p)) == 101 )
+		goto st1195;
 	goto st0;
-tr1587:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1195;
-tr1589:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1195;
 st1195:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1195;
 case 1195:
-#line 15802 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr1588;
-		case 32: goto tr1588;
-		case 59: goto tr1590;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr1589;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr1588;
+	if ( (*( state.p)) == 108 )
+		goto st1196;
 	goto st0;
 st1196:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1196;
 case 1196:
 	switch( (*( state.p)) ) {
-		case 13: goto st1196;
-		case 32: goto st1196;
-		case 100: goto st1197;
-		case 102: goto st1224;
-		case 108: goto st1677;
-		case 115: goto st1696;
-		case 119: goto st1764;
-		case 125: goto tr1597;
+		case 13: goto st1197;
+		case 32: goto st1197;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1196;
+		goto st1197;
 	goto st0;
 st1197:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1197;
 case 1197:
-	if ( (*( state.p)) == 101 )
-		goto st1198;
+	switch( (*( state.p)) ) {
+		case 13: goto st1197;
+		case 32: goto st1197;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1592;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1197;
 	goto st0;
+tr1592:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1198;
+tr1594:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1198;
 st1198:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1198;
 case 1198:
-	if ( (*( state.p)) == 101 )
-		goto st1199;
+#line 15841 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr1593;
+		case 32: goto tr1593;
+		case 59: goto tr1595;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr1594;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr1593;
 	goto st0;
 st1199:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1199;
 case 1199:
-	if ( (*( state.p)) == 112 )
-		goto st1200;
+	switch( (*( state.p)) ) {
+		case 13: goto st1199;
+		case 32: goto st1199;
+		case 100: goto st1200;
+		case 102: goto st1227;
+		case 108: goto st1680;
+		case 115: goto st1699;
+		case 119: goto st1767;
+		case 125: goto tr1602;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1199;
 	goto st0;
 st1200:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1200;
 case 1200:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 101 )
 		goto st1201;
 	goto st0;
 st1201:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1201;
 case 1201:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 101 )
 		goto st1202;
 	goto st0;
 st1202:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1202;
 case 1202:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 112 )
 		goto st1203;
 	goto st0;
 st1203:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1203;
 case 1203:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 95 )
 		goto st1204;
 	goto st0;
 st1204:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1204;
 case 1204:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 119 )
 		goto st1205;
 	goto st0;
 st1205:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1205;
 case 1205:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1206;
 	goto st0;
 st1206:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1206;
 case 1206:
-	switch( (*( state.p)) ) {
-		case 13: goto st1207;
-		case 32: goto st1207;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 116 )
 		goto st1207;
 	goto st0;
 st1207:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1207;
 case 1207:
-	switch( (*( state.p)) ) {
-		case 13: goto st1207;
-		case 32: goto st1207;
-		case 34: goto tr1608;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1207;
+	if ( (*( state.p)) == 101 )
+		goto st1208;
 	goto st0;
-tr1609:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1208;
-tr1608:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1208;
-tr1611:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1208; goto st47;}}
-	goto st1208;
 st1208:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1208;
 case 1208:
-#line 15937 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1209;
-		case 92: goto tr1611;
-	}
-	goto tr1609;
+	if ( (*( state.p)) == 114 )
+		goto st1209;
+	goto st0;
 st1209:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1209;
 case 1209:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1612;
-		case 32: goto tr1612;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1612;
-	goto st0;
-tr1612:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1210;
-st1210:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1210;
-case 1210:
-#line 15962 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1210;
 		case 32: goto st1210;
-		case 98: goto st1211;
-		case 100: goto st1919;
-		case 110: goto st1922;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1210;
 	goto st0;
+st1210:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1210;
+case 1210:
+	switch( (*( state.p)) ) {
+		case 13: goto st1210;
+		case 32: goto st1210;
+		case 34: goto tr1613;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1210;
+	goto st0;
+tr1614:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1211;
+tr1613:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1211;
+tr1616:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1211; goto st47;}}
+	goto st1211;
 st1211:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1211;
 case 1211:
-	if ( (*( state.p)) == 114 )
-		goto st1212;
-	goto st0;
+#line 15976 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1212;
+		case 92: goto tr1616;
+	}
+	goto tr1614;
 st1212:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1212;
 case 1212:
-	if ( (*( state.p)) == 105 )
-		goto st1213;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1617;
+		case 32: goto tr1617;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1617;
 	goto st0;
+tr1617:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1213;
 st1213:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1213;
 case 1213:
-	if ( (*( state.p)) == 103 )
-		goto st1214;
+#line 16001 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1213;
+		case 32: goto st1213;
+		case 98: goto st1214;
+		case 100: goto st1922;
+		case 110: goto st1925;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1213;
 	goto st0;
 st1214:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1214;
 case 1214:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1215;
 	goto st0;
 st1215:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1215;
 case 1215:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1216;
 	goto st0;
 st1216:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1216;
 case 1216:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1622;
-		case 32: goto tr1622;
-		case 95: goto tr1623;
-		case 98: goto tr1624;
-		case 99: goto tr1625;
-		case 103: goto tr1626;
-		case 109: goto tr1627;
-		case 114: goto tr1628;
-		case 119: goto tr1629;
-		case 121: goto tr1630;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1622;
+	if ( (*( state.p)) == 103 )
+		goto st1217;
 	goto st0;
-tr1622:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1217;
-tr2749:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1217;
 st1217:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1217;
 case 1217:
-#line 16039 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1217;
-		case 32: goto st1217;
-		case 98: goto st1218;
-		case 99: goto st1888;
-		case 103: goto st1892;
-		case 109: goto st1897;
-		case 114: goto st1904;
-		case 119: goto st1907;
-		case 121: goto st1912;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1217;
+	if ( (*( state.p)) == 104 )
+		goto st1218;
 	goto st0;
-tr1624:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1218;
-tr2751:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1218;
 st1218:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1218;
 case 1218:
-#line 16066 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1219;
 	goto st0;
 st1219:
@@ -16071,22 +16048,61 @@ st1219:
 		goto _test_eof1219;
 case 1219:
 	switch( (*( state.p)) ) {
-		case 97: goto st1220;
-		case 117: goto st1886;
+		case 13: goto tr1627;
+		case 32: goto tr1627;
+		case 95: goto tr1628;
+		case 98: goto tr1629;
+		case 99: goto tr1630;
+		case 103: goto tr1631;
+		case 109: goto tr1632;
+		case 114: goto tr1633;
+		case 119: goto tr1634;
+		case 121: goto tr1635;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1627;
 	goto st0;
+tr1627:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1220;
+tr2754:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1220;
 st1220:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1220;
 case 1220:
-	if ( (*( state.p)) == 99 )
-		goto st1221;
+#line 16078 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1220;
+		case 32: goto st1220;
+		case 98: goto st1221;
+		case 99: goto st1891;
+		case 103: goto st1895;
+		case 109: goto st1900;
+		case 114: goto st1907;
+		case 119: goto st1910;
+		case 121: goto st1915;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1220;
 	goto st0;
+tr1629:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1221;
+tr2756:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1221;
 st1221:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1221;
 case 1221:
-	if ( (*( state.p)) == 107 )
+#line 16105 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1222;
 	goto st0;
 st1222:
@@ -16094,1385 +16110,1346 @@ st1222:
 		goto _test_eof1222;
 case 1222:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1644;
-		case 32: goto tr1644;
-		case 59: goto tr1645;
+		case 97: goto st1223;
+		case 117: goto st1889;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1644;
 	goto st0;
-tr1597:
-#line 422 "configparser.rl"
-	{ { state.cs =  state.stack[-- state.top];goto _again;} }
-	goto st1223;
-tr1644:
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr1697:
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1700:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1705:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1711:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1719:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1723:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1729:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1736:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1223;
-tr1788:
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1791:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1796:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1802:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1810:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1814:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1820:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1827:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1223;
-tr1879:
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1882:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1887:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1893:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1901:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1905:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1911:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1918:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1223;
-tr1970:
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr1973:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr1978:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr1984:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr1992:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr1996:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr2002:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr2009:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1223;
-tr2061:
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2064:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2069:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2075:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2083:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2087:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2093:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2100:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1223;
-tr2152:
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2155:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2160:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2166:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2174:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2178:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2184:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2191:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1223;
-tr2243:
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2246:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2251:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2257:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2265:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2269:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2275:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2282:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1223;
-tr2334:
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2337:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2342:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2348:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2356:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2360:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2366:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2373:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1223;
-tr2401:
-#line 412 "configparser.rl"
-	{ lev.lightradius = toint(state.match); }
-	goto st1223;
-tr2409:
-#line 413 "configparser.rl"
-	{ lev.lightradius_max = toint(state.match); }
-	goto st1223;
-tr2461:
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2464:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2469:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2475:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2483:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2487:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2493:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2500:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1223;
-tr2556:
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2559:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2564:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2570:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2578:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2582:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2588:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2595:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1223;
-tr2654:
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2657:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2662:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2668:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2676:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2680:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2686:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2693:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1223;
-tr2709:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2714:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2720:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2728:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2732:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2738:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
-tr2745:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1223;
 st1223:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1223;
 case 1223:
-#line 16673 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1223;
-		case 32: goto st1223;
-		case 59: goto st1934;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1223;
-	goto st0;
-tr1645:
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr1698:
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1701:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1706:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1712:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1720:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1724:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1730:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1737:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 404 "configparser.rl"
-	{ lev.floor1 = skin; }
-	goto st1934;
-tr1789:
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1792:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1797:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1803:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1811:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1815:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1821:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1828:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 405 "configparser.rl"
-	{ lev.floor2 = skin; }
-	goto st1934;
-tr1880:
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1883:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1888:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1894:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1902:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1906:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1912:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1919:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 406 "configparser.rl"
-	{ lev.floor3 = skin; }
-	goto st1934;
-tr1971:
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr1974:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr1979:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr1985:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr1993:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr1997:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr2003:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr2010:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 407 "configparser.rl"
-	{ lev.floor4 = skin; }
-	goto st1934;
-tr2062:
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2065:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2070:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2076:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2084:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2088:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2094:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2101:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 408 "configparser.rl"
-	{ lev.floor5 = skin; }
-	goto st1934;
-tr2153:
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2156:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2161:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2167:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2175:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2179:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2185:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2192:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 409 "configparser.rl"
-	{ lev.floor6 = skin; }
-	goto st1934;
-tr2244:
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2247:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2252:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2258:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2266:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2270:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2276:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2283:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 410 "configparser.rl"
-	{ lev.floor7 = skin; }
-	goto st1934;
-tr2335:
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2338:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2343:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2349:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2357:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2361:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2367:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2374:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 411 "configparser.rl"
-	{ lev.floor8 = skin; }
-	goto st1934;
-tr2403:
-#line 412 "configparser.rl"
-	{ lev.lightradius = toint(state.match); }
-	goto st1934;
-tr2411:
-#line 413 "configparser.rl"
-	{ lev.lightradius_max = toint(state.match); }
-	goto st1934;
-tr2462:
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2465:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2470:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2476:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2484:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2488:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2494:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2501:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 401 "configparser.rl"
-	{ lev.shallow_water = skin; }
-	goto st1934;
-tr2557:
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2560:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2565:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2571:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2579:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2583:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2589:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2596:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 402 "configparser.rl"
-	{ lev.wall = skin; }
-	goto st1934;
-tr2655:
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2658:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2663:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2669:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2677:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2681:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2687:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2694:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 403 "configparser.rl"
-	{ lev.water_wall = skin; }
-	goto st1934;
-tr2710:
-#line 156 "configparser.rl"
-	{ add_color(skin.fore, 4); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2715:
-#line 158 "configparser.rl"
-	{ add_color(skin.fore, 6); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2721:
-#line 154 "configparser.rl"
-	{ add_color(skin.fore, 2); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2729:
-#line 157 "configparser.rl"
-	{ add_color(skin.fore, 5); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2733:
-#line 153 "configparser.rl"
-	{ add_color(skin.fore, 1); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2739:
-#line 159 "configparser.rl"
-	{ add_color(skin.fore, 7); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-tr2746:
-#line 155 "configparser.rl"
-	{ add_color(skin.fore, 3); }
-#line 400 "configparser.rl"
-	{ lev.deep_water = skin; }
-	goto st1934;
-st1934:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1934;
-case 1934:
-#line 17246 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1196;
-		case 32: goto st1196;
-		case 100: goto st1197;
-		case 102: goto st1224;
-		case 108: goto st1677;
-		case 115: goto st1696;
-		case 119: goto st1764;
-		case 125: goto tr1597;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1196;
+	if ( (*( state.p)) == 99 )
+		goto st1224;
 	goto st0;
 st1224:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1224;
 case 1224:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 107 )
 		goto st1225;
 	goto st0;
 st1225:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1225;
 case 1225:
-	if ( (*( state.p)) == 111 )
-		goto st1226;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1649;
+		case 32: goto tr1649;
+		case 59: goto tr1650;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1649;
 	goto st0;
+tr1602:
+#line 424 "configparser.rl"
+	{ { state.cs =  state.stack[-- state.top];goto _again;} }
+	goto st1226;
+tr1649:
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr1702:
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1705:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1710:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1716:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1724:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1728:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1734:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1741:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1226;
+tr1793:
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1796:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1801:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1807:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1815:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1819:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1825:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1832:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1226;
+tr1884:
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1887:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1892:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1898:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1906:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1910:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1916:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1923:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1226;
+tr1975:
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr1978:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr1983:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr1989:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr1997:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr2001:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr2007:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr2014:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1226;
+tr2066:
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2069:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2074:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2080:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2088:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2092:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2098:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2105:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1226;
+tr2157:
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2160:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2165:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2171:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2179:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2183:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2189:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2196:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1226;
+tr2248:
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2251:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2256:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2262:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2270:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2274:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2280:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2287:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1226;
+tr2339:
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2342:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2347:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2353:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2361:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2365:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2371:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2378:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1226;
+tr2406:
+#line 414 "configparser.rl"
+	{ lev.lightradius = toint(state.match); }
+	goto st1226;
+tr2414:
+#line 415 "configparser.rl"
+	{ lev.lightradius_max = toint(state.match); }
+	goto st1226;
+tr2466:
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2469:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2474:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2480:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2488:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2492:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2498:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2505:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1226;
+tr2561:
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2564:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2569:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2575:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2583:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2587:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2593:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2600:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1226;
+tr2659:
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2662:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2667:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2673:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2681:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2685:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2691:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2698:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1226;
+tr2714:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2719:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2725:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2733:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2737:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2743:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
+tr2750:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1226;
 st1226:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1226;
 case 1226:
-	if ( (*( state.p)) == 111 )
-		goto st1227;
+#line 16712 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1226;
+		case 32: goto st1226;
+		case 59: goto st1937;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1226;
+	goto st0;
+tr1650:
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr1703:
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1706:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1711:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1717:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1725:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1729:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1735:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1742:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 406 "configparser.rl"
+	{ lev.floor1 = skin; }
+	goto st1937;
+tr1794:
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1797:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1802:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1808:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1816:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1820:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1826:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1833:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 407 "configparser.rl"
+	{ lev.floor2 = skin; }
+	goto st1937;
+tr1885:
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1888:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1893:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1899:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1907:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1911:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1917:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1924:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 408 "configparser.rl"
+	{ lev.floor3 = skin; }
+	goto st1937;
+tr1976:
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr1979:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr1984:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr1990:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr1998:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr2002:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr2008:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr2015:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 409 "configparser.rl"
+	{ lev.floor4 = skin; }
+	goto st1937;
+tr2067:
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2070:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2075:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2081:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2089:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2093:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2099:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2106:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 410 "configparser.rl"
+	{ lev.floor5 = skin; }
+	goto st1937;
+tr2158:
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2161:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2166:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2172:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2180:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2184:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2190:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2197:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 411 "configparser.rl"
+	{ lev.floor6 = skin; }
+	goto st1937;
+tr2249:
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2252:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2257:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2263:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2271:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2275:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2281:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2288:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 412 "configparser.rl"
+	{ lev.floor7 = skin; }
+	goto st1937;
+tr2340:
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2343:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2348:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2354:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2362:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2366:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2372:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2379:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 413 "configparser.rl"
+	{ lev.floor8 = skin; }
+	goto st1937;
+tr2408:
+#line 414 "configparser.rl"
+	{ lev.lightradius = toint(state.match); }
+	goto st1937;
+tr2416:
+#line 415 "configparser.rl"
+	{ lev.lightradius_max = toint(state.match); }
+	goto st1937;
+tr2467:
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2470:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2475:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2481:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2489:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2493:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2499:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2506:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 403 "configparser.rl"
+	{ lev.shallow_water = skin; }
+	goto st1937;
+tr2562:
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2565:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2570:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2576:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2584:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2588:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2594:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2601:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 404 "configparser.rl"
+	{ lev.wall = skin; }
+	goto st1937;
+tr2660:
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2663:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2668:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2674:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2682:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2686:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2692:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2699:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 405 "configparser.rl"
+	{ lev.water_wall = skin; }
+	goto st1937;
+tr2715:
+#line 156 "configparser.rl"
+	{ add_color(skin.fore, 4); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2720:
+#line 158 "configparser.rl"
+	{ add_color(skin.fore, 6); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2726:
+#line 154 "configparser.rl"
+	{ add_color(skin.fore, 2); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2734:
+#line 157 "configparser.rl"
+	{ add_color(skin.fore, 5); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2738:
+#line 153 "configparser.rl"
+	{ add_color(skin.fore, 1); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2744:
+#line 159 "configparser.rl"
+	{ add_color(skin.fore, 7); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+tr2751:
+#line 155 "configparser.rl"
+	{ add_color(skin.fore, 3); }
+#line 402 "configparser.rl"
+	{ lev.deep_water = skin; }
+	goto st1937;
+st1937:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1937;
+case 1937:
+#line 17285 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1199;
+		case 32: goto st1199;
+		case 100: goto st1200;
+		case 102: goto st1227;
+		case 108: goto st1680;
+		case 115: goto st1699;
+		case 119: goto st1767;
+		case 125: goto tr1602;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1199;
 	goto st0;
 st1227:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1227;
 case 1227:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 108 )
 		goto st1228;
 	goto st0;
 st1228:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1228;
 case 1228:
-	switch( (*( state.p)) ) {
-		case 49: goto st1229;
-		case 50: goto st1285;
-		case 51: goto st1341;
-		case 52: goto st1397;
-		case 53: goto st1453;
-		case 54: goto st1509;
-		case 55: goto st1565;
-		case 56: goto st1621;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1229;
 	goto st0;
 st1229:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1229;
 case 1229:
-	switch( (*( state.p)) ) {
-		case 13: goto st1230;
-		case 32: goto st1230;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1230;
 	goto st0;
 st1230:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1230;
 case 1230:
-	switch( (*( state.p)) ) {
-		case 13: goto st1230;
-		case 32: goto st1230;
-		case 34: goto tr1661;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1230;
+	if ( (*( state.p)) == 114 )
+		goto st1231;
 	goto st0;
-tr1662:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1231;
-tr1661:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1231;
-tr1664:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1231; goto st47;}}
-	goto st1231;
 st1231:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1231;
 case 1231:
-#line 17346 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 34: goto st1232;
-		case 92: goto tr1664;
+		case 49: goto st1232;
+		case 50: goto st1288;
+		case 51: goto st1344;
+		case 52: goto st1400;
+		case 53: goto st1456;
+		case 54: goto st1512;
+		case 55: goto st1568;
+		case 56: goto st1624;
 	}
-	goto tr1662;
+	goto st0;
 st1232:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1232;
 case 1232:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1665;
-		case 32: goto tr1665;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1665;
-	goto st0;
-tr1665:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1233;
-st1233:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1233;
-case 1233:
-#line 17371 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1233;
 		case 32: goto st1233;
-		case 98: goto st1234;
-		case 100: goto st1279;
-		case 110: goto st1282;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1233;
 	goto st0;
+st1233:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1233;
+case 1233:
+	switch( (*( state.p)) ) {
+		case 13: goto st1233;
+		case 32: goto st1233;
+		case 34: goto tr1666;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1233;
+	goto st0;
+tr1667:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1234;
+tr1666:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1234;
+tr1669:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1234; goto st47;}}
+	goto st1234;
 st1234:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1234;
 case 1234:
-	if ( (*( state.p)) == 114 )
-		goto st1235;
-	goto st0;
+#line 17385 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1235;
+		case 92: goto tr1669;
+	}
+	goto tr1667;
 st1235:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1235;
 case 1235:
-	if ( (*( state.p)) == 105 )
-		goto st1236;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1670;
+		case 32: goto tr1670;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1670;
 	goto st0;
+tr1670:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1236;
 st1236:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1236;
 case 1236:
-	if ( (*( state.p)) == 103 )
-		goto st1237;
+#line 17410 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1236;
+		case 32: goto st1236;
+		case 98: goto st1237;
+		case 100: goto st1282;
+		case 110: goto st1285;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1236;
 	goto st0;
 st1237:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1237;
 case 1237:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1238;
 	goto st0;
 st1238:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1238;
 case 1238:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1239;
 	goto st0;
 st1239:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1239;
 case 1239:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1675;
-		case 32: goto tr1675;
-		case 95: goto tr1676;
-		case 98: goto tr1677;
-		case 99: goto tr1678;
-		case 103: goto tr1679;
-		case 109: goto tr1680;
-		case 114: goto tr1681;
-		case 119: goto tr1682;
-		case 121: goto tr1683;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1675;
+	if ( (*( state.p)) == 103 )
+		goto st1240;
 	goto st0;
-tr1675:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1240;
-tr1740:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1240;
 st1240:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1240;
 case 1240:
-#line 17448 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1240;
-		case 32: goto st1240;
-		case 98: goto st1241;
-		case 99: goto st1248;
-		case 103: goto st1252;
-		case 109: goto st1257;
-		case 114: goto st1264;
-		case 119: goto st1267;
-		case 121: goto st1272;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1240;
+	if ( (*( state.p)) == 104 )
+		goto st1241;
 	goto st0;
-tr1677:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1241;
-tr1742:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1241;
 st1241:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1241;
 case 1241:
-#line 17475 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1242;
 	goto st0;
 st1242:
@@ -17480,22 +17457,61 @@ st1242:
 		goto _test_eof1242;
 case 1242:
 	switch( (*( state.p)) ) {
-		case 97: goto st1243;
-		case 117: goto st1246;
+		case 13: goto tr1680;
+		case 32: goto tr1680;
+		case 95: goto tr1681;
+		case 98: goto tr1682;
+		case 99: goto tr1683;
+		case 103: goto tr1684;
+		case 109: goto tr1685;
+		case 114: goto tr1686;
+		case 119: goto tr1687;
+		case 121: goto tr1688;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1680;
 	goto st0;
+tr1680:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1243;
+tr1745:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1243;
 st1243:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1243;
 case 1243:
-	if ( (*( state.p)) == 99 )
-		goto st1244;
+#line 17487 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1243;
+		case 32: goto st1243;
+		case 98: goto st1244;
+		case 99: goto st1251;
+		case 103: goto st1255;
+		case 109: goto st1260;
+		case 114: goto st1267;
+		case 119: goto st1270;
+		case 121: goto st1275;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1243;
 	goto st0;
+tr1682:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1244;
+tr1747:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1244;
 st1244:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1244;
 case 1244:
-	if ( (*( state.p)) == 107 )
+#line 17514 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1245;
 	goto st0;
 st1245:
@@ -17503,66 +17519,47 @@ st1245:
 		goto _test_eof1245;
 case 1245:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1697;
-		case 32: goto tr1697;
-		case 59: goto tr1698;
+		case 97: goto st1246;
+		case 117: goto st1249;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1697;
 	goto st0;
 st1246:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1246;
 case 1246:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1247;
 	goto st0;
 st1247:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1247;
 case 1247:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1700;
-		case 32: goto tr1700;
-		case 59: goto tr1701;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1700;
+	if ( (*( state.p)) == 107 )
+		goto st1248;
 	goto st0;
-tr1678:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1248;
-tr1743:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1248;
 st1248:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1248;
 case 1248:
-#line 17545 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1249;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1702;
+		case 32: goto tr1702;
+		case 59: goto tr1703;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1702;
 	goto st0;
 st1249:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1249;
 case 1249:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1250;
 	goto st0;
 st1250:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1250;
 case 1250:
-	if ( (*( state.p)) == 110 )
-		goto st1251;
-	goto st0;
-st1251:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1251;
-case 1251:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1705;
 		case 32: goto tr1705;
@@ -17571,139 +17568,146 @@ case 1251:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1705;
 	goto st0;
-tr1679:
+tr1683:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1252;
-tr1744:
+	goto st1251;
+tr1748:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1252;
+	goto st1251;
+st1251:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1251;
+case 1251:
+#line 17584 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1252;
+	goto st0;
 st1252:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1252;
 case 1252:
-#line 17587 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1253;
 	goto st0;
 st1253:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1253;
 case 1253:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1254;
 	goto st0;
 st1254:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1254;
 case 1254:
-	if ( (*( state.p)) == 101 )
-		goto st1255;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1710;
+		case 32: goto tr1710;
+		case 59: goto tr1711;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1710;
 	goto st0;
+tr1684:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1255;
+tr1749:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1255;
 st1255:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1255;
 case 1255:
-	if ( (*( state.p)) == 110 )
+#line 17626 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1256;
 	goto st0;
 st1256:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1256;
 case 1256:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1711;
-		case 32: goto tr1711;
-		case 59: goto tr1712;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1711;
+	if ( (*( state.p)) == 101 )
+		goto st1257;
 	goto st0;
-tr1680:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1257;
-tr1745:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1257;
 st1257:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1257;
 case 1257:
-#line 17636 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1258;
 	goto st0;
 st1258:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1258;
 case 1258:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1259;
 	goto st0;
 st1259:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1259;
 case 1259:
-	if ( (*( state.p)) == 101 )
-		goto st1260;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1716;
+		case 32: goto tr1716;
+		case 59: goto tr1717;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1716;
 	goto st0;
+tr1685:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1260;
+tr1750:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1260;
 st1260:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1260;
 case 1260:
-	if ( (*( state.p)) == 110 )
+#line 17675 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1261;
 	goto st0;
 st1261:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1261;
 case 1261:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1262;
 	goto st0;
 st1262:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1262;
 case 1262:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1263;
 	goto st0;
 st1263:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1263;
 case 1263:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1719;
-		case 32: goto tr1719;
-		case 59: goto tr1720;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1719;
+	if ( (*( state.p)) == 110 )
+		goto st1264;
 	goto st0;
-tr1681:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1264;
-tr1746:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1264;
 st1264:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1264;
 case 1264:
-#line 17699 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1265;
 	goto st0;
 st1265:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1265;
 case 1265:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1266;
 	goto st0;
 st1266:
@@ -17711,18 +17715,18 @@ st1266:
 		goto _test_eof1266;
 case 1266:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1723;
-		case 32: goto tr1723;
-		case 59: goto tr1724;
+		case 13: goto tr1724;
+		case 32: goto tr1724;
+		case 59: goto tr1725;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1723;
+		goto tr1724;
 	goto st0;
-tr1682:
+tr1686:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1267;
-tr1747:
+tr1751:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1267;
@@ -17730,350 +17734,323 @@ st1267:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1267;
 case 1267:
-#line 17734 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 17738 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1268;
 	goto st0;
 st1268:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1268;
 case 1268:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1269;
 	goto st0;
 st1269:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1269;
 case 1269:
-	if ( (*( state.p)) == 116 )
-		goto st1270;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1728;
+		case 32: goto tr1728;
+		case 59: goto tr1729;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1728;
 	goto st0;
+tr1687:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1270;
+tr1752:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1270;
 st1270:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1270;
 case 1270:
-	if ( (*( state.p)) == 101 )
+#line 17773 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1271;
 	goto st0;
 st1271:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1271;
 case 1271:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1729;
-		case 32: goto tr1729;
-		case 59: goto tr1730;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1729;
+	if ( (*( state.p)) == 105 )
+		goto st1272;
 	goto st0;
-tr1683:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1272;
-tr1748:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1272;
 st1272:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1272;
 case 1272:
-#line 17783 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1273;
 	goto st0;
 st1273:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1273;
 case 1273:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1274;
 	goto st0;
 st1274:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1274;
 case 1274:
-	if ( (*( state.p)) == 108 )
-		goto st1275;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1734;
+		case 32: goto tr1734;
+		case 59: goto tr1735;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1734;
 	goto st0;
+tr1688:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1275;
+tr1753:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1275;
 st1275:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1275;
 case 1275:
-	if ( (*( state.p)) == 111 )
+#line 17822 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1276;
 	goto st0;
 st1276:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1276;
 case 1276:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1277;
 	goto st0;
 st1277:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1277;
 case 1277:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1736;
-		case 32: goto tr1736;
-		case 59: goto tr1737;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1736;
+	if ( (*( state.p)) == 108 )
+		goto st1278;
 	goto st0;
-tr1676:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1278;
-tr1741:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1278;
 st1278:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1278;
 case 1278:
-#line 17839 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1241;
-		case 99: goto st1248;
-		case 103: goto st1252;
-		case 109: goto st1257;
-		case 114: goto st1264;
-		case 119: goto st1267;
-		case 121: goto st1272;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1279;
 	goto st0;
 st1279:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1279;
 case 1279:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1280;
 	goto st0;
 st1280:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1280;
 case 1280:
-	if ( (*( state.p)) == 109 )
-		goto st1281;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1741;
+		case 32: goto tr1741;
+		case 59: goto tr1742;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1741;
 	goto st0;
+tr1681:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1281;
+tr1746:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1281;
 st1281:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1281;
 case 1281:
+#line 17878 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1740;
-		case 32: goto tr1740;
-		case 95: goto tr1741;
-		case 98: goto tr1742;
-		case 99: goto tr1743;
-		case 103: goto tr1744;
-		case 109: goto tr1745;
-		case 114: goto tr1746;
-		case 119: goto tr1747;
-		case 121: goto tr1748;
+		case 98: goto st1244;
+		case 99: goto st1251;
+		case 103: goto st1255;
+		case 109: goto st1260;
+		case 114: goto st1267;
+		case 119: goto st1270;
+		case 121: goto st1275;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1740;
 	goto st0;
 st1282:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1282;
 case 1282:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1283;
 	goto st0;
 st1283:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1283;
 case 1283:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1284;
 	goto st0;
 st1284:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1284;
 case 1284:
-	if ( (*( state.p)) == 101 )
-		goto st1245;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1745;
+		case 32: goto tr1745;
+		case 95: goto tr1746;
+		case 98: goto tr1747;
+		case 99: goto tr1748;
+		case 103: goto tr1749;
+		case 109: goto tr1750;
+		case 114: goto tr1751;
+		case 119: goto tr1752;
+		case 121: goto tr1753;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1745;
 	goto st0;
 st1285:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1285;
 case 1285:
-	switch( (*( state.p)) ) {
-		case 13: goto st1286;
-		case 32: goto st1286;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1286;
 	goto st0;
 st1286:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1286;
 case 1286:
-	switch( (*( state.p)) ) {
-		case 13: goto st1286;
-		case 32: goto st1286;
-		case 34: goto tr1752;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1286;
+	if ( (*( state.p)) == 110 )
+		goto st1287;
 	goto st0;
-tr1753:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1287;
-tr1752:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1287;
-tr1755:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1287; goto st47;}}
-	goto st1287;
 st1287:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1287;
 case 1287:
-#line 17947 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1288;
-		case 92: goto tr1755;
-	}
-	goto tr1753;
+	if ( (*( state.p)) == 101 )
+		goto st1248;
+	goto st0;
 st1288:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1288;
 case 1288:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1756;
-		case 32: goto tr1756;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1756;
-	goto st0;
-tr1756:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1289;
-st1289:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1289;
-case 1289:
-#line 17972 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1289;
 		case 32: goto st1289;
-		case 98: goto st1290;
-		case 100: goto st1335;
-		case 110: goto st1338;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1289;
 	goto st0;
+st1289:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1289;
+case 1289:
+	switch( (*( state.p)) ) {
+		case 13: goto st1289;
+		case 32: goto st1289;
+		case 34: goto tr1757;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1289;
+	goto st0;
+tr1758:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1290;
+tr1757:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1290;
+tr1760:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1290; goto st47;}}
+	goto st1290;
 st1290:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1290;
 case 1290:
-	if ( (*( state.p)) == 114 )
-		goto st1291;
-	goto st0;
+#line 17986 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1291;
+		case 92: goto tr1760;
+	}
+	goto tr1758;
 st1291:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1291;
 case 1291:
-	if ( (*( state.p)) == 105 )
-		goto st1292;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1761;
+		case 32: goto tr1761;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1761;
 	goto st0;
+tr1761:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1292;
 st1292:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1292;
 case 1292:
-	if ( (*( state.p)) == 103 )
-		goto st1293;
+#line 18011 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1292;
+		case 32: goto st1292;
+		case 98: goto st1293;
+		case 100: goto st1338;
+		case 110: goto st1341;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1292;
 	goto st0;
 st1293:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1293;
 case 1293:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1294;
 	goto st0;
 st1294:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1294;
 case 1294:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1295;
 	goto st0;
 st1295:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1295;
 case 1295:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1766;
-		case 32: goto tr1766;
-		case 95: goto tr1767;
-		case 98: goto tr1768;
-		case 99: goto tr1769;
-		case 103: goto tr1770;
-		case 109: goto tr1771;
-		case 114: goto tr1772;
-		case 119: goto tr1773;
-		case 121: goto tr1774;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1766;
+	if ( (*( state.p)) == 103 )
+		goto st1296;
 	goto st0;
-tr1766:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1296;
-tr1831:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1296;
 st1296:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1296;
 case 1296:
-#line 18049 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1296;
-		case 32: goto st1296;
-		case 98: goto st1297;
-		case 99: goto st1304;
-		case 103: goto st1308;
-		case 109: goto st1313;
-		case 114: goto st1320;
-		case 119: goto st1323;
-		case 121: goto st1328;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1296;
+	if ( (*( state.p)) == 104 )
+		goto st1297;
 	goto st0;
-tr1768:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1297;
-tr1833:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1297;
 st1297:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1297;
 case 1297:
-#line 18076 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1298;
 	goto st0;
 st1298:
@@ -18081,22 +18058,61 @@ st1298:
 		goto _test_eof1298;
 case 1298:
 	switch( (*( state.p)) ) {
-		case 97: goto st1299;
-		case 117: goto st1302;
+		case 13: goto tr1771;
+		case 32: goto tr1771;
+		case 95: goto tr1772;
+		case 98: goto tr1773;
+		case 99: goto tr1774;
+		case 103: goto tr1775;
+		case 109: goto tr1776;
+		case 114: goto tr1777;
+		case 119: goto tr1778;
+		case 121: goto tr1779;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1771;
 	goto st0;
+tr1771:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1299;
+tr1836:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1299;
 st1299:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1299;
 case 1299:
-	if ( (*( state.p)) == 99 )
-		goto st1300;
+#line 18088 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1299;
+		case 32: goto st1299;
+		case 98: goto st1300;
+		case 99: goto st1307;
+		case 103: goto st1311;
+		case 109: goto st1316;
+		case 114: goto st1323;
+		case 119: goto st1326;
+		case 121: goto st1331;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1299;
 	goto st0;
+tr1773:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1300;
+tr1838:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1300;
 st1300:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1300;
 case 1300:
-	if ( (*( state.p)) == 107 )
+#line 18115 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1301;
 	goto st0;
 st1301:
@@ -18104,66 +18120,47 @@ st1301:
 		goto _test_eof1301;
 case 1301:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1788;
-		case 32: goto tr1788;
-		case 59: goto tr1789;
+		case 97: goto st1302;
+		case 117: goto st1305;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1788;
 	goto st0;
 st1302:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1302;
 case 1302:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1303;
 	goto st0;
 st1303:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1303;
 case 1303:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1791;
-		case 32: goto tr1791;
-		case 59: goto tr1792;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1791;
+	if ( (*( state.p)) == 107 )
+		goto st1304;
 	goto st0;
-tr1769:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1304;
-tr1834:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1304;
 st1304:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1304;
 case 1304:
-#line 18146 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1305;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1793;
+		case 32: goto tr1793;
+		case 59: goto tr1794;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1793;
 	goto st0;
 st1305:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1305;
 case 1305:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1306;
 	goto st0;
 st1306:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1306;
 case 1306:
-	if ( (*( state.p)) == 110 )
-		goto st1307;
-	goto st0;
-st1307:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1307;
-case 1307:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1796;
 		case 32: goto tr1796;
@@ -18172,139 +18169,146 @@ case 1307:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1796;
 	goto st0;
-tr1770:
+tr1774:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1308;
-tr1835:
+	goto st1307;
+tr1839:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1308;
+	goto st1307;
+st1307:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1307;
+case 1307:
+#line 18185 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1308;
+	goto st0;
 st1308:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1308;
 case 1308:
-#line 18188 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1309;
 	goto st0;
 st1309:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1309;
 case 1309:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1310;
 	goto st0;
 st1310:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1310;
 case 1310:
-	if ( (*( state.p)) == 101 )
-		goto st1311;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1801;
+		case 32: goto tr1801;
+		case 59: goto tr1802;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1801;
 	goto st0;
+tr1775:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1311;
+tr1840:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1311;
 st1311:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1311;
 case 1311:
-	if ( (*( state.p)) == 110 )
+#line 18227 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1312;
 	goto st0;
 st1312:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1312;
 case 1312:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1802;
-		case 32: goto tr1802;
-		case 59: goto tr1803;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1802;
+	if ( (*( state.p)) == 101 )
+		goto st1313;
 	goto st0;
-tr1771:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1313;
-tr1836:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1313;
 st1313:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1313;
 case 1313:
-#line 18237 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1314;
 	goto st0;
 st1314:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1314;
 case 1314:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1315;
 	goto st0;
 st1315:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1315;
 case 1315:
-	if ( (*( state.p)) == 101 )
-		goto st1316;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1807;
+		case 32: goto tr1807;
+		case 59: goto tr1808;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1807;
 	goto st0;
+tr1776:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1316;
+tr1841:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1316;
 st1316:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1316;
 case 1316:
-	if ( (*( state.p)) == 110 )
+#line 18276 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1317;
 	goto st0;
 st1317:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1317;
 case 1317:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1318;
 	goto st0;
 st1318:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1318;
 case 1318:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1319;
 	goto st0;
 st1319:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1319;
 case 1319:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1810;
-		case 32: goto tr1810;
-		case 59: goto tr1811;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1810;
+	if ( (*( state.p)) == 110 )
+		goto st1320;
 	goto st0;
-tr1772:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1320;
-tr1837:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1320;
 st1320:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1320;
 case 1320:
-#line 18300 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1321;
 	goto st0;
 st1321:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1321;
 case 1321:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1322;
 	goto st0;
 st1322:
@@ -18312,18 +18316,18 @@ st1322:
 		goto _test_eof1322;
 case 1322:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1814;
-		case 32: goto tr1814;
-		case 59: goto tr1815;
+		case 13: goto tr1815;
+		case 32: goto tr1815;
+		case 59: goto tr1816;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1814;
+		goto tr1815;
 	goto st0;
-tr1773:
+tr1777:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1323;
-tr1838:
+tr1842:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1323;
@@ -18331,350 +18335,323 @@ st1323:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1323;
 case 1323:
-#line 18335 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 18339 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1324;
 	goto st0;
 st1324:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1324;
 case 1324:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1325;
 	goto st0;
 st1325:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1325;
 case 1325:
-	if ( (*( state.p)) == 116 )
-		goto st1326;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1819;
+		case 32: goto tr1819;
+		case 59: goto tr1820;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1819;
 	goto st0;
+tr1778:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1326;
+tr1843:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1326;
 st1326:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1326;
 case 1326:
-	if ( (*( state.p)) == 101 )
+#line 18374 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1327;
 	goto st0;
 st1327:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1327;
 case 1327:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1820;
-		case 32: goto tr1820;
-		case 59: goto tr1821;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1820;
+	if ( (*( state.p)) == 105 )
+		goto st1328;
 	goto st0;
-tr1774:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1328;
-tr1839:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1328;
 st1328:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1328;
 case 1328:
-#line 18384 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1329;
 	goto st0;
 st1329:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1329;
 case 1329:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1330;
 	goto st0;
 st1330:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1330;
 case 1330:
-	if ( (*( state.p)) == 108 )
-		goto st1331;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1825;
+		case 32: goto tr1825;
+		case 59: goto tr1826;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1825;
 	goto st0;
+tr1779:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1331;
+tr1844:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1331;
 st1331:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1331;
 case 1331:
-	if ( (*( state.p)) == 111 )
+#line 18423 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1332;
 	goto st0;
 st1332:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1332;
 case 1332:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1333;
 	goto st0;
 st1333:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1333;
 case 1333:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1827;
-		case 32: goto tr1827;
-		case 59: goto tr1828;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1827;
+	if ( (*( state.p)) == 108 )
+		goto st1334;
 	goto st0;
-tr1767:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1334;
-tr1832:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1334;
 st1334:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1334;
 case 1334:
-#line 18440 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1297;
-		case 99: goto st1304;
-		case 103: goto st1308;
-		case 109: goto st1313;
-		case 114: goto st1320;
-		case 119: goto st1323;
-		case 121: goto st1328;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1335;
 	goto st0;
 st1335:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1335;
 case 1335:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1336;
 	goto st0;
 st1336:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1336;
 case 1336:
-	if ( (*( state.p)) == 109 )
-		goto st1337;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1832;
+		case 32: goto tr1832;
+		case 59: goto tr1833;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1832;
 	goto st0;
+tr1772:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1337;
+tr1837:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1337;
 st1337:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1337;
 case 1337:
+#line 18479 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1831;
-		case 32: goto tr1831;
-		case 95: goto tr1832;
-		case 98: goto tr1833;
-		case 99: goto tr1834;
-		case 103: goto tr1835;
-		case 109: goto tr1836;
-		case 114: goto tr1837;
-		case 119: goto tr1838;
-		case 121: goto tr1839;
+		case 98: goto st1300;
+		case 99: goto st1307;
+		case 103: goto st1311;
+		case 109: goto st1316;
+		case 114: goto st1323;
+		case 119: goto st1326;
+		case 121: goto st1331;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1831;
 	goto st0;
 st1338:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1338;
 case 1338:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1339;
 	goto st0;
 st1339:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1339;
 case 1339:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1340;
 	goto st0;
 st1340:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1340;
 case 1340:
-	if ( (*( state.p)) == 101 )
-		goto st1301;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1836;
+		case 32: goto tr1836;
+		case 95: goto tr1837;
+		case 98: goto tr1838;
+		case 99: goto tr1839;
+		case 103: goto tr1840;
+		case 109: goto tr1841;
+		case 114: goto tr1842;
+		case 119: goto tr1843;
+		case 121: goto tr1844;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1836;
 	goto st0;
 st1341:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1341;
 case 1341:
-	switch( (*( state.p)) ) {
-		case 13: goto st1342;
-		case 32: goto st1342;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1342;
 	goto st0;
 st1342:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1342;
 case 1342:
-	switch( (*( state.p)) ) {
-		case 13: goto st1342;
-		case 32: goto st1342;
-		case 34: goto tr1843;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1342;
+	if ( (*( state.p)) == 110 )
+		goto st1343;
 	goto st0;
-tr1844:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1343;
-tr1843:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1343;
-tr1846:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1343; goto st47;}}
-	goto st1343;
 st1343:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1343;
 case 1343:
-#line 18548 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1344;
-		case 92: goto tr1846;
-	}
-	goto tr1844;
+	if ( (*( state.p)) == 101 )
+		goto st1304;
+	goto st0;
 st1344:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1344;
 case 1344:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1847;
-		case 32: goto tr1847;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1847;
-	goto st0;
-tr1847:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1345;
-st1345:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1345;
-case 1345:
-#line 18573 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1345;
 		case 32: goto st1345;
-		case 98: goto st1346;
-		case 100: goto st1391;
-		case 110: goto st1394;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1345;
 	goto st0;
+st1345:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1345;
+case 1345:
+	switch( (*( state.p)) ) {
+		case 13: goto st1345;
+		case 32: goto st1345;
+		case 34: goto tr1848;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1345;
+	goto st0;
+tr1849:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1346;
+tr1848:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1346;
+tr1851:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1346; goto st47;}}
+	goto st1346;
 st1346:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1346;
 case 1346:
-	if ( (*( state.p)) == 114 )
-		goto st1347;
-	goto st0;
+#line 18587 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1347;
+		case 92: goto tr1851;
+	}
+	goto tr1849;
 st1347:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1347;
 case 1347:
-	if ( (*( state.p)) == 105 )
-		goto st1348;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1852;
+		case 32: goto tr1852;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1852;
 	goto st0;
+tr1852:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1348;
 st1348:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1348;
 case 1348:
-	if ( (*( state.p)) == 103 )
-		goto st1349;
+#line 18612 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1348;
+		case 32: goto st1348;
+		case 98: goto st1349;
+		case 100: goto st1394;
+		case 110: goto st1397;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1348;
 	goto st0;
 st1349:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1349;
 case 1349:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1350;
 	goto st0;
 st1350:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1350;
 case 1350:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1351;
 	goto st0;
 st1351:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1351;
 case 1351:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1857;
-		case 32: goto tr1857;
-		case 95: goto tr1858;
-		case 98: goto tr1859;
-		case 99: goto tr1860;
-		case 103: goto tr1861;
-		case 109: goto tr1862;
-		case 114: goto tr1863;
-		case 119: goto tr1864;
-		case 121: goto tr1865;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1857;
+	if ( (*( state.p)) == 103 )
+		goto st1352;
 	goto st0;
-tr1857:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1352;
-tr1922:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1352;
 st1352:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1352;
 case 1352:
-#line 18650 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1352;
-		case 32: goto st1352;
-		case 98: goto st1353;
-		case 99: goto st1360;
-		case 103: goto st1364;
-		case 109: goto st1369;
-		case 114: goto st1376;
-		case 119: goto st1379;
-		case 121: goto st1384;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1352;
+	if ( (*( state.p)) == 104 )
+		goto st1353;
 	goto st0;
-tr1859:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1353;
-tr1924:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1353;
 st1353:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1353;
 case 1353:
-#line 18677 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1354;
 	goto st0;
 st1354:
@@ -18682,22 +18659,61 @@ st1354:
 		goto _test_eof1354;
 case 1354:
 	switch( (*( state.p)) ) {
-		case 97: goto st1355;
-		case 117: goto st1358;
+		case 13: goto tr1862;
+		case 32: goto tr1862;
+		case 95: goto tr1863;
+		case 98: goto tr1864;
+		case 99: goto tr1865;
+		case 103: goto tr1866;
+		case 109: goto tr1867;
+		case 114: goto tr1868;
+		case 119: goto tr1869;
+		case 121: goto tr1870;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1862;
 	goto st0;
+tr1862:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1355;
+tr1927:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1355;
 st1355:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1355;
 case 1355:
-	if ( (*( state.p)) == 99 )
-		goto st1356;
+#line 18689 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1355;
+		case 32: goto st1355;
+		case 98: goto st1356;
+		case 99: goto st1363;
+		case 103: goto st1367;
+		case 109: goto st1372;
+		case 114: goto st1379;
+		case 119: goto st1382;
+		case 121: goto st1387;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1355;
 	goto st0;
+tr1864:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1356;
+tr1929:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1356;
 st1356:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1356;
 case 1356:
-	if ( (*( state.p)) == 107 )
+#line 18716 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1357;
 	goto st0;
 st1357:
@@ -18705,66 +18721,47 @@ st1357:
 		goto _test_eof1357;
 case 1357:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1879;
-		case 32: goto tr1879;
-		case 59: goto tr1880;
+		case 97: goto st1358;
+		case 117: goto st1361;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1879;
 	goto st0;
 st1358:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1358;
 case 1358:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1359;
 	goto st0;
 st1359:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1359;
 case 1359:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1882;
-		case 32: goto tr1882;
-		case 59: goto tr1883;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1882;
+	if ( (*( state.p)) == 107 )
+		goto st1360;
 	goto st0;
-tr1860:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1360;
-tr1925:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1360;
 st1360:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1360;
 case 1360:
-#line 18747 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1361;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1884;
+		case 32: goto tr1884;
+		case 59: goto tr1885;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1884;
 	goto st0;
 st1361:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1361;
 case 1361:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1362;
 	goto st0;
 st1362:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1362;
 case 1362:
-	if ( (*( state.p)) == 110 )
-		goto st1363;
-	goto st0;
-st1363:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1363;
-case 1363:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1887;
 		case 32: goto tr1887;
@@ -18773,139 +18770,146 @@ case 1363:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1887;
 	goto st0;
-tr1861:
+tr1865:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1364;
-tr1926:
+	goto st1363;
+tr1930:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1364;
+	goto st1363;
+st1363:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1363;
+case 1363:
+#line 18786 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1364;
+	goto st0;
 st1364:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1364;
 case 1364:
-#line 18789 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1365;
 	goto st0;
 st1365:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1365;
 case 1365:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1366;
 	goto st0;
 st1366:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1366;
 case 1366:
-	if ( (*( state.p)) == 101 )
-		goto st1367;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1892;
+		case 32: goto tr1892;
+		case 59: goto tr1893;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1892;
 	goto st0;
+tr1866:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1367;
+tr1931:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1367;
 st1367:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1367;
 case 1367:
-	if ( (*( state.p)) == 110 )
+#line 18828 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1368;
 	goto st0;
 st1368:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1368;
 case 1368:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1893;
-		case 32: goto tr1893;
-		case 59: goto tr1894;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1893;
+	if ( (*( state.p)) == 101 )
+		goto st1369;
 	goto st0;
-tr1862:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1369;
-tr1927:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1369;
 st1369:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1369;
 case 1369:
-#line 18838 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1370;
 	goto st0;
 st1370:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1370;
 case 1370:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1371;
 	goto st0;
 st1371:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1371;
 case 1371:
-	if ( (*( state.p)) == 101 )
-		goto st1372;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1898;
+		case 32: goto tr1898;
+		case 59: goto tr1899;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1898;
 	goto st0;
+tr1867:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1372;
+tr1932:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1372;
 st1372:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1372;
 case 1372:
-	if ( (*( state.p)) == 110 )
+#line 18877 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1373;
 	goto st0;
 st1373:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1373;
 case 1373:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1374;
 	goto st0;
 st1374:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1374;
 case 1374:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1375;
 	goto st0;
 st1375:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1375;
 case 1375:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1901;
-		case 32: goto tr1901;
-		case 59: goto tr1902;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1901;
+	if ( (*( state.p)) == 110 )
+		goto st1376;
 	goto st0;
-tr1863:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1376;
-tr1928:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1376;
 st1376:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1376;
 case 1376:
-#line 18901 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1377;
 	goto st0;
 st1377:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1377;
 case 1377:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1378;
 	goto st0;
 st1378:
@@ -18913,18 +18917,18 @@ st1378:
 		goto _test_eof1378;
 case 1378:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1905;
-		case 32: goto tr1905;
-		case 59: goto tr1906;
+		case 13: goto tr1906;
+		case 32: goto tr1906;
+		case 59: goto tr1907;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1905;
+		goto tr1906;
 	goto st0;
-tr1864:
+tr1868:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1379;
-tr1929:
+tr1933:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1379;
@@ -18932,350 +18936,323 @@ st1379:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1379;
 case 1379:
-#line 18936 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 18940 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1380;
 	goto st0;
 st1380:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1380;
 case 1380:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1381;
 	goto st0;
 st1381:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1381;
 case 1381:
-	if ( (*( state.p)) == 116 )
-		goto st1382;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1910;
+		case 32: goto tr1910;
+		case 59: goto tr1911;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1910;
 	goto st0;
+tr1869:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1382;
+tr1934:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1382;
 st1382:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1382;
 case 1382:
-	if ( (*( state.p)) == 101 )
+#line 18975 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1383;
 	goto st0;
 st1383:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1383;
 case 1383:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1911;
-		case 32: goto tr1911;
-		case 59: goto tr1912;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1911;
+	if ( (*( state.p)) == 105 )
+		goto st1384;
 	goto st0;
-tr1865:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1384;
-tr1930:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1384;
 st1384:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1384;
 case 1384:
-#line 18985 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1385;
 	goto st0;
 st1385:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1385;
 case 1385:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1386;
 	goto st0;
 st1386:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1386;
 case 1386:
-	if ( (*( state.p)) == 108 )
-		goto st1387;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1916;
+		case 32: goto tr1916;
+		case 59: goto tr1917;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1916;
 	goto st0;
+tr1870:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1387;
+tr1935:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1387;
 st1387:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1387;
 case 1387:
-	if ( (*( state.p)) == 111 )
+#line 19024 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1388;
 	goto st0;
 st1388:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1388;
 case 1388:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1389;
 	goto st0;
 st1389:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1389;
 case 1389:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1918;
-		case 32: goto tr1918;
-		case 59: goto tr1919;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1918;
+	if ( (*( state.p)) == 108 )
+		goto st1390;
 	goto st0;
-tr1858:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1390;
-tr1923:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1390;
 st1390:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1390;
 case 1390:
-#line 19041 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1353;
-		case 99: goto st1360;
-		case 103: goto st1364;
-		case 109: goto st1369;
-		case 114: goto st1376;
-		case 119: goto st1379;
-		case 121: goto st1384;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1391;
 	goto st0;
 st1391:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1391;
 case 1391:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1392;
 	goto st0;
 st1392:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1392;
 case 1392:
-	if ( (*( state.p)) == 109 )
-		goto st1393;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1923;
+		case 32: goto tr1923;
+		case 59: goto tr1924;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1923;
 	goto st0;
+tr1863:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1393;
+tr1928:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1393;
 st1393:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1393;
 case 1393:
+#line 19080 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr1922;
-		case 32: goto tr1922;
-		case 95: goto tr1923;
-		case 98: goto tr1924;
-		case 99: goto tr1925;
-		case 103: goto tr1926;
-		case 109: goto tr1927;
-		case 114: goto tr1928;
-		case 119: goto tr1929;
-		case 121: goto tr1930;
+		case 98: goto st1356;
+		case 99: goto st1363;
+		case 103: goto st1367;
+		case 109: goto st1372;
+		case 114: goto st1379;
+		case 119: goto st1382;
+		case 121: goto st1387;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1922;
 	goto st0;
 st1394:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1394;
 case 1394:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1395;
 	goto st0;
 st1395:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1395;
 case 1395:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1396;
 	goto st0;
 st1396:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1396;
 case 1396:
-	if ( (*( state.p)) == 101 )
-		goto st1357;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1927;
+		case 32: goto tr1927;
+		case 95: goto tr1928;
+		case 98: goto tr1929;
+		case 99: goto tr1930;
+		case 103: goto tr1931;
+		case 109: goto tr1932;
+		case 114: goto tr1933;
+		case 119: goto tr1934;
+		case 121: goto tr1935;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1927;
 	goto st0;
 st1397:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1397;
 case 1397:
-	switch( (*( state.p)) ) {
-		case 13: goto st1398;
-		case 32: goto st1398;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1398;
 	goto st0;
 st1398:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1398;
 case 1398:
-	switch( (*( state.p)) ) {
-		case 13: goto st1398;
-		case 32: goto st1398;
-		case 34: goto tr1934;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1398;
+	if ( (*( state.p)) == 110 )
+		goto st1399;
 	goto st0;
-tr1935:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1399;
-tr1934:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1399;
-tr1937:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1399; goto st47;}}
-	goto st1399;
 st1399:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1399;
 case 1399:
-#line 19149 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1400;
-		case 92: goto tr1937;
-	}
-	goto tr1935;
+	if ( (*( state.p)) == 101 )
+		goto st1360;
+	goto st0;
 st1400:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1400;
 case 1400:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1938;
-		case 32: goto tr1938;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1938;
-	goto st0;
-tr1938:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1401;
-st1401:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1401;
-case 1401:
-#line 19174 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1401;
 		case 32: goto st1401;
-		case 98: goto st1402;
-		case 100: goto st1447;
-		case 110: goto st1450;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1401;
 	goto st0;
+st1401:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1401;
+case 1401:
+	switch( (*( state.p)) ) {
+		case 13: goto st1401;
+		case 32: goto st1401;
+		case 34: goto tr1939;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1401;
+	goto st0;
+tr1940:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1402;
+tr1939:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1402;
+tr1942:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1402; goto st47;}}
+	goto st1402;
 st1402:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1402;
 case 1402:
-	if ( (*( state.p)) == 114 )
-		goto st1403;
-	goto st0;
+#line 19188 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1403;
+		case 92: goto tr1942;
+	}
+	goto tr1940;
 st1403:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1403;
 case 1403:
-	if ( (*( state.p)) == 105 )
-		goto st1404;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1943;
+		case 32: goto tr1943;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1943;
 	goto st0;
+tr1943:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1404;
 st1404:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1404;
 case 1404:
-	if ( (*( state.p)) == 103 )
-		goto st1405;
+#line 19213 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1404;
+		case 32: goto st1404;
+		case 98: goto st1405;
+		case 100: goto st1450;
+		case 110: goto st1453;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1404;
 	goto st0;
 st1405:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1405;
 case 1405:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1406;
 	goto st0;
 st1406:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1406;
 case 1406:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1407;
 	goto st0;
 st1407:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1407;
 case 1407:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1948;
-		case 32: goto tr1948;
-		case 95: goto tr1949;
-		case 98: goto tr1950;
-		case 99: goto tr1951;
-		case 103: goto tr1952;
-		case 109: goto tr1953;
-		case 114: goto tr1954;
-		case 119: goto tr1955;
-		case 121: goto tr1956;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1948;
+	if ( (*( state.p)) == 103 )
+		goto st1408;
 	goto st0;
-tr1948:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1408;
-tr2013:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1408;
 st1408:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1408;
 case 1408:
-#line 19251 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1408;
-		case 32: goto st1408;
-		case 98: goto st1409;
-		case 99: goto st1416;
-		case 103: goto st1420;
-		case 109: goto st1425;
-		case 114: goto st1432;
-		case 119: goto st1435;
-		case 121: goto st1440;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1408;
+	if ( (*( state.p)) == 104 )
+		goto st1409;
 	goto st0;
-tr1950:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1409;
-tr2015:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1409;
 st1409:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1409;
 case 1409:
-#line 19278 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1410;
 	goto st0;
 st1410:
@@ -19283,22 +19260,61 @@ st1410:
 		goto _test_eof1410;
 case 1410:
 	switch( (*( state.p)) ) {
-		case 97: goto st1411;
-		case 117: goto st1414;
+		case 13: goto tr1953;
+		case 32: goto tr1953;
+		case 95: goto tr1954;
+		case 98: goto tr1955;
+		case 99: goto tr1956;
+		case 103: goto tr1957;
+		case 109: goto tr1958;
+		case 114: goto tr1959;
+		case 119: goto tr1960;
+		case 121: goto tr1961;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1953;
 	goto st0;
+tr1953:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1411;
+tr2018:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1411;
 st1411:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1411;
 case 1411:
-	if ( (*( state.p)) == 99 )
-		goto st1412;
+#line 19290 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1411;
+		case 32: goto st1411;
+		case 98: goto st1412;
+		case 99: goto st1419;
+		case 103: goto st1423;
+		case 109: goto st1428;
+		case 114: goto st1435;
+		case 119: goto st1438;
+		case 121: goto st1443;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1411;
 	goto st0;
+tr1955:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1412;
+tr2020:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1412;
 st1412:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1412;
 case 1412:
-	if ( (*( state.p)) == 107 )
+#line 19317 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1413;
 	goto st0;
 st1413:
@@ -19306,66 +19322,47 @@ st1413:
 		goto _test_eof1413;
 case 1413:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1970;
-		case 32: goto tr1970;
-		case 59: goto tr1971;
+		case 97: goto st1414;
+		case 117: goto st1417;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1970;
 	goto st0;
 st1414:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1414;
 case 1414:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1415;
 	goto st0;
 st1415:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1415;
 case 1415:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1973;
-		case 32: goto tr1973;
-		case 59: goto tr1974;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1973;
+	if ( (*( state.p)) == 107 )
+		goto st1416;
 	goto st0;
-tr1951:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1416;
-tr2016:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1416;
 st1416:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1416;
 case 1416:
-#line 19348 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1417;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1975;
+		case 32: goto tr1975;
+		case 59: goto tr1976;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1975;
 	goto st0;
 st1417:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1417;
 case 1417:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1418;
 	goto st0;
 st1418:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1418;
 case 1418:
-	if ( (*( state.p)) == 110 )
-		goto st1419;
-	goto st0;
-st1419:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1419;
-case 1419:
 	switch( (*( state.p)) ) {
 		case 13: goto tr1978;
 		case 32: goto tr1978;
@@ -19374,139 +19371,146 @@ case 1419:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr1978;
 	goto st0;
-tr1952:
+tr1956:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1420;
-tr2017:
+	goto st1419;
+tr2021:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1420;
+	goto st1419;
+st1419:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1419;
+case 1419:
+#line 19387 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1420;
+	goto st0;
 st1420:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1420;
 case 1420:
-#line 19390 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1421;
 	goto st0;
 st1421:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1421;
 case 1421:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1422;
 	goto st0;
 st1422:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1422;
 case 1422:
-	if ( (*( state.p)) == 101 )
-		goto st1423;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1983;
+		case 32: goto tr1983;
+		case 59: goto tr1984;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1983;
 	goto st0;
+tr1957:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1423;
+tr2022:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1423;
 st1423:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1423;
 case 1423:
-	if ( (*( state.p)) == 110 )
+#line 19429 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1424;
 	goto st0;
 st1424:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1424;
 case 1424:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1984;
-		case 32: goto tr1984;
-		case 59: goto tr1985;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1984;
+	if ( (*( state.p)) == 101 )
+		goto st1425;
 	goto st0;
-tr1953:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1425;
-tr2018:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1425;
 st1425:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1425;
 case 1425:
-#line 19439 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1426;
 	goto st0;
 st1426:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1426;
 case 1426:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1427;
 	goto st0;
 st1427:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1427;
 case 1427:
-	if ( (*( state.p)) == 101 )
-		goto st1428;
+	switch( (*( state.p)) ) {
+		case 13: goto tr1989;
+		case 32: goto tr1989;
+		case 59: goto tr1990;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr1989;
 	goto st0;
+tr1958:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1428;
+tr2023:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1428;
 st1428:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1428;
 case 1428:
-	if ( (*( state.p)) == 110 )
+#line 19478 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1429;
 	goto st0;
 st1429:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1429;
 case 1429:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1430;
 	goto st0;
 st1430:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1430;
 case 1430:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1431;
 	goto st0;
 st1431:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1431;
 case 1431:
-	switch( (*( state.p)) ) {
-		case 13: goto tr1992;
-		case 32: goto tr1992;
-		case 59: goto tr1993;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1992;
+	if ( (*( state.p)) == 110 )
+		goto st1432;
 	goto st0;
-tr1954:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1432;
-tr2019:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1432;
 st1432:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1432;
 case 1432:
-#line 19502 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1433;
 	goto st0;
 st1433:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1433;
 case 1433:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1434;
 	goto st0;
 st1434:
@@ -19514,18 +19518,18 @@ st1434:
 		goto _test_eof1434;
 case 1434:
 	switch( (*( state.p)) ) {
-		case 13: goto tr1996;
-		case 32: goto tr1996;
-		case 59: goto tr1997;
+		case 13: goto tr1997;
+		case 32: goto tr1997;
+		case 59: goto tr1998;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr1996;
+		goto tr1997;
 	goto st0;
-tr1955:
+tr1959:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1435;
-tr2020:
+tr2024:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1435;
@@ -19533,350 +19537,323 @@ st1435:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1435;
 case 1435:
-#line 19537 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 19541 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1436;
 	goto st0;
 st1436:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1436;
 case 1436:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1437;
 	goto st0;
 st1437:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1437;
 case 1437:
-	if ( (*( state.p)) == 116 )
-		goto st1438;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2001;
+		case 32: goto tr2001;
+		case 59: goto tr2002;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2001;
 	goto st0;
+tr1960:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1438;
+tr2025:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1438;
 st1438:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1438;
 case 1438:
-	if ( (*( state.p)) == 101 )
+#line 19576 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1439;
 	goto st0;
 st1439:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1439;
 case 1439:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2002;
-		case 32: goto tr2002;
-		case 59: goto tr2003;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2002;
+	if ( (*( state.p)) == 105 )
+		goto st1440;
 	goto st0;
-tr1956:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1440;
-tr2021:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1440;
 st1440:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1440;
 case 1440:
-#line 19586 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1441;
 	goto st0;
 st1441:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1441;
 case 1441:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1442;
 	goto st0;
 st1442:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1442;
 case 1442:
-	if ( (*( state.p)) == 108 )
-		goto st1443;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2007;
+		case 32: goto tr2007;
+		case 59: goto tr2008;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2007;
 	goto st0;
+tr1961:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1443;
+tr2026:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1443;
 st1443:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1443;
 case 1443:
-	if ( (*( state.p)) == 111 )
+#line 19625 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1444;
 	goto st0;
 st1444:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1444;
 case 1444:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1445;
 	goto st0;
 st1445:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1445;
 case 1445:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2009;
-		case 32: goto tr2009;
-		case 59: goto tr2010;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2009;
+	if ( (*( state.p)) == 108 )
+		goto st1446;
 	goto st0;
-tr1949:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1446;
-tr2014:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1446;
 st1446:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1446;
 case 1446:
-#line 19642 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1409;
-		case 99: goto st1416;
-		case 103: goto st1420;
-		case 109: goto st1425;
-		case 114: goto st1432;
-		case 119: goto st1435;
-		case 121: goto st1440;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1447;
 	goto st0;
 st1447:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1447;
 case 1447:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1448;
 	goto st0;
 st1448:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1448;
 case 1448:
-	if ( (*( state.p)) == 109 )
-		goto st1449;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2014;
+		case 32: goto tr2014;
+		case 59: goto tr2015;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2014;
 	goto st0;
+tr1954:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1449;
+tr2019:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1449;
 st1449:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1449;
 case 1449:
+#line 19681 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2013;
-		case 32: goto tr2013;
-		case 95: goto tr2014;
-		case 98: goto tr2015;
-		case 99: goto tr2016;
-		case 103: goto tr2017;
-		case 109: goto tr2018;
-		case 114: goto tr2019;
-		case 119: goto tr2020;
-		case 121: goto tr2021;
+		case 98: goto st1412;
+		case 99: goto st1419;
+		case 103: goto st1423;
+		case 109: goto st1428;
+		case 114: goto st1435;
+		case 119: goto st1438;
+		case 121: goto st1443;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2013;
 	goto st0;
 st1450:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1450;
 case 1450:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1451;
 	goto st0;
 st1451:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1451;
 case 1451:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1452;
 	goto st0;
 st1452:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1452;
 case 1452:
-	if ( (*( state.p)) == 101 )
-		goto st1413;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2018;
+		case 32: goto tr2018;
+		case 95: goto tr2019;
+		case 98: goto tr2020;
+		case 99: goto tr2021;
+		case 103: goto tr2022;
+		case 109: goto tr2023;
+		case 114: goto tr2024;
+		case 119: goto tr2025;
+		case 121: goto tr2026;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2018;
 	goto st0;
 st1453:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1453;
 case 1453:
-	switch( (*( state.p)) ) {
-		case 13: goto st1454;
-		case 32: goto st1454;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1454;
 	goto st0;
 st1454:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1454;
 case 1454:
-	switch( (*( state.p)) ) {
-		case 13: goto st1454;
-		case 32: goto st1454;
-		case 34: goto tr2025;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1454;
+	if ( (*( state.p)) == 110 )
+		goto st1455;
 	goto st0;
-tr2026:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1455;
-tr2025:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1455;
-tr2028:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1455; goto st47;}}
-	goto st1455;
 st1455:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1455;
 case 1455:
-#line 19750 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1456;
-		case 92: goto tr2028;
-	}
-	goto tr2026;
+	if ( (*( state.p)) == 101 )
+		goto st1416;
+	goto st0;
 st1456:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1456;
 case 1456:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2029;
-		case 32: goto tr2029;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2029;
-	goto st0;
-tr2029:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1457;
-st1457:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1457;
-case 1457:
-#line 19775 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1457;
 		case 32: goto st1457;
-		case 98: goto st1458;
-		case 100: goto st1503;
-		case 110: goto st1506;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1457;
 	goto st0;
+st1457:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1457;
+case 1457:
+	switch( (*( state.p)) ) {
+		case 13: goto st1457;
+		case 32: goto st1457;
+		case 34: goto tr2030;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1457;
+	goto st0;
+tr2031:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1458;
+tr2030:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1458;
+tr2033:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1458; goto st47;}}
+	goto st1458;
 st1458:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1458;
 case 1458:
-	if ( (*( state.p)) == 114 )
-		goto st1459;
-	goto st0;
+#line 19789 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1459;
+		case 92: goto tr2033;
+	}
+	goto tr2031;
 st1459:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1459;
 case 1459:
-	if ( (*( state.p)) == 105 )
-		goto st1460;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2034;
+		case 32: goto tr2034;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2034;
 	goto st0;
+tr2034:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1460;
 st1460:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1460;
 case 1460:
-	if ( (*( state.p)) == 103 )
-		goto st1461;
+#line 19814 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1460;
+		case 32: goto st1460;
+		case 98: goto st1461;
+		case 100: goto st1506;
+		case 110: goto st1509;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1460;
 	goto st0;
 st1461:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1461;
 case 1461:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1462;
 	goto st0;
 st1462:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1462;
 case 1462:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1463;
 	goto st0;
 st1463:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1463;
 case 1463:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2039;
-		case 32: goto tr2039;
-		case 95: goto tr2040;
-		case 98: goto tr2041;
-		case 99: goto tr2042;
-		case 103: goto tr2043;
-		case 109: goto tr2044;
-		case 114: goto tr2045;
-		case 119: goto tr2046;
-		case 121: goto tr2047;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2039;
+	if ( (*( state.p)) == 103 )
+		goto st1464;
 	goto st0;
-tr2039:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1464;
-tr2104:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1464;
 st1464:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1464;
 case 1464:
-#line 19852 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1464;
-		case 32: goto st1464;
-		case 98: goto st1465;
-		case 99: goto st1472;
-		case 103: goto st1476;
-		case 109: goto st1481;
-		case 114: goto st1488;
-		case 119: goto st1491;
-		case 121: goto st1496;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1464;
+	if ( (*( state.p)) == 104 )
+		goto st1465;
 	goto st0;
-tr2041:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1465;
-tr2106:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1465;
 st1465:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1465;
 case 1465:
-#line 19879 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1466;
 	goto st0;
 st1466:
@@ -19884,22 +19861,61 @@ st1466:
 		goto _test_eof1466;
 case 1466:
 	switch( (*( state.p)) ) {
-		case 97: goto st1467;
-		case 117: goto st1470;
+		case 13: goto tr2044;
+		case 32: goto tr2044;
+		case 95: goto tr2045;
+		case 98: goto tr2046;
+		case 99: goto tr2047;
+		case 103: goto tr2048;
+		case 109: goto tr2049;
+		case 114: goto tr2050;
+		case 119: goto tr2051;
+		case 121: goto tr2052;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2044;
 	goto st0;
+tr2044:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1467;
+tr2109:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1467;
 st1467:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1467;
 case 1467:
-	if ( (*( state.p)) == 99 )
-		goto st1468;
+#line 19891 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1467;
+		case 32: goto st1467;
+		case 98: goto st1468;
+		case 99: goto st1475;
+		case 103: goto st1479;
+		case 109: goto st1484;
+		case 114: goto st1491;
+		case 119: goto st1494;
+		case 121: goto st1499;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1467;
 	goto st0;
+tr2046:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1468;
+tr2111:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1468;
 st1468:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1468;
 case 1468:
-	if ( (*( state.p)) == 107 )
+#line 19918 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1469;
 	goto st0;
 st1469:
@@ -19907,66 +19923,47 @@ st1469:
 		goto _test_eof1469;
 case 1469:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2061;
-		case 32: goto tr2061;
-		case 59: goto tr2062;
+		case 97: goto st1470;
+		case 117: goto st1473;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2061;
 	goto st0;
 st1470:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1470;
 case 1470:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1471;
 	goto st0;
 st1471:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1471;
 case 1471:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2064;
-		case 32: goto tr2064;
-		case 59: goto tr2065;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2064;
+	if ( (*( state.p)) == 107 )
+		goto st1472;
 	goto st0;
-tr2042:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1472;
-tr2107:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1472;
 st1472:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1472;
 case 1472:
-#line 19949 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1473;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2066;
+		case 32: goto tr2066;
+		case 59: goto tr2067;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2066;
 	goto st0;
 st1473:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1473;
 case 1473:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1474;
 	goto st0;
 st1474:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1474;
 case 1474:
-	if ( (*( state.p)) == 110 )
-		goto st1475;
-	goto st0;
-st1475:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1475;
-case 1475:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2069;
 		case 32: goto tr2069;
@@ -19975,139 +19972,146 @@ case 1475:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2069;
 	goto st0;
-tr2043:
+tr2047:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1476;
-tr2108:
+	goto st1475;
+tr2112:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1476;
+	goto st1475;
+st1475:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1475;
+case 1475:
+#line 19988 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1476;
+	goto st0;
 st1476:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1476;
 case 1476:
-#line 19991 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1477;
 	goto st0;
 st1477:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1477;
 case 1477:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1478;
 	goto st0;
 st1478:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1478;
 case 1478:
-	if ( (*( state.p)) == 101 )
-		goto st1479;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2074;
+		case 32: goto tr2074;
+		case 59: goto tr2075;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2074;
 	goto st0;
+tr2048:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1479;
+tr2113:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1479;
 st1479:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1479;
 case 1479:
-	if ( (*( state.p)) == 110 )
+#line 20030 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1480;
 	goto st0;
 st1480:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1480;
 case 1480:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2075;
-		case 32: goto tr2075;
-		case 59: goto tr2076;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2075;
+	if ( (*( state.p)) == 101 )
+		goto st1481;
 	goto st0;
-tr2044:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1481;
-tr2109:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1481;
 st1481:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1481;
 case 1481:
-#line 20040 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1482;
 	goto st0;
 st1482:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1482;
 case 1482:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1483;
 	goto st0;
 st1483:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1483;
 case 1483:
-	if ( (*( state.p)) == 101 )
-		goto st1484;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2080;
+		case 32: goto tr2080;
+		case 59: goto tr2081;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2080;
 	goto st0;
+tr2049:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1484;
+tr2114:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1484;
 st1484:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1484;
 case 1484:
-	if ( (*( state.p)) == 110 )
+#line 20079 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1485;
 	goto st0;
 st1485:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1485;
 case 1485:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1486;
 	goto st0;
 st1486:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1486;
 case 1486:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1487;
 	goto st0;
 st1487:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1487;
 case 1487:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2083;
-		case 32: goto tr2083;
-		case 59: goto tr2084;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2083;
+	if ( (*( state.p)) == 110 )
+		goto st1488;
 	goto st0;
-tr2045:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1488;
-tr2110:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1488;
 st1488:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1488;
 case 1488:
-#line 20103 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1489;
 	goto st0;
 st1489:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1489;
 case 1489:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1490;
 	goto st0;
 st1490:
@@ -20115,18 +20119,18 @@ st1490:
 		goto _test_eof1490;
 case 1490:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2087;
-		case 32: goto tr2087;
-		case 59: goto tr2088;
+		case 13: goto tr2088;
+		case 32: goto tr2088;
+		case 59: goto tr2089;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2087;
+		goto tr2088;
 	goto st0;
-tr2046:
+tr2050:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1491;
-tr2111:
+tr2115:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1491;
@@ -20134,350 +20138,323 @@ st1491:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1491;
 case 1491:
-#line 20138 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 20142 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1492;
 	goto st0;
 st1492:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1492;
 case 1492:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1493;
 	goto st0;
 st1493:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1493;
 case 1493:
-	if ( (*( state.p)) == 116 )
-		goto st1494;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2092;
+		case 32: goto tr2092;
+		case 59: goto tr2093;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2092;
 	goto st0;
+tr2051:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1494;
+tr2116:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1494;
 st1494:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1494;
 case 1494:
-	if ( (*( state.p)) == 101 )
+#line 20177 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1495;
 	goto st0;
 st1495:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1495;
 case 1495:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2093;
-		case 32: goto tr2093;
-		case 59: goto tr2094;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2093;
+	if ( (*( state.p)) == 105 )
+		goto st1496;
 	goto st0;
-tr2047:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1496;
-tr2112:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1496;
 st1496:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1496;
 case 1496:
-#line 20187 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1497;
 	goto st0;
 st1497:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1497;
 case 1497:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1498;
 	goto st0;
 st1498:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1498;
 case 1498:
-	if ( (*( state.p)) == 108 )
-		goto st1499;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2098;
+		case 32: goto tr2098;
+		case 59: goto tr2099;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2098;
 	goto st0;
+tr2052:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1499;
+tr2117:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1499;
 st1499:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1499;
 case 1499:
-	if ( (*( state.p)) == 111 )
+#line 20226 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1500;
 	goto st0;
 st1500:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1500;
 case 1500:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1501;
 	goto st0;
 st1501:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1501;
 case 1501:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2100;
-		case 32: goto tr2100;
-		case 59: goto tr2101;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2100;
+	if ( (*( state.p)) == 108 )
+		goto st1502;
 	goto st0;
-tr2040:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1502;
-tr2105:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1502;
 st1502:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1502;
 case 1502:
-#line 20243 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1465;
-		case 99: goto st1472;
-		case 103: goto st1476;
-		case 109: goto st1481;
-		case 114: goto st1488;
-		case 119: goto st1491;
-		case 121: goto st1496;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1503;
 	goto st0;
 st1503:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1503;
 case 1503:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1504;
 	goto st0;
 st1504:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1504;
 case 1504:
-	if ( (*( state.p)) == 109 )
-		goto st1505;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2105;
+		case 32: goto tr2105;
+		case 59: goto tr2106;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2105;
 	goto st0;
+tr2045:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1505;
+tr2110:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1505;
 st1505:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1505;
 case 1505:
+#line 20282 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2104;
-		case 32: goto tr2104;
-		case 95: goto tr2105;
-		case 98: goto tr2106;
-		case 99: goto tr2107;
-		case 103: goto tr2108;
-		case 109: goto tr2109;
-		case 114: goto tr2110;
-		case 119: goto tr2111;
-		case 121: goto tr2112;
+		case 98: goto st1468;
+		case 99: goto st1475;
+		case 103: goto st1479;
+		case 109: goto st1484;
+		case 114: goto st1491;
+		case 119: goto st1494;
+		case 121: goto st1499;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2104;
 	goto st0;
 st1506:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1506;
 case 1506:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1507;
 	goto st0;
 st1507:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1507;
 case 1507:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1508;
 	goto st0;
 st1508:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1508;
 case 1508:
-	if ( (*( state.p)) == 101 )
-		goto st1469;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2109;
+		case 32: goto tr2109;
+		case 95: goto tr2110;
+		case 98: goto tr2111;
+		case 99: goto tr2112;
+		case 103: goto tr2113;
+		case 109: goto tr2114;
+		case 114: goto tr2115;
+		case 119: goto tr2116;
+		case 121: goto tr2117;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2109;
 	goto st0;
 st1509:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1509;
 case 1509:
-	switch( (*( state.p)) ) {
-		case 13: goto st1510;
-		case 32: goto st1510;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1510;
 	goto st0;
 st1510:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1510;
 case 1510:
-	switch( (*( state.p)) ) {
-		case 13: goto st1510;
-		case 32: goto st1510;
-		case 34: goto tr2116;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1510;
+	if ( (*( state.p)) == 110 )
+		goto st1511;
 	goto st0;
-tr2117:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1511;
-tr2116:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1511;
-tr2119:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1511; goto st47;}}
-	goto st1511;
 st1511:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1511;
 case 1511:
-#line 20351 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1512;
-		case 92: goto tr2119;
-	}
-	goto tr2117;
+	if ( (*( state.p)) == 101 )
+		goto st1472;
+	goto st0;
 st1512:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1512;
 case 1512:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2120;
-		case 32: goto tr2120;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2120;
-	goto st0;
-tr2120:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1513;
-st1513:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1513;
-case 1513:
-#line 20376 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1513;
 		case 32: goto st1513;
-		case 98: goto st1514;
-		case 100: goto st1559;
-		case 110: goto st1562;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1513;
 	goto st0;
+st1513:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1513;
+case 1513:
+	switch( (*( state.p)) ) {
+		case 13: goto st1513;
+		case 32: goto st1513;
+		case 34: goto tr2121;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1513;
+	goto st0;
+tr2122:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1514;
+tr2121:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1514;
+tr2124:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1514; goto st47;}}
+	goto st1514;
 st1514:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1514;
 case 1514:
-	if ( (*( state.p)) == 114 )
-		goto st1515;
-	goto st0;
+#line 20390 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1515;
+		case 92: goto tr2124;
+	}
+	goto tr2122;
 st1515:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1515;
 case 1515:
-	if ( (*( state.p)) == 105 )
-		goto st1516;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2125;
+		case 32: goto tr2125;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2125;
 	goto st0;
+tr2125:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1516;
 st1516:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1516;
 case 1516:
-	if ( (*( state.p)) == 103 )
-		goto st1517;
+#line 20415 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1516;
+		case 32: goto st1516;
+		case 98: goto st1517;
+		case 100: goto st1562;
+		case 110: goto st1565;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1516;
 	goto st0;
 st1517:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1517;
 case 1517:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1518;
 	goto st0;
 st1518:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1518;
 case 1518:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1519;
 	goto st0;
 st1519:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1519;
 case 1519:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2130;
-		case 32: goto tr2130;
-		case 95: goto tr2131;
-		case 98: goto tr2132;
-		case 99: goto tr2133;
-		case 103: goto tr2134;
-		case 109: goto tr2135;
-		case 114: goto tr2136;
-		case 119: goto tr2137;
-		case 121: goto tr2138;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2130;
+	if ( (*( state.p)) == 103 )
+		goto st1520;
 	goto st0;
-tr2130:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1520;
-tr2195:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1520;
 st1520:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1520;
 case 1520:
-#line 20453 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1520;
-		case 32: goto st1520;
-		case 98: goto st1521;
-		case 99: goto st1528;
-		case 103: goto st1532;
-		case 109: goto st1537;
-		case 114: goto st1544;
-		case 119: goto st1547;
-		case 121: goto st1552;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1520;
+	if ( (*( state.p)) == 104 )
+		goto st1521;
 	goto st0;
-tr2132:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1521;
-tr2197:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1521;
 st1521:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1521;
 case 1521:
-#line 20480 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1522;
 	goto st0;
 st1522:
@@ -20485,22 +20462,61 @@ st1522:
 		goto _test_eof1522;
 case 1522:
 	switch( (*( state.p)) ) {
-		case 97: goto st1523;
-		case 117: goto st1526;
+		case 13: goto tr2135;
+		case 32: goto tr2135;
+		case 95: goto tr2136;
+		case 98: goto tr2137;
+		case 99: goto tr2138;
+		case 103: goto tr2139;
+		case 109: goto tr2140;
+		case 114: goto tr2141;
+		case 119: goto tr2142;
+		case 121: goto tr2143;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2135;
 	goto st0;
+tr2135:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1523;
+tr2200:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1523;
 st1523:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1523;
 case 1523:
-	if ( (*( state.p)) == 99 )
-		goto st1524;
+#line 20492 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1523;
+		case 32: goto st1523;
+		case 98: goto st1524;
+		case 99: goto st1531;
+		case 103: goto st1535;
+		case 109: goto st1540;
+		case 114: goto st1547;
+		case 119: goto st1550;
+		case 121: goto st1555;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1523;
 	goto st0;
+tr2137:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1524;
+tr2202:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1524;
 st1524:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1524;
 case 1524:
-	if ( (*( state.p)) == 107 )
+#line 20519 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1525;
 	goto st0;
 st1525:
@@ -20508,66 +20524,47 @@ st1525:
 		goto _test_eof1525;
 case 1525:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2152;
-		case 32: goto tr2152;
-		case 59: goto tr2153;
+		case 97: goto st1526;
+		case 117: goto st1529;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2152;
 	goto st0;
 st1526:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1526;
 case 1526:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1527;
 	goto st0;
 st1527:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1527;
 case 1527:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2155;
-		case 32: goto tr2155;
-		case 59: goto tr2156;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2155;
+	if ( (*( state.p)) == 107 )
+		goto st1528;
 	goto st0;
-tr2133:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1528;
-tr2198:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1528;
 st1528:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1528;
 case 1528:
-#line 20550 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1529;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2157;
+		case 32: goto tr2157;
+		case 59: goto tr2158;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2157;
 	goto st0;
 st1529:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1529;
 case 1529:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1530;
 	goto st0;
 st1530:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1530;
 case 1530:
-	if ( (*( state.p)) == 110 )
-		goto st1531;
-	goto st0;
-st1531:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1531;
-case 1531:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2160;
 		case 32: goto tr2160;
@@ -20576,139 +20573,146 @@ case 1531:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2160;
 	goto st0;
-tr2134:
+tr2138:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1532;
-tr2199:
+	goto st1531;
+tr2203:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1532;
+	goto st1531;
+st1531:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1531;
+case 1531:
+#line 20589 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1532;
+	goto st0;
 st1532:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1532;
 case 1532:
-#line 20592 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1533;
 	goto st0;
 st1533:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1533;
 case 1533:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1534;
 	goto st0;
 st1534:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1534;
 case 1534:
-	if ( (*( state.p)) == 101 )
-		goto st1535;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2165;
+		case 32: goto tr2165;
+		case 59: goto tr2166;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2165;
 	goto st0;
+tr2139:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1535;
+tr2204:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1535;
 st1535:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1535;
 case 1535:
-	if ( (*( state.p)) == 110 )
+#line 20631 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1536;
 	goto st0;
 st1536:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1536;
 case 1536:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2166;
-		case 32: goto tr2166;
-		case 59: goto tr2167;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2166;
+	if ( (*( state.p)) == 101 )
+		goto st1537;
 	goto st0;
-tr2135:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1537;
-tr2200:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1537;
 st1537:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1537;
 case 1537:
-#line 20641 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1538;
 	goto st0;
 st1538:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1538;
 case 1538:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1539;
 	goto st0;
 st1539:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1539;
 case 1539:
-	if ( (*( state.p)) == 101 )
-		goto st1540;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2171;
+		case 32: goto tr2171;
+		case 59: goto tr2172;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2171;
 	goto st0;
+tr2140:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1540;
+tr2205:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1540;
 st1540:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1540;
 case 1540:
-	if ( (*( state.p)) == 110 )
+#line 20680 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1541;
 	goto st0;
 st1541:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1541;
 case 1541:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1542;
 	goto st0;
 st1542:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1542;
 case 1542:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1543;
 	goto st0;
 st1543:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1543;
 case 1543:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2174;
-		case 32: goto tr2174;
-		case 59: goto tr2175;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2174;
+	if ( (*( state.p)) == 110 )
+		goto st1544;
 	goto st0;
-tr2136:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1544;
-tr2201:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1544;
 st1544:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1544;
 case 1544:
-#line 20704 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1545;
 	goto st0;
 st1545:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1545;
 case 1545:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1546;
 	goto st0;
 st1546:
@@ -20716,18 +20720,18 @@ st1546:
 		goto _test_eof1546;
 case 1546:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2178;
-		case 32: goto tr2178;
-		case 59: goto tr2179;
+		case 13: goto tr2179;
+		case 32: goto tr2179;
+		case 59: goto tr2180;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2178;
+		goto tr2179;
 	goto st0;
-tr2137:
+tr2141:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1547;
-tr2202:
+tr2206:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1547;
@@ -20735,350 +20739,323 @@ st1547:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1547;
 case 1547:
-#line 20739 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 20743 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1548;
 	goto st0;
 st1548:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1548;
 case 1548:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1549;
 	goto st0;
 st1549:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1549;
 case 1549:
-	if ( (*( state.p)) == 116 )
-		goto st1550;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2183;
+		case 32: goto tr2183;
+		case 59: goto tr2184;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2183;
 	goto st0;
+tr2142:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1550;
+tr2207:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1550;
 st1550:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1550;
 case 1550:
-	if ( (*( state.p)) == 101 )
+#line 20778 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1551;
 	goto st0;
 st1551:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1551;
 case 1551:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2184;
-		case 32: goto tr2184;
-		case 59: goto tr2185;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2184;
+	if ( (*( state.p)) == 105 )
+		goto st1552;
 	goto st0;
-tr2138:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1552;
-tr2203:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1552;
 st1552:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1552;
 case 1552:
-#line 20788 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1553;
 	goto st0;
 st1553:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1553;
 case 1553:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1554;
 	goto st0;
 st1554:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1554;
 case 1554:
-	if ( (*( state.p)) == 108 )
-		goto st1555;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2189;
+		case 32: goto tr2189;
+		case 59: goto tr2190;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2189;
 	goto st0;
+tr2143:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1555;
+tr2208:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1555;
 st1555:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1555;
 case 1555:
-	if ( (*( state.p)) == 111 )
+#line 20827 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1556;
 	goto st0;
 st1556:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1556;
 case 1556:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1557;
 	goto st0;
 st1557:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1557;
 case 1557:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2191;
-		case 32: goto tr2191;
-		case 59: goto tr2192;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2191;
+	if ( (*( state.p)) == 108 )
+		goto st1558;
 	goto st0;
-tr2131:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1558;
-tr2196:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1558;
 st1558:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1558;
 case 1558:
-#line 20844 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1521;
-		case 99: goto st1528;
-		case 103: goto st1532;
-		case 109: goto st1537;
-		case 114: goto st1544;
-		case 119: goto st1547;
-		case 121: goto st1552;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1559;
 	goto st0;
 st1559:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1559;
 case 1559:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1560;
 	goto st0;
 st1560:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1560;
 case 1560:
-	if ( (*( state.p)) == 109 )
-		goto st1561;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2196;
+		case 32: goto tr2196;
+		case 59: goto tr2197;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2196;
 	goto st0;
+tr2136:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1561;
+tr2201:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1561;
 st1561:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1561;
 case 1561:
+#line 20883 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2195;
-		case 32: goto tr2195;
-		case 95: goto tr2196;
-		case 98: goto tr2197;
-		case 99: goto tr2198;
-		case 103: goto tr2199;
-		case 109: goto tr2200;
-		case 114: goto tr2201;
-		case 119: goto tr2202;
-		case 121: goto tr2203;
+		case 98: goto st1524;
+		case 99: goto st1531;
+		case 103: goto st1535;
+		case 109: goto st1540;
+		case 114: goto st1547;
+		case 119: goto st1550;
+		case 121: goto st1555;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2195;
 	goto st0;
 st1562:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1562;
 case 1562:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1563;
 	goto st0;
 st1563:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1563;
 case 1563:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1564;
 	goto st0;
 st1564:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1564;
 case 1564:
-	if ( (*( state.p)) == 101 )
-		goto st1525;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2200;
+		case 32: goto tr2200;
+		case 95: goto tr2201;
+		case 98: goto tr2202;
+		case 99: goto tr2203;
+		case 103: goto tr2204;
+		case 109: goto tr2205;
+		case 114: goto tr2206;
+		case 119: goto tr2207;
+		case 121: goto tr2208;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2200;
 	goto st0;
 st1565:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1565;
 case 1565:
-	switch( (*( state.p)) ) {
-		case 13: goto st1566;
-		case 32: goto st1566;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1566;
 	goto st0;
 st1566:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1566;
 case 1566:
-	switch( (*( state.p)) ) {
-		case 13: goto st1566;
-		case 32: goto st1566;
-		case 34: goto tr2207;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1566;
+	if ( (*( state.p)) == 110 )
+		goto st1567;
 	goto st0;
-tr2208:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1567;
-tr2207:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1567;
-tr2210:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1567; goto st47;}}
-	goto st1567;
 st1567:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1567;
 case 1567:
-#line 20952 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1568;
-		case 92: goto tr2210;
-	}
-	goto tr2208;
+	if ( (*( state.p)) == 101 )
+		goto st1528;
+	goto st0;
 st1568:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1568;
 case 1568:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2211;
-		case 32: goto tr2211;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2211;
-	goto st0;
-tr2211:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1569;
-st1569:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1569;
-case 1569:
-#line 20977 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1569;
 		case 32: goto st1569;
-		case 98: goto st1570;
-		case 100: goto st1615;
-		case 110: goto st1618;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1569;
 	goto st0;
+st1569:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1569;
+case 1569:
+	switch( (*( state.p)) ) {
+		case 13: goto st1569;
+		case 32: goto st1569;
+		case 34: goto tr2212;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1569;
+	goto st0;
+tr2213:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1570;
+tr2212:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1570;
+tr2215:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1570; goto st47;}}
+	goto st1570;
 st1570:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1570;
 case 1570:
-	if ( (*( state.p)) == 114 )
-		goto st1571;
-	goto st0;
+#line 20991 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1571;
+		case 92: goto tr2215;
+	}
+	goto tr2213;
 st1571:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1571;
 case 1571:
-	if ( (*( state.p)) == 105 )
-		goto st1572;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2216;
+		case 32: goto tr2216;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2216;
 	goto st0;
+tr2216:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1572;
 st1572:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1572;
 case 1572:
-	if ( (*( state.p)) == 103 )
-		goto st1573;
+#line 21016 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1572;
+		case 32: goto st1572;
+		case 98: goto st1573;
+		case 100: goto st1618;
+		case 110: goto st1621;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1572;
 	goto st0;
 st1573:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1573;
 case 1573:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1574;
 	goto st0;
 st1574:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1574;
 case 1574:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1575;
 	goto st0;
 st1575:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1575;
 case 1575:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2221;
-		case 32: goto tr2221;
-		case 95: goto tr2222;
-		case 98: goto tr2223;
-		case 99: goto tr2224;
-		case 103: goto tr2225;
-		case 109: goto tr2226;
-		case 114: goto tr2227;
-		case 119: goto tr2228;
-		case 121: goto tr2229;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2221;
+	if ( (*( state.p)) == 103 )
+		goto st1576;
 	goto st0;
-tr2221:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1576;
-tr2286:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1576;
 st1576:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1576;
 case 1576:
-#line 21054 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1576;
-		case 32: goto st1576;
-		case 98: goto st1577;
-		case 99: goto st1584;
-		case 103: goto st1588;
-		case 109: goto st1593;
-		case 114: goto st1600;
-		case 119: goto st1603;
-		case 121: goto st1608;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1576;
+	if ( (*( state.p)) == 104 )
+		goto st1577;
 	goto st0;
-tr2223:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1577;
-tr2288:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1577;
 st1577:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1577;
 case 1577:
-#line 21081 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1578;
 	goto st0;
 st1578:
@@ -21086,22 +21063,61 @@ st1578:
 		goto _test_eof1578;
 case 1578:
 	switch( (*( state.p)) ) {
-		case 97: goto st1579;
-		case 117: goto st1582;
+		case 13: goto tr2226;
+		case 32: goto tr2226;
+		case 95: goto tr2227;
+		case 98: goto tr2228;
+		case 99: goto tr2229;
+		case 103: goto tr2230;
+		case 109: goto tr2231;
+		case 114: goto tr2232;
+		case 119: goto tr2233;
+		case 121: goto tr2234;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2226;
 	goto st0;
+tr2226:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1579;
+tr2291:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1579;
 st1579:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1579;
 case 1579:
-	if ( (*( state.p)) == 99 )
-		goto st1580;
+#line 21093 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1579;
+		case 32: goto st1579;
+		case 98: goto st1580;
+		case 99: goto st1587;
+		case 103: goto st1591;
+		case 109: goto st1596;
+		case 114: goto st1603;
+		case 119: goto st1606;
+		case 121: goto st1611;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1579;
 	goto st0;
+tr2228:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1580;
+tr2293:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1580;
 st1580:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1580;
 case 1580:
-	if ( (*( state.p)) == 107 )
+#line 21120 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1581;
 	goto st0;
 st1581:
@@ -21109,66 +21125,47 @@ st1581:
 		goto _test_eof1581;
 case 1581:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2243;
-		case 32: goto tr2243;
-		case 59: goto tr2244;
+		case 97: goto st1582;
+		case 117: goto st1585;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2243;
 	goto st0;
 st1582:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1582;
 case 1582:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1583;
 	goto st0;
 st1583:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1583;
 case 1583:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2246;
-		case 32: goto tr2246;
-		case 59: goto tr2247;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2246;
+	if ( (*( state.p)) == 107 )
+		goto st1584;
 	goto st0;
-tr2224:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1584;
-tr2289:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1584;
 st1584:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1584;
 case 1584:
-#line 21151 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1585;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2248;
+		case 32: goto tr2248;
+		case 59: goto tr2249;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2248;
 	goto st0;
 st1585:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1585;
 case 1585:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1586;
 	goto st0;
 st1586:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1586;
 case 1586:
-	if ( (*( state.p)) == 110 )
-		goto st1587;
-	goto st0;
-st1587:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1587;
-case 1587:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2251;
 		case 32: goto tr2251;
@@ -21177,139 +21174,146 @@ case 1587:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2251;
 	goto st0;
-tr2225:
+tr2229:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1588;
-tr2290:
+	goto st1587;
+tr2294:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1588;
+	goto st1587;
+st1587:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1587;
+case 1587:
+#line 21190 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1588;
+	goto st0;
 st1588:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1588;
 case 1588:
-#line 21193 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1589;
 	goto st0;
 st1589:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1589;
 case 1589:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1590;
 	goto st0;
 st1590:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1590;
 case 1590:
-	if ( (*( state.p)) == 101 )
-		goto st1591;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2256;
+		case 32: goto tr2256;
+		case 59: goto tr2257;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2256;
 	goto st0;
+tr2230:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1591;
+tr2295:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1591;
 st1591:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1591;
 case 1591:
-	if ( (*( state.p)) == 110 )
+#line 21232 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1592;
 	goto st0;
 st1592:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1592;
 case 1592:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2257;
-		case 32: goto tr2257;
-		case 59: goto tr2258;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2257;
+	if ( (*( state.p)) == 101 )
+		goto st1593;
 	goto st0;
-tr2226:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1593;
-tr2291:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1593;
 st1593:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1593;
 case 1593:
-#line 21242 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1594;
 	goto st0;
 st1594:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1594;
 case 1594:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1595;
 	goto st0;
 st1595:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1595;
 case 1595:
-	if ( (*( state.p)) == 101 )
-		goto st1596;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2262;
+		case 32: goto tr2262;
+		case 59: goto tr2263;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2262;
 	goto st0;
+tr2231:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1596;
+tr2296:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1596;
 st1596:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1596;
 case 1596:
-	if ( (*( state.p)) == 110 )
+#line 21281 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1597;
 	goto st0;
 st1597:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1597;
 case 1597:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1598;
 	goto st0;
 st1598:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1598;
 case 1598:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1599;
 	goto st0;
 st1599:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1599;
 case 1599:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2265;
-		case 32: goto tr2265;
-		case 59: goto tr2266;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2265;
+	if ( (*( state.p)) == 110 )
+		goto st1600;
 	goto st0;
-tr2227:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1600;
-tr2292:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1600;
 st1600:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1600;
 case 1600:
-#line 21305 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1601;
 	goto st0;
 st1601:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1601;
 case 1601:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1602;
 	goto st0;
 st1602:
@@ -21317,18 +21321,18 @@ st1602:
 		goto _test_eof1602;
 case 1602:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2269;
-		case 32: goto tr2269;
-		case 59: goto tr2270;
+		case 13: goto tr2270;
+		case 32: goto tr2270;
+		case 59: goto tr2271;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2269;
+		goto tr2270;
 	goto st0;
-tr2228:
+tr2232:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1603;
-tr2293:
+tr2297:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1603;
@@ -21336,350 +21340,323 @@ st1603:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1603;
 case 1603:
-#line 21340 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 21344 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1604;
 	goto st0;
 st1604:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1604;
 case 1604:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1605;
 	goto st0;
 st1605:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1605;
 case 1605:
-	if ( (*( state.p)) == 116 )
-		goto st1606;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2274;
+		case 32: goto tr2274;
+		case 59: goto tr2275;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2274;
 	goto st0;
+tr2233:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1606;
+tr2298:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1606;
 st1606:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1606;
 case 1606:
-	if ( (*( state.p)) == 101 )
+#line 21379 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1607;
 	goto st0;
 st1607:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1607;
 case 1607:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2275;
-		case 32: goto tr2275;
-		case 59: goto tr2276;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2275;
+	if ( (*( state.p)) == 105 )
+		goto st1608;
 	goto st0;
-tr2229:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1608;
-tr2294:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1608;
 st1608:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1608;
 case 1608:
-#line 21389 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1609;
 	goto st0;
 st1609:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1609;
 case 1609:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1610;
 	goto st0;
 st1610:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1610;
 case 1610:
-	if ( (*( state.p)) == 108 )
-		goto st1611;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2280;
+		case 32: goto tr2280;
+		case 59: goto tr2281;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2280;
 	goto st0;
+tr2234:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1611;
+tr2299:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1611;
 st1611:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1611;
 case 1611:
-	if ( (*( state.p)) == 111 )
+#line 21428 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1612;
 	goto st0;
 st1612:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1612;
 case 1612:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1613;
 	goto st0;
 st1613:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1613;
 case 1613:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2282;
-		case 32: goto tr2282;
-		case 59: goto tr2283;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2282;
+	if ( (*( state.p)) == 108 )
+		goto st1614;
 	goto st0;
-tr2222:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1614;
-tr2287:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1614;
 st1614:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1614;
 case 1614:
-#line 21445 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1577;
-		case 99: goto st1584;
-		case 103: goto st1588;
-		case 109: goto st1593;
-		case 114: goto st1600;
-		case 119: goto st1603;
-		case 121: goto st1608;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1615;
 	goto st0;
 st1615:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1615;
 case 1615:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1616;
 	goto st0;
 st1616:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1616;
 case 1616:
-	if ( (*( state.p)) == 109 )
-		goto st1617;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2287;
+		case 32: goto tr2287;
+		case 59: goto tr2288;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2287;
 	goto st0;
+tr2227:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1617;
+tr2292:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1617;
 st1617:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1617;
 case 1617:
+#line 21484 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2286;
-		case 32: goto tr2286;
-		case 95: goto tr2287;
-		case 98: goto tr2288;
-		case 99: goto tr2289;
-		case 103: goto tr2290;
-		case 109: goto tr2291;
-		case 114: goto tr2292;
-		case 119: goto tr2293;
-		case 121: goto tr2294;
+		case 98: goto st1580;
+		case 99: goto st1587;
+		case 103: goto st1591;
+		case 109: goto st1596;
+		case 114: goto st1603;
+		case 119: goto st1606;
+		case 121: goto st1611;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2286;
 	goto st0;
 st1618:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1618;
 case 1618:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1619;
 	goto st0;
 st1619:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1619;
 case 1619:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1620;
 	goto st0;
 st1620:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1620;
 case 1620:
-	if ( (*( state.p)) == 101 )
-		goto st1581;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2291;
+		case 32: goto tr2291;
+		case 95: goto tr2292;
+		case 98: goto tr2293;
+		case 99: goto tr2294;
+		case 103: goto tr2295;
+		case 109: goto tr2296;
+		case 114: goto tr2297;
+		case 119: goto tr2298;
+		case 121: goto tr2299;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2291;
 	goto st0;
 st1621:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1621;
 case 1621:
-	switch( (*( state.p)) ) {
-		case 13: goto st1622;
-		case 32: goto st1622;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 111 )
 		goto st1622;
 	goto st0;
 st1622:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1622;
 case 1622:
-	switch( (*( state.p)) ) {
-		case 13: goto st1622;
-		case 32: goto st1622;
-		case 34: goto tr2298;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1622;
+	if ( (*( state.p)) == 110 )
+		goto st1623;
 	goto st0;
-tr2299:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1623;
-tr2298:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1623;
-tr2301:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1623; goto st47;}}
-	goto st1623;
 st1623:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1623;
 case 1623:
-#line 21553 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1624;
-		case 92: goto tr2301;
-	}
-	goto tr2299;
+	if ( (*( state.p)) == 101 )
+		goto st1584;
+	goto st0;
 st1624:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1624;
 case 1624:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2302;
-		case 32: goto tr2302;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2302;
-	goto st0;
-tr2302:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1625;
-st1625:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1625;
-case 1625:
-#line 21578 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1625;
 		case 32: goto st1625;
-		case 98: goto st1626;
-		case 100: goto st1671;
-		case 110: goto st1674;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1625;
 	goto st0;
+st1625:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1625;
+case 1625:
+	switch( (*( state.p)) ) {
+		case 13: goto st1625;
+		case 32: goto st1625;
+		case 34: goto tr2303;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1625;
+	goto st0;
+tr2304:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1626;
+tr2303:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1626;
+tr2306:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1626; goto st47;}}
+	goto st1626;
 st1626:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1626;
 case 1626:
-	if ( (*( state.p)) == 114 )
-		goto st1627;
-	goto st0;
+#line 21592 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1627;
+		case 92: goto tr2306;
+	}
+	goto tr2304;
 st1627:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1627;
 case 1627:
-	if ( (*( state.p)) == 105 )
-		goto st1628;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2307;
+		case 32: goto tr2307;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2307;
 	goto st0;
+tr2307:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1628;
 st1628:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1628;
 case 1628:
-	if ( (*( state.p)) == 103 )
-		goto st1629;
+#line 21617 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1628;
+		case 32: goto st1628;
+		case 98: goto st1629;
+		case 100: goto st1674;
+		case 110: goto st1677;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1628;
 	goto st0;
 st1629:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1629;
 case 1629:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1630;
 	goto st0;
 st1630:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1630;
 case 1630:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1631;
 	goto st0;
 st1631:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1631;
 case 1631:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2312;
-		case 32: goto tr2312;
-		case 95: goto tr2313;
-		case 98: goto tr2314;
-		case 99: goto tr2315;
-		case 103: goto tr2316;
-		case 109: goto tr2317;
-		case 114: goto tr2318;
-		case 119: goto tr2319;
-		case 121: goto tr2320;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2312;
+	if ( (*( state.p)) == 103 )
+		goto st1632;
 	goto st0;
-tr2312:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1632;
-tr2377:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1632;
 st1632:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1632;
 case 1632:
-#line 21655 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1632;
-		case 32: goto st1632;
-		case 98: goto st1633;
-		case 99: goto st1640;
-		case 103: goto st1644;
-		case 109: goto st1649;
-		case 114: goto st1656;
-		case 119: goto st1659;
-		case 121: goto st1664;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1632;
+	if ( (*( state.p)) == 104 )
+		goto st1633;
 	goto st0;
-tr2314:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1633;
-tr2379:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1633;
 st1633:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1633;
 case 1633:
-#line 21682 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1634;
 	goto st0;
 st1634:
@@ -21687,22 +21664,61 @@ st1634:
 		goto _test_eof1634;
 case 1634:
 	switch( (*( state.p)) ) {
-		case 97: goto st1635;
-		case 117: goto st1638;
+		case 13: goto tr2317;
+		case 32: goto tr2317;
+		case 95: goto tr2318;
+		case 98: goto tr2319;
+		case 99: goto tr2320;
+		case 103: goto tr2321;
+		case 109: goto tr2322;
+		case 114: goto tr2323;
+		case 119: goto tr2324;
+		case 121: goto tr2325;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2317;
 	goto st0;
+tr2317:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1635;
+tr2382:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1635;
 st1635:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1635;
 case 1635:
-	if ( (*( state.p)) == 99 )
-		goto st1636;
+#line 21694 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1635;
+		case 32: goto st1635;
+		case 98: goto st1636;
+		case 99: goto st1643;
+		case 103: goto st1647;
+		case 109: goto st1652;
+		case 114: goto st1659;
+		case 119: goto st1662;
+		case 121: goto st1667;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1635;
 	goto st0;
+tr2319:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1636;
+tr2384:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1636;
 st1636:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1636;
 case 1636:
-	if ( (*( state.p)) == 107 )
+#line 21721 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1637;
 	goto st0;
 st1637:
@@ -21710,66 +21726,47 @@ st1637:
 		goto _test_eof1637;
 case 1637:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2334;
-		case 32: goto tr2334;
-		case 59: goto tr2335;
+		case 97: goto st1638;
+		case 117: goto st1641;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2334;
 	goto st0;
 st1638:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1638;
 case 1638:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1639;
 	goto st0;
 st1639:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1639;
 case 1639:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2337;
-		case 32: goto tr2337;
-		case 59: goto tr2338;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2337;
+	if ( (*( state.p)) == 107 )
+		goto st1640;
 	goto st0;
-tr2315:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1640;
-tr2380:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1640;
 st1640:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1640;
 case 1640:
-#line 21752 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1641;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2339;
+		case 32: goto tr2339;
+		case 59: goto tr2340;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2339;
 	goto st0;
 st1641:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1641;
 case 1641:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1642;
 	goto st0;
 st1642:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1642;
 case 1642:
-	if ( (*( state.p)) == 110 )
-		goto st1643;
-	goto st0;
-st1643:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1643;
-case 1643:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2342;
 		case 32: goto tr2342;
@@ -21778,139 +21775,146 @@ case 1643:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2342;
 	goto st0;
-tr2316:
+tr2320:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1644;
-tr2381:
+	goto st1643;
+tr2385:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1644;
+	goto st1643;
+st1643:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1643;
+case 1643:
+#line 21791 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1644;
+	goto st0;
 st1644:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1644;
 case 1644:
-#line 21794 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1645;
 	goto st0;
 st1645:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1645;
 case 1645:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1646;
 	goto st0;
 st1646:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1646;
 case 1646:
-	if ( (*( state.p)) == 101 )
-		goto st1647;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2347;
+		case 32: goto tr2347;
+		case 59: goto tr2348;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2347;
 	goto st0;
+tr2321:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1647;
+tr2386:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1647;
 st1647:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1647;
 case 1647:
-	if ( (*( state.p)) == 110 )
+#line 21833 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1648;
 	goto st0;
 st1648:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1648;
 case 1648:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2348;
-		case 32: goto tr2348;
-		case 59: goto tr2349;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2348;
+	if ( (*( state.p)) == 101 )
+		goto st1649;
 	goto st0;
-tr2317:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1649;
-tr2382:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1649;
 st1649:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1649;
 case 1649:
-#line 21843 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1650;
 	goto st0;
 st1650:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1650;
 case 1650:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1651;
 	goto st0;
 st1651:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1651;
 case 1651:
-	if ( (*( state.p)) == 101 )
-		goto st1652;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2353;
+		case 32: goto tr2353;
+		case 59: goto tr2354;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2353;
 	goto st0;
+tr2322:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1652;
+tr2387:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1652;
 st1652:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1652;
 case 1652:
-	if ( (*( state.p)) == 110 )
+#line 21882 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1653;
 	goto st0;
 st1653:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1653;
 case 1653:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1654;
 	goto st0;
 st1654:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1654;
 case 1654:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1655;
 	goto st0;
 st1655:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1655;
 case 1655:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2356;
-		case 32: goto tr2356;
-		case 59: goto tr2357;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2356;
+	if ( (*( state.p)) == 110 )
+		goto st1656;
 	goto st0;
-tr2318:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1656;
-tr2383:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1656;
 st1656:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1656;
 case 1656:
-#line 21906 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1657;
 	goto st0;
 st1657:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1657;
 case 1657:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1658;
 	goto st0;
 st1658:
@@ -21918,18 +21922,18 @@ st1658:
 		goto _test_eof1658;
 case 1658:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2360;
-		case 32: goto tr2360;
-		case 59: goto tr2361;
+		case 13: goto tr2361;
+		case 32: goto tr2361;
+		case 59: goto tr2362;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2360;
+		goto tr2361;
 	goto st0;
-tr2319:
+tr2323:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1659;
-tr2384:
+tr2388:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1659;
@@ -21937,640 +21941,613 @@ st1659:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1659;
 case 1659:
-#line 21941 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 21945 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1660;
 	goto st0;
 st1660:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1660;
 case 1660:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1661;
 	goto st0;
 st1661:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1661;
 case 1661:
-	if ( (*( state.p)) == 116 )
-		goto st1662;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2365;
+		case 32: goto tr2365;
+		case 59: goto tr2366;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2365;
 	goto st0;
+tr2324:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1662;
+tr2389:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1662;
 st1662:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1662;
 case 1662:
-	if ( (*( state.p)) == 101 )
+#line 21980 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1663;
 	goto st0;
 st1663:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1663;
 case 1663:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2366;
-		case 32: goto tr2366;
-		case 59: goto tr2367;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2366;
+	if ( (*( state.p)) == 105 )
+		goto st1664;
 	goto st0;
-tr2320:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1664;
-tr2385:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1664;
 st1664:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1664;
 case 1664:
-#line 21990 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1665;
 	goto st0;
 st1665:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1665;
 case 1665:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1666;
 	goto st0;
 st1666:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1666;
 case 1666:
-	if ( (*( state.p)) == 108 )
-		goto st1667;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2371;
+		case 32: goto tr2371;
+		case 59: goto tr2372;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2371;
 	goto st0;
+tr2325:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1667;
+tr2390:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1667;
 st1667:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1667;
 case 1667:
-	if ( (*( state.p)) == 111 )
+#line 22029 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1668;
 	goto st0;
 st1668:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1668;
 case 1668:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1669;
 	goto st0;
 st1669:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1669;
 case 1669:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2373;
-		case 32: goto tr2373;
-		case 59: goto tr2374;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2373;
+	if ( (*( state.p)) == 108 )
+		goto st1670;
 	goto st0;
-tr2313:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1670;
-tr2378:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1670;
 st1670:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1670;
 case 1670:
-#line 22046 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1633;
-		case 99: goto st1640;
-		case 103: goto st1644;
-		case 109: goto st1649;
-		case 114: goto st1656;
-		case 119: goto st1659;
-		case 121: goto st1664;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1671;
 	goto st0;
 st1671:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1671;
 case 1671:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1672;
 	goto st0;
 st1672:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1672;
 case 1672:
-	if ( (*( state.p)) == 109 )
-		goto st1673;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2378;
+		case 32: goto tr2378;
+		case 59: goto tr2379;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2378;
 	goto st0;
+tr2318:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1673;
+tr2383:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1673;
 st1673:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1673;
 case 1673:
+#line 22085 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2377;
-		case 32: goto tr2377;
-		case 95: goto tr2378;
-		case 98: goto tr2379;
-		case 99: goto tr2380;
-		case 103: goto tr2381;
-		case 109: goto tr2382;
-		case 114: goto tr2383;
-		case 119: goto tr2384;
-		case 121: goto tr2385;
+		case 98: goto st1636;
+		case 99: goto st1643;
+		case 103: goto st1647;
+		case 109: goto st1652;
+		case 114: goto st1659;
+		case 119: goto st1662;
+		case 121: goto st1667;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2377;
 	goto st0;
 st1674:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1674;
 case 1674:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1675;
 	goto st0;
 st1675:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1675;
 case 1675:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1676;
 	goto st0;
 st1676:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1676;
 case 1676:
-	if ( (*( state.p)) == 101 )
-		goto st1637;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2382;
+		case 32: goto tr2382;
+		case 95: goto tr2383;
+		case 98: goto tr2384;
+		case 99: goto tr2385;
+		case 103: goto tr2386;
+		case 109: goto tr2387;
+		case 114: goto tr2388;
+		case 119: goto tr2389;
+		case 121: goto tr2390;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2382;
 	goto st0;
 st1677:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1677;
 case 1677:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 111 )
 		goto st1678;
 	goto st0;
 st1678:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1678;
 case 1678:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1679;
 	goto st0;
 st1679:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1679;
 case 1679:
-	if ( (*( state.p)) == 104 )
-		goto st1680;
+	if ( (*( state.p)) == 101 )
+		goto st1640;
 	goto st0;
 st1680:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1680;
 case 1680:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1681;
 	goto st0;
 st1681:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1681;
 case 1681:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 103 )
 		goto st1682;
 	goto st0;
 st1682:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1682;
 case 1682:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 104 )
 		goto st1683;
 	goto st0;
 st1683:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1683;
 case 1683:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 116 )
 		goto st1684;
 	goto st0;
 st1684:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1684;
 case 1684:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 114 )
 		goto st1685;
 	goto st0;
 st1685:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1685;
 case 1685:
-	if ( (*( state.p)) == 117 )
+	if ( (*( state.p)) == 97 )
 		goto st1686;
 	goto st0;
 st1686:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1686;
 case 1686:
-	if ( (*( state.p)) == 115 )
+	if ( (*( state.p)) == 100 )
 		goto st1687;
 	goto st0;
 st1687:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1687;
 case 1687:
-	switch( (*( state.p)) ) {
-		case 13: goto st1688;
-		case 32: goto st1688;
-		case 95: goto st1690;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 105 )
 		goto st1688;
 	goto st0;
 st1688:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1688;
 case 1688:
-	switch( (*( state.p)) ) {
-		case 13: goto st1688;
-		case 32: goto st1688;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr2400;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1688;
+	if ( (*( state.p)) == 117 )
+		goto st1689;
 	goto st0;
-tr2400:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1689;
-tr2402:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1689;
 st1689:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1689;
 case 1689:
-#line 22227 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr2401;
-		case 32: goto tr2401;
-		case 59: goto tr2403;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr2402;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr2401;
+	if ( (*( state.p)) == 115 )
+		goto st1690;
 	goto st0;
 st1690:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1690;
 case 1690:
-	if ( (*( state.p)) == 109 )
+	switch( (*( state.p)) ) {
+		case 13: goto st1691;
+		case 32: goto st1691;
+		case 95: goto st1693;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1691;
 	goto st0;
 st1691:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1691;
 case 1691:
-	if ( (*( state.p)) == 97 )
-		goto st1692;
+	switch( (*( state.p)) ) {
+		case 13: goto st1691;
+		case 32: goto st1691;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr2405;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1691;
 	goto st0;
+tr2405:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1692;
+tr2407:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1692;
 st1692:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1692;
 case 1692:
-	if ( (*( state.p)) == 120 )
-		goto st1693;
+#line 22266 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr2406;
+		case 32: goto tr2406;
+		case 59: goto tr2408;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr2407;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr2406;
 	goto st0;
 st1693:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1693;
 case 1693:
-	switch( (*( state.p)) ) {
-		case 13: goto st1694;
-		case 32: goto st1694;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 109 )
 		goto st1694;
 	goto st0;
 st1694:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1694;
 case 1694:
-	switch( (*( state.p)) ) {
-		case 13: goto st1694;
-		case 32: goto st1694;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr2408;
-	} else if ( (*( state.p)) >= 9 )
-		goto st1694;
+	if ( (*( state.p)) == 97 )
+		goto st1695;
 	goto st0;
-tr2408:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1695;
-tr2410:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1695;
 st1695:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1695;
 case 1695:
-#line 22305 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto tr2409;
-		case 32: goto tr2409;
-		case 59: goto tr2411;
-	}
-	if ( (*( state.p)) > 10 ) {
-		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
-			goto tr2410;
-	} else if ( (*( state.p)) >= 9 )
-		goto tr2409;
+	if ( (*( state.p)) == 120 )
+		goto st1696;
 	goto st0;
 st1696:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1696;
 case 1696:
-	if ( (*( state.p)) == 104 )
+	switch( (*( state.p)) ) {
+		case 13: goto st1697;
+		case 32: goto st1697;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1697;
 	goto st0;
 st1697:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1697;
 case 1697:
-	if ( (*( state.p)) == 97 )
-		goto st1698;
+	switch( (*( state.p)) ) {
+		case 13: goto st1697;
+		case 32: goto st1697;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr2413;
+	} else if ( (*( state.p)) >= 9 )
+		goto st1697;
 	goto st0;
+tr2413:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1698;
+tr2415:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1698;
 st1698:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1698;
 case 1698:
-	if ( (*( state.p)) == 108 )
-		goto st1699;
+#line 22344 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto tr2414;
+		case 32: goto tr2414;
+		case 59: goto tr2416;
+	}
+	if ( (*( state.p)) > 10 ) {
+		if ( 48 <= (*( state.p)) && (*( state.p)) <= 57 )
+			goto tr2415;
+	} else if ( (*( state.p)) >= 9 )
+		goto tr2414;
 	goto st0;
 st1699:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1699;
 case 1699:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 104 )
 		goto st1700;
 	goto st0;
 st1700:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1700;
 case 1700:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 97 )
 		goto st1701;
 	goto st0;
 st1701:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1701;
 case 1701:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1702;
 	goto st0;
 st1702:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1702;
 case 1702:
-	if ( (*( state.p)) == 95 )
+	if ( (*( state.p)) == 108 )
 		goto st1703;
 	goto st0;
 st1703:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1703;
 case 1703:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 111 )
 		goto st1704;
 	goto st0;
 st1704:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1704;
 case 1704:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 119 )
 		goto st1705;
 	goto st0;
 st1705:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1705;
 case 1705:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 95 )
 		goto st1706;
 	goto st0;
 st1706:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1706;
 case 1706:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 119 )
 		goto st1707;
 	goto st0;
 st1707:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1707;
 case 1707:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1708;
 	goto st0;
 st1708:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1708;
 case 1708:
-	switch( (*( state.p)) ) {
-		case 13: goto st1709;
-		case 32: goto st1709;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 116 )
 		goto st1709;
 	goto st0;
 st1709:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1709;
 case 1709:
-	switch( (*( state.p)) ) {
-		case 13: goto st1709;
-		case 32: goto st1709;
-		case 34: goto tr2425;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1709;
+	if ( (*( state.p)) == 101 )
+		goto st1710;
 	goto st0;
-tr2426:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1710;
-tr2425:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1710;
-tr2428:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1710; goto st47;}}
-	goto st1710;
 st1710:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1710;
 case 1710:
-#line 22444 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1711;
-		case 92: goto tr2428;
-	}
-	goto tr2426;
+	if ( (*( state.p)) == 114 )
+		goto st1711;
+	goto st0;
 st1711:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1711;
 case 1711:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2429;
-		case 32: goto tr2429;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2429;
-	goto st0;
-tr2429:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1712;
-st1712:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1712;
-case 1712:
-#line 22469 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1712;
 		case 32: goto st1712;
-		case 98: goto st1713;
-		case 100: goto st1758;
-		case 110: goto st1761;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1712;
 	goto st0;
+st1712:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1712;
+case 1712:
+	switch( (*( state.p)) ) {
+		case 13: goto st1712;
+		case 32: goto st1712;
+		case 34: goto tr2430;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1712;
+	goto st0;
+tr2431:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1713;
+tr2430:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1713;
+tr2433:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1713; goto st47;}}
+	goto st1713;
 st1713:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1713;
 case 1713:
-	if ( (*( state.p)) == 114 )
-		goto st1714;
-	goto st0;
+#line 22483 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1714;
+		case 92: goto tr2433;
+	}
+	goto tr2431;
 st1714:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1714;
 case 1714:
-	if ( (*( state.p)) == 105 )
-		goto st1715;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2434;
+		case 32: goto tr2434;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2434;
 	goto st0;
+tr2434:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1715;
 st1715:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1715;
 case 1715:
-	if ( (*( state.p)) == 103 )
-		goto st1716;
+#line 22508 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1715;
+		case 32: goto st1715;
+		case 98: goto st1716;
+		case 100: goto st1761;
+		case 110: goto st1764;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1715;
 	goto st0;
 st1716:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1716;
 case 1716:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1717;
 	goto st0;
 st1717:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1717;
 case 1717:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1718;
 	goto st0;
 st1718:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1718;
 case 1718:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2439;
-		case 32: goto tr2439;
-		case 95: goto tr2440;
-		case 98: goto tr2441;
-		case 99: goto tr2442;
-		case 103: goto tr2443;
-		case 109: goto tr2444;
-		case 114: goto tr2445;
-		case 119: goto tr2446;
-		case 121: goto tr2447;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2439;
+	if ( (*( state.p)) == 103 )
+		goto st1719;
 	goto st0;
-tr2439:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1719;
-tr2504:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1719;
 st1719:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1719;
 case 1719:
-#line 22546 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1719;
-		case 32: goto st1719;
-		case 98: goto st1720;
-		case 99: goto st1727;
-		case 103: goto st1731;
-		case 109: goto st1736;
-		case 114: goto st1743;
-		case 119: goto st1746;
-		case 121: goto st1751;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1719;
+	if ( (*( state.p)) == 104 )
+		goto st1720;
 	goto st0;
-tr2441:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1720;
-tr2506:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1720;
 st1720:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1720;
 case 1720:
-#line 22573 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1721;
 	goto st0;
 st1721:
@@ -22578,22 +22555,61 @@ st1721:
 		goto _test_eof1721;
 case 1721:
 	switch( (*( state.p)) ) {
-		case 97: goto st1722;
-		case 117: goto st1725;
+		case 13: goto tr2444;
+		case 32: goto tr2444;
+		case 95: goto tr2445;
+		case 98: goto tr2446;
+		case 99: goto tr2447;
+		case 103: goto tr2448;
+		case 109: goto tr2449;
+		case 114: goto tr2450;
+		case 119: goto tr2451;
+		case 121: goto tr2452;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2444;
 	goto st0;
+tr2444:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1722;
+tr2509:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1722;
 st1722:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1722;
 case 1722:
-	if ( (*( state.p)) == 99 )
-		goto st1723;
+#line 22585 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1722;
+		case 32: goto st1722;
+		case 98: goto st1723;
+		case 99: goto st1730;
+		case 103: goto st1734;
+		case 109: goto st1739;
+		case 114: goto st1746;
+		case 119: goto st1749;
+		case 121: goto st1754;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1722;
 	goto st0;
+tr2446:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1723;
+tr2511:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1723;
 st1723:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1723;
 case 1723:
-	if ( (*( state.p)) == 107 )
+#line 22612 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1724;
 	goto st0;
 st1724:
@@ -22601,66 +22617,47 @@ st1724:
 		goto _test_eof1724;
 case 1724:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2461;
-		case 32: goto tr2461;
-		case 59: goto tr2462;
+		case 97: goto st1725;
+		case 117: goto st1728;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2461;
 	goto st0;
 st1725:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1725;
 case 1725:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1726;
 	goto st0;
 st1726:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1726;
 case 1726:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2464;
-		case 32: goto tr2464;
-		case 59: goto tr2465;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2464;
+	if ( (*( state.p)) == 107 )
+		goto st1727;
 	goto st0;
-tr2442:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1727;
-tr2507:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1727;
 st1727:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1727;
 case 1727:
-#line 22643 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1728;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2466;
+		case 32: goto tr2466;
+		case 59: goto tr2467;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2466;
 	goto st0;
 st1728:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1728;
 case 1728:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1729;
 	goto st0;
 st1729:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1729;
 case 1729:
-	if ( (*( state.p)) == 110 )
-		goto st1730;
-	goto st0;
-st1730:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1730;
-case 1730:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2469;
 		case 32: goto tr2469;
@@ -22669,139 +22666,146 @@ case 1730:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2469;
 	goto st0;
-tr2443:
+tr2447:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1731;
-tr2508:
+	goto st1730;
+tr2512:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1731;
+	goto st1730;
+st1730:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1730;
+case 1730:
+#line 22682 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1731;
+	goto st0;
 st1731:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1731;
 case 1731:
-#line 22685 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1732;
 	goto st0;
 st1732:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1732;
 case 1732:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1733;
 	goto st0;
 st1733:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1733;
 case 1733:
-	if ( (*( state.p)) == 101 )
-		goto st1734;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2474;
+		case 32: goto tr2474;
+		case 59: goto tr2475;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2474;
 	goto st0;
+tr2448:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1734;
+tr2513:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1734;
 st1734:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1734;
 case 1734:
-	if ( (*( state.p)) == 110 )
+#line 22724 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1735;
 	goto st0;
 st1735:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1735;
 case 1735:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2475;
-		case 32: goto tr2475;
-		case 59: goto tr2476;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2475;
+	if ( (*( state.p)) == 101 )
+		goto st1736;
 	goto st0;
-tr2444:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1736;
-tr2509:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1736;
 st1736:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1736;
 case 1736:
-#line 22734 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1737;
 	goto st0;
 st1737:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1737;
 case 1737:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1738;
 	goto st0;
 st1738:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1738;
 case 1738:
-	if ( (*( state.p)) == 101 )
-		goto st1739;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2480;
+		case 32: goto tr2480;
+		case 59: goto tr2481;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2480;
 	goto st0;
+tr2449:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1739;
+tr2514:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1739;
 st1739:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1739;
 case 1739:
-	if ( (*( state.p)) == 110 )
+#line 22773 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1740;
 	goto st0;
 st1740:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1740;
 case 1740:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1741;
 	goto st0;
 st1741:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1741;
 case 1741:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1742;
 	goto st0;
 st1742:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1742;
 case 1742:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2483;
-		case 32: goto tr2483;
-		case 59: goto tr2484;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2483;
+	if ( (*( state.p)) == 110 )
+		goto st1743;
 	goto st0;
-tr2445:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1743;
-tr2510:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1743;
 st1743:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1743;
 case 1743:
-#line 22797 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1744;
 	goto st0;
 st1744:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1744;
 case 1744:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1745;
 	goto st0;
 st1745:
@@ -22809,18 +22813,18 @@ st1745:
 		goto _test_eof1745;
 case 1745:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2487;
-		case 32: goto tr2487;
-		case 59: goto tr2488;
+		case 13: goto tr2488;
+		case 32: goto tr2488;
+		case 59: goto tr2489;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2487;
+		goto tr2488;
 	goto st0;
-tr2446:
+tr2450:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1746;
-tr2511:
+tr2515:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1746;
@@ -22828,208 +22832,216 @@ st1746:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1746;
 case 1746:
-#line 22832 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 22836 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1747;
 	goto st0;
 st1747:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1747;
 case 1747:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1748;
 	goto st0;
 st1748:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1748;
 case 1748:
-	if ( (*( state.p)) == 116 )
-		goto st1749;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2492;
+		case 32: goto tr2492;
+		case 59: goto tr2493;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2492;
 	goto st0;
+tr2451:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1749;
+tr2516:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1749;
 st1749:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1749;
 case 1749:
-	if ( (*( state.p)) == 101 )
+#line 22871 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1750;
 	goto st0;
 st1750:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1750;
 case 1750:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2493;
-		case 32: goto tr2493;
-		case 59: goto tr2494;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2493;
+	if ( (*( state.p)) == 105 )
+		goto st1751;
 	goto st0;
-tr2447:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1751;
-tr2512:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1751;
 st1751:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1751;
 case 1751:
-#line 22881 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1752;
 	goto st0;
 st1752:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1752;
 case 1752:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1753;
 	goto st0;
 st1753:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1753;
 case 1753:
-	if ( (*( state.p)) == 108 )
-		goto st1754;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2498;
+		case 32: goto tr2498;
+		case 59: goto tr2499;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2498;
 	goto st0;
+tr2452:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1754;
+tr2517:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1754;
 st1754:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1754;
 case 1754:
-	if ( (*( state.p)) == 111 )
+#line 22920 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1755;
 	goto st0;
 st1755:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1755;
 case 1755:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1756;
 	goto st0;
 st1756:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1756;
 case 1756:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2500;
-		case 32: goto tr2500;
-		case 59: goto tr2501;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2500;
+	if ( (*( state.p)) == 108 )
+		goto st1757;
 	goto st0;
-tr2440:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1757;
-tr2505:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1757;
 st1757:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1757;
 case 1757:
-#line 22937 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1720;
-		case 99: goto st1727;
-		case 103: goto st1731;
-		case 109: goto st1736;
-		case 114: goto st1743;
-		case 119: goto st1746;
-		case 121: goto st1751;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1758;
 	goto st0;
 st1758:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1758;
 case 1758:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1759;
 	goto st0;
 st1759:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1759;
 case 1759:
-	if ( (*( state.p)) == 109 )
-		goto st1760;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2505;
+		case 32: goto tr2505;
+		case 59: goto tr2506;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2505;
 	goto st0;
+tr2445:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1760;
+tr2510:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1760;
 st1760:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1760;
 case 1760:
+#line 22976 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2504;
-		case 32: goto tr2504;
-		case 95: goto tr2505;
-		case 98: goto tr2506;
-		case 99: goto tr2507;
-		case 103: goto tr2508;
-		case 109: goto tr2509;
-		case 114: goto tr2510;
-		case 119: goto tr2511;
-		case 121: goto tr2512;
+		case 98: goto st1723;
+		case 99: goto st1730;
+		case 103: goto st1734;
+		case 109: goto st1739;
+		case 114: goto st1746;
+		case 119: goto st1749;
+		case 121: goto st1754;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2504;
 	goto st0;
 st1761:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1761;
 case 1761:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1762;
 	goto st0;
 st1762:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1762;
 case 1762:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1763;
 	goto st0;
 st1763:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1763;
 case 1763:
-	if ( (*( state.p)) == 101 )
-		goto st1724;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2509;
+		case 32: goto tr2509;
+		case 95: goto tr2510;
+		case 98: goto tr2511;
+		case 99: goto tr2512;
+		case 103: goto tr2513;
+		case 109: goto tr2514;
+		case 114: goto tr2515;
+		case 119: goto tr2516;
+		case 121: goto tr2517;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2509;
 	goto st0;
 st1764:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1764;
 case 1764:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 111 )
 		goto st1765;
 	goto st0;
 st1765:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1765;
 case 1765:
-	switch( (*( state.p)) ) {
-		case 108: goto st1766;
-		case 116: goto st1823;
-	}
+	if ( (*( state.p)) == 110 )
+		goto st1766;
 	goto st0;
 st1766:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1766;
 case 1766:
-	if ( (*( state.p)) == 108 )
-		goto st1767;
+	if ( (*( state.p)) == 101 )
+		goto st1727;
 	goto st0;
 st1767:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1767;
 case 1767:
-	switch( (*( state.p)) ) {
-		case 13: goto st1768;
-		case 32: goto st1768;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 97 )
 		goto st1768;
 	goto st0;
 st1768:
@@ -23037,164 +23049,129 @@ st1768:
 		goto _test_eof1768;
 case 1768:
 	switch( (*( state.p)) ) {
-		case 13: goto st1768;
-		case 32: goto st1768;
-		case 34: goto tr2520;
+		case 108: goto st1769;
+		case 116: goto st1826;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1768;
 	goto st0;
-tr2521:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1769;
-tr2520:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1769;
-tr2523:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1769; goto st47;}}
-	goto st1769;
 st1769:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1769;
 case 1769:
-#line 23068 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1770;
-		case 92: goto tr2523;
-	}
-	goto tr2521;
+	if ( (*( state.p)) == 108 )
+		goto st1770;
+	goto st0;
 st1770:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1770;
 case 1770:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2524;
-		case 32: goto tr2524;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2524;
-	goto st0;
-tr2524:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1771;
-st1771:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1771;
-case 1771:
-#line 23093 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1771;
 		case 32: goto st1771;
-		case 98: goto st1772;
-		case 100: goto st1817;
-		case 110: goto st1820;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1771;
 	goto st0;
+st1771:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1771;
+case 1771:
+	switch( (*( state.p)) ) {
+		case 13: goto st1771;
+		case 32: goto st1771;
+		case 34: goto tr2525;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1771;
+	goto st0;
+tr2526:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1772;
+tr2525:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1772;
+tr2528:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1772; goto st47;}}
+	goto st1772;
 st1772:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1772;
 case 1772:
-	if ( (*( state.p)) == 114 )
-		goto st1773;
-	goto st0;
+#line 23107 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1773;
+		case 92: goto tr2528;
+	}
+	goto tr2526;
 st1773:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1773;
 case 1773:
-	if ( (*( state.p)) == 105 )
-		goto st1774;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2529;
+		case 32: goto tr2529;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2529;
 	goto st0;
+tr2529:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1774;
 st1774:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1774;
 case 1774:
-	if ( (*( state.p)) == 103 )
-		goto st1775;
+#line 23132 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1774;
+		case 32: goto st1774;
+		case 98: goto st1775;
+		case 100: goto st1820;
+		case 110: goto st1823;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1774;
 	goto st0;
 st1775:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1775;
 case 1775:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1776;
 	goto st0;
 st1776:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1776;
 case 1776:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1777;
 	goto st0;
 st1777:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1777;
 case 1777:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2534;
-		case 32: goto tr2534;
-		case 95: goto tr2535;
-		case 98: goto tr2536;
-		case 99: goto tr2537;
-		case 103: goto tr2538;
-		case 109: goto tr2539;
-		case 114: goto tr2540;
-		case 119: goto tr2541;
-		case 121: goto tr2542;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2534;
+	if ( (*( state.p)) == 103 )
+		goto st1778;
 	goto st0;
-tr2534:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1778;
-tr2599:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1778;
 st1778:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1778;
 case 1778:
-#line 23170 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1778;
-		case 32: goto st1778;
-		case 98: goto st1779;
-		case 99: goto st1786;
-		case 103: goto st1790;
-		case 109: goto st1795;
-		case 114: goto st1802;
-		case 119: goto st1805;
-		case 121: goto st1810;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1778;
+	if ( (*( state.p)) == 104 )
+		goto st1779;
 	goto st0;
-tr2536:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1779;
-tr2601:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1779;
 st1779:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1779;
 case 1779:
-#line 23197 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1780;
 	goto st0;
 st1780:
@@ -23202,22 +23179,61 @@ st1780:
 		goto _test_eof1780;
 case 1780:
 	switch( (*( state.p)) ) {
-		case 97: goto st1781;
-		case 117: goto st1784;
+		case 13: goto tr2539;
+		case 32: goto tr2539;
+		case 95: goto tr2540;
+		case 98: goto tr2541;
+		case 99: goto tr2542;
+		case 103: goto tr2543;
+		case 109: goto tr2544;
+		case 114: goto tr2545;
+		case 119: goto tr2546;
+		case 121: goto tr2547;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2539;
 	goto st0;
+tr2539:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1781;
+tr2604:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1781;
 st1781:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1781;
 case 1781:
-	if ( (*( state.p)) == 99 )
-		goto st1782;
+#line 23209 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1781;
+		case 32: goto st1781;
+		case 98: goto st1782;
+		case 99: goto st1789;
+		case 103: goto st1793;
+		case 109: goto st1798;
+		case 114: goto st1805;
+		case 119: goto st1808;
+		case 121: goto st1813;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1781;
 	goto st0;
+tr2541:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1782;
+tr2606:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1782;
 st1782:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1782;
 case 1782:
-	if ( (*( state.p)) == 107 )
+#line 23236 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1783;
 	goto st0;
 st1783:
@@ -23225,66 +23241,47 @@ st1783:
 		goto _test_eof1783;
 case 1783:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2556;
-		case 32: goto tr2556;
-		case 59: goto tr2557;
+		case 97: goto st1784;
+		case 117: goto st1787;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2556;
 	goto st0;
 st1784:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1784;
 case 1784:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1785;
 	goto st0;
 st1785:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1785;
 case 1785:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2559;
-		case 32: goto tr2559;
-		case 59: goto tr2560;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2559;
+	if ( (*( state.p)) == 107 )
+		goto st1786;
 	goto st0;
-tr2537:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1786;
-tr2602:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1786;
 st1786:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1786;
 case 1786:
-#line 23267 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1787;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2561;
+		case 32: goto tr2561;
+		case 59: goto tr2562;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2561;
 	goto st0;
 st1787:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1787;
 case 1787:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1788;
 	goto st0;
 st1788:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1788;
 case 1788:
-	if ( (*( state.p)) == 110 )
-		goto st1789;
-	goto st0;
-st1789:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1789;
-case 1789:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2564;
 		case 32: goto tr2564;
@@ -23293,139 +23290,146 @@ case 1789:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2564;
 	goto st0;
-tr2538:
+tr2542:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1790;
-tr2603:
+	goto st1789;
+tr2607:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1790;
+	goto st1789;
+st1789:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1789;
+case 1789:
+#line 23306 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1790;
+	goto st0;
 st1790:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1790;
 case 1790:
-#line 23309 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1791;
 	goto st0;
 st1791:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1791;
 case 1791:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1792;
 	goto st0;
 st1792:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1792;
 case 1792:
-	if ( (*( state.p)) == 101 )
-		goto st1793;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2569;
+		case 32: goto tr2569;
+		case 59: goto tr2570;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2569;
 	goto st0;
+tr2543:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1793;
+tr2608:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1793;
 st1793:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1793;
 case 1793:
-	if ( (*( state.p)) == 110 )
+#line 23348 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1794;
 	goto st0;
 st1794:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1794;
 case 1794:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2570;
-		case 32: goto tr2570;
-		case 59: goto tr2571;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2570;
+	if ( (*( state.p)) == 101 )
+		goto st1795;
 	goto st0;
-tr2539:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1795;
-tr2604:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1795;
 st1795:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1795;
 case 1795:
-#line 23358 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1796;
 	goto st0;
 st1796:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1796;
 case 1796:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1797;
 	goto st0;
 st1797:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1797;
 case 1797:
-	if ( (*( state.p)) == 101 )
-		goto st1798;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2575;
+		case 32: goto tr2575;
+		case 59: goto tr2576;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2575;
 	goto st0;
+tr2544:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1798;
+tr2609:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1798;
 st1798:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1798;
 case 1798:
-	if ( (*( state.p)) == 110 )
+#line 23397 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1799;
 	goto st0;
 st1799:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1799;
 case 1799:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1800;
 	goto st0;
 st1800:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1800;
 case 1800:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1801;
 	goto st0;
 st1801:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1801;
 case 1801:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2578;
-		case 32: goto tr2578;
-		case 59: goto tr2579;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2578;
+	if ( (*( state.p)) == 110 )
+		goto st1802;
 	goto st0;
-tr2540:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1802;
-tr2605:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1802;
 st1802:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1802;
 case 1802:
-#line 23421 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1803;
 	goto st0;
 st1803:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1803;
 case 1803:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1804;
 	goto st0;
 st1804:
@@ -23433,18 +23437,18 @@ st1804:
 		goto _test_eof1804;
 case 1804:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2582;
-		case 32: goto tr2582;
-		case 59: goto tr2583;
+		case 13: goto tr2583;
+		case 32: goto tr2583;
+		case 59: goto tr2584;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2582;
+		goto tr2583;
 	goto st0;
-tr2541:
+tr2545:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1805;
-tr2606:
+tr2610:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1805;
@@ -23452,399 +23456,372 @@ st1805:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1805;
 case 1805:
-#line 23456 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 23460 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1806;
 	goto st0;
 st1806:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1806;
 case 1806:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1807;
 	goto st0;
 st1807:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1807;
 case 1807:
-	if ( (*( state.p)) == 116 )
-		goto st1808;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2587;
+		case 32: goto tr2587;
+		case 59: goto tr2588;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2587;
 	goto st0;
+tr2546:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1808;
+tr2611:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1808;
 st1808:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1808;
 case 1808:
-	if ( (*( state.p)) == 101 )
+#line 23495 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1809;
 	goto st0;
 st1809:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1809;
 case 1809:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2588;
-		case 32: goto tr2588;
-		case 59: goto tr2589;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2588;
+	if ( (*( state.p)) == 105 )
+		goto st1810;
 	goto st0;
-tr2542:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1810;
-tr2607:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1810;
 st1810:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1810;
 case 1810:
-#line 23505 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1811;
 	goto st0;
 st1811:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1811;
 case 1811:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1812;
 	goto st0;
 st1812:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1812;
 case 1812:
-	if ( (*( state.p)) == 108 )
-		goto st1813;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2593;
+		case 32: goto tr2593;
+		case 59: goto tr2594;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2593;
 	goto st0;
+tr2547:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1813;
+tr2612:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1813;
 st1813:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1813;
 case 1813:
-	if ( (*( state.p)) == 111 )
+#line 23544 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1814;
 	goto st0;
 st1814:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1814;
 case 1814:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1815;
 	goto st0;
 st1815:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1815;
 case 1815:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2595;
-		case 32: goto tr2595;
-		case 59: goto tr2596;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2595;
+	if ( (*( state.p)) == 108 )
+		goto st1816;
 	goto st0;
-tr2535:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1816;
-tr2600:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1816;
 st1816:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1816;
 case 1816:
-#line 23561 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1779;
-		case 99: goto st1786;
-		case 103: goto st1790;
-		case 109: goto st1795;
-		case 114: goto st1802;
-		case 119: goto st1805;
-		case 121: goto st1810;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1817;
 	goto st0;
 st1817:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1817;
 case 1817:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1818;
 	goto st0;
 st1818:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1818;
 case 1818:
-	if ( (*( state.p)) == 109 )
-		goto st1819;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2600;
+		case 32: goto tr2600;
+		case 59: goto tr2601;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2600;
 	goto st0;
+tr2540:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1819;
+tr2605:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1819;
 st1819:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1819;
 case 1819:
+#line 23600 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2599;
-		case 32: goto tr2599;
-		case 95: goto tr2600;
-		case 98: goto tr2601;
-		case 99: goto tr2602;
-		case 103: goto tr2603;
-		case 109: goto tr2604;
-		case 114: goto tr2605;
-		case 119: goto tr2606;
-		case 121: goto tr2607;
+		case 98: goto st1782;
+		case 99: goto st1789;
+		case 103: goto st1793;
+		case 109: goto st1798;
+		case 114: goto st1805;
+		case 119: goto st1808;
+		case 121: goto st1813;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2599;
 	goto st0;
 st1820:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1820;
 case 1820:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1821;
 	goto st0;
 st1821:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1821;
 case 1821:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1822;
 	goto st0;
 st1822:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1822;
 case 1822:
-	if ( (*( state.p)) == 101 )
-		goto st1783;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2604;
+		case 32: goto tr2604;
+		case 95: goto tr2605;
+		case 98: goto tr2606;
+		case 99: goto tr2607;
+		case 103: goto tr2608;
+		case 109: goto tr2609;
+		case 114: goto tr2610;
+		case 119: goto tr2611;
+		case 121: goto tr2612;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2604;
 	goto st0;
 st1823:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1823;
 case 1823:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 111 )
 		goto st1824;
 	goto st0;
 st1824:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1824;
 case 1824:
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 110 )
 		goto st1825;
 	goto st0;
 st1825:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1825;
 case 1825:
-	if ( (*( state.p)) == 95 )
-		goto st1826;
+	if ( (*( state.p)) == 101 )
+		goto st1786;
 	goto st0;
 st1826:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1826;
 case 1826:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 101 )
 		goto st1827;
 	goto st0;
 st1827:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1827;
 case 1827:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 114 )
 		goto st1828;
 	goto st0;
 st1828:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1828;
 case 1828:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 95 )
 		goto st1829;
 	goto st0;
 st1829:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1829;
 case 1829:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 119 )
 		goto st1830;
 	goto st0;
 st1830:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1830;
 case 1830:
-	switch( (*( state.p)) ) {
-		case 13: goto st1831;
-		case 32: goto st1831;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+	if ( (*( state.p)) == 97 )
 		goto st1831;
 	goto st0;
 st1831:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1831;
 case 1831:
-	switch( (*( state.p)) ) {
-		case 13: goto st1831;
-		case 32: goto st1831;
-		case 34: goto tr2618;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1831;
+	if ( (*( state.p)) == 108 )
+		goto st1832;
 	goto st0;
-tr2619:
-#line 113 "configparser.rl"
-	{
-            state.match += (*( state.p));
-        }
-	goto st1832;
-tr2618:
-#line 109 "configparser.rl"
-	{
-            state.match.clear();
-        }
-	goto st1832;
-tr2621:
-#line 144 "configparser.rl"
-	{{ state.stack[ state.top++] = 1832; goto st47;}}
-	goto st1832;
 st1832:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1832;
 case 1832:
-#line 23718 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 34: goto st1833;
-		case 92: goto tr2621;
-	}
-	goto tr2619;
+	if ( (*( state.p)) == 108 )
+		goto st1833;
+	goto st0;
 st1833:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1833;
 case 1833:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2622;
-		case 32: goto tr2622;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2622;
-	goto st0;
-tr2622:
-#line 166 "configparser.rl"
-	{ skin.text = state.match; }
-	goto st1834;
-st1834:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1834;
-case 1834:
-#line 23743 "configparser.h"
-	switch( (*( state.p)) ) {
 		case 13: goto st1834;
 		case 32: goto st1834;
-		case 98: goto st1835;
-		case 100: goto st1880;
-		case 110: goto st1883;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto st1834;
 	goto st0;
+st1834:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1834;
+case 1834:
+	switch( (*( state.p)) ) {
+		case 13: goto st1834;
+		case 32: goto st1834;
+		case 34: goto tr2623;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1834;
+	goto st0;
+tr2624:
+#line 113 "configparser.rl"
+	{
+            state.match += (*( state.p));
+        }
+	goto st1835;
+tr2623:
+#line 109 "configparser.rl"
+	{
+            state.match.clear();
+        }
+	goto st1835;
+tr2626:
+#line 144 "configparser.rl"
+	{{ state.stack[ state.top++] = 1835; goto st47;}}
+	goto st1835;
 st1835:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1835;
 case 1835:
-	if ( (*( state.p)) == 114 )
-		goto st1836;
-	goto st0;
+#line 23757 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 34: goto st1836;
+		case 92: goto tr2626;
+	}
+	goto tr2624;
 st1836:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1836;
 case 1836:
-	if ( (*( state.p)) == 105 )
-		goto st1837;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2627;
+		case 32: goto tr2627;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2627;
 	goto st0;
+tr2627:
+#line 166 "configparser.rl"
+	{ skin.text = state.match; }
+	goto st1837;
 st1837:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1837;
 case 1837:
-	if ( (*( state.p)) == 103 )
-		goto st1838;
+#line 23782 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1837;
+		case 32: goto st1837;
+		case 98: goto st1838;
+		case 100: goto st1883;
+		case 110: goto st1886;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1837;
 	goto st0;
 st1838:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1838;
 case 1838:
-	if ( (*( state.p)) == 104 )
+	if ( (*( state.p)) == 114 )
 		goto st1839;
 	goto st0;
 st1839:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1839;
 case 1839:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 105 )
 		goto st1840;
 	goto st0;
 st1840:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1840;
 case 1840:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2632;
-		case 32: goto tr2632;
-		case 95: goto tr2633;
-		case 98: goto tr2634;
-		case 99: goto tr2635;
-		case 103: goto tr2636;
-		case 109: goto tr2637;
-		case 114: goto tr2638;
-		case 119: goto tr2639;
-		case 121: goto tr2640;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2632;
+	if ( (*( state.p)) == 103 )
+		goto st1841;
 	goto st0;
-tr2632:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1841;
-tr2697:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1841;
 st1841:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1841;
 case 1841:
-#line 23820 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 13: goto st1841;
-		case 32: goto st1841;
-		case 98: goto st1842;
-		case 99: goto st1849;
-		case 103: goto st1853;
-		case 109: goto st1858;
-		case 114: goto st1865;
-		case 119: goto st1868;
-		case 121: goto st1873;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto st1841;
+	if ( (*( state.p)) == 104 )
+		goto st1842;
 	goto st0;
-tr2634:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1842;
-tr2699:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1842;
 st1842:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1842;
 case 1842:
-#line 23847 "configparser.h"
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 116 )
 		goto st1843;
 	goto st0;
 st1843:
@@ -23852,22 +23829,61 @@ st1843:
 		goto _test_eof1843;
 case 1843:
 	switch( (*( state.p)) ) {
-		case 97: goto st1844;
-		case 117: goto st1847;
+		case 13: goto tr2637;
+		case 32: goto tr2637;
+		case 95: goto tr2638;
+		case 98: goto tr2639;
+		case 99: goto tr2640;
+		case 103: goto tr2641;
+		case 109: goto tr2642;
+		case 114: goto tr2643;
+		case 119: goto tr2644;
+		case 121: goto tr2645;
 	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2637;
 	goto st0;
+tr2637:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1844;
+tr2702:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1844;
 st1844:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1844;
 case 1844:
-	if ( (*( state.p)) == 99 )
-		goto st1845;
+#line 23859 "configparser.h"
+	switch( (*( state.p)) ) {
+		case 13: goto st1844;
+		case 32: goto st1844;
+		case 98: goto st1845;
+		case 99: goto st1852;
+		case 103: goto st1856;
+		case 109: goto st1861;
+		case 114: goto st1868;
+		case 119: goto st1871;
+		case 121: goto st1876;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto st1844;
 	goto st0;
+tr2639:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1845;
+tr2704:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1845;
 st1845:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1845;
 case 1845:
-	if ( (*( state.p)) == 107 )
+#line 23886 "configparser.h"
+	if ( (*( state.p)) == 108 )
 		goto st1846;
 	goto st0;
 st1846:
@@ -23875,66 +23891,47 @@ st1846:
 		goto _test_eof1846;
 case 1846:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2654;
-		case 32: goto tr2654;
-		case 59: goto tr2655;
+		case 97: goto st1847;
+		case 117: goto st1850;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2654;
 	goto st0;
 st1847:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1847;
 case 1847:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 99 )
 		goto st1848;
 	goto st0;
 st1848:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1848;
 case 1848:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2657;
-		case 32: goto tr2657;
-		case 59: goto tr2658;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2657;
+	if ( (*( state.p)) == 107 )
+		goto st1849;
 	goto st0;
-tr2635:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1849;
-tr2700:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1849;
 st1849:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1849;
 case 1849:
-#line 23917 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1850;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2659;
+		case 32: goto tr2659;
+		case 59: goto tr2660;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2659;
 	goto st0;
 st1850:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1850;
 case 1850:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1851;
 	goto st0;
 st1851:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1851;
 case 1851:
-	if ( (*( state.p)) == 110 )
-		goto st1852;
-	goto st0;
-st1852:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1852;
-case 1852:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2662;
 		case 32: goto tr2662;
@@ -23943,139 +23940,146 @@ case 1852:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2662;
 	goto st0;
-tr2636:
+tr2640:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1853;
-tr2701:
+	goto st1852;
+tr2705:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1853;
+	goto st1852;
+st1852:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1852;
+case 1852:
+#line 23956 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1853;
+	goto st0;
 st1853:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1853;
 case 1853:
-#line 23959 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1854;
 	goto st0;
 st1854:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1854;
 case 1854:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1855;
 	goto st0;
 st1855:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1855;
 case 1855:
-	if ( (*( state.p)) == 101 )
-		goto st1856;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2667;
+		case 32: goto tr2667;
+		case 59: goto tr2668;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2667;
 	goto st0;
+tr2641:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1856;
+tr2706:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1856;
 st1856:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1856;
 case 1856:
-	if ( (*( state.p)) == 110 )
+#line 23998 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1857;
 	goto st0;
 st1857:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1857;
 case 1857:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2668;
-		case 32: goto tr2668;
-		case 59: goto tr2669;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2668;
+	if ( (*( state.p)) == 101 )
+		goto st1858;
 	goto st0;
-tr2637:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1858;
-tr2702:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1858;
 st1858:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1858;
 case 1858:
-#line 24008 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1859;
 	goto st0;
 st1859:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1859;
 case 1859:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1860;
 	goto st0;
 st1860:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1860;
 case 1860:
-	if ( (*( state.p)) == 101 )
-		goto st1861;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2673;
+		case 32: goto tr2673;
+		case 59: goto tr2674;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2673;
 	goto st0;
+tr2642:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1861;
+tr2707:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1861;
 st1861:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1861;
 case 1861:
-	if ( (*( state.p)) == 110 )
+#line 24047 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1862;
 	goto st0;
 st1862:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1862;
 case 1862:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1863;
 	goto st0;
 st1863:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1863;
 case 1863:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1864;
 	goto st0;
 st1864:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1864;
 case 1864:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2676;
-		case 32: goto tr2676;
-		case 59: goto tr2677;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2676;
+	if ( (*( state.p)) == 110 )
+		goto st1865;
 	goto st0;
-tr2638:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1865;
-tr2703:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1865;
 st1865:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1865;
 case 1865:
-#line 24071 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1866;
 	goto st0;
 st1866:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1866;
 case 1866:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1867;
 	goto st0;
 st1867:
@@ -24083,18 +24087,18 @@ st1867:
 		goto _test_eof1867;
 case 1867:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2680;
-		case 32: goto tr2680;
-		case 59: goto tr2681;
+		case 13: goto tr2681;
+		case 32: goto tr2681;
+		case 59: goto tr2682;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2680;
+		goto tr2681;
 	goto st0;
-tr2639:
+tr2643:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1868;
-tr2704:
+tr2708:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1868;
@@ -24102,229 +24106,222 @@ st1868:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1868;
 case 1868:
-#line 24106 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 24110 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1869;
 	goto st0;
 st1869:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1869;
 case 1869:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1870;
 	goto st0;
 st1870:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1870;
 case 1870:
-	if ( (*( state.p)) == 116 )
-		goto st1871;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2685;
+		case 32: goto tr2685;
+		case 59: goto tr2686;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2685;
 	goto st0;
+tr2644:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1871;
+tr2709:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1871;
 st1871:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1871;
 case 1871:
-	if ( (*( state.p)) == 101 )
+#line 24145 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1872;
 	goto st0;
 st1872:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1872;
 case 1872:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2686;
-		case 32: goto tr2686;
-		case 59: goto tr2687;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2686;
+	if ( (*( state.p)) == 105 )
+		goto st1873;
 	goto st0;
-tr2640:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1873;
-tr2705:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1873;
 st1873:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1873;
 case 1873:
-#line 24155 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1874;
 	goto st0;
 st1874:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1874;
 case 1874:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1875;
 	goto st0;
 st1875:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1875;
 case 1875:
-	if ( (*( state.p)) == 108 )
-		goto st1876;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2691;
+		case 32: goto tr2691;
+		case 59: goto tr2692;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2691;
 	goto st0;
+tr2645:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1876;
+tr2710:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1876;
 st1876:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1876;
 case 1876:
-	if ( (*( state.p)) == 111 )
+#line 24194 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1877;
 	goto st0;
 st1877:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1877;
 case 1877:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1878;
 	goto st0;
 st1878:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1878;
 case 1878:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2693;
-		case 32: goto tr2693;
-		case 59: goto tr2694;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2693;
+	if ( (*( state.p)) == 108 )
+		goto st1879;
 	goto st0;
-tr2633:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1879;
-tr2698:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1879;
 st1879:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1879;
 case 1879:
-#line 24211 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1842;
-		case 99: goto st1849;
-		case 103: goto st1853;
-		case 109: goto st1858;
-		case 114: goto st1865;
-		case 119: goto st1868;
-		case 121: goto st1873;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1880;
 	goto st0;
 st1880:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1880;
 case 1880:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1881;
 	goto st0;
 st1881:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1881;
 case 1881:
-	if ( (*( state.p)) == 109 )
-		goto st1882;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2698;
+		case 32: goto tr2698;
+		case 59: goto tr2699;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2698;
 	goto st0;
+tr2638:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1882;
+tr2703:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1882;
 st1882:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1882;
 case 1882:
+#line 24250 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2697;
-		case 32: goto tr2697;
-		case 95: goto tr2698;
-		case 98: goto tr2699;
-		case 99: goto tr2700;
-		case 103: goto tr2701;
-		case 109: goto tr2702;
-		case 114: goto tr2703;
-		case 119: goto tr2704;
-		case 121: goto tr2705;
+		case 98: goto st1845;
+		case 99: goto st1852;
+		case 103: goto st1856;
+		case 109: goto st1861;
+		case 114: goto st1868;
+		case 119: goto st1871;
+		case 121: goto st1876;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2697;
 	goto st0;
 st1883:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1883;
 case 1883:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1884;
 	goto st0;
 st1884:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1884;
 case 1884:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1885;
 	goto st0;
 st1885:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1885;
 case 1885:
-	if ( (*( state.p)) == 101 )
-		goto st1846;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2702;
+		case 32: goto tr2702;
+		case 95: goto tr2703;
+		case 98: goto tr2704;
+		case 99: goto tr2705;
+		case 103: goto tr2706;
+		case 109: goto tr2707;
+		case 114: goto tr2708;
+		case 119: goto tr2709;
+		case 121: goto tr2710;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2702;
 	goto st0;
 st1886:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1886;
 case 1886:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 111 )
 		goto st1887;
 	goto st0;
 st1887:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1887;
 case 1887:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2709;
-		case 32: goto tr2709;
-		case 59: goto tr2710;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2709;
+	if ( (*( state.p)) == 110 )
+		goto st1888;
 	goto st0;
-tr1625:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1888;
-tr2752:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1888;
 st1888:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1888;
 case 1888:
-#line 24307 "configparser.h"
-	if ( (*( state.p)) == 121 )
-		goto st1889;
+	if ( (*( state.p)) == 101 )
+		goto st1849;
 	goto st0;
 st1889:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1889;
 case 1889:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1890;
 	goto st0;
 st1890:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1890;
 case 1890:
-	if ( (*( state.p)) == 110 )
-		goto st1891;
-	goto st0;
-st1891:
-	if ( ++( state.p) == ( state.pe) )
-		goto _test_eof1891;
-case 1891:
 	switch( (*( state.p)) ) {
 		case 13: goto tr2714;
 		case 32: goto tr2714;
@@ -24333,139 +24330,146 @@ case 1891:
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
 		goto tr2714;
 	goto st0;
-tr1626:
+tr1630:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
-	goto st1892;
-tr2753:
+	goto st1891;
+tr2757:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
-	goto st1892;
+	goto st1891;
+st1891:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1891;
+case 1891:
+#line 24346 "configparser.h"
+	if ( (*( state.p)) == 121 )
+		goto st1892;
+	goto st0;
 st1892:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1892;
 case 1892:
-#line 24349 "configparser.h"
-	if ( (*( state.p)) == 114 )
+	if ( (*( state.p)) == 97 )
 		goto st1893;
 	goto st0;
 st1893:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1893;
 case 1893:
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 110 )
 		goto st1894;
 	goto st0;
 st1894:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1894;
 case 1894:
-	if ( (*( state.p)) == 101 )
-		goto st1895;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2719;
+		case 32: goto tr2719;
+		case 59: goto tr2720;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2719;
 	goto st0;
+tr1631:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1895;
+tr2758:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1895;
 st1895:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1895;
 case 1895:
-	if ( (*( state.p)) == 110 )
+#line 24388 "configparser.h"
+	if ( (*( state.p)) == 114 )
 		goto st1896;
 	goto st0;
 st1896:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1896;
 case 1896:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2720;
-		case 32: goto tr2720;
-		case 59: goto tr2721;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2720;
+	if ( (*( state.p)) == 101 )
+		goto st1897;
 	goto st0;
-tr1627:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1897;
-tr2754:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1897;
 st1897:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1897;
 case 1897:
-#line 24398 "configparser.h"
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1898;
 	goto st0;
 st1898:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1898;
 case 1898:
-	if ( (*( state.p)) == 103 )
+	if ( (*( state.p)) == 110 )
 		goto st1899;
 	goto st0;
 st1899:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1899;
 case 1899:
-	if ( (*( state.p)) == 101 )
-		goto st1900;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2725;
+		case 32: goto tr2725;
+		case 59: goto tr2726;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2725;
 	goto st0;
+tr1632:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1900;
+tr2759:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1900;
 st1900:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1900;
 case 1900:
-	if ( (*( state.p)) == 110 )
+#line 24437 "configparser.h"
+	if ( (*( state.p)) == 97 )
 		goto st1901;
 	goto st0;
 st1901:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1901;
 case 1901:
-	if ( (*( state.p)) == 116 )
+	if ( (*( state.p)) == 103 )
 		goto st1902;
 	goto st0;
 st1902:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1902;
 case 1902:
-	if ( (*( state.p)) == 97 )
+	if ( (*( state.p)) == 101 )
 		goto st1903;
 	goto st0;
 st1903:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1903;
 case 1903:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2728;
-		case 32: goto tr2728;
-		case 59: goto tr2729;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2728;
+	if ( (*( state.p)) == 110 )
+		goto st1904;
 	goto st0;
-tr1628:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1904;
-tr2755:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1904;
 st1904:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1904;
 case 1904:
-#line 24461 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1905;
 	goto st0;
 st1905:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1905;
 case 1905:
-	if ( (*( state.p)) == 100 )
+	if ( (*( state.p)) == 97 )
 		goto st1906;
 	goto st0;
 st1906:
@@ -24473,18 +24477,18 @@ st1906:
 		goto _test_eof1906;
 case 1906:
 	switch( (*( state.p)) ) {
-		case 13: goto tr2732;
-		case 32: goto tr2732;
-		case 59: goto tr2733;
+		case 13: goto tr2733;
+		case 32: goto tr2733;
+		case 59: goto tr2734;
 	}
 	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2732;
+		goto tr2733;
 	goto st0;
-tr1629:
+tr1633:
 #line 164 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	goto st1907;
-tr2756:
+tr2760:
 #line 163 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	goto st1907;
@@ -24492,175 +24496,210 @@ st1907:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1907;
 case 1907:
-#line 24496 "configparser.h"
-	if ( (*( state.p)) == 104 )
+#line 24500 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1908;
 	goto st0;
 st1908:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1908;
 case 1908:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 100 )
 		goto st1909;
 	goto st0;
 st1909:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1909;
 case 1909:
-	if ( (*( state.p)) == 116 )
-		goto st1910;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2737;
+		case 32: goto tr2737;
+		case 59: goto tr2738;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2737;
 	goto st0;
+tr1634:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1910;
+tr2761:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1910;
 st1910:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1910;
 case 1910:
-	if ( (*( state.p)) == 101 )
+#line 24535 "configparser.h"
+	if ( (*( state.p)) == 104 )
 		goto st1911;
 	goto st0;
 st1911:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1911;
 case 1911:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2738;
-		case 32: goto tr2738;
-		case 59: goto tr2739;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2738;
+	if ( (*( state.p)) == 105 )
+		goto st1912;
 	goto st0;
-tr1630:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1912;
-tr2757:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1912;
 st1912:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1912;
 case 1912:
-#line 24545 "configparser.h"
-	if ( (*( state.p)) == 101 )
+	if ( (*( state.p)) == 116 )
 		goto st1913;
 	goto st0;
 st1913:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1913;
 case 1913:
-	if ( (*( state.p)) == 108 )
+	if ( (*( state.p)) == 101 )
 		goto st1914;
 	goto st0;
 st1914:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1914;
 case 1914:
-	if ( (*( state.p)) == 108 )
-		goto st1915;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2743;
+		case 32: goto tr2743;
+		case 59: goto tr2744;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2743;
 	goto st0;
+tr1635:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1915;
+tr2762:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1915;
 st1915:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1915;
 case 1915:
-	if ( (*( state.p)) == 111 )
+#line 24584 "configparser.h"
+	if ( (*( state.p)) == 101 )
 		goto st1916;
 	goto st0;
 st1916:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1916;
 case 1916:
-	if ( (*( state.p)) == 119 )
+	if ( (*( state.p)) == 108 )
 		goto st1917;
 	goto st0;
 st1917:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1917;
 case 1917:
-	switch( (*( state.p)) ) {
-		case 13: goto tr2745;
-		case 32: goto tr2745;
-		case 59: goto tr2746;
-	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2745;
+	if ( (*( state.p)) == 108 )
+		goto st1918;
 	goto st0;
-tr1623:
-#line 164 "configparser.rl"
-	{ skin.fore = maudit::color::bright_black; }
-	goto st1918;
-tr2750:
-#line 163 "configparser.rl"
-	{ skin.fore = maudit::color::dim_black; }
-	goto st1918;
 st1918:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1918;
 case 1918:
-#line 24601 "configparser.h"
-	switch( (*( state.p)) ) {
-		case 98: goto st1218;
-		case 99: goto st1888;
-		case 103: goto st1892;
-		case 109: goto st1897;
-		case 114: goto st1904;
-		case 119: goto st1907;
-		case 121: goto st1912;
-	}
+	if ( (*( state.p)) == 111 )
+		goto st1919;
 	goto st0;
 st1919:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1919;
 case 1919:
-	if ( (*( state.p)) == 105 )
+	if ( (*( state.p)) == 119 )
 		goto st1920;
 	goto st0;
 st1920:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1920;
 case 1920:
-	if ( (*( state.p)) == 109 )
-		goto st1921;
+	switch( (*( state.p)) ) {
+		case 13: goto tr2750;
+		case 32: goto tr2750;
+		case 59: goto tr2751;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2750;
 	goto st0;
+tr1628:
+#line 164 "configparser.rl"
+	{ skin.fore = maudit::color::bright_black; }
+	goto st1921;
+tr2755:
+#line 163 "configparser.rl"
+	{ skin.fore = maudit::color::dim_black; }
+	goto st1921;
 st1921:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1921;
 case 1921:
+#line 24640 "configparser.h"
 	switch( (*( state.p)) ) {
-		case 13: goto tr2749;
-		case 32: goto tr2749;
-		case 95: goto tr2750;
-		case 98: goto tr2751;
-		case 99: goto tr2752;
-		case 103: goto tr2753;
-		case 109: goto tr2754;
-		case 114: goto tr2755;
-		case 119: goto tr2756;
-		case 121: goto tr2757;
+		case 98: goto st1221;
+		case 99: goto st1891;
+		case 103: goto st1895;
+		case 109: goto st1900;
+		case 114: goto st1907;
+		case 119: goto st1910;
+		case 121: goto st1915;
 	}
-	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
-		goto tr2749;
 	goto st0;
 st1922:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1922;
 case 1922:
-	if ( (*( state.p)) == 111 )
+	if ( (*( state.p)) == 105 )
 		goto st1923;
 	goto st0;
 st1923:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1923;
 case 1923:
-	if ( (*( state.p)) == 110 )
+	if ( (*( state.p)) == 109 )
 		goto st1924;
 	goto st0;
 st1924:
 	if ( ++( state.p) == ( state.pe) )
 		goto _test_eof1924;
 case 1924:
+	switch( (*( state.p)) ) {
+		case 13: goto tr2754;
+		case 32: goto tr2754;
+		case 95: goto tr2755;
+		case 98: goto tr2756;
+		case 99: goto tr2757;
+		case 103: goto tr2758;
+		case 109: goto tr2759;
+		case 114: goto tr2760;
+		case 119: goto tr2761;
+		case 121: goto tr2762;
+	}
+	if ( 9 <= (*( state.p)) && (*( state.p)) <= 10 )
+		goto tr2754;
+	goto st0;
+st1925:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1925;
+case 1925:
+	if ( (*( state.p)) == 111 )
+		goto st1926;
+	goto st0;
+st1926:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1926;
+case 1926:
+	if ( (*( state.p)) == 110 )
+		goto st1927;
+	goto st0;
+st1927:
+	if ( ++( state.p) == ( state.pe) )
+		goto _test_eof1927;
+case 1927:
 	if ( (*( state.p)) == 101 )
-		goto st1222;
+		goto st1225;
 	goto st0;
 	}
 	_test_eof1:  state.cs = 1; goto _test_eof; 
@@ -24675,8 +24714,8 @@ case 1924:
 	_test_eof10:  state.cs = 10; goto _test_eof; 
 	_test_eof11:  state.cs = 11; goto _test_eof; 
 	_test_eof12:  state.cs = 12; goto _test_eof; 
-	_test_eof1925:  state.cs = 1925; goto _test_eof; 
-	_test_eof1926:  state.cs = 1926; goto _test_eof; 
+	_test_eof1928:  state.cs = 1928; goto _test_eof; 
+	_test_eof1929:  state.cs = 1929; goto _test_eof; 
 	_test_eof13:  state.cs = 13; goto _test_eof; 
 	_test_eof14:  state.cs = 14; goto _test_eof; 
 	_test_eof15:  state.cs = 15; goto _test_eof; 
@@ -24689,7 +24728,7 @@ case 1924:
 	_test_eof22:  state.cs = 22; goto _test_eof; 
 	_test_eof23:  state.cs = 23; goto _test_eof; 
 	_test_eof24:  state.cs = 24; goto _test_eof; 
-	_test_eof1927:  state.cs = 1927; goto _test_eof; 
+	_test_eof1930:  state.cs = 1930; goto _test_eof; 
 	_test_eof25:  state.cs = 25; goto _test_eof; 
 	_test_eof26:  state.cs = 26; goto _test_eof; 
 	_test_eof27:  state.cs = 27; goto _test_eof; 
@@ -24702,7 +24741,7 @@ case 1924:
 	_test_eof34:  state.cs = 34; goto _test_eof; 
 	_test_eof35:  state.cs = 35; goto _test_eof; 
 	_test_eof36:  state.cs = 36; goto _test_eof; 
-	_test_eof1928:  state.cs = 1928; goto _test_eof; 
+	_test_eof1931:  state.cs = 1931; goto _test_eof; 
 	_test_eof37:  state.cs = 37; goto _test_eof; 
 	_test_eof38:  state.cs = 38; goto _test_eof; 
 	_test_eof39:  state.cs = 39; goto _test_eof; 
@@ -24713,9 +24752,9 @@ case 1924:
 	_test_eof44:  state.cs = 44; goto _test_eof; 
 	_test_eof45:  state.cs = 45; goto _test_eof; 
 	_test_eof46:  state.cs = 46; goto _test_eof; 
-	_test_eof1929:  state.cs = 1929; goto _test_eof; 
+	_test_eof1932:  state.cs = 1932; goto _test_eof; 
 	_test_eof47:  state.cs = 47; goto _test_eof; 
-	_test_eof1930:  state.cs = 1930; goto _test_eof; 
+	_test_eof1933:  state.cs = 1933; goto _test_eof; 
 	_test_eof48:  state.cs = 48; goto _test_eof; 
 	_test_eof49:  state.cs = 49; goto _test_eof; 
 	_test_eof50:  state.cs = 50; goto _test_eof; 
@@ -24735,7 +24774,7 @@ case 1924:
 	_test_eof64:  state.cs = 64; goto _test_eof; 
 	_test_eof65:  state.cs = 65; goto _test_eof; 
 	_test_eof66:  state.cs = 66; goto _test_eof; 
-	_test_eof1931:  state.cs = 1931; goto _test_eof; 
+	_test_eof1934:  state.cs = 1934; goto _test_eof; 
 	_test_eof67:  state.cs = 67; goto _test_eof; 
 	_test_eof68:  state.cs = 68; goto _test_eof; 
 	_test_eof69:  state.cs = 69; goto _test_eof; 
@@ -25308,7 +25347,7 @@ case 1924:
 	_test_eof636:  state.cs = 636; goto _test_eof; 
 	_test_eof637:  state.cs = 637; goto _test_eof; 
 	_test_eof638:  state.cs = 638; goto _test_eof; 
-	_test_eof1932:  state.cs = 1932; goto _test_eof; 
+	_test_eof1935:  state.cs = 1935; goto _test_eof; 
 	_test_eof639:  state.cs = 639; goto _test_eof; 
 	_test_eof640:  state.cs = 640; goto _test_eof; 
 	_test_eof641:  state.cs = 641; goto _test_eof; 
@@ -25650,10 +25689,10 @@ case 1924:
 	_test_eof977:  state.cs = 977; goto _test_eof; 
 	_test_eof978:  state.cs = 978; goto _test_eof; 
 	_test_eof979:  state.cs = 979; goto _test_eof; 
-	_test_eof1933:  state.cs = 1933; goto _test_eof; 
 	_test_eof980:  state.cs = 980; goto _test_eof; 
 	_test_eof981:  state.cs = 981; goto _test_eof; 
 	_test_eof982:  state.cs = 982; goto _test_eof; 
+	_test_eof1936:  state.cs = 1936; goto _test_eof; 
 	_test_eof983:  state.cs = 983; goto _test_eof; 
 	_test_eof984:  state.cs = 984; goto _test_eof; 
 	_test_eof985:  state.cs = 985; goto _test_eof; 
@@ -25895,10 +25934,10 @@ case 1924:
 	_test_eof1221:  state.cs = 1221; goto _test_eof; 
 	_test_eof1222:  state.cs = 1222; goto _test_eof; 
 	_test_eof1223:  state.cs = 1223; goto _test_eof; 
-	_test_eof1934:  state.cs = 1934; goto _test_eof; 
 	_test_eof1224:  state.cs = 1224; goto _test_eof; 
 	_test_eof1225:  state.cs = 1225; goto _test_eof; 
 	_test_eof1226:  state.cs = 1226; goto _test_eof; 
+	_test_eof1937:  state.cs = 1937; goto _test_eof; 
 	_test_eof1227:  state.cs = 1227; goto _test_eof; 
 	_test_eof1228:  state.cs = 1228; goto _test_eof; 
 	_test_eof1229:  state.cs = 1229; goto _test_eof; 
@@ -26597,35 +26636,38 @@ case 1924:
 	_test_eof1922:  state.cs = 1922; goto _test_eof; 
 	_test_eof1923:  state.cs = 1923; goto _test_eof; 
 	_test_eof1924:  state.cs = 1924; goto _test_eof; 
+	_test_eof1925:  state.cs = 1925; goto _test_eof; 
+	_test_eof1926:  state.cs = 1926; goto _test_eof; 
+	_test_eof1927:  state.cs = 1927; goto _test_eof; 
 
 	_test_eof: {}
 	if ( ( state.p) == ( state.eof) )
 	{
 	switch (  state.cs ) {
-	case 1928: 
+	case 1931: 
 #line 294 "configparser.rl"
 	{ init_species(spe); }
 	break;
-	case 1925: 
-#line 347 "configparser.rl"
+	case 1928: 
+#line 349 "configparser.rl"
 	{ init_design(des); }
 	break;
-	case 1929: 
-#line 395 "configparser.rl"
+	case 1932: 
+#line 397 "configparser.rl"
 	{ init_terrain(ter); }
 	break;
-	case 1927: 
-#line 435 "configparser.rl"
+	case 1930: 
+#line 437 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
-#line 26622 "configparser.h"
+#line 26664 "configparser.h"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 474 "configparser.rl"
+#line 476 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;

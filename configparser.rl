@@ -312,6 +312,8 @@ void parse_config(const std::string& filename) {
         design_lightradius = 'lightradius' ws1 number   %{ des.lightradius = toint(state.match); };
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
 
+        design_blink      = 'blink' %{ des.flags.blink = true; };
+
         design_blast      = 'blast' 
             ws1 number %{ des.blastradius = toint(state.match); }
             ws1 number %{ des.blastrange = toint(state.match); }
@@ -326,7 +328,7 @@ void parse_config(const std::string& filename) {
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed |
-            design_lightradius | design_digging |
+            design_lightradius | design_digging | design_blink |
             '}'
             ${ fret; })
             ;

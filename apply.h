@@ -2,7 +2,7 @@
 #define __APPLY_H
 
 
-inline bool apply_item(Player& p, const std::string& slot, grender::Grid& render) {
+inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state) {
 
     items::Item tmp;
         
@@ -19,16 +19,31 @@ inline bool apply_item(Player& p, const std::string& slot, grender::Grid& render
     if (d.heal > 0) {
 
         p.health.inc(d.heal);
-        render.do_message("You feel better.");
+        state.render.do_message("You feel better.");
         ret = true;
     } 
 
     if (d.feed > 0) {
 
         p.food.inc(d.feed);
-        render.do_message(nlp::message("You eat %s.", d));
+        state.render.do_message(nlp::message("You eat %s.", d));
         ret = true;
     } 
+
+    if (d.flags.blink) {
+
+        grid::pt xy;
+        if (!state.grid.one_of_walk(state.rng, xy))
+            return false;
+
+        state.render.invalidate(p.px, p.py);
+
+        p.px = xy.first;
+        p.py = xy.second;
+
+        state.render.invalidate(p.px, p.py);
+        ret = true;
+    }
 
     return ret;
 }

@@ -39,7 +39,7 @@ inline void handle_input_inv_item(Player& p, mainloop::GameState& state,
         state.window_stack.clear();
         return;
 
-    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state.render)) {
+    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state)) {
 
         ticks++;
         state.window_stack.clear();
