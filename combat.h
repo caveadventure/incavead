@@ -64,7 +64,9 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
-    if (!s.flags.plant || !fromplayer)
+    std::cout << "[[ " << s.flags.plant << " " << fromplayer << " " << s.level << " >? " << p.level << std::endl;
+
+    if (s.flags.plant || !fromplayer)
         return;
 
     if (s.level > p.level) {
@@ -89,6 +91,8 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         return false;
     }
 
+    std::cout << "player attacks" << std::endl;
+
     damage::attacks_t attack_res;
     roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
 
@@ -109,6 +113,8 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     for (const auto& v : attack_res) {
 
         double dmg = v.val;
+
+        std::cout << "   " << (int)v.type << " " << dmg << std::endl;
 
         if (v.type == damage::type_t::sleep) {
 

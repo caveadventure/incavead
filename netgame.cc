@@ -1024,10 +1024,15 @@ struct Game {
             p.worldx += t.tunnel_x;
             p.worldy += t.tunnel_y;
 
-            p.worldx = std::min(p.worldx, 1);
-            p.worldx = std::max(p.worldx, -1);
-            p.worldy = std::min(p.worldy, 1);
-            p.worldy = std::max(p.worldy, -1);
+            std::cout << "^: " << t.tunnel_x << "," << t.tunnel_y << " " << p.worldx << "," << p.worldy << std::endl;
+
+            if (p.worldx > 1) p.worldx = -1;
+            else if (p.worldx < -1) p.worldx = 1;
+
+            if (p.worldy > 1) p.worldy = -1;
+            else if (p.worldy < -1) p.worldy = 1;
+
+            std::cout << "^: " << p.worldx << "," << p.worldy << std::endl;
 
             ++ticks;
             regen = true;
