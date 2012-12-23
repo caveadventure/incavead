@@ -60,7 +60,7 @@ struct keypress {
     unsigned int w;
     unsigned int h;
 
-    keypress() : letter(0), key(keycode::none), w(0), h(0) {}
+    keypress(unsigned char l = 0) : letter(l), key(keycode::none), w(0), h(0) {}
 };
 
 

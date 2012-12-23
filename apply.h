@@ -5,13 +5,16 @@
 inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state) {
 
     items::Item tmp;
-        
-    if (!p.inv.take(slot, tmp, 1))
+
+    if (!p.inv.get(slot, tmp))
         return false;
 
     const Design& d = designs().get(tmp.tag);
 
     if (!d.usable) 
+        return false;
+        
+    if (!p.inv.take(slot, tmp, 1))
         return false;
 
     bool ret = false;

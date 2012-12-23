@@ -55,7 +55,7 @@ inline void handle_input_inv_item(Player& p, mainloop::GameState& state,
         state.window_stack.clear();
         return;
 
-    } else if (k.letter == 'T' && start_digging(p, p.inv.selected_slot, state)) {
+    } else if (k.letter == 'D' && start_digging(p, p.inv.selected_slot, state)) {
 
         state.render.do_message("Press a direction key to start tunneling.");
         state.window_stack.clear();

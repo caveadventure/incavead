@@ -592,7 +592,7 @@ struct Game {
 
             double q = state.grid._get(p.dig_x, p.dig_y);
 
-            q = (q / 2.0) + 1.0;
+            q = ((q + 10) / 4.0) + 1.0;
             
             state.render.push_hud_line("Tunnel", maudit::color::dim_green,
                                        std::max(q, 0.0),
@@ -896,9 +896,12 @@ struct Game {
 
             double& height = state.grid._get(p.dig_x, p.dig_y);
 
+            std::cout << "DIG: " << height << " " << digspeed << std::endl;
+
             height -= digspeed;
 
-            if (height < 0) {
+            if (height < -10) {
+                height = -10;
                 state.grid.set_walk(state.neigh, p.dig_x, p.dig_y, true);
                 state.render.invalidate(p.dig_x, p.dig_y);
 
@@ -1144,8 +1147,20 @@ struct Game {
             start_look_cycle(p.state, p.look, p.px, p.py, state, k);
             break;
 
-        case 'z':
-            cast_cloud(state, p.px, p.py, 5, "cd");
+            //
+        case 'D':
+            p.inv.selected_slot = "d";
+            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('D'));
+            break;
+
+        case 'H':
+            p.inv.selected_slot = "e";
+            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a'));
+            break;
+
+        case 'F':
+            p.inv.selected_slot = "f";
+            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a'));
             break;
         }
 

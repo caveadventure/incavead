@@ -201,7 +201,7 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
-            ret += dp.lightradius;
+            ret += (dp.lightradius * i.second.count);
         }
 
         return ret;
