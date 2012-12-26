@@ -28,7 +28,7 @@ inline void handle_input_inventory(Player& p, mainloop::GameState& state,
     state.window_stack.pop_back();
 }
 
-inline void handle_input_inv_item(Player& p, mainloop::GameState& state,
+inline bool handle_input_inv_item(Player& p, mainloop::GameState& state,
                                   size_t& ticks, bool& done, bool& dead, bool& regen, 
                                   maudit::keypress k) {
 
@@ -37,32 +37,36 @@ inline void handle_input_inv_item(Player& p, mainloop::GameState& state,
 
         ticks++;
         state.window_stack.clear();
-        return;
+        return true;
 
     } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state)) {
 
         ticks++;
         state.window_stack.clear();
-        return;
+        return true;
 
     } else if (k.letter == 't' && start_throw_item(p, p.inv.selected_slot, state)) {
 
         state.window_stack.clear();
-        return;
+        return true;
 
     } else if (k.letter == 'f' && start_blast_item(p, p.inv.selected_slot, state, ticks)) {
 
         state.window_stack.clear();
-        return;
+        return true;
 
     } else if (k.letter == 'D' && start_digging(p, p.inv.selected_slot, state)) {
 
         state.render.do_message("Press a direction key to start tunneling.");
         state.window_stack.clear();
-        return;
+        return true;
     }
 
-    state.window_stack.pop_back();
+    if (state.window_stack.size() > 0) {
+        state.window_stack.pop_back();
+    }
+
+    return false;
 }
 
 inline void handle_input_floor_item(Player& p, mainloop::GameState& state,

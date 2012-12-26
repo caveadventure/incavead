@@ -1150,17 +1150,20 @@ struct Game {
             //
         case 'D':
             p.inv.selected_slot = "d";
-            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('D'));
+            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('D')))
+                state.render.do_message("You don't have a tool you can dig with.");
             break;
 
         case 'H':
             p.inv.selected_slot = "e";
-            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a'));
+            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
+                state.render.do_message("You have nothing in your 'edible' slot.");
             break;
 
         case 'F':
             p.inv.selected_slot = "f";
-            handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a'));
+            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
+                state.render.do_message("You have nothing in your 'food' slot.");
             break;
         }
 
