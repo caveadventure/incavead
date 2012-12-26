@@ -94,7 +94,7 @@ struct Items {
                         _c = rng.gauss(mean, dev);
                     }
 
-                    if (_c > d.stackrange)
+                    if (_c > (int)d.stackrange)
                         _c = d.stackrange;
 
                     if (_c <= 0)
