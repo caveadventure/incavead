@@ -128,41 +128,47 @@ void init_statics() {
         *grimlock zombie
 
       4 cave
-        giant crab
-        giant catfish
-        giant pirahna
-        medusoid
-        cephalopod
-        giant octopus
-        bull shark
-        giant squid
-        narwhal
+        *giant crab
+        *giant catfish
+        *giant pirahna
+        *medusoid
+        *cephalopod
+        *giant octopus
+        *bull shark
+        *giant squid
+        *narwhal
 
-        giant killer bee
-        giant centipede
-        fungal grove
-        gray ooze
-        pod plant
-        vomit fly
-        giant ant
+        *giant killer bee
+        *giant centipede
+        *fungal grove
+        *gray ooze
+        *pod plant
+        *vomit fly
+        *giant ant
 
-        albino ape
+        *albino ape
         gamma wyrm
-        land squid
-        giant rat
+        *land squid
+        *giant rat
         carnivorous sheep
 
-        brain lasher
-        narcolep
-        humanoid mass
+        *brain lasher
+        *narcolep
+        *humanoid mass
         fungoid
-        homo erectus
+        *homo erectus
         morlock
         eloi
         pigman
         mutant tribesman
         mutant lord
         mutant seer
+
+        Ancient attack/protect artifacts!
+
+      5 lost soul -- immune to physical and poison! Attacks with soul drain, need soul drain protection and attack weapon!
+        Black Gate
+        Jade Peach Orchard Gate 
 
 
       5 dinosaur/megafauna
