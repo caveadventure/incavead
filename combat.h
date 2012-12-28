@@ -249,7 +249,8 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
                    v.type == damage::type_t::psi ||
-                   v.type == damage::type_t::eat_brain) {
+                   v.type == damage::type_t::eat_brain ||
+                   v.type == damage::type_t::drain) {
 
             p.health.dec(v.val);
         }
@@ -281,6 +282,9 @@ inline void defend(Player& p,
 
             } else if (v.type == damage::type_t::eat_brain) {
                 state.render.do_message(nlp::message("%s is eating your brain!", s));
+
+            } else if (v.type == damage::type_t::drain) {
+                state.render.do_message(nlp::message("%s is draining your vital forces!", s));
 
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison) {
@@ -324,7 +328,9 @@ inline void defend(Player& p,
             do_psi = true;
 
         } else if (v.type == damage::type_t::physical ||
-                   v.type == damage::type_t::eat_brain) {
+                   v.type == damage::type_t::eat_brain ||
+                   v.type == damage::type_t::drain) {
+
             do_hurt = true;
         }
     }
@@ -373,7 +379,9 @@ inline void defend(Player& p,
             do_psi = true;
 
         } else if (v.type == damage::type_t::physical ||
-                   v.type == damage::type_t::eat_brain) {
+                   v.type == damage::type_t::eat_brain ||
+                   v.type == damage::type_t::drain) {
+
             do_hurt = true;
         }
     }
