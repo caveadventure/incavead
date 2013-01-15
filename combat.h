@@ -230,6 +230,15 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 }
 
 
+inline void handle_post_defend(Player& p, mainloop::GameState& state) {
+
+    if (p.digging) {
+        state.render.do_message("You stop digging.");
+        p.digging = false;
+    }
+}
+
+
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const damage::attacks_t& attacks, unsigned int alevel, 
@@ -292,6 +301,8 @@ inline void defend(Player& p,
                 state.render.do_message(nlp::message("%s hits!", s));
             }
         }
+
+        handle_post_defend(p, state);
     }
 }
 
@@ -350,6 +361,10 @@ inline void defend(Player& p,
     if (do_sleep) {
         state.render.do_message("You fall asleep.");
     }
+
+    if (!attack_res.empty()) {
+        handle_post_defend(p, state);
+    }
 }
 
 
@@ -400,6 +415,10 @@ inline void defend(Player& p,
 
     if (do_sleep) {
         state.render.do_message("You fall asleep.");
+    }
+
+    if (!attack_res.empty()) {
+        handle_post_defend(p, state);
     }
 }
 

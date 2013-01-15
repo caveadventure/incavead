@@ -582,7 +582,7 @@ struct Game {
         }
     }
 
-    void draw_hud(mainloop::GameState& state) {
+    void draw_hud(mainloop::GameState& state, size_t ticks) {
 
         draw_one_stat(state, p.health, "Health");
         draw_one_stat(state, p.food,   "Food");
@@ -591,18 +591,21 @@ struct Game {
         if (p.sleep > 0) {
             state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                        std::min(p.sleep / 15 + 1, (unsigned int)6), 
-                                       '+', maudit::color::dim_green);
+                                       '+', 
+                                       (ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
         }
 
         if (p.digging) {
 
             double q = state.grid._get(p.dig_x, p.dig_y);
 
-            q = ((q + 10) / 4.0) + 1.0;
-            
+            q = ((q + 10) / 3.0) + 1.0;
+            q = std::max(1.0, std::min(q, 6.0));
+
             state.render.push_hud_line("Tunnel", maudit::color::dim_green,
-                                       std::max(q, 0.0),
-                                       '+', maudit::color::bright_blue);
+                                       q,
+                                       '+', 
+                                       (ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
 
             std::cout << "DIG " << q << std::endl;
         }
