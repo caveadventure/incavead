@@ -274,7 +274,7 @@ struct Main {
         game.drawing_context(ctx);
 
         if (ctx.do_hud) {
-            game.draw_hud(state);
+            game.draw_hud(state, ticks);
         }
         
         state.render.draw(screen, 
