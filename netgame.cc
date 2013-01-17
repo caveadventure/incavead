@@ -195,6 +195,8 @@ void init_statics() {
     configparser::parse_config("levelskins.cfg");
 
     ////
+
+    init_celauto("1", "345", "26", 5, "pg1");
 }
 
 
@@ -840,6 +842,29 @@ struct Game {
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
+        
+        state.camap.step(
+            [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+
+                std::set<neighbors::pt> ret;
+                for (const auto& xy : state.neigh(neighbors::pt(x,y))) {
+                    if (state.grid.is_walk(xy.first, xy.second))
+                        ret.insert(xy);
+                }
+
+                return ret;
+            },
+
+            [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+                state.features.x_set(x, y, ca.terrain, state.render);
+            },
+
+            [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+                state.features.x_unset(x, y, ca.terrain, state.render);
+            }
+            );
+
+
         summons.clear();
 
         state.monsters.process(state.render, 
@@ -1171,6 +1196,22 @@ struct Game {
             if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
                 state.render.do_message("You have nothing in your 'food' slot.");
             break;
+
+
+            ////
+            // REMOVEME
+
+        case 'z':
+        {
+            for (int x = 0; x < 2; ++x) {
+                for (int y = 0; y < 2; ++y) {
+                    if (state.grid.is_walk(p.px+x, p.py+y)) {
+                        state.camap.seed(p.px+x, p.py+y, "1");
+                    }
+                }
+            }
+            break;
+        }
         }
 
         switch (k.key) {

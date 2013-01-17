@@ -278,7 +278,6 @@ struct Main {
         }
         
         state.render.draw(screen, 
-                          state.camap,
                           ticks, 
                           ctx,
                           view_w, view_h,

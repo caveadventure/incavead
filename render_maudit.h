@@ -548,7 +548,6 @@ public:
     
     template <typename SCREEN, typename PARAMS, typename FUNC>
     void draw(SCREEN& screen,
-              celauto::CaMap& camap,
               unsigned int t,
               const PARAMS& params,
               unsigned int& ret_view_w, 
@@ -717,6 +716,7 @@ public:
                         color_t fore = sk.fore;
                         std::string text = sk.text;
 
+                        /*
                         size_t caid;
                         unsigned int caage;
                         camap.get_state(xy, caid, caage);
@@ -726,6 +726,7 @@ public:
                             double intrp = (double)caage / (maxage*2.0);
                             back = color_fade(back, intrp);
                         }
+                        */
 
                         if (gp.is_lit == 0) {
 

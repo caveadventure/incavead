@@ -65,6 +65,25 @@ struct Features {
         init();
     }
 
+    void x_set(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
+
+        pt xy(x, y);
+        if (feats.find(xy) == feats.end()) {
+            set(x, y, tag, render);
+        }
+    }
+
+    void x_unset(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
+
+        pt xy(x, y);
+        auto i = feats.find(xy);
+
+        if (i != feats.end() && i->second.tag == tag) {
+            feats.erase(i);
+            render.invalidate(x, y);
+        }
+    }
+
     void set(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
         // Check that the tag exists.
         const Terrain& t = terrain().get(tag);

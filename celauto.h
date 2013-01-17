@@ -6,23 +6,21 @@
 #include <string>
 #include <memory>
 
-#include "neighbors.h"
-
 #include "serialize.h"
 
+struct CelAuto {
+    std::string tag;
 
-
-namespace celauto {
-
-typedef std::pair<unsigned int, unsigned int> pt;
-
-struct rule {
-    size_t id;
     std::set<unsigned int> survive;
     std::set<unsigned int> born;
     unsigned int age;
 
-    rule(size_t i, const std::string& s, const std::string& b, unsigned int a) : id(i) {
+    std::string terrain;
+
+    CelAuto() : age(0) {}
+
+    CelAuto(const std::string& t, const std::string& s, const std::string& b, unsigned int a,
+            const std::string& _terrain) : tag(t), terrain(_terrain) {
 
         for (char c : s) {
             survive.insert(c - '0');
@@ -36,13 +34,75 @@ struct rule {
     }
 };
 
+struct CelAutoBank {
+
+    std::map<std::string,CelAuto> bank;
+
+    template <typename... ARGS>
+    void init(const std::string& tag, ARGS... args) {
+
+        if (bank.count(tag) != 0) {
+            throw std::runtime_error("Duplicate celauto tag: " + tag);
+        }
+
+        bank[tag] = CelAuto(tag, std::forward<ARGS>(args)...);
+    }
+
+    void copy(const CelAuto& ca) {
+
+        if (bank.count(ca.tag) != 0) {
+            throw std::runtime_error("Duplicate celauto tag: " + ca.tag);
+        }
+
+        bank[ca.tag] = ca;
+    }
+
+    const CelAuto& get(const std::string& tag) const {
+        auto i = bank.find(tag);
+
+        if (i == bank.end()) {
+            throw std::runtime_error("Invalid celauto tag: " + tag);
+        }
+
+        return i->second;
+    }
+};
+
+
+CelAutoBank& __celautos__() {
+    static CelAutoBank ret;
+    return ret;
+}
+
+const CelAutoBank celautos() {
+    return __celautos__();
+}
+
+template <typename... ARGS>
+void init_celauto(ARGS... args) {
+    __celautos__().init(std::forward<ARGS>(args)...);
+}
+
+void init_celauto_copy(const CelAuto& ca) {
+    __celautos__().copy(ca);
+}
+
+
+/*
+ *
+ */
+
+namespace celauto {
+
+typedef std::pair<unsigned int, unsigned int> pt;
+
 struct ca_element {
-    std::shared_ptr<rule> rul;
+    std::string tag;
     unsigned int age;
     unsigned int age_add;
 
     ca_element() : age(0), age_add(0) {}
-    ca_element(std::shared_ptr<rule> r, unsigned int a) : rul(r), age(a), age_add(0) {}
+    ca_element(const std::string& t, unsigned int a) : tag(t), age(a), age_add(0) {}
 };
 
 
@@ -50,18 +110,6 @@ struct CaMap {
 
     typedef std::map<pt, ca_element> camap_t;
     camap_t camap;
-
-
-    std::map<size_t, std::shared_ptr<rule> > rules;
-
-    std::shared_ptr<rule> get_rule(size_t i) {
-        return rules[i];
-    }
-
-    void make_rule(size_t i, const std::string& s, const std::string& b, unsigned int a) {
-        rules[i] = std::shared_ptr<rule>(new rule(i, s, b, a));
-    }
-
 
     void init() {
         camap.clear();
@@ -71,21 +119,23 @@ struct CaMap {
         init();
     }
 
-    void get_state(const pt& xy, size_t& id, unsigned int& age) {
+    /*
+    bool get_state(const pt& xy, std::string& tag, unsigned int& age) {
         camap_t::iterator i = camap.find(xy);
 
         if (i != camap.end()) {
-            id = i->second.rul->id;
+            tag = i->second.rul;
             age = i->second.age;
+            return true;
 
         } else {
-            id = 0;
-            age = 0;
+            return false;
         }
     }
+    */
 
-    void seed(const pt& xy, std::shared_ptr<rule> r) {
-        camap[xy] = ca_element(r, 0);
+    void seed(unsigned int x, unsigned int y, const std::string& r) {
+        camap[pt(x,y)] = ca_element(r, 0);
     }
     
     template <typename FUNC>
@@ -93,28 +143,29 @@ struct CaMap {
         camap_t::iterator i = camap.find(xy);
 
         if (i != camap.end()) {
-            funcoff(xy.first, xy.second, i->second.rul->id);
+            funcoff(xy.first, xy.second, celautos().get(i->second.tag));
             camap.erase(i);
         }
     } 
 
-    unsigned int find_n(neighbors::Neighbors& neigh,
+    template <typename FUNC>
+    unsigned int find_n(FUNC& neigh,
                         const pt& xy, 
-                        const std::shared_ptr<rule>& rul, camap_t* que = NULL) {
+                        const CelAuto& rul, camap_t* que = NULL) {
 
         unsigned int n = 0;
 
-        for (const auto& xy_ : neigh(xy)) {
+        for (const auto& xy_ : neigh(xy.first, xy.second, rul)) {
 
             camap_t::const_iterator i = camap.find(xy_);
 
             if (i != camap.end()) {
-                if (i->second.rul->id == rul->id && i->second.age == 0) {
+                if (i->second.tag == rul.tag && i->second.age == 0) {
                     n++;
                 }
 
             } else if (que != NULL) {
-                (*que)[xy_] = ca_element(rul, 0);
+                (*que)[xy_] = ca_element(rul.tag, 0);
             }
         }
 
@@ -122,8 +173,8 @@ struct CaMap {
     }
 
 
-    template <typename FUNC>
-    inline void step(neighbors::Neighbors& neigh, FUNC funcon, FUNC funcoff) {
+    template <typename FUNC1, typename FUNC2, typename FUNC3>
+    inline void step(FUNC1 neigh, FUNC2 funcon, FUNC3 funcoff) {
     
         camap_t remove;
         camap_t insert;
@@ -131,7 +182,7 @@ struct CaMap {
         for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
             const pt& xy = i->first;
-            std::shared_ptr<rule>& rul = i->second.rul;
+            const CelAuto& rul = celautos().get(i->second.tag);
             const unsigned int& age = i->second.age;
 	    unsigned int& age_add = i->second.age_add;
 
@@ -140,7 +191,7 @@ struct CaMap {
             // Check if we are dead.
             if (age > 0) {
 
-                if (age < rul->age - 1) {
+                if (age < rul.age - 1) {
                     age_add = 1;
 
                 } else {
@@ -152,7 +203,7 @@ struct CaMap {
 
                 unsigned int n = find_n(neigh, xy, rul, &insert);
 
-                if (rul->survive.count(n) == 0) {
+                if (rul.survive.count(n) == 0) {
                     age_add = 1;
                 }
             }
@@ -164,40 +215,39 @@ struct CaMap {
         for (camap_t::iterator i = insert.begin(); i != insert.end(); ++i) {
 
             const pt& xy = i->first;
-            std::shared_ptr<rule>& rul = i->second.rul;
+            const CelAuto& rul = celautos().get(i->second.tag);
 
             unsigned int n = find_n(neigh, xy, rul);
 
-            if (rul->born.count(n) != 0) {
-                born[xy] = ca_element(rul, 0);
+            if (rul.born.count(n) != 0) {
+                born[xy] = ca_element(rul.tag, 0);
             }
         }
 
         for (camap_t::iterator i = born.begin(); i != born.end(); ++i) {        
 
             const pt& xy = i->first;
-            std::shared_ptr<rule>& rul = i->second.rul;
+            const CelAuto& rul = celautos().get(i->second.tag);
 
             camap[xy] = i->second;
 
-            funcon(xy.first, xy.second, rul->id);
+            funcon(xy.first, xy.second, rul);
         }
 
         // Leave remains of dead cells.
         for (camap_t::iterator i = remove.begin(); i != remove.end(); ++i) {
 
             const pt& xy = i->first;
-            std::shared_ptr<rule>& rul = i->second.rul;
+            const CelAuto& rul = celautos().get(i->second.tag);
 
             camap.erase(xy);
         
-            funcoff(xy.first, xy.second, rul->id);
+            funcoff(xy.first, xy.second, rul);
         }
 
 	for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 	  i->second.age += i->second.age_add;
 	}
-
     }
 
 };
@@ -216,14 +266,11 @@ struct reader<celauto::CaMap> {
         for (size_t i = 0; i < sz; ++i) {
             celauto::pt key;
             celauto::ca_element ca;
-            size_t id;
 
             serialize::read(s, key);
-            serialize::read(s, id);
+            serialize::read(s, ca.tag);
             serialize::read(s, ca.age);
             serialize::read(s, ca.age_add);
-
-            ca.rul = t.get_rule(id);
 
             t.camap[key] = ca;
         }
@@ -237,7 +284,7 @@ struct writer<celauto::CaMap> {
         serialize::write(s, m.camap.size());
         for (const auto& t : m.camap) {
             serialize::write(s, t.first);
-            serialize::write(s, t.second.rul->id);
+            serialize::write(s, t.second.tag);
             serialize::write(s, t.second.age);
             serialize::write(s, t.second.age_add);
         }
