@@ -20,7 +20,7 @@ struct CelAuto {
     CelAuto() : age(0) {}
 
     CelAuto(const std::string& t, const std::string& s, const std::string& b, unsigned int a,
-            const std::string& _terrain) : tag(t), terrain(_terrain) {
+            const std::string& _terrain) : tag(t), age(a), terrain(_terrain) {
 
         for (char c : s) {
             survive.insert(c - '0');
@@ -29,8 +29,6 @@ struct CelAuto {
         for (char c : b) {
             born.insert(c - '0');
         }
-
-        age = a;
     }
 };
 
@@ -74,7 +72,7 @@ CelAutoBank& __celautos__() {
     return ret;
 }
 
-const CelAutoBank celautos() {
+const CelAutoBank& celautos() {
     return __celautos__();
 }
 
