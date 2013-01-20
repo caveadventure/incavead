@@ -597,21 +597,6 @@ public:
 
                 fov::fov_shadowcasting(w, h, grid, px, py, params.lightradius);
 
-                /*
-                for (gridpoint& gp : grid) {
-                    gp.in_fov = false;
-                }
-                   
-                TCOD_map_compute_fov(tcodmap, px, py, params.lightradius, true, FOV_SHADOW);
-
-                for (unsigned int _y = 0; _y < h; ++_y) {
-                    for (unsigned int _x = 0; _x < w; ++_x) {
-
-                        _get(pt(_x,_y)).in_fov = TCOD_map_is_in_fov(tcodmap, _x, _y);
-                    }
-                }
-                */
-
                 bool do_hud = params.do_hud;
 
                 if (view_w <= 30 || view_h <= std::max(hud_pips.size(), (size_t)3)) {
@@ -715,18 +700,6 @@ public:
 
                         color_t fore = sk.fore;
                         std::string text = sk.text;
-
-                        /*
-                        size_t caid;
-                        unsigned int caage;
-                        camap.get_state(xy, caid, caage);
-
-                        if (caid) {
-                            unsigned int maxage = camap.rules[caid]->age;
-                            double intrp = (double)caage / (maxage*2.0);
-                            back = color_fade(back, intrp);
-                        }
-                        */
 
                         if (gp.is_lit == 0) {
 

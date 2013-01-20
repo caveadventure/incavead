@@ -159,11 +159,21 @@ void parse_config(const std::string& filename) {
             'white'   %{ add_color(skin.fore, 7); } ;
 
         color = 
-            ('none') | 
+            ('none'   %{ skin.fore = maudit::color::none; } ) | 
             ('dim'    %{ skin.fore = maudit::color::dim_black; }    sep colorname) | 
             ('bright' %{ skin.fore = maudit::color::bright_black; } sep colorname) ;
 
-        skin = string %{ skin.text = state.match; } ws1 color;
+        back_color =
+            'black'   %{ skin.back = maudit::color::bright_black; }   | 
+            'red'     %{ skin.back = maudit::color::bright_red; }     | 
+            'green'   %{ skin.back = maudit::color::bright_green; }   | 
+            'yellow'  %{ skin.back = maudit::color::bright_yellow; }  | 
+            'blue'    %{ skin.back = maudit::color::bright_blue; }    | 
+            'magenta' %{ skin.back = maudit::color::bright_magenta; } | 
+            'cyan'    %{ skin.back = maudit::color::bright_cyan; }    | 
+            'white'   %{ skin.back = maudit::color::bright_white; }   ;
+
+        skin = string %{ skin.text = state.match; } ws1 color (ws1 'back' ws1 back_color)? ;
 
         ####
 
