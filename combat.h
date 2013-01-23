@@ -52,8 +52,8 @@ inline void roll_attack(rnd::Generator& rng,
     }
 }
 
-inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::Monster& mon, 
-                         const Species& s, bool fromplayer) {
+inline void monster_kill(mainloop::GameState& state, const monsters::Monster& mon, 
+                         const Species& s) {
 
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
@@ -63,31 +63,101 @@ inline void monster_kill(Player& p, mainloop::GameState& state, const monsters::
 
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
+}
 
-    std::cout << "[[ " << s.flags.plant << " " << fromplayer << " " << s.level << " >? " << p.level << std::endl;
 
-    if (s.flags.plant || !fromplayer)
+inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
+                                  mainloop::GameState& state,
+                                  double& totdamage, double& totmagic, 
+                                  double& totsleep, double& totfear, bool mortal) {
+
+    double dmg = v.val;
+
+    if (v.type == damage::type_t::sleep) {
+
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += dmg; });
+        totsleep += dmg;
+
+    } else if (v.type == damage::type_t::turn_undead) {
+
+        if (s.flags.undead) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+            totdamage += dmg;
+        }
+
+    } else if (v.type == damage::type_t::scare_animal) {
+
+        if (s.flags.animal) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
+            totfear += dmg;
+        }
+        
+    } else if (v.type == damage::type_t::cancellation) {
+
+        if (s.flags.magic) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
+            totmagic += dmg;
+        }
+
+    } else {
+        
+        std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
+
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+        totdamage += dmg;
+        
+        if (dmg >= 2.8) {
+            mortal = true;
+        }
+    }
+}
+
+
+inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
+                   mainloop::GameState& state, const monsters::Monster& mon,
+                   const Species& s) {
+
+    if (attacks.empty()) {
+        std::cout << "OOPS1" << std::endl;
         return;
+    }
 
-    if (s.level > p.level) {
-        p.level = s.level;
-        state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
+    damage::attacks_t attack_res;
+    roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
+
+    if (attack_res.empty()) {
+        std::cout << "OOPS2" << std::endl;
+        return;
+    }
+
+    double totdamage = 0.0;
+    double totmagic = 0.0;
+    double totsleep = 0.0;
+    double totfear = 0.0;
+    bool mortal = false;
+
+    for (const auto& v : attack_res) {
+
+        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, mortal);
+    }
+
+    std::cout << s.name << " " << mon.health - totdamage << std::endl;
+
+    if (mon.health - totdamage < -3) {
+
+        monster_kill(state, mon, s);
     }
 }
 
 
 inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
                    mainloop::GameState& state, const monsters::Monster& mon, 
-                   bool quiet = false, bool fromplayer = true) {
+                   bool quiet = false) {
 
     const Species& s = species().get(mon.tag);
         
     if (attacks.empty()) {
-
-        if (fromplayer) {
-            state.render.do_message("You can't attack without a weapon!", true);
-        }
-
+        state.render.do_message("You can't attack without a weapon!", true);
         return false;
     }
 
@@ -98,7 +168,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (attack_res.empty()) {
 
-        if (!quiet && fromplayer)
+        if (!quiet)
             state.render.do_message(nlp::message("You attack %s but do no damage.", s));
 
         return true;
@@ -112,53 +182,11 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     for (const auto& v : attack_res) {
 
-        double dmg = v.val;
-
-        std::cout << "   " << (int)v.type << " " << dmg << std::endl;
-
-        if (v.type == damage::type_t::sleep) {
-
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += dmg; });
-            totsleep += dmg;
-
-        } else if (v.type == damage::type_t::turn_undead) {
-
-            if (s.flags.undead) {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-                totdamage += dmg;
-            }
-
-        } else if (v.type == damage::type_t::scare_animal) {
-
-            if (s.flags.animal) {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
-                totfear += dmg;
-            }
-
-        } else if (v.type == damage::type_t::cancellation) {
-
-            if (s.flags.magic) {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
-                totmagic += dmg;
-            }
-
-        } else {
-
-            std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
-
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-            totdamage += dmg;
-
-            if (dmg >= 2.8) {
-                mortal = true;
-            }
-        }
+        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, mortal);
     }
 
-    if (fromplayer) {
-        std::cout << "karma " << s.karma << " " << totdamage << std::endl;
-        p.karma.inc(s.karma * totdamage);
-    }
+    std::cout << "karma " << s.karma << " " << totdamage << std::endl;
+    p.karma.inc(s.karma * totdamage);
 
     if (totsleep > 0) {
 
@@ -171,24 +199,20 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (mon.health - totdamage < -3) {
 
-        if (!fromplayer) {
-            if (s.flags.plant) {
-                state.render.do_message(nlp::message("%s is destroyed.", s));
-            } else {
-                state.render.do_message(nlp::message("%s dies.", s));
-            }
-
+        if (s.flags.plant) {
+            state.render.do_message(nlp::message("You destroyed %s.", s));
         } else {
-            if (s.flags.plant) {
-                state.render.do_message(nlp::message("You destroyed %s.", s));
-            } else {
-                state.render.do_message(nlp::message("You killed %s.", s));
-            }
+            state.render.do_message(nlp::message("You killed %s.", s));
         }
 
-        monster_kill(p, state, mon, s, fromplayer);
+        monster_kill(state, mon, s);
 
-    } else if (!quiet && fromplayer) {
+        if (!s.flags.plant && s.level > p.level) {
+            p.level = s.level;
+            state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
+        }
+
+    } else if (!quiet) {
 
         if (s.flags.plant) {
             state.render.do_message(nlp::message("You smash %s.", s));
@@ -220,7 +244,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (s.level == p.level && mortal && !s.flags.plant && fromplayer) {
+    if (s.level == p.level && mortal && !s.flags.plant) {
 
         ++p.level;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);

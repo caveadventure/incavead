@@ -656,7 +656,7 @@ struct Game {
             monsters::Monster mon;
             if (state.monsters.get(_x, _y, mon)) {
 
-                attack(p, attacks, s.level, state, mon, true, false);
+                attack(attacks, s.level, state, mon, species().get(mon.tag));
             }
         }
     }
@@ -742,6 +742,18 @@ struct Game {
 
     bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
                       monsters::pt& nxy, bool& do_die) {
+
+        features::Feature feat;
+        if (state.features.get(m.xy.first, m.xy.second, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+
+            if (!t.attacks.empty()) {
+
+                attack(t.attacks, t.attack_level, state, m, s);
+            }
+        }
+
 
         if (m.health < -3) {
             do_die = true;
@@ -844,7 +856,6 @@ struct Game {
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
-
         
         state.camap.step(
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
@@ -867,6 +878,20 @@ struct Game {
             }
             );
 
+
+        features::Feature feat;
+        if (state.features.get(p.px, p.py, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+
+            if (!t.attacks.empty()) {
+
+                damage::defenses_t defenses;
+                p.inv.get_defense(defenses);
+
+                defend(p, defenses, p.level, t, state);
+            }
+        }
 
         summons.clear();
 
@@ -946,20 +971,6 @@ struct Game {
     }
 
     void move_player(mainloop::GameState& state) {
-
-        features::Feature feat;
-        if (state.features.get(p.px, p.py, feat)) {
-
-            const Terrain& t = terrain().get(feat.tag);
-
-            if (!t.attacks.empty()) {
-
-                damage::defenses_t defenses;
-                p.inv.get_defense(defenses);
-
-                defend(p, defenses, p.level, t, state);
-            }
-        }
         
         size_t nstack = state.items.stack_size(p.px, p.py);
 
@@ -1081,7 +1092,9 @@ struct Game {
 
     void rest(mainloop::GameState& state, size_t& ticks) {
 
+        //REMOVEME
         state.render.do_message(nlp::message("%d", state.grid._get(p.px, p.py)));
+
         ++ticks;
     }
 
