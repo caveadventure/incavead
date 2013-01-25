@@ -196,7 +196,9 @@ void init_statics() {
 
     ////
 
-    init_celauto("1", "345", "26", 5, "pg1");
+    //init_celauto("1", "345", "26", 5, "tomeat");
+    init_celauto("1", "23", "24", 32, "tomeat");
+
 }
 
 
@@ -862,15 +864,18 @@ struct Game {
 
                 std::set<neighbors::pt> ret;
                 for (const auto& xy : state.neigh(neighbors::pt(x,y))) {
-                    if (state.grid.is_walk(xy.first, xy.second))
+
+                    if (state.grid.is_walk(xy.first, xy.second) && 
+                        state.grid.get_karma(x, y) < 1.0)
                         ret.insert(xy);
                 }
-
                 return ret;
             },
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+
                 state.features.x_set(x, y, ca.terrain, state.render);
+                state.grid.get_karma(x, y) += 0.5;
             },
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
@@ -1093,7 +1098,7 @@ struct Game {
     void rest(mainloop::GameState& state, size_t& ticks) {
 
         //REMOVEME
-        state.render.do_message(nlp::message("%d", state.grid._get(p.px, p.py)));
+        state.render.do_message(nlp::message("%d", state.grid.get_karma(p.px, p.py)));
 
         ++ticks;
     }

@@ -266,7 +266,7 @@ struct Main {
     }
 
     void draw() {
-        //bm _p("draw");
+        bm _p("draw");
 
         drawing_context_t ctx;
         ctx.view_w = view_w;
@@ -295,7 +295,7 @@ struct Main {
 
         oldticks = ticks;
 
-        //bm _p("process");
+        bm _p("process");
 
         game.process_world(state, ticks, done, dead, regen, need_input, draw);
 
@@ -372,6 +372,8 @@ struct Main {
         bool regen = false;
 
         while (1) {
+
+            bm _p("frame");
 
             bool need_input = false;
 

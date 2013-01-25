@@ -69,7 +69,7 @@ inline void monster_kill(mainloop::GameState& state, const monsters::Monster& mo
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   mainloop::GameState& state,
                                   double& totdamage, double& totmagic, 
-                                  double& totsleep, double& totfear, bool mortal) {
+                                  double& totsleep, double& totfear, bool& mortal) {
 
     double dmg = v.val;
 
@@ -97,6 +97,19 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         if (s.flags.magic) {
             state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
             totmagic += dmg;
+        }
+
+    } else if (v.type == damage::type_t::make_meat) {
+
+        // HACK hardcode SUXX
+        if (dmg > 0.5) {
+            if (s.karma < 0) {
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meatx"; });
+            } else {
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meat"; });
+            }
+
+            state.render.invalidate(mon.xy.first, mon.xy.second);
         }
 
     } else {
@@ -279,6 +292,11 @@ inline void defend(Player& p,
         if (v.type == damage::type_t::sleep) {
             p.sleep += v.val;
 
+        } else if (v.type == damage::type_t::make_meat) {
+
+            if (v.val > 0.5)
+                p.health.dec(6.0);
+
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
                    v.type == damage::type_t::psi ||
@@ -312,6 +330,11 @@ inline void defend(Player& p,
 
             } else if (v.type == damage::type_t::psi) {
                 state.render.do_message(nlp::message("%s is destroying your mind!", s));
+
+            } else if (v.type == damage::type_t::make_meat) {
+
+                if (v.val > 0.5)
+                    state.render.do_message("You turn into a slab of brainless meat.", true);
 
             } else if (v.type == damage::type_t::eat_brain) {
                 state.render.do_message(nlp::message("%s is eating your brain!", s));
@@ -361,6 +384,11 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::psi) {
             do_psi = true;
+
+        } else if (v.type == damage::type_t::make_meat) {
+
+            if (v.val > 0.5)
+                state.render.do_message("You turn into a slab of brainless meat.", true);
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
@@ -416,6 +444,11 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::psi) {
             do_psi = true;
+
+        } else if (v.type == damage::type_t::make_meat) {
+
+            if (v.val > 0.5)
+                state.render.do_message("You turn into a slab of brainless meat.", true);
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||

@@ -39,6 +39,8 @@ struct Map {
     unsigned int h;
 
     std::vector<double> grid;
+
+    std::vector<double> karma;
  
     std::unordered_set<pt> walkmap;
     std::unordered_set<pt> watermap;
@@ -132,6 +134,7 @@ struct Map {
         h = _h;
 
         grid.resize(w*h);
+        karma.resize(w*h);
         walkmap.clear();
         watermap.clear();
         floormap.clear();
@@ -142,6 +145,7 @@ struct Map {
 
         for (size_t i = 0; i < w*h; ++i) {
             grid[i] = 10.0;
+            karma[i] = 0.0;
         }
     }
 
@@ -157,6 +161,9 @@ struct Map {
         return grid[xy.second*w+xy.first];
     }
 
+    double& get_karma(unsigned int x, unsigned int y) {
+        return karma[y*w+x];
+    }
 
 
     /*** *** *** *** *** ***/
@@ -507,6 +514,24 @@ struct Map {
         }
     }
 
+    void make_karma(rnd::Generator& rng) {
+
+        for (unsigned int y = 0; y < h; ++y) {
+            for (unsigned int x = 0; x < w; ++x) {
+
+                double& k = get_karma(x, y);
+
+                if (y > 0 && x > 0) {
+                    k = ((get_karma(x-1, y) + get_karma(x, y-1) + get_karma(x-1, y-1)) / 3.0);
+                }
+
+                k += rng.gauss(0.0, 0.2);
+
+                k = std::min(std::max(k, -1.0), 1.0);
+            }
+        }
+    }
+
     void generate(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
                   unsigned int nflatten = 0, unsigned int nunflow = 0) {
@@ -523,6 +548,9 @@ struct Map {
         flatten(neigh, nflatten, nunflow);
 
         set_maps(neigh);
+
+        //
+        make_karma(rng);
     }
 
 
@@ -689,6 +717,7 @@ struct reader<grid::Map> {
         serialize::read(s, t.w);
         serialize::read(s, t.h);
         serialize::read(s, t.grid);
+        serialize::read(s, t.karma);
         serialize::read(s, t.walkmap);
         serialize::read(s, t.watermap);
         serialize::read(s, t.floormap);
@@ -705,6 +734,7 @@ struct writer<grid::Map> {
         serialize::write(s, t.w);
         serialize::write(s, t.h);
         serialize::write(s, t.grid);
+        serialize::write(s, t.karma);
         serialize::write(s, t.walkmap);
         serialize::write(s, t.watermap);
         serialize::write(s, t.floormap);
