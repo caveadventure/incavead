@@ -42,7 +42,8 @@ inline void roll_attack(rnd::Generator& rng,
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
 
-        } else if (v.type == damage::type_t::scare_animal) {
+        } else if (v.type == damage::type_t::scare_animal ||
+                   v.type == damage::type_t::scare) {
             dmg = damage_to_scareturns(dmg);
         }
 
@@ -88,6 +89,13 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     } else if (v.type == damage::type_t::scare_animal) {
 
         if (s.flags.animal) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
+            totfear += dmg;
+        }
+
+    } else if (v.type == damage::type_t::scare) {
+
+        if (!s.flags.undead && !s.flags.plant) {
             state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
             totfear += dmg;
         }

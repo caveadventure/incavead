@@ -16,7 +16,8 @@ enum class type_t : unsigned int {
     psi,
     eat_brain,
     drain,
-    make_meat
+    make_meat,
+    scare
 };
 
 struct val_t {
