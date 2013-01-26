@@ -17,11 +17,16 @@ struct CelAuto {
 
     std::string terrain;
 
+    bool is_walk;
+    double karma_scale;
+    double karma_step;
+
     CelAuto() : age(0) {}
 
     CelAuto(const std::string& t, const std::string& s, const std::string& b, unsigned int a,
-            const std::string& _terrain) : 
-        tag(t), age(a), terrain(_terrain) {
+            const std::string& _terrain, bool _is_walk, double _karma_scale, double _karma_step) : 
+        tag(t), age(a), terrain(_terrain), 
+        is_walk(_is_walk), karma_scale(_karma_scale), karma_step(_karma_step) {
 
         for (char c : s) {
             survive.insert(c - '0');

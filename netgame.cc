@@ -197,8 +197,8 @@ void init_statics() {
     ////
 
     //init_celauto("1", "345", "26", 5, "tomeat");
-    init_celauto("1", "23", "24", 32, "tomeat");
-
+    init_celauto("1", "23", "24", 32, "tomeat", true, 1.0, 0.5);
+    init_celauto("2", "3", "1", 12, "liq", false, -1.0, -1.0);
 }
 
 
@@ -858,27 +858,34 @@ struct Game {
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
-        
+
         state.camap.step(
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 std::set<neighbors::pt> ret;
                 for (const auto& xy : state.neigh(neighbors::pt(x,y))) {
 
-                    if (state.grid.is_walk(xy.first, xy.second) && 
-                        state.grid.get_karma(x, y) < 1.0)
+                    if (state.grid.is_walk(xy.first, xy.second) == ca.is_walk && 
+                        state.grid.get_karma(xy.first, xy.second) * ca.karma_scale < 1.0)
                         ret.insert(xy);
                 }
                 return ret;
+                std::cout << ret.size() << std::endl;
             },
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+
+                if (!ca.is_walk) {
+                    state.grid.set_walk(state.neigh, x, y, true);
+                    state.render.invalidate(x, y);
+                }
 
                 state.features.x_set(x, y, ca.terrain, state.render);
-                state.grid.get_karma(x, y) += 0.5;
+                state.grid.get_karma(x, y) += ca.karma_step;
             },
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
+
                 state.features.x_unset(x, y, ca.terrain, state.render);
             }
             );
@@ -1231,6 +1238,15 @@ struct Game {
                     }
                 }
             }
+            break;
+        }
+
+        case 'x':
+        {
+            for (const auto& xy : state.neigh(neighbors::pt(p.px, p.py))) {
+                state.camap.seed(xy.first, xy.second, "2");
+            }
+            state.camap.seed(p.px, p.py, "2");
             break;
         }
         }
