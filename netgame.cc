@@ -789,7 +789,9 @@ struct Game {
         if (s.ai == Species::ai_t::seek_player ||
             (s.ai == Species::ai_t::seek_nosleep && p.sleep == 0)) {
 
-            do_seek = true;
+            if (dist <= s.range + 5) {
+                do_seek = true;
+            }
         }
 
 
