@@ -431,10 +431,15 @@ void parse_config(const std::string& filename) {
         celauto_karma_scale = 'karma_scale' ws1 real %{ cel.karma_scale = toreal(state.match); } ;
         celauto_karma_step  = 'karma_step'  ws1 real %{ cel.karma_step  = toreal(state.match); } ;
 
+        celauto_seed = 'seed'      %{ cel.seed.push_back(std::make_pair(0,0)); }
+                       ws1 snumber %{ cel.seed.back().first = toint(state.match); }
+                       ws1 snumber %{ cel.seed.back().second = toint(state.match); }
+                       ; 
+
         celauto_one_data =
             (celauto_s | celauto_b | celauto_a | celauto_terrain |
             celauto_is_walk | celauto_karma_scale | celauto_karma_step |
-            '}' 
+            celauto_seed | '}' 
             ${ fret; })
             ;
 

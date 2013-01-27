@@ -1128,6 +1128,23 @@ struct Game {
                                  });
     }
 
+    void seed_celauto(mainloop::GameState& state, 
+                      unsigned int _x, unsigned int _y, const std::string& tag) {
+
+        const CelAuto& ca = celautos().get(tag);
+
+        for (const auto& dxy : ca.seed) {
+
+            int x = _x + dxy.first;
+            int y = _y + dxy.second;
+
+            if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
+                continue;
+
+            state.camap.seed(x, y, tag);
+        }
+    }
+
     void handle_input_main(mainloop::GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
                            maudit::keypress k) {
@@ -1233,25 +1250,12 @@ struct Game {
             // REMOVEME
 
         case 'z':
-        {
-            for (int x = 0; x < 2; ++x) {
-                for (int y = 0; y < 2; ++y) {
-                    if (state.grid.is_walk(p.px+x, p.py+y)) {
-                        state.camap.seed(p.px+x, p.py+y, "m");
-                    }
-                }
-            }
+            seed_celauto(state, p.px, p.py, "m");
             break;
-        }
 
         case 'x':
-        {
-            for (const auto& xy : state.neigh(neighbors::pt(p.px, p.py))) {
-                state.camap.seed(xy.first, xy.second, "w");
-            }
-            state.camap.seed(p.px, p.py, "w");
+            seed_celauto(state, p.px, p.py, "w");
             break;
-        }
         }
 
         switch (k.key) {

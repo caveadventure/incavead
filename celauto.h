@@ -21,21 +21,10 @@ struct CelAuto {
     double karma_scale;
     double karma_step;
 
+    std::vector< std::pair<int,int> > seed;
+
     CelAuto() : age(0), is_walk(false), karma_scale(1.0), karma_step(1.0) {}
 
-    CelAuto(const std::string& t, const std::string& s, const std::string& b, unsigned int a,
-            const std::string& _terrain, bool _is_walk, double _karma_scale, double _karma_step) : 
-        tag(t), age(a), terrain(_terrain), 
-        is_walk(_is_walk), karma_scale(_karma_scale), karma_step(_karma_step) {
-
-        for (char c : s) {
-            survive.insert(c - '0');
-        }
-
-        for (char c : b) {
-            born.insert(c - '0');
-        }
-    }
 };
 
 struct CelAutoBank {
