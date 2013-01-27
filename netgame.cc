@@ -192,13 +192,16 @@ void init_statics() {
 
     configparser::parse_config("terrain.cfg");
 
+    configparser::parse_config("celauto.cfg");
+
     configparser::parse_config("levelskins.cfg");
 
     ////
 
-    //init_celauto("1", "345", "26", 5, "tomeat");
-    init_celauto("1", "23", "24", 32, "tomeat", true, 1.0, 0.5);
-    init_celauto("2", "3", "1", 12, "liq", false, -1.0, -1.0);
+    
+
+    //init_celauto("1", "23", "24", 32, "tomeat", true, 1.0, 0.5);
+    //init_celauto("2", "3", "1", 12, "liq", false, -1.0, -1.0);
 }
 
 
@@ -1234,7 +1237,7 @@ struct Game {
             for (int x = 0; x < 2; ++x) {
                 for (int y = 0; y < 2; ++y) {
                     if (state.grid.is_walk(p.px+x, p.py+y)) {
-                        state.camap.seed(p.px+x, p.py+y, "1");
+                        state.camap.seed(p.px+x, p.py+y, "m");
                     }
                 }
             }
@@ -1244,9 +1247,9 @@ struct Game {
         case 'x':
         {
             for (const auto& xy : state.neigh(neighbors::pt(p.px, p.py))) {
-                state.camap.seed(xy.first, xy.second, "2");
+                state.camap.seed(xy.first, xy.second, "w");
             }
-            state.camap.seed(p.px, p.py, "2");
+            state.camap.seed(p.px, p.py, "w");
             break;
         }
         }

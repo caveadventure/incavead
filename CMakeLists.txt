@@ -4,7 +4,11 @@ project (netgame)
 
 SET(CMAKE_BUILD_TYPE "Release")
 
-SET(CMAKE_CXX_FLAGS "-Wall -std=c++0x -O3 -g -pthread")
+#SET (CMAKE_C_COMPILER   "/usr/bin/clang")
+#SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
+#SET(CMAKE_CXX_FLAGS "-Wall -std=c++0x -O3 -g -pthread -stdlib=libc++ -nostdinc++ -I/home/itkachev/libc++/include/c++/v1/ -L/home/itkachev/libc++/lib/")
+
+SET(CMAKE_CXX_FLAGS "-Wall -std=c++0x -O4 -g -pthread")
 
 SET(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist)

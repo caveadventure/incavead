@@ -21,7 +21,7 @@ struct CelAuto {
     double karma_scale;
     double karma_step;
 
-    CelAuto() : age(0) {}
+    CelAuto() : age(0), is_walk(false), karma_scale(1.0), karma_step(1.0) {}
 
     CelAuto(const std::string& t, const std::string& s, const std::string& b, unsigned int a,
             const std::string& _terrain, bool _is_walk, double _karma_scale, double _karma_step) : 

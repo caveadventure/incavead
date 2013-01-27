@@ -58,6 +58,10 @@ inline void init_terrain(const Terrain& t) {
     init_terrain_copy(t);
 }
 
+inline void init_celauto(const CelAuto& c) {
+    init_celauto_copy(c);
+}
+
 inline void init_levelskin_(const Levelskin& l) {
     init_levelskin(l);
 }
@@ -91,6 +95,7 @@ void parse_config(const std::string& filename) {
     Species spe;
     Design des;
     Terrain ter;
+    CelAuto cel;
     Levelskin lev;
 
     damage::val_t dmgval;
@@ -413,6 +418,41 @@ void parse_config(const std::string& filename) {
 
         ####
 
+        celauto_s = 's' ws1 ( [0-9] ${ cel.survive.insert(fc - '0'); } )+;
+
+        celauto_b = 'b' ws1 ( [0-9] ${ cel.born.insert(fc - '0'); } )+;
+
+        celauto_a = 'a' ws1 number %{ cel.age = toint(state.match); } ;
+
+        celauto_terrain = 'terrain' ws1 string %{ cel.terrain = state.match; } ;
+
+        celauto_is_walk = 'is_walk' %{ cel.is_walk = true; } ;
+
+        celauto_karma_scale = 'karma_scale' ws1 real %{ cel.karma_scale = toreal(state.match); } ;
+        celauto_karma_step  = 'karma_step'  ws1 real %{ cel.karma_step  = toreal(state.match); } ;
+
+        celauto_one_data =
+            (celauto_s | celauto_b | celauto_a | celauto_terrain |
+            celauto_is_walk | celauto_karma_scale | celauto_karma_step |
+            '}' 
+            ${ fret; })
+            ;
+
+        one_celauto := (ws celauto_one_data ws ';')+
+            ;
+
+        celauto_tag = tag %{ cel.tag = state.match; }
+        ;
+
+        celauto = 
+            'celauto' %{ cel = CelAuto(); }
+            ws1 celauto_tag ws
+            '{' ${fcall one_celauto;}
+            %{ init_celauto(cel); }
+            ;
+
+        ####
+
         levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water = skin; };
         levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water = skin; };
         levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall = skin; };
@@ -454,7 +494,7 @@ void parse_config(const std::string& filename) {
         ####
 
 
-        entry = species | design | terrain | levelskin ;
+        entry = species | design | terrain | celauto | levelskin ;
             
       main := (ws entry)+ ws ;
         
@@ -494,6 +534,7 @@ void parse_config(const std::string& filename) {
         (void)ConfigParser_en_one_species;
         (void)ConfigParser_en_one_design;
         (void)ConfigParser_en_one_terrain;
+        (void)ConfigParser_en_one_celauto;
         (void)ConfigParser_en_one_levelskin;
         (void)ConfigParser_en_main;
 
