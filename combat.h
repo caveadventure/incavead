@@ -72,7 +72,8 @@ inline void monster_kill(mainloop::GameState& state, const monsters::Monster& mo
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   mainloop::GameState& state,
                                   double& totdamage, double& totmagic, 
-                                  double& totsleep, double& totfear, bool& mortal) {
+                                  double& totsleep, double& totfear, double& totvamp,
+                                  bool& mortal) {
 
     double dmg = v.val;
 
@@ -112,6 +113,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     } else if (v.type == damage::type_t::make_meat) {
 
         // HACK hardcode SUXX
+        // FIXME
         if (dmg > 0.5) {
             if (s.karma < 0) {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meatx"; });
@@ -121,6 +123,11 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
             state.render.invalidate(mon.xy.first, mon.xy.second);
         }
+
+    } else if (v.type == damage::type_t::vampiric) {
+
+        totdamage += dmg;
+        totvamp += dmg;
 
     } else {
         
@@ -157,11 +164,12 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
     double totmagic = 0.0;
     double totsleep = 0.0;
     double totfear = 0.0;
+    double totvamp = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, mortal);
+        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
 
     std::cout << s.name << " " << mon.health - totdamage << std::endl;
@@ -201,15 +209,20 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     double totmagic = 0.0;
     double totsleep = 0.0;
     double totfear = 0.0;
+    double totvamp = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, mortal);
+        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
 
     std::cout << "karma " << s.karma << " " << totdamage << std::endl;
     p.karma.inc(s.karma * totdamage);
+
+    if (totvamp > 0) {
+        p.health.inc(totvamp);
+    }
 
     if (totsleep > 0) {
 
@@ -311,7 +324,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::poison ||
                    v.type == damage::type_t::psi ||
                    v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain) {
+                   v.type == damage::type_t::drain ||
+                   v.type == damage::type_t::vampiric) {
 
             p.health.dec(v.val);
         }
@@ -402,7 +416,8 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain) {
+                   v.type == damage::type_t::drain ||
+                   v.type == damage::type_t::vampiric) {
 
             do_hurt = true;
         }
@@ -462,7 +477,8 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain) {
+                   v.type == damage::type_t::drain ||
+                   v.type == damage::type_t::vampiric) {
 
             do_hurt = true;
         }

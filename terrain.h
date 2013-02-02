@@ -31,6 +31,7 @@ struct Terrain {
     damage::attacks_t attacks;
 
     bool sticky;
+    bool is_lit;
     unsigned int charges;
 
     struct spell_t {
@@ -46,7 +47,7 @@ struct Terrain {
 
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),
-                sticky(false), charges(0) {}
+                sticky(false), is_lit(false), charges(0) {}
 
 };
 

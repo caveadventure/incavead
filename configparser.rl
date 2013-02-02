@@ -195,7 +195,8 @@ void parse_config(const std::string& filename) {
             'eat_brain'    %{ dmgval.type = damage::type_t::eat_brain; }    |
             'drain'        %{ dmgval.type = damage::type_t::drain; }        |
             'make_meat'    %{ dmgval.type = damage::type_t::make_meat; }    |
-            'scare'        %{ dmgval.type = damage::type_t::scare; }        ;
+            'scare'        %{ dmgval.type = damage::type_t::scare; }        |
+            'vampiric'     %{ dmgval.type = damage::type_t::vampiric; }     ;
 
 
         damage_val = 
@@ -393,6 +394,8 @@ void parse_config(const std::string& filename) {
         terrain_attack    = 'attack'    ws1 damage_val %{ ter.attacks.add(dmgval); } ;
         terrain_sticky    = 'sticky'                   %{ ter.sticky = true; } ;
         terrain_charges   = 'charges'   ws1 number     %{ ter.charges = toint(state.match); } ;
+        
+        terrain_is_lit    = 'is_lit' %{ ter.is_lit = true; } ;
 
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
@@ -406,7 +409,7 @@ void parse_config(const std::string& filename) {
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
-            terrain_charges | terrain_grant_spell |
+            terrain_charges | terrain_grant_spell | terrain_is_lit |
             '}' 
             ${ fret; })
             ;

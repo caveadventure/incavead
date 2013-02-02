@@ -314,11 +314,13 @@ struct Game {
             state.render.set_skin(x, y, 1, t.skin);
             state.render.set_is_viewblock(x, y, 1, t.viewblock);
             state.render.set_is_walkblock(x, y, 1, t.walkblock);
+            state.render.set_is_lit(x, y, 1, t.is_lit);
 
         } else {
             state.render.unset_skin(x, y, 1);
             state.render.set_is_viewblock(x, y, 1, false);
             state.render.set_is_walkblock(x, y, 1, false);
+            state.render.set_is_lit(x, y, 1, false);
         }
 
         // //
@@ -571,7 +573,7 @@ struct Game {
             if (sp.timeout <= 0) {
                 si = p.spells.erase(si);
 
-                state.render.do_message("You feel a sense of arcane foreboding.");
+                state.render.do_message("You feel a sense of arcane foreboding.", true);
             } else {
                 ++si;
             }
@@ -651,7 +653,9 @@ struct Game {
             if (state.features.get(p.px, p.py, feat)) {
                 const Terrain& t = terrain().get(feat.tag);
 
-                state.render.do_message(nlp::message("There is %s here.", t));
+                if (t.name.size() > 0) {
+                    state.render.do_message(nlp::message("There is %s here.", t));
+                }
             }
         }
     }
