@@ -172,6 +172,8 @@ struct CaMap {
         camap_t remove;
         camap_t insert;
 
+        std::cout << "CAMAP " << camap.size() << std::endl;
+
         for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
             const pt& xy = i->first;

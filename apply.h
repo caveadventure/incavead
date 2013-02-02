@@ -83,8 +83,6 @@ inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, 
     const Design& d = designs().get(tmp.tag);
 
     if (distance(p.px, p.py, lx, ly) > d.blastrange) {
-        std::cout << "OOPZ " << distance(p.px, p.py, lx, ly) << " " << d.blastrange 
-                  << "   " << tmp.tag << " " << d.name << std::endl;
         return false;
     }
 
@@ -107,13 +105,15 @@ inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, 
 inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameState& state, size_t& ticks) {
 
     items::Item tmp;
-    if (!p.inv.get(slot, tmp))
+    if (!p.inv.get(slot, tmp)) {
         return false;
+    }
 
     const Design& d = designs().get(tmp.tag);
 
-    if (d.blastradius == 0 && d.blastrange == 0)
+    if (d.blastradius == 0 && d.blastrange == 0) {
         return false;
+    }
 
     if (d.blastrange > 0) {
         
@@ -145,13 +145,11 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     double v = distance(p.px, p.py, lx, ly);
 
     if (d.throwrange == 0 || v > d.throwrange) {
-        std::cout << "OOPS " << v << " " << d.throwrange << std::endl;
         return false;
     }
 
     monsters::Monster mon;
     if (state.monsters.get(lx, ly, mon)) {
-        std::cout << "!! attack" << std::endl;
             
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 

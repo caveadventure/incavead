@@ -32,6 +32,8 @@ inline bool handle_input_inv_item(Player& p, mainloop::GameState& state,
                                   size_t& ticks, bool& done, bool& dead, bool& regen, 
                                   maudit::keypress k) {
 
+    std::cout << "FF " << k.letter << std::endl;
+
     if (k.letter == 'd') {
         p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
 

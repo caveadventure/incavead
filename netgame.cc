@@ -766,7 +766,7 @@ struct Game {
                 state.render.do_message(nlp::message("You are granted the power of %s.", sp.name), true);
 
             } else {
-                state.render.do_message("You want nothing to do with this vile place.");
+                state.render.do_message("You want nothing to do with this vile thing.");
             }
 
             return;
@@ -829,6 +829,7 @@ struct Game {
 
         seed_celauto(state, p.px, p.py, sp.ca_tag);        
         ++ticks;
+        state.window_stack.pop_back();
     }
 
 
@@ -937,7 +938,7 @@ struct Game {
             break;
 
         case 'Z':
-            p.inv.selected_slot = "z";
+            p.inv.selected_slot = "m1";
             if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f')))
                 state.render.do_message("You have nothing in your 'magical' slot.");
             break;

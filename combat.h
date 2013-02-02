@@ -37,7 +37,9 @@ inline void roll_attack(rnd::Generator& rng,
     for (const auto& v : attacks) {
         double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
 
-        std::cout << "ROLL " << (int)v.type << " : " << defenses.get(v.type) << " vs " << v.val << std::endl;
+        std::cout << "ROLL " << (int)v.type << " : " 
+                  << defenses.get(v.type) << "/" << dlevel 
+                  << " vs " << v.val << "/" << alevel << std::endl;
 
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
