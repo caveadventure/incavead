@@ -1,6 +1,6 @@
 
 cmake_minimum_required (VERSION 2.6)
-project (netgame)
+project (incavead)
 
 SET(CMAKE_BUILD_TYPE "Release")
 
@@ -24,7 +24,7 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(netgame netgame.cc
+add_executable(incavead incavead.cc
                        talgo/bresenham_c.c
                        talgo/fov_c.c 
                        talgo/path_c.c 
@@ -32,7 +32,7 @@ add_executable(netgame netgame.cc
 )
 
 add_custom_target(configparserh DEPENDS configparser.h)
-add_dependencies(netgame configparserh)
+add_dependencies(incavead configparserh)
 
-target_link_libraries(netgame m)
+target_link_libraries(incavead m)
 
