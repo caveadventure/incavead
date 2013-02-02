@@ -33,6 +33,17 @@ struct Terrain {
     bool sticky;
     unsigned int charges;
 
+    struct spell_t {
+        double karma_bound;
+        std::string ca_tag;
+        std::string name;
+        double timeout;
+
+        spell_t() : karma_bound(0), timeout(0) {}
+    };
+
+    spell_t grant_spell;
+
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),
                 sticky(false), charges(0) {}

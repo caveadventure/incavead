@@ -20,7 +20,7 @@ struct inventory_t {
     inventory_t() {
         make_slot(slot_t{"a",  " Armour", 'a'});
         make_slot(slot_t{"d",  "   Tool", 't'});
-        make_slot(slot_t{"e",  " Edible", 'e'});
+        make_slot(slot_t{"e",  "Medical", 'm'});
         make_slot(slot_t{"f",  "   Food", 'f'});
         make_slot(slot_t{"h",  " Helmet", 'h'});
         make_slot(slot_t{"l",  "  Light", 'l'});
@@ -29,7 +29,7 @@ struct inventory_t {
         make_slot(slot_t{"r1", "   Ring", 'r'});
         make_slot(slot_t{"r2", "   Ring", 'R'});
         make_slot(slot_t{"s",  " Shield", 's'});
-        make_slot(slot_t{"t",  "Missile", 'm'});
+        make_slot(slot_t{"t",  "Missile", 'i'});
         make_slot(slot_t{"w",  " Weapon", 'w'});
     }
 

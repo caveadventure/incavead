@@ -169,6 +169,7 @@ void parse_config(const std::string& filename) {
             ('bright' %{ skin.fore = maudit::color::bright_black; } sep colorname) ;
 
         back_color =
+            'none'    %{ skin.back = maudit::color::none; }           |
             'black'   %{ skin.back = maudit::color::bright_black; }   | 
             'red'     %{ skin.back = maudit::color::bright_red; }     | 
             'green'   %{ skin.back = maudit::color::bright_green; }   | 
@@ -178,7 +179,8 @@ void parse_config(const std::string& filename) {
             'cyan'    %{ skin.back = maudit::color::bright_cyan; }    | 
             'white'   %{ skin.back = maudit::color::bright_white; }   ;
 
-        skin = string %{ skin.text = state.match; } ws1 color (ws1 'back' ws1 back_color)? ;
+        skin = string %{ skin.text = state.match; skin.back = maudit::color::bright_black; } 
+               ws1 color (ws1 'back' ws1 back_color)? ;
 
         ####
 
@@ -394,11 +396,17 @@ void parse_config(const std::string& filename) {
 
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
+        terrain_grant_spell = 'grant_spell'
+            ws1 string %{ ter.grant_spell.ca_tag = state.match; } 
+            ws1 real   %{ ter.grant_spell.karma_bound = toreal(state.match); }
+            ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
+            ws1 string %{ ter.grant_spell.name = state.match; } ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
-            terrain_charges |
+            terrain_charges | terrain_grant_spell |
             '}' 
             ${ fret; })
             ;

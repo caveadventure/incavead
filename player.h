@@ -70,6 +70,8 @@ struct Player {
 
     look_t look;
 
+    std::vector<Terrain::spell_t> spells;
+
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
                sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN) 
         {
@@ -80,6 +82,26 @@ struct Player {
 
 
 namespace serialize {
+
+template <>
+struct reader<Terrain::spell_t> {
+    void read(Source& s, Terrain::spell_t& sp) {
+        serialize::read(s, sp.karma_bound);
+        serialize::read(s, sp.ca_tag);
+        serialize::read(s, sp.name);
+        serialize::read(s, sp.timeout);
+    }
+};
+
+template <>
+struct writer<Terrain::spell_t> {
+    void write(Sink& s, const Terrain::spell_t& sp) {
+        serialize::write(s, sp.karma_bound);
+        serialize::write(s, sp.ca_tag);
+        serialize::write(s, sp.name);
+        serialize::write(s, sp.timeout);
+    }
+};
 
 template <>
 struct reader<Player> {
@@ -96,7 +118,6 @@ struct reader<Player> {
         serialize::read(s, p.sleep);
         serialize::read(s, p.dig_x);
         serialize::read(s, p.dig_y);
-        // TODO
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -104,6 +125,7 @@ struct reader<Player> {
         serialize::read(s, p.look.target);
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
+        serialize::read(s, p.spells);
     }
 };
 
@@ -122,7 +144,6 @@ struct writer<Player> {
         serialize::write(s, p.sleep);
         serialize::write(s, p.dig_x);
         serialize::write(s, p.dig_y);
-        // TODO
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);
@@ -130,6 +151,7 @@ struct writer<Player> {
         serialize::write(s, p.look.target);
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
+        serialize::write(s, p.spells);
     }
 };
 

@@ -35,12 +35,14 @@
 #include "look_screens.h"
 #include "combat.h"
 #include "apply.h"
+#include "monster_ai.h"
 
 enum class screens_t : unsigned int {
     messages = 0,
     inventory,
     inv_item,
-    floor_item
+    floor_item,
+    spells
 };
 
 #include "inv_screens2.h"
@@ -49,127 +51,6 @@ enum class screens_t : unsigned int {
 void init_statics() {
 
     /*
-      TODO: candles!
-
-      0 
-        *kobold child
-        *kobold farmer
-        *kobold warrior
-        *female kobold
-        *kobold slave 
-        *kobold slavedriver
-        *kobold miner
-        *kobold chieftain
-        *kobold warlord
-        *kobold sex slave
-        kobold shaman
-        *kobold fisherman
-        kobold infant
-        *kobold cannibal
-        *renegade kobold
-        dog
-        *lichen
-        *pond scum
-        orc raider
-        lizardman envoy
-
-      1 
-        *kobold slave
-        *orcish raider
-        *orcish slavemaster
-        *orcish slave
-        *drow flaneur
-        *drow noble
-        *drow sorceror
-        *drow torturer
-        *drow necromancer
-        *orcish sex slave
-        *drow warrior
-        *drow slaver
-        *drow priest of darkness
-        *drow priest of insanity
-        *drow priestess of lust
-        *cave spider
-        *spider queen
-        *sacred spider
-        *drow queen
-        *spiderdrow guard
-        armor (breastplate, helmet, shield)
-        poison darts
-        poison dagger
-        ring of poison resistance
-        candles
-        glowing crystal
-        lamp
-
-      2
-        *illithid mindflayer
-        *illithid lord
-        *illithid slavemaster
-        *illithid elderbrain
-        *aboleth
-        *aboleth larva
-        *beholder
-        *elder beholder
-        *beholder hive mother
-        *carrion crawler
-        *carrion crawler larva
-        *purple worm
-        *grimlock slave
-        *grimlock cannibal
-        *grimlock savage
-        *drow slave
-        *drow zombie
-        *orcish zombie
-        *humanoid zombie
-        *kobold zombie
-        *dwarven zombie
-        *gnome zombie
-        *grimlock zombie
-
-      4 cave
-        *giant crab
-        *giant catfish
-        *giant pirahna
-        *medusoid
-        *cephalopod
-        *giant octopus
-        *bull shark
-        *giant squid
-        *narwhal
-
-        *giant killer bee
-        *giant centipede
-        *fungal grove
-        *gray ooze
-        *pod plant
-        *vomit fly
-        *giant ant
-
-        *albino ape
-        gamma wyrm
-        *land squid
-        *giant rat
-        carnivorous sheep
-
-        *brain lasher
-        *narcolep
-        *humanoid mass
-        fungoid
-        *homo erectus
-        morlock
-        eloi
-        pigman
-        mutant tribesman
-        mutant lord
-        mutant seer
-
-        Ancient attack/protect artifacts!
-
-      5 lost soul -- immune to physical and poison! Attacks with soul drain, need soul drain protection and attack weapon!
-        Black Gate
-        Jade Peach Orchard Gate 
-
 
       5 dinosaur/megafauna
       6 dragon
@@ -209,16 +90,6 @@ void init_statics() {
 struct Game {
 
     Player p;
-
-    // HACK
-    struct summons_t {
-        unsigned int x;
-        unsigned int y;
-        std::string summontag;
-        std::string summonertag;
-    };
-    std::vector<summons_t> summons;
-
 
     static const unsigned int GRID_W = 256;
     static const unsigned int GRID_H = 256;
@@ -489,31 +360,11 @@ struct Game {
     template <typename SINK>
     void save(SINK& s) {
         serialize::write(s, p);
-
-        serialize::write(s, summons.size());
-        for (const auto& v : summons) {
-            serialize::write(s, v.x);
-            serialize::write(s, v.y);
-            serialize::write(s, v.summontag);
-            serialize::write(s, v.summonertag);
-        }
     }
 
     template <typename SOURCE>
     void load(SOURCE& s) {
         serialize::read(s, p);
-
-        size_t n;
-        serialize::read(s, n);
-        summons.resize(n);
-
-        for (size_t i = 0; i < n; ++i) {
-            auto& v = summons[i];
-            serialize::read(s, v.x);
-            serialize::read(s, v.y);
-            serialize::read(s, v.summontag);
-            serialize::read(s, v.summonertag);
-        }
     }
 
     void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
@@ -621,234 +472,6 @@ struct Game {
         //                           4, '+', maudit::color::bright_green);
     }
 
-    bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
-        unsigned int _x = ax;
-        unsigned int _y = ay;
-
-        state.render.draw_line(ax, ay, bx, by, false, 
-                               maudit::color::dim_red, maudit::color::bright_white,
-                               [&](unsigned int x, unsigned int y) {
-                                   
-                                   if (x == ax && y == ay)
-                                       return true;
-
-                                   if (state.render.is_walkblock(x, y) ||
-                                       state.render.is_viewblock(x, y))
-                                       return false;
-
-                                   _x = x;
-                                   _y = y;
-                                   return true;
-                               });
-
-        if (_x == bx && _y == by) return true;
-        return false;
-    }
-
-    
-    void monster_blast_process_point(mainloop::GameState& state, const Species& s,
-                                     unsigned int _x, unsigned int _y, const damage::attacks_t& attacks) {
-
-        if (_x == p.px && _y == p.py) {
-
-            damage::defenses_t defenses;
-            p.inv.get_defense(defenses);
-
-            defend(p, defenses, p.level, s, attacks, state);
-
-        } else {
-
-            monsters::Monster mon;
-            if (state.monsters.get(_x, _y, mon)) {
-
-                attack(attacks, s.level, state, mon, species().get(mon.tag));
-            }
-        }
-    }
-
-    void do_monster_blast(mainloop::GameState& state, const Species& s, 
-                          unsigned int tx, unsigned int ty, unsigned int rad, const damage::attacks_t& attacks) {
-
-        if (rad == 0) {
-
-            monster_blast_process_point(state, s, tx, ty, attacks);
-
-        } else {
-
-            state.render.draw_circle(tx, ty, rad, true, s.skin.fore, maudit::color::bright_black,
-                                     [&](unsigned int _x, unsigned int _y) {
-                                 
-                                         monster_blast_process_point(state, s, _x, _y, attacks);
-                                     });
-        }
-    }
-
-
-    bool do_monster_magic(mainloop::GameState& state, size_t ticks, double dist, 
-                          const monsters::Monster& m, const Species& s) {
-
-        bool reachd = false;
-
-        if (dist < s.range && 
-            (s.blast.size() > 0 || s.cast_cloud.size() > 0)) {
-
-            reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
-        }
-
-        if (reachd) {
-
-            for (const auto& b : s.blast) {
-
-                if (dist >= b.range) 
-                    continue;
-
-                if ((ticks % b.turns) != 0)
-                    continue;
-
-                double v = state.rng.gauss(0.0, 1.0);
-                if (v <= b.chance) continue;
-
-                do_monster_blast(state, s, p.px, p.py, b.radius, b.attacks);
-                return true;
-            }
-
-            for (const auto& c : s.cast_cloud) {
-
-                if ((ticks % c.turns) != 0) continue;
-                    
-                double v = state.rng.gauss(0.0, 1.0);
-                if (v <= c.chance) continue;
-
-                cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
-                state.render.do_message(nlp::message("%s casts %s!", s, c.name));
-                return true;
-            }
-        }
-
-        if (s.summon.size() > 0 && dist < s.range) {
-
-            for (const auto& c : s.summon) {
-
-                if ((ticks & c.turns) != 0) continue;
-
-                const Species& s = species().get(c.speciestag);
-                if (!state.species_counts.has(s.level, c.speciestag))
-                    continue;
-
-                double v = state.rng.gauss(0.0, 1.0);
-                if (v <= c.chance) continue;
-
-                summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, m.tag});
-            }
-        }
-
-        return false;
-    }
-
-    bool move_monster(mainloop::GameState& state, size_t ticks, const monsters::Monster& m, const Species& s,
-                      monsters::pt& nxy, bool& do_die) {
-
-        features::Feature feat;
-        if (state.features.get(m.xy.first, m.xy.second, feat)) {
-
-            const Terrain& t = terrain().get(feat.tag);
-
-            if (!t.attacks.empty()) {
-
-                attack(t.attacks, t.attack_level, state, m, s);
-            }
-        }
-
-
-        if (m.health < -3) {
-            do_die = true;
-            return true;
-        }
-
-        if (m.sleep > 0) {
-            state.monsters.change(m, [](monsters::Monster& m) { --(m.sleep); });
-            return false;
-        }
-
-        if (m.fear > 0) {
-            state.monsters.change(m, [](monsters::Monster& m) { --(m.fear); });
-        }
-
-        double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
-
-        if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
-
-            if (do_monster_magic(state, ticks, dist, m, s)) 
-                return false;
-        }
-
-        // HACK!
-        bool do_random = false;
-        bool do_seek = false;
-
-        if (s.ai == Species::ai_t::seek_player ||
-            (s.ai == Species::ai_t::seek_nosleep && p.sleep == 0)) {
-
-            if (dist <= s.range + 5) {
-                do_seek = true;
-            }
-        }
-
-
-        if (m.fear > 0 || s.ai == Species::ai_t::random) {
-            do_random = true;
-
-        } else if (s.ai == Species::ai_t::inrange_random && dist <= s.range) {
-            do_random = true;
-
-        } else if (do_seek && !do_random &&
-                   state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, 
-                                          s.range, nxy.first, nxy.second)) {
-
-            // Nothing, nxy is good.
-
-        } else {
-
-            switch (s.idle_ai) {
-
-            case Species::idle_ai_t::random:
-
-                if (dist > get_lightradius() + 5)
-                    return false;
-
-                do_random = true;
-                break;
-
-            default:
-                return false;
-            }
-        }
-
-        if (do_random) {
-            std::vector<monsters::pt> tmp = monsters::Monsters::get_walkables(state.neigh, state.grid, s, m.xy);
-
-            if (tmp.empty())
-                return false;
-
-            nxy = tmp[state.rng.n(tmp.size())];
-        }
-
-        if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
-            return false;
-
-        if (nxy.first == p.px && nxy.second == p.py) {
-
-            damage::defenses_t defenses;
-            p.inv.get_defense(defenses);
-
-            defend(p, defenses, p.level, s, state);
-            return false;
-
-        } else {
-            return true;
-        }
-    }
-
     bool process_feature(mainloop::GameState& state, features::Feature& f, const Terrain& t) {
 
         if (f.decay > 0) {
@@ -910,10 +533,10 @@ struct Game {
             }
         }
 
-        summons.clear();
+        std::vector<summons_t> summons;
 
         state.monsters.process(state.render, 
-                               std::bind(&Game::move_monster, this, std::ref(state), ticks, 
+                               std::bind(move_monster, std::ref(p), std::ref(state), ticks, std::ref(summons),
                                          std::placeholders::_1, std::placeholders::_2, 
                                          std::placeholders::_3, std::placeholders::_4));
 
@@ -930,6 +553,27 @@ struct Game {
 
                 state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
                                                      nlp::count(), species().get(i.summontag), nm));
+            }
+        }
+
+
+        for (std::vector<Terrain::spell_t>::iterator si = p.spells.begin(); si != p.spells.end(); ) {
+            double k = p.karma.val;
+            auto& sp = *si;
+
+            if (sp.karma_bound < 0 && k > sp.karma_bound) {
+                sp.timeout -= (k - sp.karma_bound);
+
+            } else if (sp.karma_bound > 0 && k < sp.karma_bound) {
+                sp.timeout -= (sp.karma_bound - k);
+            }
+
+            if (sp.timeout <= 0) {
+                si = p.spells.erase(si);
+
+                state.render.do_message("You feel a sense of arcane foreboding.");
+            } else {
+                ++si;
             }
         }
 
@@ -1104,6 +748,30 @@ struct Game {
             return;
         }
 
+        if (t.grant_spell.timeout > 0) {
+
+            const auto& sp = t.grant_spell;
+
+            if ((sp.karma_bound < 0 && p.karma.val <= sp.karma_bound) ||
+                (sp.karma_bound > 0 && p.karma.val >= sp.karma_bound)) {
+
+                for (const auto& i : p.spells) {
+                    if (i.name == sp.name) {
+                        state.render.do_message("Nothing happens.");
+                        return;
+                    }
+                }
+
+                p.spells.push_back(sp);
+                state.render.do_message(nlp::message("You are granted the power of %s.", sp.name), true);
+
+            } else {
+                state.render.do_message("You want nothing to do with this vile place.");
+            }
+
+            return;
+        }
+
         state.render.do_message("There is nothing here to use.");
     }
 
@@ -1113,21 +781,6 @@ struct Game {
         state.render.do_message(nlp::message("%d", state.grid.get_karma(p.px, p.py)));
 
         ++ticks;
-    }
-
-    void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
-                    const std::string& terraintag) {
-
-        state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
-                                 [&](unsigned int _x, unsigned int _y) {
-
-                                     features::Feature tmp;
-                                     if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
-
-                                     if (!state.grid.is_walk(_x, _y)) return;
-
-                                     state.features.set(_x, _y, terraintag, state.render);
-                                 });
     }
 
     void seed_celauto(mainloop::GameState& state, 
@@ -1146,6 +799,38 @@ struct Game {
             state.camap.seed(x, y, tag);
         }
     }
+
+    std::string show_spells(std::vector<Terrain::spell_t>& spells) {
+
+        std::string m;
+
+        m = "\2Your arcane powers:\n\n";
+
+        char z = 'a';
+        for (const auto& sp : spells) {
+
+            m += nlp::message("   \2%c\1) %S\n", z, sp);
+            ++z;
+        }
+
+        return m;
+    }
+
+    void handle_input_spells(mainloop::GameState& state, size_t& ticks, maudit::keypress k) {
+
+        int z = k.letter - 'a';
+
+        if (z < 0 || z >= (int)p.spells.size()) {
+            state.window_stack.pop_back();
+            return;
+        }
+
+        const auto& sp = p.spells[z];
+
+        seed_celauto(state, p.px, p.py, sp.ca_tag);        
+        ++ticks;
+    }
+
 
     void handle_input_main(mainloop::GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
@@ -1216,6 +901,10 @@ struct Game {
             state.push_window(show_inventory(p.inv, p.level, p.worldz, state.items, p.px, p.py), screens_t::inventory);
             break;
 
+        case 'z':
+            state.push_window(show_spells(p.spells), screens_t::spells);
+            break;
+
         case 'P':
             state.push_window(state.render.all_messages(), screens_t::messages);
             break;
@@ -1238,7 +927,7 @@ struct Game {
         case 'H':
             p.inv.selected_slot = "e";
             if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
-                state.render.do_message("You have nothing in your 'edible' slot.");
+                state.render.do_message("You have nothing in your 'medical' slot.");
             break;
 
         case 'F':
@@ -1247,10 +936,16 @@ struct Game {
                 state.render.do_message("You have nothing in your 'food' slot.");
             break;
 
+        case 'Z':
+            p.inv.selected_slot = "z";
+            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f')))
+                state.render.do_message("You have nothing in your 'magical' slot.");
+            break;
 
             ////
             // REMOVEME
 
+            /*
         case 'z':
             seed_celauto(state, p.px, p.py, "m");
             break;
@@ -1258,6 +953,7 @@ struct Game {
         case 'x':
             seed_celauto(state, p.px, p.py, "w");
             break;
+            */
         }
 
         switch (k.key) {
@@ -1427,6 +1123,10 @@ struct Game {
 
         case screens_t::floor_item:
             handle_input_floor_item(p, state, ticks, done, dead, regen, k);
+            break;
+
+        case screens_t::spells:
+            handle_input_spells(state, ticks, k);
             break;
         }
     }

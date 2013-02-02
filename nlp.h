@@ -327,9 +327,9 @@ void message(_buffer& b, const T& val, const TAIL&... args) {
     if (c == '\0') 
         return;
 
-    if (c == 's') {
+    if (c == 's' || c == 'S') {
         parsed_name pn(val.name);
-        b.out += pn.make(1, b.is_start);
+        b.out += pn.make(1, (c == 'S' ? true : b.is_start));
     }
 
     message(b, args...);
