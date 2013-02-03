@@ -80,9 +80,18 @@ void init_statics() {
     ////
 
     
+    // -m,m2 (f)
+    // -rv,rh (d)
+    // -v (h)
+    // +w (dg)
+    // +sc
+    // +sl
+    // +sw,+sf 
 
-    //init_celauto("1", "23", "24", 32, "tomeat", true, 1.0, 0.5);
-    //init_celauto("2", "3", "1", 12, "liq", false, -1.0, -1.0);
+    // +food
+    // +heal
+
+    // +teleport?
 }
 
 
