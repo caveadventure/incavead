@@ -42,7 +42,8 @@ enum class screens_t : unsigned int {
     inventory,
     inv_item,
     floor_item,
-    spells
+    spells,
+    help
 };
 
 #include "inv_screens2.h"
@@ -195,7 +196,7 @@ struct Game {
             p.px = xy.first;
             p.py = xy.second;
 
-            maps.add_nogen(p.px, p.py);
+            maps.add_nogen_expand(state.neigh, p.px, p.py, 3);
 
             // Place some dungeon features on the same spots every time.
 
@@ -846,6 +847,36 @@ struct Game {
     }
 
 
+    std::string help_text() {
+
+        std::string ret = 
+            "\3Essential commands:\1\n"
+            "  \2h j k l\1 "
+            "  \2arrow keys\1 : Move left, down, up and right.\n"
+            "  \2y u b n\1 "
+            "  \2keypad\1 :     Move diagonally.\n"
+            "  \2.\1 :          Stand still.\n"
+            "  \2S\1 :          Save and quit.\n"
+            "  \2Q\1 :          Commit suicide and quit.\n"
+            "  \2>\1 :          Use terrain. (Enter holes and tunnels, use statues.)\n"
+            "  \2i\1 :          Interact with inventory and show character info.\n"
+            "  \2z\1 :          Cast spells if you know them.\n"
+            "  \2/\1 :          Look around you using arrow keys.\n"
+            "  \2tab\1 :        Look at monsters and items in view.\n"
+            "  \2P\1 :          Show message history.\n"
+            "  \2?\1 :          Show this help message.\n"
+            "\n\3Shortcut commands:\1\n"
+            "  \2T\1 :          Take the first item laying on the floor.\n"
+            "  \2,\1 :          Examine the first item laying on the floor.\n"
+            "  \2H\1 :          Use medicine if you have any.\n"
+            "  \2F\1 :          Eat food if you have any.\n"
+            "  \2Z\1 :          Fire a magical item if you have one.\n"
+            "  \2D\1 :          Tunnel at rock if you have a instrument for digging.\n"
+            ;
+
+        return ret;
+    }
+
     void handle_input_main(mainloop::GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
                            maudit::keypress k) {
@@ -956,6 +987,10 @@ struct Game {
                 state.render.do_message("You have nothing in your 'magical' slot.");
             break;
 
+        case '?':
+            state.push_window(help_text(), screens_t::help);
+            break;
+
             ////
             // REMOVEME
 
@@ -982,6 +1017,18 @@ struct Game {
             break;
         case maudit::keycode::down:
             move(state, 0, 1, ticks);
+            break;
+        case maudit::keycode::kp_7:
+            move(state, -1, -1, ticks);
+            break;
+        case maudit::keycode::kp_9:
+            move(state, 1, -1, ticks);
+            break;
+        case maudit::keycode::kp_1:
+            move(state, -1, 1, ticks);
+            break;
+        case maudit::keycode::kp_3:
+            move(state, 1, 1, ticks);
             break;
         default:
             break;
@@ -1124,6 +1171,7 @@ struct Game {
         switch ((screens_t)state.window_stack.back().type) {
 
         case screens_t::messages:
+        case screens_t::help:
             handle_input_messages(state, k);
             break;
 

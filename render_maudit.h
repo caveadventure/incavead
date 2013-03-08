@@ -815,18 +815,27 @@ public:
 
     template <typename SCREEN>
     keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h,
-                         const std::string& msg) {
+                         const std::string& msg, unsigned int ix, unsigned int iy) {
 
         std::vector< std::vector<skin> > glyphs;
 
         glyphs.push_back(std::vector<skin>());
         color_t fore = gray_color;
 
+        unsigned int nc = 0;
+        unsigned int nl = 0;
+
         for (unsigned char c : msg) {
 
             if (c == '\n') {
-                glyphs.push_back(std::vector<skin>());
+
+                if (nl >= iy) {
+                    glyphs.push_back(std::vector<skin>());
+                }
+
                 fore = gray_color;
+                nl++;
+                nc = 0;
                 continue;
             }
 
@@ -837,7 +846,12 @@ public:
             } else if (c == 1) {
                 fore = gray_color;
             } else {
-                glyphs.back().push_back(skin(std::string(1, c), fore, blue_color));
+
+                if (nc >= ix && nl >= iy) {
+                    glyphs.back().push_back(skin(std::string(1, c), fore, blue_color));
+                }
+
+                nc++;
             }
         }
 
@@ -862,10 +876,24 @@ public:
                                 c = "+";
 
                             } else if (y <= 0 || y >= view_h-1) {
-                                c = "-";
+
+                                if (y >= view_h-1 && nl-iy > view_h) {
+                                    c = "v";
+                                } else if (y <= 0 && iy > 0) {
+                                    c = "^";
+                                } else {
+                                    c = "-";
+                                }
 
                             } else if (x <= 0 || x >= view_w-1) {
-                                c = "|";
+
+                                if (x >= view_w-1 && nc-ix > view_w) {
+                                    c = ">";
+                                } else if (x <= 0 && ix > 0) {
+                                    c = "<";
+                                } else {
+                                    c = "|";
+                                }
 
                             } else {
                                 c = " ";
@@ -897,6 +925,37 @@ public:
 
         return wait_for_key(screen, view_w, view_h);
     }
+
+    template <typename SCREEN>
+    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h,
+                         const std::string& msg) {
+
+        unsigned int ix = 0;
+        unsigned int iy = 0;
+        
+        while (1) {
+            keypress k = draw_window(screen, view_w, view_h, msg, ix, iy);
+
+            switch (k.key) {
+            case maudit::keycode::up:
+                if (iy > 0) --iy;
+                break;
+            case maudit::keycode::left:
+                if (ix > 0) --ix;
+                break;
+            case maudit::keycode::right:
+                ++ix;
+                break;
+            case maudit::keycode::down:
+                ++iy;
+                break;
+
+            default:
+                return k;
+            }
+        }
+    }
+
 
     template <typename FUNC>
     void draw_circle(unsigned int x, unsigned int y, unsigned int r, 

@@ -71,6 +71,37 @@ struct Map {
             nogens.insert(pt(x, y));
         }
 
+        void add_nogen_expand(neighbors::Neighbors& neigh,
+                              unsigned int x, unsigned int y, unsigned int depth) {
+
+            pt xy(x, y);
+
+            std::set<pt> ng(neigh(xy));
+            std::set<pt> proc;
+        
+            nogens.insert(xy);
+            proc.insert(xy);
+
+            for (unsigned int i = 1; i < depth; ++i) {
+            
+                std::set<pt> ngtmp;
+
+                for (const pt& z : ng) {
+
+                    if (proc.count(z) != 0)
+                        continue;
+
+                    proc.insert(z);
+                    const auto& tmp = neigh(z);
+                    ngtmp.insert(tmp.begin(), tmp.end());
+                }
+
+                ng.insert(ngtmp.begin(), ngtmp.end());
+            }
+
+            nogens.insert(ng.begin(), ng.end());
+        }
+
         bool _one_of(rnd::Generator& rng, const std::vector<pt>& map, pt& ret) const {
 
             if (map.empty())
@@ -620,36 +651,6 @@ struct Map {
             lakemap.erase(tmp);
         }
     }
-
-
-    /*
-    void add_nogen_expand(neighbors::Neighbors& neigh,
-                          unsigned int x, unsigned int y, unsigned int depth) {
-
-        std::set<pt> ng(neigh(pt(x, y)));
-        std::set<pt> proc;
-        
-        proc.insert(pt(x, y));
-
-        for (unsigned int i = 1; i < depth; ++i) {
-            
-            std::set<pt> ngtmp;
-
-            for (const pt& z : ng) {
-                if (proc.count(z) == 0) {
-                    proc.insert(z);
-
-                    const auto& tmp = neigh(z);
-                    ngtmp.insert(tmp.begin(), tmp.end());
-                }
-            }
-
-            ng.insert(ngtmp.begin(), ngtmp.end());
-        }
-
-        nogens.insert(ng.begin(), ng.end());
-    }
-    */
 
     bool _one_of(rnd::Generator& rng, const std::unordered_set<pt>& s, pt& ret) {
 

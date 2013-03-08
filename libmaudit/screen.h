@@ -48,8 +48,12 @@ enum class keycode : uint32_t {
     right,
     up,
     down,
+    kp_7,
+    kp_9,
+    kp_1,
+    kp_3,
     esc,
-    resize
+    resize,
 };
 
 
@@ -311,6 +315,20 @@ struct screen {
                 case 'A':  out.key = keycode::up;    break;
                 case 'C':  out.key = keycode::right; break;
                 case 'B':  out.key = keycode::down;  break;
+                    
+                case '1':  out.key = keycode::kp_7;  break;
+                case '5':  out.key = keycode::kp_9;  break;
+                case '4':  out.key = keycode::kp_1;  break;
+                case '6':  out.key = keycode::kp_3;  break;
+                }
+
+                if (out.key == keycode::kp_7 || 
+                    out.key == keycode::kp_9 || 
+                    out.key == keycode::kp_1 || 
+                    out.key == keycode::kp_3) {
+
+                    ok = io.read(c);
+                    if (!ok) return false;
                 }
 
             } else {
