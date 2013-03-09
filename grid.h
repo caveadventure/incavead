@@ -505,7 +505,7 @@ struct Map {
         }
     }
 
-    void _set_maps1(neighbors::Neighbors& neigh, const pt& xy) {
+    void _insert_walk(neighbors::Neighbors& neigh, const pt& xy) {
 
         if (watermap.count(xy) == 0) {
 
@@ -527,21 +527,17 @@ struct Map {
         }
     }
 
-    void _set_maps2(const pt& xy) {
-
-        if (walkmap.count(xy) != 0) {
-            lakemap.insert(xy);
-        }
-    }
-
     void set_maps(neighbors::Neighbors& neigh) {
 
         for (const pt& xy : walkmap) {
-            _set_maps1(neigh, xy);
+            _insert_walk(neigh, xy);
         }
 
         for (const pt& xy : watermap) {
-            _set_maps2(xy);
+
+            if (walkmap.count(xy) != 0) {
+                lakemap.insert(xy);
+            }
         }
     }
 
@@ -628,7 +624,7 @@ struct Map {
 
         if (v) {
             walkmap.insert(tmp);
-            _set_maps1(neigh, tmp);
+            _insert_walk(neigh, tmp);
 
         } else {
             walkmap.erase(tmp);
@@ -636,19 +632,46 @@ struct Map {
             cornermap.erase(tmp);
             shoremap.erase(tmp);
             lowlands.erase(tmp);
+
+            for (const auto& v : neigh(tmp)) {
+                if (walkmap.count(v) != 0) {
+                    cornermap.insert(v);
+                }
+            }
         }
     }
 
-    void set_water(unsigned int x, unsigned int y, bool v) {
+    void set_water(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
         pt tmp(x, y);
 
         if (v) {
             watermap.insert(tmp);
-            _set_maps2(tmp);
+            floormap.erase(tmp);
+
+            if (walkmap.count(tmp) != 0) {
+                lakemap.insert(tmp);
+            }
+
+            for (const auto& v : neigh(tmp)) {
+                if (walkmap.count(v) != 0) {
+                    shoremap.insert(v);
+                }
+            }
 
         } else {
             watermap.erase(tmp);
             lakemap.erase(tmp);
+
+            if (walkmap.count(tmp) != 0) {
+                floormap.insert(tmp);
+            }
+
+            for (const auto& v : neigh(tmp)) {
+                if (watermap.count(v) != 0) {
+                    shoremap.insert(tmp);
+                    break;
+                }
+            }
         }
     }
 

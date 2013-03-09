@@ -62,6 +62,33 @@ struct Items {
         init();
     }
 
+    Item make_item(const std::string& tag, const pt& xy, rnd::Generator& rng) {
+
+        const Design& d = designs().get(tag);
+
+        int _c = 1;
+
+        {
+            double mean = d.gencount.mean;
+            double dev = d.gencount.deviation;
+
+            if (dev == 0) {
+                _c = mean;
+
+            } else {
+                _c = rng.gauss(mean, dev);
+            }
+            
+            if (_c > (int)d.stackrange)
+                _c = d.stackrange;
+
+            if (_c <= 0)
+                _c = 1;
+        }
+
+        return Item(tag, xy, _c);
+    }
+
 
     template <typename T>
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
@@ -79,29 +106,7 @@ struct Items {
                 if (!ptsource.one_of_floor(rng, xy))
                     return;
                 
-                const Design& d = designs().get(i.first);
-
-                int _c = 1;
-
-                {
-                    double mean = d.gencount.mean;
-                    double dev = d.gencount.deviation;
-
-                    if (dev == 0) {
-                        _c = mean;
-
-                    } else {
-                        _c = rng.gauss(mean, dev);
-                    }
-
-                    if (_c > (int)d.stackrange)
-                        _c = d.stackrange;
-
-                    if (_c <= 0)
-                        _c = 1;
-                }
-
-                stuff[xy].push_back(Item(i.first, xy, _c));
+                stuff[xy].push_back(make_item(i.first, xy, rng));
             }
         }
     }

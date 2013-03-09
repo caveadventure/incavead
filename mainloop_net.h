@@ -31,6 +31,7 @@ struct GameState {
     counters::Counts designs_counts;
     counters::Counts species_counts;
     counters::Counts terrain_counts;
+    counters::Counts vaults_counts;
 
     monsters::Monsters monsters;
     items::Items items;
@@ -81,7 +82,10 @@ struct reader<mainloop::GameState> {
         // REMOVEME
         state.designs_counts = designs().counts;
         state.species_counts = species().counts;
+        state.vaults_counts = vaults().counts;
         serialize::read(s, state.terrain_counts);
+        // REMOVEME UNCOMMENT
+        // serialize::read(s, state.vaults_counts);
         serialize::read(s, state.monsters);
         serialize::read(s, state.items);
         serialize::read(s, state.features);
@@ -111,6 +115,8 @@ struct writer<mainloop::GameState> {
         serialize::write(s, state.designs_counts);
         serialize::write(s, state.species_counts);
         serialize::write(s, state.terrain_counts);
+        // REMOVEME UNCOMMENT
+        // serialize::write(s, state.vaults_counts);
         serialize::write(s, state.monsters);
         serialize::write(s, state.items);
         serialize::write(s, state.features);
@@ -235,6 +241,7 @@ struct Main {
         state.designs_counts = designs().counts;
         state.species_counts = species().counts;
         state.terrain_counts = terrain().counts;
+        state.vaults_counts = vaults().counts;
 
         state.features.init();
         state.items.init();

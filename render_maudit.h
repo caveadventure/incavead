@@ -877,7 +877,7 @@ public:
 
                             } else if (y <= 0 || y >= view_h-1) {
 
-                                if (y >= view_h-1 && nl-iy > view_h) {
+                                if (y >= view_h-1 && nl+4-iy > view_h) {
                                     c = "v";
                                 } else if (y <= 0 && iy > 0) {
                                     c = "^";
@@ -887,7 +887,7 @@ public:
 
                             } else if (x <= 0 || x >= view_w-1) {
 
-                                if (x >= view_w-1 && nc-ix > view_w) {
+                                if (x >= view_w-1 && nc+4-ix > view_w) {
                                     c = ">";
                                 } else if (x <= 0 && ix > 0) {
                                     c = "<";

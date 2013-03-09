@@ -9,17 +9,6 @@ struct TerrainBank {
     std::map<std::string,Terrain> bank;
     counters::Counts counts;
 
-    template <typename... ARGS>
-    void init(const std::string& tag, unsigned int count, ARGS... args) {
-
-        if (bank.count(tag) != 0) {
-            throw std::runtime_error("Duplicate terrain tag: " + tag);
-        }
-
-        bank[tag] = Terrain(tag, count, std::forward<ARGS>(args)...);
-        counts.init(tag, 0, count);
-    }
-
     void copy(const Terrain& t) {
 
         if (bank.count(t.tag) != 0) {
@@ -48,11 +37,6 @@ TerrainBank& __terrain__() {
 
 const TerrainBank& terrain() {
     return __terrain__();
-}
-
-template <typename... ARGS>
-void init_terrain(ARGS... args) {
-    __terrain__().init(std::forward<ARGS>(args)...);
 }
 
 void init_terrain_copy(const Terrain& t) {

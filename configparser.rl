@@ -14,9 +14,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "libmaudit/maudit.h"
-#include "species.h"
-#include "species_bank.h"
 
 namespace configparser {
 
@@ -58,6 +55,10 @@ inline void init_terrain(const Terrain& t) {
     init_terrain_copy(t);
 }
 
+inline void init_vault(const Vault& v) {
+    init_vault_copy(v);
+}
+
 inline void init_celauto(const CelAuto& c) {
     init_celauto_copy(c);
 }
@@ -95,12 +96,15 @@ void parse_config(const std::string& filename) {
     Species spe;
     Design des;
     Terrain ter;
+    Vault vau;
     CelAuto cel;
     Levelskin lev;
 
     damage::val_t dmgval;
 
     maudit::glyph skin;
+
+    Vault::brush vbrush;
 
     %%{
 
@@ -373,7 +377,7 @@ void parse_config(const std::string& filename) {
 
         ####
 
-        placement = 
+        tplacement = 
             'floor'   %{ ter.placement = Terrain::placement_t::floor; }     | 
             'water'   %{ ter.placement = Terrain::placement_t::water; }     | 
             'corner'  %{ ter.placement = Terrain::placement_t::corner; }    ;
@@ -386,7 +390,7 @@ void parse_config(const std::string& filename) {
         terrain_count     = 'count'     ws1 number     %{ ter.count = toint(state.match); } ;
         terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
         terrain_skin      = 'skin'      ws1 skin       %{ ter.skin = skin; };
-        terrain_placement = 'placement' ws1 placement  ;
+        terrain_placement = 'placement' ws1 tplacement  ;
         terrain_stairs    = 'stairs'    ws1 number     %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
         terrain_walkblock = 'walkblock'                %{ ter.walkblock = true; } ;
@@ -429,6 +433,57 @@ void parse_config(const std::string& filename) {
 
         ####
 
+        vplacement = 
+            'floor'   %{ vau.placement = Vault::placement_t::floor; }     | 
+            'water'   %{ vau.placement = Vault::placement_t::water; }     | 
+            'corner'  %{ vau.placement = Vault::placement_t::corner; }    ;
+
+        vault_count     = 'count'     ws1 number     %{ vau.count = toint(state.match); } ;
+        vault_placement = 'placement' ws1 vplacement  ;
+
+        vault_anchor    = 'anchor'    
+            ws1 number %{ vau.ax = toint(state.match); } 
+            ws1 number %{ vau.ay = toint(state.match); }
+            ;
+
+        vault_brush = 'brush' %{ vbrush = Vault::brush(); }
+            ws1 ('blank' ${ vbrush.is_blank = true; } |
+                 'floor' ${ vbrush.is_walk = true; vbrush.is_water = false;  } |
+                 'water' ${ vbrush.is_walk = true; vbrush.is_water = true;   } |
+                 'wall'  ${ vbrush.is_walk = false; vbrush.is_water = false; } |
+                 'wwall' ${ vbrush.is_walk = false; vbrush.is_water = true;  })
+            ws1 string   %{ vbrush.terrain = state.match; }
+            ws1 string   %{ vbrush.design = state.match; }
+            ws1 string   %{ vbrush.species = state.match; }
+            ws1 '\'' any ${ vau.brushes[fc] = vbrush; } '\''
+            ;
+
+        vault_line = 'l' ws1 string %{ vau.pic.push_back(state.match); } ;
+
+        vault_one_data =
+            (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
+            '}'
+             ${ fret; })
+            ;
+
+        one_vault := (ws vault_one_data ws ';')+
+            ;
+
+        vault_level = number %{ vau.level = toint(state.match); }
+        ;
+
+        vault_tag = tag %{ vau.tag = state.match; }
+        ;
+
+        vault = 
+            'vault' %{ vau = Vault(); }
+            ws1 vault_level ws1 vault_tag ws
+            '{' ${fcall one_vault;}
+            %{ vau.postprocess(); init_vault(vau); }
+            ;
+
+        ####
+
         celauto_s = 's' ws1 ( [0-9] ${ cel.survive.insert(fc - '0'); } )+;
 
         celauto_b = 'b' ws1 ( [0-9] ${ cel.born.insert(fc - '0'); } )+;
@@ -437,7 +492,8 @@ void parse_config(const std::string& filename) {
 
         celauto_terrain = 'terrain' ws1 string %{ cel.terrain = state.match; } ;
 
-        celauto_is_walk = 'is_walk' %{ cel.is_walk = true; } ;
+        celauto_is_walk   = 'is_walk'   %{ cel.is_walk = true; } ;
+        celauto_make_walk = 'make_walk' %{ cel.make_walk = true; } ;
 
         celauto_karma_scale = 'karma_scale' ws1 real %{ cel.karma_scale = toreal(state.match); } ;
         celauto_karma_step  = 'karma_step'  ws1 real %{ cel.karma_step  = toreal(state.match); } ;
@@ -449,8 +505,8 @@ void parse_config(const std::string& filename) {
 
         celauto_one_data =
             (celauto_s | celauto_b | celauto_a | celauto_terrain |
-            celauto_is_walk | celauto_karma_scale | celauto_karma_step |
-            celauto_seed | '}' 
+            celauto_is_walk | celauto_make_walk | celauto_karma_scale | 
+            celauto_karma_step | celauto_seed | '}' 
             ${ fret; })
             ;
 
@@ -510,7 +566,7 @@ void parse_config(const std::string& filename) {
         ####
 
 
-        entry = species | design | terrain | celauto | levelskin ;
+        entry = species | design | terrain | vault | celauto | levelskin ;
             
       main := (ws entry)+ ws ;
         
@@ -550,6 +606,7 @@ void parse_config(const std::string& filename) {
         (void)ConfigParser_en_one_species;
         (void)ConfigParser_en_one_design;
         (void)ConfigParser_en_one_terrain;
+        (void)ConfigParser_en_one_vault;
         (void)ConfigParser_en_one_celauto;
         (void)ConfigParser_en_one_levelskin;
         (void)ConfigParser_en_main;

@@ -9,18 +9,6 @@ struct DesignsBank {
     std::map<std::string,Design> bank;
     counters::Counts counts;
 
-    template <typename... ARGS>
-    void init(const std::string& tag, unsigned int level, unsigned int count,
-              ARGS... args) {
-
-        if (bank.count(tag) != 0) {
-            throw std::runtime_error("Duplicate design tag: " + tag);
-        }
-
-        bank[tag] = Design(tag, level, count, std::forward<ARGS>(args)...);
-        counts.init(tag, level, count);
-    }
-
     void copy(const Design& d) {
 
         if (bank.count(d.tag) != 0) {
@@ -49,11 +37,6 @@ DesignsBank& __designs__() {
 
 const DesignsBank& designs() {
     return __designs__();
-}
-
-template <typename... ARGS>
-void init_design(ARGS... args) {
-    __designs__().init(std::forward<ARGS>(args)...);
 }
 
 void init_design_copy(const Design& d) {

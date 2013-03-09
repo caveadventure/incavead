@@ -15,10 +15,12 @@
 #include "terrain.h"
 #include "designs.h"
 #include "species.h"
+#include "vaults.h"
 
 #include "terrain_bank.h"
 #include "designs_bank.h"
 #include "species_bank.h"
+#include "vaults_bank.h"
 
 #include "levelskins.h"
 
@@ -73,6 +75,8 @@ void init_statics() {
     configparser::parse_config("designs.cfg");
 
     configparser::parse_config("terrain.cfg");
+
+    configparser::parse_config("vaults.cfg");
 
     configparser::parse_config("celauto.cfg");
 
@@ -151,6 +155,82 @@ struct Game {
         std::cout << "Writing OK" << std::endl;
     }
 
+    void generate_vault(const Vault& vault, mainloop::GameState& state) {
+
+        grid::pt xy;
+
+        for (unsigned int i = 0; i < 10; ++i) {
+
+            switch (vault.placement) {
+            case Vault::placement_t::floor:
+                if (!state.grid.one_of_floor(state.rng, xy)) return;
+                break;
+            case Vault::placement_t::water:
+                if (!state.grid.one_of_lake(state.rng, xy)) return;
+                break;
+            case Vault::placement_t::corner:
+                if (!state.grid.one_of_corner(state.rng, xy)) return;
+                break;
+            }
+
+            std::cout << "VAULT XXX " << vault.tag << " " << xy.first << " " << xy.second 
+                      << " " << vault.w << " " << vault.h 
+                      << " " << state.grid.w << " " << state.grid.h << std::endl;
+            
+            if (xy.first  >= state.grid.w - vault.w ||
+                xy.second >= state.grid.h - vault.h)
+                continue;
+
+            if (i >= 9) return;
+
+            break;
+        }
+
+        for (unsigned int y = 0; y < vault.h; ++y) {
+             for (unsigned int x = 0; x < vault.w; ++x) {
+
+                 const std::string& line = vault.pic[y];
+                 if (x >= line.size()) 
+                     continue;
+
+                 unsigned int c = line[x];
+                 auto bi = vault.brushes.find(c);
+
+                 if (bi == vault.brushes.end()) {
+                     throw std::runtime_error("Invalid brush char for " + vault.tag + ": '" + 
+                                              std::string(1, c) + "'");
+                 }
+
+                 const Vault::brush& b = bi->second;
+
+                 unsigned int xi = xy.first + x;
+                 unsigned int yi = xy.second + y;
+
+                 std::cout << "VAULT " << vault.tag << " " << xi << " " << yi << std::endl;
+
+                 if (!b.is_blank) {
+                     state.grid.set_walk(state.neigh, xi, yi, b.is_walk);
+                     state.grid.set_water(state.neigh, xi, yi, b.is_water);
+                 }
+
+                 if (b.terrain.size() > 0) {
+                     state.features.set(xi, yi, b.terrain, state.render);
+                 }
+
+                 if (b.design.size() > 0) {
+                     state.items.place(xi, yi, 
+                                       state.items.make_item(b.design, items::pt(xi, yi), state.rng), 
+                                       state.render);
+                 }
+
+                 if (b.species.size() > 0) {
+                     state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts,
+                                           state.render, xi, yi, b.species);
+                 }
+             }
+        }
+    }
+
     void generate(mainloop::GameState& state) {
 
         bm _zz("level generation");
@@ -180,11 +260,25 @@ struct Game {
             make_map(state, gridseed, cached_grid.str());
         }
 
-        grid::Map::genmaps_t maps(state.grid);
-
         // Place the player on the same starting point every time.
 
         state.rng.init(gridseed);
+
+        {
+            bm _gg("vault generation");
+
+            std::map<std::string, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
+
+            for (const auto vi : vc) {
+                const Vault& v = vaults().get(vi.first);
+
+                for (unsigned int ci = 0; ci < vi.second; ++ci) {
+                    generate_vault(v, state);
+                }
+            }
+        }
+
+        grid::Map::genmaps_t maps(state.grid);
 
         {
             bm _gg("feature generation");
@@ -515,7 +609,7 @@ struct Game {
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
-                if (!ca.is_walk) {
+                if (ca.make_walk) {
                     state.grid.set_walk(state.neigh, x, y, true);
                     state.render.invalidate(x, y);
                 }
@@ -792,7 +886,7 @@ struct Game {
     void rest(mainloop::GameState& state, size_t& ticks) {
 
         //REMOVEME
-        state.render.do_message(nlp::message("%d", state.grid.get_karma(p.px, p.py)));
+        state.render.do_message(nlp::message("%d %d", p.px, p.py));
 
         ++ticks;
     }

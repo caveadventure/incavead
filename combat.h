@@ -37,10 +37,6 @@ inline void roll_attack(rnd::Generator& rng,
     for (const auto& v : attacks) {
         double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
 
-        std::cout << "ROLL " << (int)v.type << " : " 
-                  << defenses.get(v.type) << "/" << dlevel 
-                  << " vs " << v.val << "/" << alevel << std::endl;
-
         if (v.type == damage::type_t::sleep) {
             dmg = damage_to_sleepturns(dmg);
 
@@ -131,8 +127,6 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else {
         
-        std::cout << "HIT: " << (int)v.type << " : " <<mon.health << " " << dmg << std::endl;
-
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
         totdamage += dmg;
         
@@ -148,7 +142,6 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
                    const Species& s) {
 
     if (attacks.empty()) {
-        std::cout << "OOPS1" << std::endl;
         return;
     }
 
@@ -156,7 +149,6 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
     roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
-        std::cout << "OOPS2" << std::endl;
         return;
     }
 
@@ -171,8 +163,6 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
 
         attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
-
-    std::cout << s.name << " " << mon.health - totdamage << std::endl;
 
     if (mon.health - totdamage < -3) {
 
@@ -191,8 +181,6 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         state.render.do_message("You can't attack without a weapon!", true);
         return false;
     }
-
-    std::cout << "player attacks" << std::endl;
 
     damage::attacks_t attack_res;
     roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
@@ -217,7 +205,6 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
 
-    std::cout << "karma " << s.karma << " " << totdamage << std::endl;
     p.karma.inc(s.karma * totdamage);
 
     if (totvamp > 0) {

@@ -9,18 +9,6 @@ struct SpeciesBank {
     std::map<std::string,Species> bank;
     counters::Counts counts;
 
-    template <typename... ARGS>
-    void init(const std::string& tag, unsigned int level, unsigned int count,
-              ARGS... args) {
-
-        if (bank.count(tag) != 0) {
-            throw std::runtime_error("Duplicate species tag: " + tag);
-        }
-
-        bank[tag] = Species(tag, level, count, std::forward<ARGS>(args)...);
-        counts.init(tag, level, count);
-    }
-
     void copy(const Species& s) {
 
         if (bank.count(s.tag) != 0) {
@@ -49,11 +37,6 @@ SpeciesBank& __species__() {
 
 const SpeciesBank& species() {
     return __species__();
-}
-
-template <typename... ARGS>
-void init_species(ARGS... args) {
-    __species__().init(std::forward<ARGS>(args)...);
 }
 
 void init_species_copy(const Species& s) {

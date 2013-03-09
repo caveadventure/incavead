@@ -18,12 +18,13 @@ struct CelAuto {
     std::string terrain;
 
     bool is_walk;
+    bool make_walk;
     double karma_scale;
     double karma_step;
 
     std::vector< std::pair<int,int> > seed;
 
-    CelAuto() : age(0), is_walk(false), karma_scale(1.0), karma_step(1.0) {}
+    CelAuto() : age(0), is_walk(false), make_walk(false), karma_scale(1.0), karma_step(1.0) {}
 
 };
 
@@ -171,8 +172,6 @@ struct CaMap {
     
         camap_t remove;
         camap_t insert;
-
-        std::cout << "CAMAP " << camap.size() << std::endl;
 
         for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
