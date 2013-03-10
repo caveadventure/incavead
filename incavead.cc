@@ -280,7 +280,7 @@ struct Game {
             make_map(state, gridseed, cached_grid.str());
         }
 
-        // Place the player on the same starting point every time.
+        // //
 
         for (const auto& xy : state.grid.cornermap) {
             if (state.grid.walkmap.count(xy) == 0)
@@ -350,15 +350,6 @@ struct Game {
 
         {
             bm _gg("feature generation");
-        
-            grid::pt xy;
-            if (!maps.one_of_lowlands(state.rng, xy))
-                throw std::runtime_error("Failed to generate grid");
-
-            p.px = xy.first;
-            p.py = xy.second;
-
-            maps.add_nogen_expand(state.neigh, p.px, p.py, 3);
 
             // Place some dungeon features on the same spots every time.
 
@@ -381,6 +372,19 @@ struct Game {
         // Place some random items.
 
         state.rng.init(::time(NULL));
+
+        {
+            bm _y("placing player");
+
+            grid::pt xy;
+            if (!maps.one_of_lowlands(state.rng, xy))
+                throw std::runtime_error("Failed to generate grid");
+
+            p.px = xy.first;
+            p.py = xy.second;
+
+            maps.add_nogen_expand(state.neigh, p.px, p.py, 3);
+        }
 
         {
             bm _y("item generation");
