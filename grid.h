@@ -670,7 +670,7 @@ struct Map {
             }
 
             for (const auto& v : neigh(xy)) {
-                if (watermap.count(v) != 0) {
+                if (watermap.count(v) != 0 && walkmap.count(v) != 0) {
                     shoremap.insert(xy);
                 }
 
