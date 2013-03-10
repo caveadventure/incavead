@@ -505,32 +505,28 @@ struct Map {
         }
     }
 
-    void _insert_walk(neighbors::Neighbors& neigh, const pt& xy) {
+    void _set_maps(neighbors::Neighbors& neigh) {
 
-        if (watermap.count(xy) == 0) {
+        for (const pt& xy : walkmap) {
 
-            floormap.insert(xy);
+            if (watermap.count(xy) == 0) {
+
+                floormap.insert(xy);
+
+                for (const auto& v : neigh(xy)) {
+                    if (watermap.count(v) != 0) {
+                        shoremap.insert(xy);
+                        break;
+                    }
+                }
+            }
 
             for (const auto& v : neigh(xy)) {
-                if (watermap.count(v) != 0) {
-                    shoremap.insert(xy);
+                if (walkmap.count(v) == 0) {
+                    cornermap.insert(xy);
                     break;
                 }
             }
-        }
-
-        for (const auto& v : neigh(xy)) {
-            if (walkmap.count(v) == 0) {
-                cornermap.insert(xy);
-                break;
-            }
-        }
-    }
-
-    void set_maps(neighbors::Neighbors& neigh) {
-
-        for (const pt& xy : walkmap) {
-            _insert_walk(neigh, xy);
         }
 
         for (const pt& xy : watermap) {
@@ -574,10 +570,46 @@ struct Map {
 
         flatten(neigh, nflatten, nunflow);
 
-        set_maps(neigh);
+        for (const auto& xy : lakemap) {
+            if (walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.1.1");
+
+            if (watermap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.1.2");
+        }
+
+        for (const auto& xy : shoremap) {
+            if (walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.1.3");
+        }
 
         //
         make_karma(rng);
+
+        set_maps(neigh);
+    }
+
+    void set_maps(neighbors::Neighbors& neigh) {
+
+        floormap.clear();
+        shoremap.clear();
+        cornermap.clear();
+        lakemap.clear();
+
+        _set_maps(neigh);
+
+        for (const auto& xy : lakemap) {
+            if (walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.2.1");
+
+            if (watermap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.2.2");
+        }
+
+        for (const auto& xy : shoremap) {
+            if (walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 0.2.3");
+        }
     }
 
 
@@ -618,61 +650,60 @@ struct Map {
     bool is_lowlands(unsigned int x, unsigned int y) const {
         return (lowlands.count(pt(x, y)) != 0);
     }
-    
-    void set_walk(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
-        pt tmp(x, y);
 
-        if (v) {
-            walkmap.insert(tmp);
-            _insert_walk(neigh, tmp);
+    void _set_maps_of(neighbors::Neighbors& neigh, const std::set<pt>& affected) {
 
-        } else {
-            walkmap.erase(tmp);
-            floormap.erase(tmp);
-            cornermap.erase(tmp);
-            shoremap.erase(tmp);
-            lowlands.erase(tmp);
+        for (const pt& xy : affected) {
 
-            for (const auto& v : neigh(tmp)) {
-                if (walkmap.count(v) != 0) {
-                    cornermap.insert(v);
+            floormap.erase(xy);
+            shoremap.erase(xy);
+            cornermap.erase(xy);
+            lakemap.erase(xy);
+
+            if (walkmap.count(xy) == 0) 
+                continue;
+
+            floormap.insert(xy);
+                
+            if (watermap.count(xy) != 0) {
+                lakemap.insert(xy);
+            }
+
+            for (const auto& v : neigh(xy)) {
+                if (watermap.count(v) != 0) {
+                    shoremap.insert(xy);
+                }
+
+                if (walkmap.count(v) == 0) {
+                    cornermap.insert(xy);
                 }
             }
         }
     }
 
-    void set_water(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool v) {
+    void set_walk_water(neighbors::Neighbors& neigh, unsigned int x, unsigned int y, bool walk, bool water) { 
+
         pt tmp(x, y);
 
-        if (v) {
+        if (walk) {
+            walkmap.insert(tmp);
+        } else {
+            walkmap.erase(tmp);
+        }
+
+        if (water) {
             watermap.insert(tmp);
-            floormap.erase(tmp);
-
-            if (walkmap.count(tmp) != 0) {
-                lakemap.insert(tmp);
-            }
-
-            for (const auto& v : neigh(tmp)) {
-                if (walkmap.count(v) != 0) {
-                    shoremap.insert(v);
-                }
-            }
-
         } else {
             watermap.erase(tmp);
-            lakemap.erase(tmp);
-
-            if (walkmap.count(tmp) != 0) {
-                floormap.insert(tmp);
-            }
-
-            for (const auto& v : neigh(tmp)) {
-                if (watermap.count(v) != 0) {
-                    shoremap.insert(tmp);
-                    break;
-                }
-            }
         }
+
+        std::set<pt> affected;
+
+        for (const auto& v : neigh(tmp)) {
+            affected.insert(v);
+        }
+
+        _set_maps_of(neigh, affected);
     }
 
     bool _one_of(rnd::Generator& rng, const std::unordered_set<pt>& s, pt& ret) {

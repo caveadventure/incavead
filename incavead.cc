@@ -136,17 +136,6 @@ struct Game {
         state.grid.generate(state.neigh, state.rng, nflatten, nunflow);
 
         std::cout << "Generating OK" << std::endl;
-
-        for (unsigned int x = 0; x < GRID_W; ++x) {
-            state.grid.set_walk(state.neigh, x, 0, false);
-            state.grid.set_walk(state.neigh, x, GRID_H-1, false);
-        }
-
-        for (unsigned int y = 1; y < GRID_H-1; ++y) {
-            state.grid.set_walk(state.neigh, 0, y, false);
-            state.grid.set_walk(state.neigh, GRID_W-1, y, false);
-        }
-
         std::cout << "Writing grid... " << cached_grid << std::endl;
 
         serialize::Sink sink(cached_grid);
@@ -155,7 +144,7 @@ struct Game {
         std::cout << "Writing OK" << std::endl;
     }
 
-    void generate_vault(const Vault& vault, mainloop::GameState& state) {
+    void generate_vault(const Vault& vault, mainloop::GameState& state, std::vector<summons_t>& summons) {
 
         grid::pt xy;
 
@@ -186,6 +175,18 @@ struct Game {
             break;
         }
 
+        std::set<grid::pt> affected;
+
+        for (int i = -1; i <= (int)vault.w; ++i) {
+            affected.insert(grid::pt(xy.first + i, xy.second - 1));
+            affected.insert(grid::pt(xy.first + i, xy.second + vault.h));
+        }
+
+        for (int i = 0; i < (int)vault.h; ++i) {
+            affected.insert(grid::pt(xy.first - 1, xy.second + i));
+            affected.insert(grid::pt(xy.first + vault.w, xy.second + i));
+        }
+
         for (unsigned int y = 0; y < vault.h; ++y) {
              for (unsigned int x = 0; x < vault.w; ++x) {
 
@@ -206,11 +207,25 @@ struct Game {
                  unsigned int xi = xy.first + x;
                  unsigned int yi = xy.second + y;
 
+                 affected.insert(grid::pt(xi, yi));
+
                  std::cout << "VAULT " << vault.tag << " " << xi << " " << yi << std::endl;
+                 std::cout << "brush " << c << " " << b.is_blank << " " << b.is_walk << " " << b.is_water 
+                           << " " << b.species << std::endl;
 
                  if (!b.is_blank) {
-                     state.grid.set_walk(state.neigh, xi, yi, b.is_walk);
-                     state.grid.set_water(state.neigh, xi, yi, b.is_water);
+
+                     if (b.is_walk) {
+                         state.grid.walkmap.insert(grid::pt(xi, yi));
+                     } else {
+                         state.grid.walkmap.erase(grid::pt(xi, yi));
+                     }
+
+                     if (b.is_water) {
+                         state.grid.watermap.insert(grid::pt(xi, yi));
+                     } else {
+                         state.grid.watermap.erase(grid::pt(xi, yi));
+                     }
                  }
 
                  if (b.terrain.size() > 0) {
@@ -224,11 +239,16 @@ struct Game {
                  }
 
                  if (b.species.size() > 0) {
-                     state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts,
-                                           state.render, xi, yi, b.species);
+                     if (!state.grid.is_walk(xi, yi))
+                         throw std::runtime_error("Invalid vault monster placement");
+
+                     summons.push_back(summons_t{xi, yi, b.species, ""});
                  }
              }
         }
+
+
+        state.grid._set_maps_of(state.neigh, affected);
     }
 
     void generate(mainloop::GameState& state) {
@@ -262,7 +282,27 @@ struct Game {
 
         // Place the player on the same starting point every time.
 
+        for (const auto& xy : state.grid.cornermap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 1.1");
+        }
+
+        for (const auto& xy : state.grid.lakemap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 1.2.1");
+
+            if (state.grid.watermap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 1.2.2");
+        }
+
+        for (const auto& xy : state.grid.shoremap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 1.3");
+        }
+
         state.rng.init(gridseed);
+
+        std::vector<summons_t> summons;
 
         {
             bm _gg("vault generation");
@@ -273,9 +313,37 @@ struct Game {
                 const Vault& v = vaults().get(vi.first);
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                    generate_vault(v, state);
+                    generate_vault(v, state, summons);
                 }
             }
+        }
+
+        for (const auto& xy : state.grid.cornermap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 2.1");
+        }
+
+        for (const auto& xy : state.grid.lakemap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 2.2.1");
+
+            if (state.grid.watermap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 2.2.2");
+        }
+
+        for (const auto& xy : state.grid.shoremap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 2.3");
+        }
+
+        for (const auto& xy : state.grid.floormap) {
+            if (state.grid.walkmap.count(xy) == 0)
+                throw std::runtime_error("Sanity error 2.4");
+        }
+
+        for (const auto& mv : state.monsters.mons) {
+            if (state.grid.walkmap.count(mv.first) == 0)
+                throw std::runtime_error("Sanity error 3");
         }
 
         grid::Map::genmaps_t maps(state.grid);
@@ -335,6 +403,12 @@ struct Game {
         {
             bm _z("monster generation");
 
+            for (const auto& s : summons) {
+                unsigned int X = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
+                                                       state.render, s.x, s.y, s.summontag);
+                std::cout << "Summoned " << X << " of " << s.summontag << std::endl;
+            }
+
             unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
 
             for (unsigned int i = 0; i < mongroups; ++i) {
@@ -344,6 +418,11 @@ struct Game {
                 state.monsters.generate(state.neigh, state.rng, state.grid, maps,
                                         state.species_counts, monlevel);
             }
+        }
+
+        for (const auto& mv : state.monsters.mons) {
+            if (state.grid.walkmap.count(mv.first) == 0)
+                throw std::runtime_error("Sanity error 4");
         }
     }
 
@@ -610,7 +689,7 @@ struct Game {
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 if (ca.make_walk) {
-                    state.grid.set_walk(state.neigh, x, y, true);
+                    state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
                     state.render.invalidate(x, y);
                 }
 
@@ -728,7 +807,7 @@ struct Game {
 
             if (height < -10) {
                 height = -10;
-                state.grid.set_walk(state.neigh, p.dig_x, p.dig_y, true);
+                state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, state.grid.is_water(p.dig_x, p.dig_y));
                 state.render.invalidate(p.dig_x, p.dig_y);
 
                 p.digging = false;
