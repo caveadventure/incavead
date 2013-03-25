@@ -1372,7 +1372,7 @@ struct Game {
 };
 
 
-void client_mainloop(int client_fd) {
+void client_mainloop(int client_fd, bool singleplayer) {
 
     try {
 
@@ -1386,7 +1386,7 @@ void client_mainloop(int client_fd) {
         mainloop::Main<Game, screen_t> main(screen);
 
         std::cout << "Starting mainloop..." << std::endl;
-        main.mainloop("_ngsave.tmp", ::time(NULL));
+        main.mainloop(singleplayer, ::time(NULL));
 
     } catch (std::exception& e) {
         std::cout << "Caught error: " << e.what() << std::endl;
@@ -1402,14 +1402,28 @@ int main(int argc, char** argv) {
 
     init_statics();
 
-    while (1) {
+    bool singleplayer = false;
 
-        std::cout << "Accepting..." << std::endl;
+    if (argc > 1 && (std::string(argv[1]) == "-s" ||
+                     std::string(argv[1]) == "--singleplayer")) {
+        singleplayer = true;
+    }
+
+    if (singleplayer) {
         int client = server.accept();
+        client_mainloop(client, true);
 
-        std::cout << "Making thread..." << std::endl;
-        std::thread thr(client_mainloop, client);
-        thr.detach();
+    } else {
+
+        while (1) {
+
+            std::cout << "Accepting..." << std::endl;
+            int client = server.accept();
+
+            std::cout << "Making thread..." << std::endl;
+            std::thread thr(client_mainloop, client, false);
+            thr.detach();
+        }
     }
 
     return 0;

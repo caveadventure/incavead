@@ -1,6 +1,8 @@
 #ifndef __MAINLOOP_H
 #define __MAINLOOP_H
 
+#include <functional>
+
 #include "serialize.h"
 #include "neighbors.h"
 #include "celauto.h"
@@ -355,12 +357,51 @@ struct Main {
         }
     }
 
-    bool mainloop(const std::string& savefile,
-                  long seed) {
+    void enter_text(std::string& prompt, std::string& out, bool secret) {
+
+        while (1) {
+            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, prompt);
+
+            if (k.letter >= ' ' && k.letter <= '~') {
+                out += k.letter;
+                prompt += (secret ? '*' : k.letter);
+                continue;
+
+            } else if (k.letter == '\n') {
+                return;
+
+            } else {
+                continue;
+            }
+        }
+    }
+
+    bool mainloop(bool singleplayer, long seed) {
 
         screen_params_t sp;
 
         game.make_screen(sp);
+
+        // //
+
+        std::string name;
+        std::string pass;
+
+        std::string window = "\n\3Enter your name:\2 ";
+        enter_text(window, name, false);
+
+        window += "\n\3Enter a passcode:\2 ";
+        enter_text(window, pass, true);
+
+        std::string savefile;
+        {
+            size_t h = std::hash<std::string>()(name) ^ std::hash<std::string>()(pass);
+            std::ostringstream tmp;
+            tmp << h << ".sav";
+            savefile = tmp.str();
+        }
+
+        // //
 
         start(savefile, seed, sp);
 
