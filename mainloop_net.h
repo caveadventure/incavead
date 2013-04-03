@@ -367,6 +367,13 @@ struct Main {
                 prompt += (secret ? '*' : k.letter);
                 continue;
 
+            } else if (k.letter == '\x7F' || k.key == maudit::keycode::del) {
+
+                if (out.size() > 0) {
+                    out.resize(out.size() - 1);
+                    prompt.resize(prompt.size() - 1);
+                }
+
             } else if (k.letter == '\n') {
                 return;
 
@@ -390,8 +397,11 @@ struct Main {
         std::string window = "\n\3Enter your name:\2 ";
         enter_text(window, name, false);
 
-        window += "\n\3Enter a passcode:\2 ";
-        enter_text(window, pass, true);
+        if (!singleplayer) {
+
+            window += "\n\3Enter a passcode:\2 ";
+            enter_text(window, pass, true);
+        }
 
         std::string savefile;
         {
