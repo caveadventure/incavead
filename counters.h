@@ -19,7 +19,7 @@ struct Counts {
         }
     }
 
-    std::map<std::string, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1) {
+    std::map<std::string, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1, bool exclusive = false) {
 
         std::map<std::string, unsigned int> ret;
 
@@ -27,7 +27,7 @@ struct Counts {
 
             if (data.count(level) == 0) {
 
-                if (level == 0) {
+                if (level == 0 || exclusive) {
                     return ret;
 
                 } else {

@@ -125,6 +125,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         totdamage += dmg;
         totvamp += dmg;
 
+    } else if (v.type == damage::type_t::heavenly_fire) {
+
+        if (s.karma < 0) {
+            totdamage += dmg;
+        }
+
     } else {
         
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
@@ -307,6 +313,11 @@ inline void defend(Player& p,
             if (v.val > 0.5)
                 p.health.dec(6.0);
 
+        } else if (v.type == damage::type_t::heavenly_fire) {
+
+            if (p.karma.val < 0)
+                p.health.dec(v.val);
+
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
                    v.type == damage::type_t::psi ||
@@ -352,6 +363,11 @@ inline void defend(Player& p,
 
             } else if (v.type == damage::type_t::drain) {
                 state.render.do_message(nlp::message("%s is draining your vital forces!", s));
+
+            } else if (v.type == damage::type_t::heavenly_fire) {
+
+                if (p.karma.val < 0)
+                    state.render.do_message(nlp::message("%s blasts you with heavenly fire.", s));
 
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison) {
@@ -400,6 +416,11 @@ inline void defend(Player& p,
 
             if (v.val > 0.5)
                 state.render.do_message("You turn into a slab of brainless meat.", true);
+
+        } else if (v.type == damage::type_t::heavenly_fire) {
+
+            if (p.karma.val < 0)
+                do_hurt = true;
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
@@ -461,6 +482,11 @@ inline void defend(Player& p,
 
             if (v.val > 0.5)
                 state.render.do_message("You turn into a slab of brainless meat.", true);
+
+        } else if (v.type == damage::type_t::heavenly_fire) {
+
+            if (p.karma.val < 0)
+                do_hurt = true;
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||

@@ -330,9 +330,9 @@ struct Monsters {
 
     template <typename T>
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
-                  counters::Counts& counts, unsigned int level) {
+                  counters::Counts& counts, unsigned int level, bool exclusive) {
 
-        std::map<std::string, unsigned int> q = counts.take(rng, level, 1);
+        std::map<std::string, unsigned int> q = counts.take(rng, level, 1, exclusive);
         std::unordered_set<pt> placed;
 
         for (auto& i : q) {

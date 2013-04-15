@@ -189,18 +189,19 @@ void parse_config(const std::string& filename) {
         ####
 
         damage_type = 
-            'physical'     %{ dmgval.type = damage::type_t::physical; }     |
-            'sleep'        %{ dmgval.type = damage::type_t::sleep; }        |
-            'poison'       %{ dmgval.type = damage::type_t::poison; }       |
-            'turn_undead'  %{ dmgval.type = damage::type_t::turn_undead; }  |
-            'cancellation' %{ dmgval.type = damage::type_t::cancellation; } |
-            'scare_animal' %{ dmgval.type = damage::type_t::scare_animal; } |
-            'psi'          %{ dmgval.type = damage::type_t::psi; }          |
-            'eat_brain'    %{ dmgval.type = damage::type_t::eat_brain; }    |
-            'drain'        %{ dmgval.type = damage::type_t::drain; }        |
-            'make_meat'    %{ dmgval.type = damage::type_t::make_meat; }    |
-            'scare'        %{ dmgval.type = damage::type_t::scare; }        |
-            'vampiric'     %{ dmgval.type = damage::type_t::vampiric; }     ;
+            'physical'      %{ dmgval.type = damage::type_t::physical; }      |
+            'sleep'         %{ dmgval.type = damage::type_t::sleep; }         |
+            'poison'        %{ dmgval.type = damage::type_t::poison; }        |
+            'turn_undead'   %{ dmgval.type = damage::type_t::turn_undead; }   |
+            'cancellation'  %{ dmgval.type = damage::type_t::cancellation; }  |
+            'scare_animal'  %{ dmgval.type = damage::type_t::scare_animal; }  |
+            'psi'           %{ dmgval.type = damage::type_t::psi; }           |
+            'eat_brain'     %{ dmgval.type = damage::type_t::eat_brain; }     |
+            'drain'         %{ dmgval.type = damage::type_t::drain; }         |
+            'make_meat'     %{ dmgval.type = damage::type_t::make_meat; }     |
+            'scare'         %{ dmgval.type = damage::type_t::scare; }         |
+            'vampiric'      %{ dmgval.type = damage::type_t::vampiric; }      |
+            'heavenly_fire' %{ dmgval.type = damage::type_t::heavenly_fire; } ;
 
 
         damage_val = 
@@ -539,6 +540,7 @@ void parse_config(const std::string& filename) {
         levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8 = skin; };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
+        levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
 
         levelskin_one_data =
             (levelskin_deep_water | levelskin_shallow_water | levelskin_wall | 
@@ -546,6 +548,7 @@ void parse_config(const std::string& filename) {
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max |
+            levelskin_exclusive |
             '}' 
             ${ fret; })
             ;

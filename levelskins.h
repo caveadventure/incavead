@@ -21,7 +21,9 @@ struct Levelskin {
 
     unsigned int level;
 
-    Levelskin() : lightradius(8), lightradius_max(8), level(0) {}
+    bool exclusive;
+
+    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false) {}
 };
 
 struct Levelskins {

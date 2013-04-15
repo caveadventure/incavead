@@ -413,6 +413,8 @@ struct Game {
                 std::cout << "Summoned " << X << " of " << s.summontag << std::endl;
             }
 
+            const Levelskin& lev = levelskins().get(p.worldz);
+
             unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
 
             for (unsigned int i = 0; i < mongroups; ++i) {
@@ -420,7 +422,7 @@ struct Game {
                 unsigned int monlevel = p.worldz;
 
                 state.monsters.generate(state.neigh, state.rng, state.grid, maps,
-                                        state.species_counts, monlevel);
+                                        state.species_counts, monlevel, lev.exclusive);
             }
         }
 
