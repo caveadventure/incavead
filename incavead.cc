@@ -9,6 +9,8 @@
 
 #include "debug_benchmark.h"
 
+#include "rcode.h"
+
 ////
 
 #include "damage.h"
@@ -108,6 +110,8 @@ struct Game {
     static const unsigned int GRID_W = 256;
     static const unsigned int GRID_H = 256;
 
+    unsigned int game_seed;
+
     Game() {}
 
     void make_screen(mainloop::screen_params_t& sp) {
@@ -118,7 +122,15 @@ struct Game {
         sp.h2 = sp.h;
     }
 
-    void init() {}
+    void init(unsigned int code) {
+
+        if (code > 0) {
+            game_seed = code;
+
+        } else {
+            game_seed = (::time(NULL) & 0xFFFFFFFF);
+        }
+    }
 
     void make_map(mainloop::GameState& state,
                   uint64_t gridseed, const std::string& cached_grid) {
@@ -371,7 +383,7 @@ struct Game {
 
         // Place some random items.
 
-        state.rng.init(::time(NULL));
+        state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
 
         {
             bm _y("placing player");
@@ -776,7 +788,11 @@ struct Game {
         }
 
         if (p.health.val <= -3.0) {
+
+            std::string code = rcode::encode(game_seed);
+
             state.render.do_message("You are dead. (Press space to quit.)", true);
+            state.render.do_message(nlp::message("Replay code: %s", code), true);
             dead = true;
             done = true;
             return;
@@ -1388,7 +1404,7 @@ void client_mainloop(int client_fd, bool singleplayer) {
         mainloop::Main<Game, screen_t> main(screen);
 
         std::cout << "Starting mainloop..." << std::endl;
-        main.mainloop(singleplayer, ::time(NULL));
+        main.mainloop(singleplayer);
 
     } catch (std::exception& e) {
         std::cout << "Caught error: " << e.what() << std::endl;

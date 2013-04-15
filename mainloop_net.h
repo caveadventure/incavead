@@ -217,7 +217,7 @@ struct Main {
 
 
     bool start(const std::string& savefile,
-               long seed,
+               unsigned int seed,
                const screen_params_t& sp) {
 
         if (load(savefile)) {
@@ -247,7 +247,7 @@ struct Main {
 
         screen.io.write("Generating world...\r\n");
 
-        game.init();
+        game.init(seed);
         game.generate(state);
 
         return true;
@@ -346,8 +346,6 @@ struct Main {
     }
 
     void goodbye_message() {
-        //screen.io.write("\r\nPress any key.\r\n");
-        //state.render.wait_for_anykey(screen, view_w, view_h);
 
         while (1) {
             grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
@@ -383,7 +381,9 @@ struct Main {
         }
     }
 
-    bool mainloop(bool singleplayer, long seed) {
+
+
+    bool mainloop(bool singleplayer) {
 
         screen_params_t sp;
 
@@ -403,6 +403,19 @@ struct Main {
             enter_text(window, pass, true);
         }
 
+        std::string code;
+
+        {
+            window += "\n\3Do you want to enter a replay code? (Y/N)\2";
+            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
+
+            if (k.letter == 'Y' || k.letter == 'y') {
+                window += "\n\3Enter a replay code (case insensitive):\2 ";
+                enter_text(window, code, false);
+            }
+        }
+        
+
         std::string savefile;
         {
             size_t h = std::hash<std::string>()(name) ^ std::hash<std::string>()(pass);
@@ -412,6 +425,8 @@ struct Main {
         }
 
         // //
+
+        unsigned int seed = rcode::decode<unsigned int>(code) & 0xFFFFFFFF;
 
         start(savefile, seed, sp);
 
