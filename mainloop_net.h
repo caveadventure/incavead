@@ -199,6 +199,7 @@ struct Main {
     }
 
     void save(const std::string& filename) {
+        std::cout << "+++ " << filename << std::endl;
         bm _s("saving savefile");
 
         serialize::Sink s(filename);
@@ -217,11 +218,29 @@ struct Main {
 
 
     bool start(const std::string& savefile,
-               unsigned int seed,
+               std::string& window,
                const screen_params_t& sp) {
 
         if (load(savefile)) {
             return false;
+        }
+
+        std::string code;
+        unsigned int seed;
+
+        {
+            window += "\n\3Do you want to enter a replay code? (Y/N)\2";
+            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
+
+            if (k.letter == 'Y' || k.letter == 'y') {
+                window += "\n\3Enter a replay code (case insensitive):\2 ";
+                enter_text(window, code, false);
+
+                seed = rcode::decode<unsigned int>(code) & 0xFFFFFFFF;
+
+            } else {
+                seed = (::time(NULL) & 0xFFFFFFFF);
+            }
         }
 
         screen.io.write("\r\nInitializing game...\r\n");
@@ -401,34 +420,20 @@ struct Main {
 
             window += "\n\3Enter a passcode:\2 ";
             enter_text(window, pass, true);
-        }
-
-        std::string code;
-
-        {
-            window += "\n\3Do you want to enter a replay code? (Y/N)\2";
-            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
-
-            if (k.letter == 'Y' || k.letter == 'y') {
-                window += "\n\3Enter a replay code (case insensitive):\2 ";
-                enter_text(window, code, false);
-            }
-        }
-        
+        }        
 
         std::string savefile;
         {
-            size_t h = std::hash<std::string>()(name) ^ std::hash<std::string>()(pass);
+            size_t h = std::hash<std::string>()(name) + std::hash<std::string>()(pass);
             std::ostringstream tmp;
             tmp << h << ".sav";
+            std::cout << "!!!!! " << tmp.str() << " " << name << " " << pass << std::endl;
             savefile = tmp.str();
         }
 
         // //
 
-        unsigned int seed = rcode::decode<unsigned int>(code) & 0xFFFFFFFF;
-
-        start(savefile, seed, sp);
+        start(savefile, window, sp);
 
         size_t oldticks = 0;
 

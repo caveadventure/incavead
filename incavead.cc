@@ -124,12 +124,7 @@ struct Game {
 
     void init(unsigned int code) {
 
-        if (code > 0) {
-            game_seed = code;
-
-        } else {
-            game_seed = (::time(NULL) & 0xFFFFFFFF);
-        }
+        game_seed = code;
     }
 
     void make_map(mainloop::GameState& state,
@@ -562,11 +557,13 @@ struct Game {
 
     template <typename SINK>
     void save(SINK& s) {
+        serialize::write(s, game_seed);
         serialize::write(s, p);
     }
 
     template <typename SOURCE>
     void load(SOURCE& s) {
+        serialize::read(s, game_seed);
         serialize::read(s, p);
     }
 
