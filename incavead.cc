@@ -1186,6 +1186,13 @@ struct Game {
             ////
             // REMOVEME
 
+        case 'd':
+        {
+            state.species_counts = species().counts;
+            state.render.do_message("Wiped species counts.");
+            break;
+        }
+        break;
             /*
         case 'z':
             seed_celauto(state, p.px, p.py, "m");
