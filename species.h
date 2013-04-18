@@ -106,8 +106,9 @@ struct Species {
         bool animal;
         bool magic;
         bool plant;
+        bool robot;
 
-        flags_t() : undead(false), animal(false), magic(false), plant(false) {}
+        flags_t() : undead(false), animal(false), magic(false), plant(false), robot(false) {}
     };
 
     flags_t flags;

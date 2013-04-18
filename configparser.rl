@@ -293,6 +293,7 @@ void parse_config(const std::string& filename) {
         species_undead = 'undead' %{ spe.flags.undead = true; } ;
         species_magic  = 'magic'  %{ spe.flags.magic = true; } ;
         species_plant  = 'plant'  %{ spe.flags.plant = true; } ;
+        species_robot  = 'robot'  %{ spe.flags.robot = true; } ;
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
@@ -300,6 +301,7 @@ void parse_config(const std::string& filename) {
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon |
             species_animal | species_undead | species_magic | species_plant |
+            species_robot |
             species_karma | species_blast |
             '}'
             ${ fret; })

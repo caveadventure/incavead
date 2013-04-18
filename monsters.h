@@ -336,6 +336,8 @@ struct Monsters {
         std::unordered_set<pt> placed;
 
         for (auto& i : q) {
+
+            std::cout << "PLACING " << i.first << " " << i.second << std::endl;
             
             place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, i.first, i.second);
 

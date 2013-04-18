@@ -110,8 +110,8 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
         // HACK hardcode SUXX
         // FIXME
-        if (dmg > 0.5) {
-            if (s.karma < 0) {
+        if (dmg > 0.5 && !s.flags.robot) {
+            if (s.karma < 0 || s.flags.undead) {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meatx"; });
             } else {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meat"; });
@@ -122,8 +122,10 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else if (v.type == damage::type_t::vampiric) {
 
-        totdamage += dmg;
-        totvamp += dmg;
+        if (!s.flags.robot) {
+            totdamage += dmg;
+            totvamp += dmg;
+        }
 
     } else if (v.type == damage::type_t::heavenly_fire) {
 
@@ -228,7 +230,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     if (mon.health - totdamage < -3) {
 
-        if (s.flags.plant) {
+        if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You destroyed %s.", s));
         } else {
             state.render.do_message(nlp::message("You killed %s.", s));
@@ -243,7 +245,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     } else if (!quiet) {
 
-        if (s.flags.plant) {
+        if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You smash %s.", s));
 
         } else if (totdamage < 0.5) {
