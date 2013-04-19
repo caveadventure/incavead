@@ -55,22 +55,6 @@ enum class screens_t : unsigned int {
 
 void init_statics() {
 
-    /*
-
-      5 dinosaur/megafauna
-      6 dragon
-      7 south asian/oriental
-      8 demons
-      9 cthulhu
-      10 robots
-      11 cyberpunk
-      12 zombie apocalypse
-      13 humanoid aliens
-      14 insectoid aliens
-      15 computer programs
-      16 abstract
-    */
-    
 
     configparser::parse_config("species.cfg");
 
@@ -1187,21 +1171,11 @@ struct Game {
             // REMOVEME
 
         case 'd':
-        {
-            state.species_counts = species().counts;
-            state.render.do_message("Wiped species counts.");
-            break;
-        }
-        break;
-            /*
-        case 'z':
-            seed_celauto(state, p.px, p.py, "m");
+            p.state = Player::DEBUG;
             break;
 
-        case 'x':
-            seed_celauto(state, p.px, p.py, "w");
+        default:
             break;
-            */
         }
 
         switch (k.key) {
@@ -1235,6 +1209,34 @@ struct Game {
 
         if (redraw) {
             state.render.clear();
+        }
+    }
+
+
+    void handle_input_debug(mainloop::GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
+
+        switch (k.letter) {
+
+        case 's':
+            state.species_counts = species().counts;
+            state.render.do_message("Wiped species counts.");
+            break;
+
+        case 'd':
+            state.designs_counts = designs().counts;
+            state.render.do_message("Wiped designs counts.");
+            break;
+
+        case '>':
+            p.worldz++;
+            regen = true;
+            state.render.do_message("Descended.");
+            break;
+
+        case '+':
+            p.level++;
+            state.render.do_message("Level gained.");
+            break;
         }
     }
 
@@ -1334,6 +1336,11 @@ struct Game {
     void handle_input(mainloop::GameState& state,
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
+
+        if (p.state == Player::DEBUG) {
+            handle_input_debug(state, ticks, regen, k);
+            return;
+        }
 
         if (p.state & Player::LOOKING) {
 
