@@ -187,8 +187,11 @@ struct Main {
 
             serialize::read(s, state);
             serialize::read(s, ticks);
-            serialize::read(s, view_w);
-            serialize::read(s, view_h);
+
+            unsigned int tmp_w;
+            unsigned int tmp_h;
+            serialize::read(s, tmp_w);
+            serialize::read(s, tmp_h);
 
             game.load(s);
 
@@ -298,7 +301,7 @@ struct Main {
         if (ctx.do_hud) {
             game.draw_hud(state, ticks);
         }
-        
+
         state.render.draw(screen, 
                           ticks, 
                           ctx,
@@ -379,6 +382,8 @@ struct Main {
         while (1) {
             maudit::keypress k = state.render.draw_window(screen, view_w, view_h, prompt);
 
+            std::cout << "KEYPRESS: [" << k.letter << "]" << std::endl;
+
             if (k.letter >= ' ' && k.letter <= '~') {
                 out += k.letter;
                 prompt += (secret ? '*' : k.letter);
@@ -391,7 +396,7 @@ struct Main {
                     prompt.resize(prompt.size() - 1);
                 }
 
-            } else if (k.letter == '\n') {
+            } else if (k.letter == '\n' || k.letter == '\r') {
                 return;
 
             } else {

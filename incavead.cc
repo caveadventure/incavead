@@ -763,7 +763,7 @@ struct Game {
 
         if (p.food.val <= -3.0) {
             state.render.do_message("You desperately need something to eat!", true);
-            p.food.dec(0.1);
+            p.health.dec(0.05);
         }
 
         if (p.health.val <= -3.0) {
@@ -954,6 +954,7 @@ struct Game {
                 state.render.do_message(nlp::message("You are granted the power of %s.", sp.name), true);
 
             } else {
+                std::cout << "KARMA " << sp.karma_bound << " " << p.karma.val << std::endl;
                 state.render.do_message("You want nothing to do with this vile thing.");
             }
 
