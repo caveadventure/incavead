@@ -35,7 +35,7 @@ struct Species {
         corner
     };
 
-    std::string tag;
+    tag_t tag;
     std::string name;
     maudit::glyph skin;
     
@@ -59,19 +59,19 @@ struct Species {
     mean_deviation_t clumpsize;
 
     struct companion_t {
-        std::string tag;
+        tag_t tag;
         double chance;
 
-        companion_t(const std::string& t = "", double c = 0.0) : tag(t), chance(c) {}
+        companion_t(tag_t t = tag_t(), double c = 0.0) : tag(t), chance(c) {}
     };
 
     std::vector<companion_t> companion;
 
     struct drop_t {
-        std::string tag;
+        tag_t tag;
         double chance;
 
-        drop_t(const std::string& t = "", double c = 0.0) : tag(t), chance(c) {}
+        drop_t(tag_t t = tag_t(), double c = 0.0) : tag(t), chance(c) {}
     };
 
     std::vector<drop_t> drop;
@@ -81,7 +81,7 @@ struct Species {
 
     struct cloud_t {
         double chance;
-        std::string terraintag;
+        tag_t terraintag;
         unsigned int radius;
         unsigned int turns;
         std::string name;
@@ -93,7 +93,7 @@ struct Species {
 
     struct summon_t {
         double chance;
-        std::string speciestag;
+        tag_t speciestag;
         unsigned int turns;
 
         summon_t() : chance(0), turns(0) {}

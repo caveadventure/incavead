@@ -10,10 +10,14 @@
 #include "debug_benchmark.h"
 
 #include "rcode.h"
+#include "serialize.h"
+#include "common.h"
 
 ////
 
 #include "damage.h"
+
+#include "constants.h"
 #include "terrain.h"
 #include "designs.h"
 #include "species.h"
@@ -55,18 +59,21 @@ enum class screens_t : unsigned int {
 
 void init_statics() {
 
+    tag_mem_t tagmem;
 
-    configparser::parse_config("species.cfg");
+    configparser::parse_config("species.cfg", tagmem);
 
-    configparser::parse_config("designs.cfg");
+    configparser::parse_config("designs.cfg", tagmem);
 
-    configparser::parse_config("terrain.cfg");
+    configparser::parse_config("terrain.cfg", tagmem);
 
-    configparser::parse_config("vaults.cfg");
+    configparser::parse_config("vaults.cfg", tagmem);
 
-    configparser::parse_config("celauto.cfg");
+    configparser::parse_config("celauto.cfg", tagmem);
 
-    configparser::parse_config("levelskins.cfg");
+    configparser::parse_config("levelskins.cfg", tagmem);
+
+    configparser::parse_config("constants.cfg", tagmem);
 
     ////
 
@@ -152,10 +159,6 @@ struct Game {
                 if (!state.grid.one_of_corner(state.rng, xy)) return;
                 break;
             }
-
-            std::cout << "VAULT XXX " << vault.tag << " " << xy.first << " " << xy.second 
-                      << " " << vault.w << " " << vault.h 
-                      << " " << state.grid.w << " " << state.grid.h << std::endl;
             
             if (xy.first  >= state.grid.w - vault.w ||
                 xy.second >= state.grid.h - vault.h)
@@ -189,7 +192,7 @@ struct Game {
                  auto bi = vault.brushes.find(c);
 
                  if (bi == vault.brushes.end()) {
-                     throw std::runtime_error("Invalid brush char for " + vault.tag + ": '" + 
+                     throw std::runtime_error("Invalid brush char: '" + 
                                               std::string(1, c) + "'");
                  }
 
@@ -199,10 +202,6 @@ struct Game {
                  unsigned int yi = xy.second + y;
 
                  affected.insert(grid::pt(xi, yi));
-
-                 std::cout << "VAULT " << vault.tag << " " << xi << " " << yi << std::endl;
-                 std::cout << "brush " << c << " " << b.is_blank << " " << b.is_walk << " " << b.is_water 
-                           << " " << b.species << std::endl;
 
                  if (!b.is_blank) {
 
@@ -219,21 +218,21 @@ struct Game {
                      }
                  }
 
-                 if (b.terrain.size() > 0) {
+                 if (!b.terrain.null()) {
                      state.features.set(xi, yi, b.terrain, state.render);
                  }
 
-                 if (b.design.size() > 0) {
+                 if (!b.design.null()) {
                      state.items.place(xi, yi, 
                                        state.items.make_item(b.design, items::pt(xi, yi), state.rng), 
                                        state.render);
                  }
 
-                 if (b.species.size() > 0) {
+                 if (!b.species.null()) {
                      if (!state.grid.is_walk(xi, yi))
                          throw std::runtime_error("Invalid vault monster placement");
 
-                     summons.push_back(summons_t{xi, yi, b.species, ""});
+                     summons.push_back(summons_t{xi, yi, b.species, tag_t()});
                  }
              }
         }
@@ -298,7 +297,7 @@ struct Game {
         {
             bm _gg("vault generation");
 
-            std::map<std::string, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
+            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
 
             for (const auto vi : vc) {
                 const Vault& v = vaults().get(vi.first);
@@ -352,7 +351,7 @@ struct Game {
 
                 unsigned int takecount = ::fabs(state.rng.gauss(5.0, 1.0));
 
-                std::map<std::string, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+                std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
 
                 for (const auto& j : t) {
                     state.features.generate(state.rng, state.grid, maps, j.first, j.second);
@@ -399,9 +398,8 @@ struct Game {
             bm _z("monster generation");
 
             for (const auto& s : summons) {
-                unsigned int X = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                                       state.render, s.x, s.y, s.summontag);
-                std::cout << "Summoned " << X << " of " << s.summontag << std::endl;
+                state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
+                                      state.render, s.x, s.y, s.summontag);
             }
 
             const Levelskin& lev = levelskins().get(p.worldz);
@@ -974,7 +972,7 @@ struct Game {
     }
 
     void seed_celauto(mainloop::GameState& state, 
-                      unsigned int _x, unsigned int _y, const std::string& tag) {
+                      unsigned int _x, unsigned int _y, tag_t tag) {
 
         const CelAuto& ca = celautos().get(tag);
 

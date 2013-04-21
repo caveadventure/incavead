@@ -10,14 +10,14 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 
 struct Feature {
-    std::string tag;
+    tag_t tag;
     pt xy;
     unsigned int decay;
     unsigned int charges;
 
     Feature() : xy(0, 0), decay(0), charges(0) {}
 
-    Feature(const std::string& _tag, const pt& _xy, unsigned int d, unsigned int c) : 
+    Feature(tag_t _tag, const pt& _xy, unsigned int d, unsigned int c) : 
         tag(_tag), xy(_xy), decay(d), charges(c)
         {}
 };
@@ -65,7 +65,7 @@ struct Features {
         init();
     }
 
-    void x_set(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
+    void x_set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
 
         pt xy(x, y);
         if (feats.find(xy) == feats.end()) {
@@ -73,7 +73,7 @@ struct Features {
         }
     }
 
-    void x_unset(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
+    void x_unset(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
 
         pt xy(x, y);
         auto i = feats.find(xy);
@@ -84,7 +84,7 @@ struct Features {
         }
     }
 
-    void set(unsigned int x, unsigned int y, const std::string& tag, grender::Grid& render) {
+    void set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
         // Check that the tag exists.
         const Terrain& t = terrain().get(tag);
 
@@ -118,7 +118,7 @@ struct Features {
 
     template <typename T>
     void generate(rnd::Generator& rng, grid::Map& grid, T& ptsource,
-                  const std::string& tag, unsigned int n) {
+                  tag_t tag, unsigned int n) {
 
         // Check that the tag exists.
         const Terrain& ter = terrain().get(tag);

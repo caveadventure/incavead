@@ -10,7 +10,7 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 
 struct Monster {
-    std::string tag;
+    tag_t tag;
     pt xy;
 
     double health;
@@ -20,7 +20,7 @@ struct Monster {
 
     Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0), fear(0) {}
 
-    Monster(const std::string& _tag, const pt& _xy) : 
+    Monster(tag_t _tag, const pt& _xy) : 
         tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), fear(0)
         {}
 };
@@ -111,7 +111,7 @@ struct Monsters {
     
     template <typename T, typename FUNC, typename FUNCP>
     unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
-                             const std::string& tag, unsigned int n,
+                             tag_t tag, unsigned int n,
                              std::unordered_set<pt>& clump, 
                              std::unordered_set<pt>& placed,
                              FUNC f, FUNCP fp) {
@@ -153,7 +153,7 @@ struct Monsters {
 
     template <typename T>
     unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
-                             const std::string& tag, unsigned int n,
+                             tag_t tag, unsigned int n,
                              std::unordered_set<pt>& clump,
                              std::unordered_set<pt>& placed) {
 
@@ -234,7 +234,7 @@ struct Monsters {
     template <typename T>
     unsigned int place(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                        counters::Counts& counts, pt* start, std::unordered_set<pt>& placed,
-                       unsigned int level, const std::string& tag, unsigned int n) {
+                       unsigned int level, tag_t tag, unsigned int n) {
 
         const Species& s = species().get(tag);
 
@@ -294,7 +294,7 @@ struct Monsters {
     }
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
-                        grender::Grid& render, unsigned int x, unsigned int y, const std::string& tag) {
+                        grender::Grid& render, unsigned int x, unsigned int y, tag_t tag) {
 
 
         std::unordered_set<pt> n;
@@ -332,13 +332,11 @@ struct Monsters {
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                   counters::Counts& counts, unsigned int level, bool exclusive) {
 
-        std::map<std::string, unsigned int> q = counts.take(rng, level, 1, exclusive);
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, 1, exclusive);
         std::unordered_set<pt> placed;
 
         for (auto& i : q) {
 
-            std::cout << "PLACING " << i.first << " " << i.second << std::endl;
-            
             place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, i.first, i.second);
 
         }

@@ -7,7 +7,7 @@
 
 struct Design {
 
-    std::string tag;
+    tag_t tag;
     std::string name;
     maudit::glyph skin;
     

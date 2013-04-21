@@ -112,9 +112,9 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         // FIXME
         if (dmg > 0.5 && !s.flags.robot) {
             if (s.karma < 0 || s.flags.undead) {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meatx"; });
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
             } else {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = "meat"; });
+                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().meat; });
             }
 
             state.render.invalidate(mon.xy.first, mon.xy.second);

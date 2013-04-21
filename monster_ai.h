@@ -6,8 +6,8 @@
 struct summons_t {
     unsigned int x;
     unsigned int y;
-    std::string summontag;
-    std::string summonertag;
+    tag_t summontag;
+    tag_t summonertag;
 };
 
 
@@ -37,7 +37,7 @@ inline bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int 
 
 
 inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
-                       const std::string& terraintag) {
+                       tag_t terraintag) {
 
     state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
                              [&](unsigned int _x, unsigned int _y) {

@@ -6,24 +6,24 @@
 
 struct TerrainBank {
 
-    std::map<std::string,Terrain> bank;
+    std::map<tag_t,Terrain> bank;
     counters::Counts counts;
 
     void copy(const Terrain& t) {
 
         if (bank.count(t.tag) != 0) {
-            throw std::runtime_error("Duplicate terrain tag: " + t.tag);
+            throw std::runtime_error("Duplicate terrain tag: " + t.name);
         }
 
         bank[t.tag] = t;
         counts.init(t.tag, 0, t.count);
     }
 
-    const Terrain& get(const std::string& tag) const {
+    const Terrain& get(tag_t tag) const {
         auto i = bank.find(tag);
 
         if (i == bank.end()) {
-            throw std::runtime_error("Invalid terrain tag: " + tag);
+            throw std::runtime_error("Invalid terrain tag");
         }
 
         return i->second;

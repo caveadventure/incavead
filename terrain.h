@@ -10,7 +10,7 @@ struct Terrain {
         corner
     };
 
-    std::string tag;
+    tag_t tag;
     std::string name;
     maudit::glyph skin;
 
@@ -36,7 +36,7 @@ struct Terrain {
 
     struct spell_t {
         double karma_bound;
-        std::string ca_tag;
+        tag_t ca_tag;
         std::string name;
         double timeout;
 

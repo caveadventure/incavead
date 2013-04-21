@@ -10,13 +10,13 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 
 struct Item {
-    std::string tag;
+    tag_t tag;
     pt xy;
     unsigned int count;
 
     Item() : xy(0, 0), count(1) {}
 
-    Item(const std::string& _tag, const pt& _xy, unsigned int c = 1) : 
+    Item(tag_t _tag, const pt& _xy, unsigned int c = 1) : 
         tag(_tag), xy(_xy), count(c)
         {}
 };
@@ -62,7 +62,7 @@ struct Items {
         init();
     }
 
-    Item make_item(const std::string& tag, const pt& xy, rnd::Generator& rng) {
+    Item make_item(tag_t tag, const pt& xy, rnd::Generator& rng) {
 
         const Design& d = designs().get(tag);
 
@@ -96,7 +96,7 @@ struct Items {
 
         bm _z("items::generate");
 
-        std::map<std::string, unsigned int> q = counts.take(rng, level, n);
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, n);
 
         for (const auto& i : q) {
 

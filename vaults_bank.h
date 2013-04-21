@@ -6,24 +6,24 @@
 
 struct VaultsBank {
 
-    std::map<std::string,Vault> bank;
+    std::map<tag_t,Vault> bank;
     counters::Counts counts;
 
     void copy(const Vault& s) {
 
         if (bank.count(s.tag) != 0) {
-            throw std::runtime_error("Duplicate vaults tag: " + s.tag);
+            throw std::runtime_error("Duplicate vaults tag");
         }
 
         bank[s.tag] = s;
         counts.init(s.tag, s.level, s.count);
     }
 
-    const Vault& get(const std::string& tag) const {
+    const Vault& get(tag_t tag) const {
         auto i = bank.find(tag);
 
         if (i == bank.end()) {
-            throw std::runtime_error("Invalid vaults tag: " + tag);
+            throw std::runtime_error("Invalid vaults tag");
         }
 
         return i->second;

@@ -8,7 +8,7 @@
 
 struct Vault {
 
-    std::string tag;
+    tag_t tag;
     unsigned int level;
     unsigned int count;
 
@@ -16,9 +16,9 @@ struct Vault {
         bool is_blank;
         bool is_walk;
         bool is_water;
-        std::string terrain;
-        std::string design;
-        std::string species;
+        tag_t terrain;
+        tag_t design;
+        tag_t species;
 
         brush() : is_blank(false), is_walk(false), is_water(false) {}
     };

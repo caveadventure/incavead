@@ -204,7 +204,7 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
         
     if (p.inv.floor_to_inv(x, y, z, state.items, state.render, disc)) {
 
-        if (!disc.tag.empty()) {
+        if (!disc.tag.null()) {
 
             const Design& d = designs().get(disc.tag);
 

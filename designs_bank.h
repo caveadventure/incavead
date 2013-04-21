@@ -6,24 +6,24 @@
 
 struct DesignsBank {
 
-    std::map<std::string,Design> bank;
+    std::map<tag_t,Design> bank;
     counters::Counts counts;
 
     void copy(const Design& d) {
 
         if (bank.count(d.tag) != 0) {
-            throw std::runtime_error("Duplicate design tag: " + d.tag);
+            throw std::runtime_error("Duplicate design tag: " + d.name);
         }
 
         bank[d.tag] = d;
         counts.init(d.tag, d.level, d.count);
     }
 
-    const Design& get(const std::string& tag) const {
+    const Design& get(tag_t tag) const {
         auto i = bank.find(tag);
 
         if (i == bank.end()) {
-            throw std::runtime_error("Invalid designs tag: " + tag);
+            throw std::runtime_error("Invalid designs tag");
         }
 
         return i->second;

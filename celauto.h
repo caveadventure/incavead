@@ -9,13 +9,13 @@
 #include "serialize.h"
 
 struct CelAuto {
-    std::string tag;
+    tag_t tag;
 
     std::set<unsigned int> survive;
     std::set<unsigned int> born;
     unsigned int age;
 
-    std::string terrain;
+    tag_t terrain;
 
     bool is_walk;
     bool make_walk;
@@ -30,13 +30,13 @@ struct CelAuto {
 
 struct CelAutoBank {
 
-    std::map<std::string,CelAuto> bank;
+    std::map<tag_t,CelAuto> bank;
 
     template <typename... ARGS>
-    void init(const std::string& tag, ARGS... args) {
+    void init(tag_t tag, ARGS... args) {
 
         if (bank.count(tag) != 0) {
-            throw std::runtime_error("Duplicate celauto tag: " + tag);
+            throw std::runtime_error("Duplicate celauto tag");
         }
 
         bank[tag] = CelAuto(tag, std::forward<ARGS>(args)...);
@@ -45,17 +45,17 @@ struct CelAutoBank {
     void copy(const CelAuto& ca) {
 
         if (bank.count(ca.tag) != 0) {
-            throw std::runtime_error("Duplicate celauto tag: " + ca.tag);
+            throw std::runtime_error("Duplicate celauto tag");
         }
 
         bank[ca.tag] = ca;
     }
 
-    const CelAuto& get(const std::string& tag) const {
+    const CelAuto& get(tag_t tag) const {
         auto i = bank.find(tag);
 
         if (i == bank.end()) {
-            throw std::runtime_error("Invalid celauto tag: " + tag);
+            throw std::runtime_error("Invalid celauto tag");
         }
 
         return i->second;
@@ -91,12 +91,12 @@ namespace celauto {
 typedef std::pair<unsigned int, unsigned int> pt;
 
 struct ca_element {
-    std::string tag;
+    tag_t tag;
     unsigned int age;
     unsigned int age_add;
 
     ca_element() : age(0), age_add(0) {}
-    ca_element(const std::string& t, unsigned int a) : tag(t), age(a), age_add(0) {}
+    ca_element(tag_t t, unsigned int a) : tag(t), age(a), age_add(0) {}
 };
 
 
@@ -113,23 +113,8 @@ struct CaMap {
         init();
     }
 
-    /*
-    bool get_state(const pt& xy, std::string& tag, unsigned int& age) {
-        camap_t::iterator i = camap.find(xy);
-
-        if (i != camap.end()) {
-            tag = i->second.rul;
-            age = i->second.age;
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-    */
-
-    void seed(unsigned int x, unsigned int y, const std::string& r) {
-        camap[pt(x,y)] = ca_element(r, 0);
+    void seed(unsigned int x, unsigned int y, tag_t tag) {
+        camap[pt(x,y)] = ca_element(tag, 0);
     }
     
     template <typename FUNC>

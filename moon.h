@@ -7,7 +7,7 @@
 
 #include "serialize.h"
 
-namespace constants {
+namespace moon_constants {
 
 // JDN stands for Julian Day Number
 // Angles here are in degrees
@@ -65,7 +65,7 @@ double lunations_base = 2423436.0;
 double earth_radius = 6378.16;
 }
 
-namespace c = constants;
+namespace c = moon_constants;
 
 namespace moon {
 

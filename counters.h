@@ -10,7 +10,7 @@ namespace counters {
 
 struct Counts {
 
-    std::map< unsigned int, std::map<std::string, unsigned int> > data;
+    std::map< unsigned int, std::map<tag_t, unsigned int> > data;
 
     /*
     void print() {
@@ -24,16 +24,16 @@ struct Counts {
     }
     */
 
-    void init(const std::string& tag, unsigned int level, unsigned int maxc) {
+    void init(tag_t tag, unsigned int level, unsigned int maxc) {
 
         if (maxc > 0) {
             data[level][tag] = maxc;
         }
     }
 
-    std::map<std::string, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1, bool exclusive = false) {
+    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1, bool exclusive = false) {
 
-        std::map<std::string, unsigned int> ret;
+        std::map<tag_t, unsigned int> ret;
 
         while (level >= 0 && n > 0) {
 
@@ -66,7 +66,7 @@ struct Counts {
                 --ntag;
             }
 
-            std::string tag = i->first;
+            tag_t tag = i->first;
             unsigned int takecount = take(level, tag, n);
 
             n -= takecount;
@@ -76,7 +76,7 @@ struct Counts {
         return ret;
     }
 
-    unsigned int take(unsigned int level, const std::string& tag, unsigned int n = 1) {
+    unsigned int take(unsigned int level, tag_t tag, unsigned int n = 1) {
 
         auto levi = data.find(level);
 
@@ -109,7 +109,7 @@ struct Counts {
         }
     }
 
-    unsigned int take(const std::string& tag, unsigned int n = 1) {
+    unsigned int take(tag_t tag, unsigned int n = 1) {
 
         unsigned int ret = 0;
 
@@ -134,13 +134,13 @@ struct Counts {
         return ret;
     }
 
-    void replace(unsigned int level, const std::string& tag, unsigned int n = 1) {
+    void replace(unsigned int level, tag_t tag, unsigned int n = 1) {
         if (n > 0) {
             data[level][tag] += n;
         }
     }
 
-    bool has(unsigned int level, const std::string& tag) {
+    bool has(unsigned int level, tag_t tag) {
         auto i = data.find(level);
 
         if (i == data.end()) return false;

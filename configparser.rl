@@ -79,7 +79,7 @@ inline double toreal(const std::string& s) {
     return ::atof(s.c_str());
 }
 
-void parse_config(const std::string& filename) {
+void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     /** File reading cruft. **/
 
@@ -256,17 +256,17 @@ void parse_config(const std::string& filename) {
 
         species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
             ws1 real   %{ spe.companion.back().chance = toreal(state.match); }
-            ws1 string %{ spe.companion.back().tag = state.match; }
+            ws1 string %{ spe.companion.back().tag = tag_t(state.match, tagmem); }
             ;
 
         species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }
-            ws1 string %{ spe.drop.back().tag = state.match; }
+            ws1 string %{ spe.drop.back().tag = tag_t(state.match, tagmem); }
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
         species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }
             ws1 real   %{ spe.cast_cloud.back().chance = toreal(state.match); }
-            ws1 string %{ spe.cast_cloud.back().terraintag = state.match; }
+            ws1 string %{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.cast_cloud.back().radius = toint(state.match); }
             ws1 number %{ spe.cast_cloud.back().turns = toint(state.match); }
             ws1 string %{ spe.cast_cloud.back().name = state.match; }
@@ -274,7 +274,7 @@ void parse_config(const std::string& filename) {
 
         species_summon = 'summon' %{ spe.summon.push_back(Species::summon_t()); }
             ws1 real   %{ spe.summon.back().chance = toreal(state.match); }
-            ws1 string %{ spe.summon.back().speciestag = state.match; }
+            ws1 string %{ spe.summon.back().speciestag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
             ;
 
@@ -313,7 +313,7 @@ void parse_config(const std::string& filename) {
         species_level = number %{ spe.level = toint(state.match); }
         ;
 
-        species_tag   = tag    %{ spe.tag = state.match; }
+        species_tag   = tag    %{ spe.tag = tag_t(state.match, tagmem); }
         ;
 
         species = 
@@ -368,7 +368,7 @@ void parse_config(const std::string& filename) {
         design_level = number %{ des.level = toint(state.match); }
         ;
 
-        design_tag   = tag    %{ des.tag = state.match; }
+        design_tag   = tag    %{ des.tag = tag_t(state.match, tagmem); }
         ;
 
         design =
@@ -407,7 +407,7 @@ void parse_config(const std::string& filename) {
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
         terrain_grant_spell = 'grant_spell'
-            ws1 string %{ ter.grant_spell.ca_tag = state.match; } 
+            ws1 string %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
             ws1 real   %{ ter.grant_spell.karma_bound = toreal(state.match); }
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
@@ -424,7 +424,7 @@ void parse_config(const std::string& filename) {
         one_terrain := (ws terrain_one_data ws ';')+
             ;
 
-        terrain_tag = tag %{ ter.tag = state.match; }
+        terrain_tag = tag %{ ter.tag = tag_t(state.match, tagmem); }
         ;
 
         terrain = 
@@ -455,9 +455,9 @@ void parse_config(const std::string& filename) {
                  'water' ${ vbrush.is_walk = true; vbrush.is_water = true;   } |
                  'wall'  ${ vbrush.is_walk = false; vbrush.is_water = false; } |
                  'wwall' ${ vbrush.is_walk = false; vbrush.is_water = true;  })
-            ws1 string   %{ vbrush.terrain = state.match; }
-            ws1 string   %{ vbrush.design = state.match; }
-            ws1 string   %{ vbrush.species = state.match; }
+            ws1 string   %{ vbrush.terrain = tag_t(state.match, tagmem); }
+            ws1 string   %{ vbrush.design = tag_t(state.match, tagmem); }
+            ws1 string   %{ vbrush.species = tag_t(state.match, tagmem); }
             ws1 '\'' any ${ vau.brushes[fc] = vbrush; } '\''
             ;
 
@@ -475,7 +475,7 @@ void parse_config(const std::string& filename) {
         vault_level = number %{ vau.level = toint(state.match); }
         ;
 
-        vault_tag = tag %{ vau.tag = state.match; }
+        vault_tag = tag %{ vau.tag = tag_t(state.match, tagmem); }
         ;
 
         vault = 
@@ -493,7 +493,7 @@ void parse_config(const std::string& filename) {
 
         celauto_a = 'a' ws1 number %{ cel.age = toint(state.match); } ;
 
-        celauto_terrain = 'terrain' ws1 string %{ cel.terrain = state.match; } ;
+        celauto_terrain = 'terrain' ws1 string %{ cel.terrain = tag_t(state.match, tagmem); } ;
 
         celauto_is_walk   = 'is_walk'   %{ cel.is_walk = true; } ;
         celauto_make_walk = 'make_walk' %{ cel.make_walk = true; } ;
@@ -516,7 +516,7 @@ void parse_config(const std::string& filename) {
         one_celauto := (ws celauto_one_data ws ';')+
             ;
 
-        celauto_tag = tag %{ cel.tag = state.match; }
+        celauto_tag = tag %{ cel.tag = tag_t(state.match, tagmem); }
         ;
 
         celauto = 
@@ -570,8 +570,16 @@ void parse_config(const std::string& filename) {
 
         ####
 
+        constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
+        constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
 
-        entry = species | design | terrain | vault | celauto | levelskin ;
+        one_constant = constant_meat | constant_bad_meat;
+
+        constant = 'constant' ws1 one_constant ws1 ';';
+
+        ####
+
+        entry = species | design | terrain | vault | celauto | levelskin | constant;
             
       main := (ws entry)+ ws ;
         
