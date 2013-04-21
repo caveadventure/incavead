@@ -575,7 +575,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_meat | constant_bad_meat;
 
-        constant = 'constant' ws1 one_constant ws1 ';';
+        constant = 'constant' ws1 one_constant ws ';';
 
         ####
 
