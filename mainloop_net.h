@@ -235,6 +235,8 @@ struct Main {
             window += "\n\3Do you want to enter a replay code? (Y/N)\2";
             maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
 
+            std::cout << "KEYPRESS: [" << k.letter << "]" << std::endl;
+
             if (k.letter == 'Y' || k.letter == 'y') {
                 window += "\n\3Enter a replay code (case insensitive):\2 ";
                 enter_text(window, code, false);
@@ -396,7 +398,7 @@ struct Main {
                     prompt.resize(prompt.size() - 1);
                 }
 
-            } else if (k.letter == '\n' || k.letter == '\r') {
+            } else if (k.letter == '\n') {
                 return;
 
             } else {
@@ -418,7 +420,11 @@ struct Main {
         std::string name;
         std::string pass;
 
-        std::string window = "\n\3Enter your name:\2 ";
+        std::string window = 
+            "\n\1The name and passcode will identify your savefile.\n"
+            "If a name/passcode combination doesn't exist, then a new savefile will be created.\n"
+            "\n\3Enter your name:\2 ";
+
         enter_text(window, name, false);
 
         if (!singleplayer) {

@@ -18,7 +18,7 @@ struct stdin_stdout {
         if (n != 1) {
             return false;
         }
-        //::fflush(stdout);
+
         return true;
     }
 
@@ -27,10 +27,6 @@ struct stdin_stdout {
         if (n != 1) {
             return false;
         }
-
-        //FILE* f = fopen("/home/itkachev/diggr-roguelike-test/libmaudit/qqpp", "a");
-        //fprintf(f, "[%c %d]\n", c, (int)c);
-        //fclose(f);
 
         return true;
     }

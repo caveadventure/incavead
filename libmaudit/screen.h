@@ -342,6 +342,21 @@ struct screen {
             return true;
         }
 
+        // Handle CR/LF insane madness.
+
+        if (c == '\r') {
+
+            ok = io.read(c);
+            if (!ok) return false;
+
+            if (c == '\0') {
+                c = '\n';
+                
+            } else if (c == '\n') {
+                c = '\n';
+            }
+        }
+
         out.letter = c;
         return true;
     }
