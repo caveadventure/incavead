@@ -118,28 +118,41 @@ struct Game {
         game_seed = code;
     }
 
-    void make_map(mainloop::GameState& state,
-                  uint64_t gridseed, const std::string& cached_grid) {
+    static void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
+
+        std::ostringstream cached_grid;
+
+        cached_grid << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
+
+        gridseed = (((uint64_t)worldx) ^ 
+                    ((uint64_t)worldy << 16) ^
+                    ((uint64_t)worldz << 32)) + 1;
+
+        filename = cached_grid.str();
+    }
+
+    static void make_map(int worldx, int worldy, int worldz, mainloop::GameState& state,
+                         uint64_t gridseed, const std::string& cached_grid) {
 
         state.rng.init(gridseed);
 
-        unsigned int nflatten = std::max(0, 4 - 2*(p.worldx + p.worldy));
-        unsigned int nunflow = std::min(std::max(0, p.worldz), 8);
+        unsigned int nflatten = std::max(0, 4 - 2*(worldx + worldy));
+        unsigned int nunflow = std::min(std::max(0, worldz), 8);
 
         //nflatten = 0;
 
-        std::cout << "Generating... " << gridseed << " " 
+        std::cout << "  Generating... " << gridseed << " " 
                   << nflatten << " " << nunflow << std::endl;
 
         state.grid.generate(state.neigh, state.rng, nflatten, nunflow);
 
-        std::cout << "Generating OK" << std::endl;
-        std::cout << "Writing grid... " << cached_grid << std::endl;
+        std::cout << "  Generating OK" << std::endl;
+        std::cout << "  Writing grid... " << cached_grid << std::endl;
 
         serialize::Sink sink(cached_grid);
         serialize::write(sink, state.grid);
 
-        std::cout << "Writing OK" << std::endl;
+        std::cout << "  Writing OK" << std::endl;
     }
 
     void generate_vault(const Vault& vault, mainloop::GameState& state, std::vector<summons_t>& summons) {
@@ -247,27 +260,23 @@ struct Game {
 
         // Read or generate cached map.
 
-        std::ostringstream cached_grid;
-
-        cached_grid << "_level_" << p.worldx << "_" << p.worldy << "_" << p.worldz << ".dat";
-
-        uint64_t gridseed = (((uint64_t)p.worldx) ^ 
-                             ((uint64_t)p.worldy << 16) ^
-                             ((uint64_t)p.worldz << 32)) + 1;
+        uint64_t gridseed;
+        std::string filename;
+        make_mapname(p.worldx, p.worldy, p.worldz, gridseed, filename);
 
         try {
             bm _rg("reading grid");
 
-            std::cout << "Reading grid... " << cached_grid.str() << std::endl;
+            std::cout << "Reading grid... " << filename << std::endl;
 
-            serialize::Source source(cached_grid.str());
+            serialize::Source source(filename);
             serialize::read(source, state.grid);
 
             std::cout << "Reading grid OK" << std::endl;
 
         } catch (std::exception& e) {
 
-            make_map(state, gridseed, cached_grid.str());
+            make_map(p.worldx, p.worldy, p.worldz, state, gridseed, filename);
         }
 
         // //
@@ -1431,10 +1440,47 @@ int main(int argc, char** argv) {
     init_statics();
 
     bool singleplayer = false;
+    bool genmaps = false;
 
-    if (argc > 1 && (std::string(argv[1]) == "-s" ||
-                     std::string(argv[1]) == "--singleplayer")) {
-        singleplayer = true;
+    if (argc > 1) {
+
+        std::string arg(argv[1]);
+
+        if (arg == "-s" || arg == "--singleplayer") {
+
+            singleplayer = true;
+
+        } else if (arg == "-g" || arg == "--generate") {
+
+            genmaps = true;
+        }
+    }
+
+    if (genmaps) {
+        std::cout << "Generating a new set of maps. Please wait." << std::endl;
+
+        mainloop::GameState state;
+        state.neigh.init(Game::GRID_W, Game::GRID_H);
+        state.grid.init(Game::GRID_W, Game::GRID_H);
+
+        for (int worldz = 0; worldz <= 25; ++worldz) {
+            for (int worldx = -1; worldx <= 1; ++worldx) {
+                for (int worldy = -1; worldy <= 1; ++worldy) {
+
+                    uint64_t gridseed;
+                    std::string filename;
+
+                    bm _x("total");
+
+                    Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
+
+                    std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
+                    Game::make_map(worldx, worldy, worldz, state, gridseed, filename);
+                }
+            }
+        }
+
+        return 0;
     }
 
     if (singleplayer) {

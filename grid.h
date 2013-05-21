@@ -301,9 +301,6 @@ struct Map {
 
         double v0 = _get(xy);
 
-        //std::vector<double> l_w;
-        //std::vector<pt> l_pt;
-
         std::vector< std::pair<double, pt> > l;
         double vtotal = 0.0;
 
@@ -314,8 +311,6 @@ struct Map {
             if (out.count(xy_) == 0 && v <= v0) {
 
                 l.push_back(std::make_pair(v, xy_));
-                //l_w.push_back(v);
-                //l_pt.push_back(xy_);
                 vtotal += v;
             }
         }
@@ -331,23 +326,18 @@ struct Map {
 
     void makeflow(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
+                  std::discrete_distribution<size_t>& ddist,
                   std::unordered_set<pt>& gout, 
                   std::unordered_map<pt, int>& watr,
                   double n, double q) {
 
-        std::vector<double> grid_norm;
-
-        for (double v : grid) {
-            grid_norm.push_back((v + 10.0) * 15); //5);
-        }
-
-        std::discrete_distribution<size_t> ddist(grid_norm.begin(), grid_norm.end());
         size_t index = ddist(rng.gen);
         
         unsigned int y = index / w;
         unsigned int x = index % w;
 
         std::unordered_set<pt> out;
+
         flow(neigh, rng, pt(x, y), out, n);
 
         for (const pt& xy : out) {
@@ -372,8 +362,26 @@ struct Map {
         unsigned int N1 = grid.size() / 20; //100;
         double N2 = 50.0;
 
-        for (unsigned int i = 0; i < N1; i++) {
-            makeflow(neigh, rng, gout, watr, N2, 1);
+        {
+            bm _x("makeflows");
+            std::cout << N1 << std::endl;
+
+            std::discrete_distribution<size_t> ddist;
+
+            for (unsigned int i = 0; i < N1; i++) {
+
+                if (i % 500 == 0) {
+                    std::vector<double> grid_norm;
+
+                    for (double v : grid) {
+                        grid_norm.push_back((v + 10.0) * 15); //5);
+                    }
+
+                    ddist = std::discrete_distribution<size_t>(grid_norm.begin(), grid_norm.end());
+                }
+
+                makeflow(neigh, rng, ddist, gout, watr, N2, 1);
+            }
         }
 
         std::vector< std::pair<double,pt> > walk_r;
@@ -432,6 +440,38 @@ struct Map {
 
     void flatten_pass(neighbors::Neighbors& neigh) {
 
+        std::unordered_map<pt, size_t> nwalk;
+        std::unordered_map<pt, size_t> nwater;
+
+        for (const auto& xy : walkmap) {
+
+            bool iswater = watermap.count(xy);
+
+            for (const auto& ij : neigh(xy)) {
+
+                // For all solid squares neighboring a walkable square, count the number of neighbor walkable squares.
+                if (walkmap.count(ij) == 0)
+                    nwalk[ij]++;
+
+                // For all dry squares neighboring a walkable water square, count the number of neighbor walkable water squares.
+                if (iswater && watermap.count(ij) == 0)
+                    nwater[ij]++;
+            }
+        }
+
+        for (const auto& z : nwalk) {
+            if (z.second >= 5) {
+                walkmap.insert(z.first);
+            }
+        }
+
+        for (const auto& z : nwater) {
+            if (z.second >= 3) {
+                watermap.insert(z.first);
+            }
+        }
+
+        /*
         std::unordered_set<pt> towalk;
         std::unordered_set<pt> towater;
 
@@ -462,11 +502,10 @@ struct Map {
             }
         }
 
-        std::cout << "+ flatten... " << towalk.size() << " " << towater.size() << std::endl;
-
         walkmap.insert(towalk.begin(), towalk.end());
         walkmap.insert(towater.begin(), towater.end());
         watermap.insert(towater.begin(), towater.end());
+        */
     }
 
 
@@ -495,13 +534,20 @@ struct Map {
 
     void flatten(neighbors::Neighbors& neigh, unsigned int nflatten, unsigned int nunflow) {
 
+        {
+            bm _x1("flatten");
+
         for (unsigned int i = 0; i < nflatten; ++i) {
-            std::cout << "flatten..." << std::endl;
             flatten_pass(neigh);
         }
+        }
+
+        {
+            bm _x2("unflow");
 
         for (unsigned int i = 0; i < nunflow; ++i) {
             unflow(neigh);
+        }
         }
     }
 
@@ -559,16 +605,29 @@ struct Map {
                   rnd::Generator& rng,
                   unsigned int nflatten = 0, unsigned int nunflow = 0) {
 
-        makegrid(rng);
-        makerivers(neigh, rng);
-        
+        bm _x("generate");
+
+        clear();
+
+        {
+            bm _x0("makegrid");
+            makegrid(rng);
+        }
+
+        {
+            bm _x1("makerivers");
+            makerivers(neigh, rng);
+        }        
+
         // nflatten, nunflow:
         // 5, 0; 
         // 1, 6;
 
-        std::cout << "+ nflatten: " << nflatten << std::endl;
-
-        flatten(neigh, nflatten, nunflow);
+        { 
+            bm _x2("flatten");
+            std::cout << nflatten << " " << nunflow << std::endl;
+            flatten(neigh, nflatten, nunflow);
+        }
 
         for (const auto& xy : lakemap) {
             if (walkmap.count(xy) == 0)
@@ -584,9 +643,15 @@ struct Map {
         }
 
         //
-        make_karma(rng);
+        {
+            bm _x2("make_karma");
+            make_karma(rng);
+        }
 
-        set_maps(neigh);
+        {
+            bm _x3("set_maps");
+            set_maps(neigh);
+        }
     }
 
     void set_maps(neighbors::Neighbors& neigh) {
