@@ -228,6 +228,7 @@ private:
     }
 
 
+public:
     skin& _overlay_set(const pt& xy) {
 
         if (xy.first >= w || xy.second >= h) {
@@ -239,6 +240,8 @@ private:
         tmp.first = current_draw_n;
         return tmp.second;
     }
+
+private:
 
     const std::pair<size_t, skin>& _overlay_get(const pt& xy) {
         return overlay[xy.second*w+xy.first];

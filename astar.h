@@ -51,8 +51,10 @@ struct Path {
         if (ox == dx && oy == dy)
             return true;
 
-        if (ox >= w || dx >= w || oy >= h || dy >= h)
+        if (ox >= w || dx >= w || oy >= h || dy >= h) {
+            std::cout << "Fail 1" << std::endl;
             return false;
+        }
 
         grid.assign(w*h, 0.0);
         prev.assign(w*h, NONE);
@@ -64,8 +66,10 @@ struct Path {
 
         _set_cells(cutoff, walk_cost);
 
-        if (grid[dx + dy * w] == 0)
+        if (grid[dx + dy * w] == 0) {
+            std::cout << "Fail 2" << std::endl;
             return false;
+        }
 
         static int dirx[] = { -1,  0,  1, -1,  0,  1, -1,  0,  1 };
         static int diry[] = { -1, -1, -1,  0,  0,  0,  1,  1,  1 };
@@ -107,8 +111,10 @@ private:
 	while (grid[dx + dy*w] == 0 && heap.size() > 0) {
 
             stepstaken++;
-            if (stepstaken > cutoff)
+            if (stepstaken > cutoff) {
+                std::cout << "Cutoff!" << std::endl;
                 break;
+            }
 
             size_t offset = heap[0];
             std::pop_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
