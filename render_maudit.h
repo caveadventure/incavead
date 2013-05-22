@@ -11,14 +11,12 @@
 
 #include "libmaudit/maudit.h"
 
-extern "C" {
-#include "talgo.h"
-}
-
 //#include <iostream>
 //#include <sys/time.h>
 
 #include "fov.h"
+#include "bresenham.h"
+#include "astar.h"
 
 
 namespace serialize {
@@ -173,15 +171,13 @@ struct Grid {
     std::vector< std::pair<size_t, skin> > overlay;
 
     // transient, not saved in dump.
-    TCOD_map_t tcodmap;
-    TCOD_path_t tcodpath;
-
-    // transient, not saved in dump.
     std::vector<hud_line> hud_pips;
 
     // transient, not saved in dump.
     bool keylog_do_replay;
     size_t keylog_index;
+
+    astar::Path path;
 
 private:
 
@@ -415,15 +411,10 @@ public:
 
     Grid() : w(0), h(0), 
              current_draw_n(0),
-             tcodmap(TCOD_map_new(0, 0)), 
-             tcodpath(TCOD_path_new_using_map(tcodmap, 1.41)),
              keylog_do_replay(false), keylog_index(0)
         {}
 
-    ~Grid() {
-        TCOD_map_delete(tcodmap);
-        TCOD_path_delete(tcodpath);
-    }
+    ~Grid() {}
 
     void init(unsigned int _w, unsigned int _h) {
 
@@ -438,19 +429,13 @@ public:
 
             overlay.resize(w*h);
 
-            TCOD_map_delete(tcodmap);
-            tcodmap = TCOD_map_new(w, h);
-            TCOD_map_clear(tcodmap, false, false);
-
-            TCOD_path_delete(tcodpath);
-            tcodpath = TCOD_path_new_using_map(tcodmap, 1.41);
+            path.init(w, h);
         }
     }
 
     void clear() {
         grid.clear();
         grid.resize(w*h);
-        TCOD_map_clear(tcodmap, false, false);
     }
 
     bool is_valid(unsigned int x, unsigned int y) {
@@ -488,8 +473,6 @@ public:
         } else {
             g.is_viewblock &= ~(1<<z);
         }
-
-        TCOD_map_set_properties(tcodmap, x, y, (g.is_viewblock == 0), (g.is_walkblock == 0));
     }
 
     void set_is_walkblock(unsigned int x, unsigned int y, unsigned int z, bool t) {
@@ -500,8 +483,6 @@ public:
         } else {
             g.is_walkblock &= ~(1<<z);
         }
-
-        TCOD_map_set_properties(tcodmap, x, y, (g.is_viewblock == 0), (g.is_walkblock == 0));
     }
 
     bool is_walkblock(unsigned int x, unsigned int y) {
@@ -1028,7 +1009,7 @@ public:
                    bool do_draw, color_t fore, color_t back,
                    FUNC func) {
         
-        TCOD_line_init(x0, y0, x1, y1);
+        bresenham::Line line(x0, y0, x1, y1);
 
         std::vector<pt> pts;
 
@@ -1040,8 +1021,8 @@ public:
 
             pts.push_back(pt(x, y));
 
-            bool ret = TCOD_line_step((int*)&x, (int*)&y);
-            if (ret)
+            bool ret = line.step((int&)x, (int&)y);
+            if (!ret)
                 break;
         }
 
@@ -1102,6 +1083,27 @@ public:
                    unsigned int n, unsigned int cutoff, 
                    unsigned int& xo, unsigned int& yo) {
 
+
+        bool tmp = path.compute(x0, y0, x1, y1, 1.41, cutoff, 
+                                [&](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
+
+                                    if (is_walkblock(c, d)) return 0.0f;
+
+                                    if (is_viewblock(c, d)) return 3.0f;
+
+                                    return 1.0f;
+                                });
+
+        if (!tmp) return false;
+
+        for (unsigned int i = 0; i < n; ++i) {
+            if (!path.walk(xo, yo))
+                return false;
+        }
+
+        return true;
+
+        /*
         bool tmp = TCOD_path_compute(tcodpath, x0, y0, x1, y1, cutoff);
 
         if (!tmp) return false;
@@ -1111,6 +1113,7 @@ public:
                 return false;
         }
         return true;
+        */
     }
 
 };
@@ -1140,9 +1143,6 @@ struct reader<grender::Grid> {
             serialize::read(s, p.in_fov);
             serialize::read(s, p.is_viewblock);
             serialize::read(s, p.is_walkblock);
-
-            TCOD_map_set_properties(g.tcodmap, i % _w, i / _w, 
-                                    (p.is_viewblock == 0), (p.is_walkblock == 0));
         }
 
 	serialize::read(s, g.keylog);

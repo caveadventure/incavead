@@ -81,8 +81,6 @@ public:
         c = *buffi;
         ++buffi;
 
-        std::cout << "INPUT: [" << c << "]" << std::endl;
-
         return true;
     }
 };
