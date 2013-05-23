@@ -382,7 +382,6 @@ struct Game {
             unsigned int itemgroups = ::fabs(state.rng.gauss(300.0, 50.0));
 
             for (unsigned int i = 0; i < itemgroups; ++i) {
-                bm _yy("one item gen");
 
                 unsigned int itemcount = std::max(1.0, state.rng.gauss(1.5, 1.0));
                 unsigned int itemlevel = p.worldz;

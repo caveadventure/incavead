@@ -94,8 +94,6 @@ struct Items {
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                   counters::Counts& counts, unsigned int level, unsigned int n) {
 
-        bm _z("items::generate");
-
         std::map<tag_t, unsigned int> q = counts.take(rng, level, n);
 
         for (const auto& i : q) {
