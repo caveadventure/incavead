@@ -7,24 +7,25 @@ arch=('x86_64' 'i686')
 license=('GPLv3')
 depends=()
 optdepends=()
-makedepends=('git', 'cmake')
+makedepends=('git' 'cmake' 'ragel')
 conflicts=()
 replaces=()
 backup=()
-source=("http://www.server.tld/${pkgname}-${pkgver}.tar.gz")
-md5sums=('a0afa52d60cea6c0363a2a8cb39a4095'
-         'a0afa52d60cea6c0363a2a8cb39a4095')
+source=("git+https://code.google.com/p/incavead/")
+md5sums=('SKIP')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
+  cd "${srcdir}/incavead"
+  mkdir build
+  cd build
+  cmake ..
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  cd "${srcdir}/incavead"
+  mkdir -p "$pkgdir/opt/games/incavead/"
+  install -Dm644 *.cfg "$pkgdir/opt/games/incavead/"
+  install build/incavead "$pkgdir/opt/games/incavead/"
 }
 
-# vim:set ts=2 sw=2 et:

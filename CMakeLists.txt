@@ -24,12 +24,7 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(incavead incavead.cc
-                       talgo/bresenham_c.c
-                       talgo/fov_c.c 
-                       talgo/path_c.c 
-                       talgo/list_c.c
-)
+add_executable(incavead incavead.cc)
 
 add_custom_target(configparserh DEPENDS configparser.h)
 add_dependencies(incavead configparserh)
