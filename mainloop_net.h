@@ -202,7 +202,6 @@ struct Main {
     }
 
     void save(const std::string& filename) {
-        std::cout << "+++ " << filename << std::endl;
         bm _s("saving savefile");
 
         serialize::Sink s(filename);
@@ -234,8 +233,6 @@ struct Main {
         {
             window += "\n\3Do you want to enter a replay code? (Y/N)\2";
             maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
-
-            std::cout << "KEYPRESS: [" << k.letter << "]" << std::endl;
 
             if (k.letter == 'Y' || k.letter == 'y') {
                 window += "\n\3Enter a replay code (case insensitive):\2 ";
@@ -384,8 +381,6 @@ struct Main {
         while (1) {
             maudit::keypress k = state.render.draw_window(screen, view_w, view_h, prompt);
 
-            std::cout << "KEYPRESS: [" << k.letter << "]" << std::endl;
-
             if (k.letter >= ' ' && k.letter <= '~') {
                 out += k.letter;
                 prompt += (secret ? '*' : k.letter);
@@ -438,7 +433,6 @@ struct Main {
             size_t h = std::hash<std::string>()(name) + std::hash<std::string>()(pass);
             std::ostringstream tmp;
             tmp << h << ".sav";
-            std::cout << "!!!!! " << tmp.str() << " " << name << " " << pass << std::endl;
             savefile = tmp.str();
         }
 

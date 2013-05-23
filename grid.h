@@ -364,7 +364,6 @@ struct Map {
 
         {
             bm _x("makeflows");
-            std::cout << N1 << std::endl;
 
             std::discrete_distribution<size_t> ddist;
 

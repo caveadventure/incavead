@@ -139,20 +139,15 @@ struct Game {
         unsigned int nflatten = std::max(0, 4 - 2*(worldx + worldy));
         unsigned int nunflow = std::min(std::max(0, worldz), 8);
 
-        //nflatten = 0;
-
         std::cout << "  Generating... " << gridseed << " " 
                   << nflatten << " " << nunflow << std::endl;
 
         state.grid.generate(state.neigh, state.rng, nflatten, nunflow);
 
         std::cout << "  Generating OK" << std::endl;
-        std::cout << "  Writing grid... " << cached_grid << std::endl;
 
         serialize::Sink sink(cached_grid);
         serialize::write(sink, state.grid);
-
-        std::cout << "  Writing OK" << std::endl;
     }
 
     void generate_vault(const Vault& vault, mainloop::GameState& state, std::vector<summons_t>& summons) {
@@ -267,12 +262,8 @@ struct Game {
         try {
             bm _rg("reading grid");
 
-            std::cout << "Reading grid... " << filename << std::endl;
-
             serialize::Source source(filename);
             serialize::read(source, state.grid);
-
-            std::cout << "Reading grid OK" << std::endl;
 
         } catch (std::exception& e) {
 
@@ -655,8 +646,6 @@ struct Game {
                                        q,
                                        '+', 
                                        (ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
-
-            std::cout << "DIG " << q << std::endl;
         }
 
         //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
@@ -689,7 +678,6 @@ struct Game {
                         ret.insert(xy);
                 }
                 return ret;
-                std::cout << ret.size() << std::endl;
             },
 
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
@@ -795,8 +783,6 @@ struct Game {
 
         if (p.digging) {
 
-            std::cout << "digging .. " << p.dig_x << "," << p.dig_y << std::endl;
-
             if (state.grid.is_walk(p.dig_x, p.dig_y)) {
                 state.render.do_message("OOPS");
                 p.digging = false;
@@ -810,8 +796,6 @@ struct Game {
             double digspeed = p.inv.get_digging();
 
             double& height = state.grid._get(p.dig_x, p.dig_y);
-
-            std::cout << "DIG: " << height << " " << digspeed << std::endl;
 
             height -= digspeed;
 
@@ -930,15 +914,11 @@ struct Game {
             p.worldx += t.tunnel_x;
             p.worldy += t.tunnel_y;
 
-            std::cout << "^: " << t.tunnel_x << "," << t.tunnel_y << " " << p.worldx << "," << p.worldy << std::endl;
-
             if (p.worldx > 1) p.worldx = -1;
             else if (p.worldx < -1) p.worldx = 1;
 
             if (p.worldy > 1) p.worldy = -1;
             else if (p.worldy < -1) p.worldy = 1;
-
-            std::cout << "^: " << p.worldx << "," << p.worldy << std::endl;
 
             ++ticks;
             regen = true;
@@ -963,7 +943,6 @@ struct Game {
                 state.render.do_message(nlp::message("You are granted the power of %s.", sp.name), true);
 
             } else {
-                std::cout << "KARMA " << sp.karma_bound << " " << p.karma.val << std::endl;
                 state.render.do_message("You want nothing to do with this vile thing.");
             }
 
@@ -1307,19 +1286,13 @@ struct Game {
             break;
         }            
 
-        std::cout << "PD " << k.letter << " " << (int)k.key << " : " 
-                  << px << "," << py << " " << nx << "," << ny << std::endl;
-
         if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny))) {
 
-            std::cout << "Not linked" << std::endl;
             pstate = Player::MAIN;
             return;
         }
 
         if (pstate & Player::DIGGING) {
-
-            std::cout << "Dig ok" << std::endl;
 
             if (state.grid.is_walk(nx, ny)) {
                 state.render.do_message("There is nothing to dig there.");
@@ -1372,7 +1345,6 @@ struct Game {
 
         if (p.state & Player::PICK_DIRECTION) {
 
-            std::cout << "PICK DIRECTION" << std::endl;
             handle_input_pick_direction(p.state, p.px, p.py, ticks, state, k);
             return;
         }

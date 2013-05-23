@@ -15,8 +15,6 @@ struct tag_mem_t {
 
         unsigned int vh = std::hash<std::string>()(v); 
 
-        std::cout << "TAG " << v << " -> " << vh << std::endl;
-
         if (vh == 0) {
             throw std::runtime_error("Hash failed for string value: " + v);
         }

@@ -15,8 +15,6 @@ struct TerrainBank {
             throw std::runtime_error("Duplicate terrain tag: " + t.name);
         }
 
-        std::cout << "Terrain bank <- " << t.tag.v << " (" << t.name << ")" << std::endl;
-
         bank[t.tag] = t;
         counts.init(t.tag, 0, t.count);
     }
