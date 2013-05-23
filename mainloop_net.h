@@ -245,8 +245,6 @@ struct Main {
             }
         }
 
-        screen.io.write("\r\nInitializing game...\r\n");
-
         state.rng.init(seed);
         state.neigh.init(sp.w, sp.h);
         state.grid.init(sp.w, sp.h);
@@ -266,10 +264,8 @@ struct Main {
 
         ticks = 1;
 
-        screen.io.write("Generating world...\r\n");
-
         game.init(seed);
-        game.generate(state);
+        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
 
         return true;
     }
@@ -286,7 +282,7 @@ struct Main {
         state.items.clear();
         state.monsters.clear();
 
-        game.generate(state);
+        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
     }
 
     void draw() {
@@ -450,11 +446,11 @@ struct Main {
 
         while (1) {
 
-            bm _p("frame");
-
             bool need_input = false;
 
             do {
+                bm _p("frame");
+
                 bool do_draw = false;
                 bool time_passed = process(oldticks, done, dead, regen, need_input, do_draw);
 

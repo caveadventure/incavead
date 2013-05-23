@@ -131,8 +131,10 @@ struct Game {
         filename = cached_grid.str();
     }
 
+    template <typename FUNC>
     static void make_map(int worldx, int worldy, int worldz, mainloop::GameState& state,
-                         uint64_t gridseed, const std::string& cached_grid) {
+                         uint64_t gridseed, const std::string& cached_grid,
+                         FUNC progressbar) {
 
         state.rng.init(gridseed);
 
@@ -142,7 +144,7 @@ struct Game {
         std::cout << "  Generating... " << gridseed << " " 
                   << nflatten << " " << nunflow << std::endl;
 
-        state.grid.generate(state.neigh, state.rng, nflatten, nunflow);
+        state.grid.generate(state.neigh, state.rng, nflatten, nunflow, progressbar);
 
         std::cout << "  Generating OK" << std::endl;
 
@@ -249,7 +251,8 @@ struct Game {
         state.grid._set_maps_of(state.neigh, affected);
     }
 
-    void generate(mainloop::GameState& state) {
+    template <typename FUNC>
+    void generate(mainloop::GameState& state, FUNC progressbar) {
 
         bm _zz("level generation");
 
@@ -267,7 +270,7 @@ struct Game {
 
         } catch (std::exception& e) {
 
-            make_map(p.worldx, p.worldy, p.worldz, state, gridseed, filename);
+            make_map(p.worldx, p.worldy, p.worldz, state, gridseed, filename, progressbar);
         }
 
         // //
@@ -295,6 +298,7 @@ struct Game {
         std::vector<summons_t> summons;
 
         {
+            progressbar("Placing vaults...");
             bm _gg("vault generation");
 
             std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
@@ -339,6 +343,7 @@ struct Game {
         grid::Map::genmaps_t maps(state.grid);
 
         {
+            progressbar("Placing features...");
             bm _gg("feature generation");
 
             // Place some dungeon features on the same spots every time.
@@ -377,6 +382,7 @@ struct Game {
         }
 
         {
+            progressbar("Placing items...");
             bm _y("item generation");
 
             unsigned int itemgroups = ::fabs(state.rng.gauss(300.0, 50.0));
@@ -394,6 +400,7 @@ struct Game {
         // Place some random monsters.
 
         {
+            progressbar("Placing monsters...");
             bm _z("monster generation");
 
             for (const auto& s : summons) {
@@ -418,6 +425,8 @@ struct Game {
             if (state.grid.walkmap.count(mv.first) == 0)
                 throw std::runtime_error("Sanity error 4");
         }
+
+        progressbar("Done!");
     }
 
     void dispose(mainloop::GameState& state) {
@@ -1446,7 +1455,8 @@ int main(int argc, char** argv) {
                     Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
 
                     std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
-                    Game::make_map(worldx, worldy, worldz, state, gridseed, filename);
+                    Game::make_map(worldx, worldy, worldz, state, gridseed, filename,
+                                   [](const std::string& msg) { std::cout << msg << std::endl; });
                 }
             }
         }

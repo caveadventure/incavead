@@ -531,12 +531,14 @@ struct Map {
         }
     }
 
-    void flatten(neighbors::Neighbors& neigh, unsigned int nflatten, unsigned int nunflow) {
+    template <typename FUNC>
+    void flatten(neighbors::Neighbors& neigh, unsigned int nflatten, unsigned int nunflow, FUNC progressbar) {
 
         {
             bm _x1("flatten");
 
         for (unsigned int i = 0; i < nflatten; ++i) {
+            progressbar("Aging rock, " + std::to_string((int)((double)i/nflatten*100)) + "%...");
             flatten_pass(neigh);
         }
         }
@@ -545,6 +547,7 @@ struct Map {
             bm _x2("unflow");
 
         for (unsigned int i = 0; i < nunflow; ++i) {
+            progressbar("Flowing water, " + std::to_string((int)((double)i/nflatten*100)) + "%...");
             unflow(neigh);
         }
         }
@@ -600,20 +603,24 @@ struct Map {
         }
     }
 
+    template <typename FUNC>
     void generate(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
-                  unsigned int nflatten = 0, unsigned int nunflow = 0) {
+                  unsigned int nflatten, unsigned int nunflow,
+                  FUNC progressbar) {
 
         bm _x("generate");
 
         clear();
 
         {
+            progressbar("Placing shiprock...");
             bm _x0("makegrid");
             makegrid(rng);
         }
 
         {
+            progressbar("Placing water...");
             bm _x1("makerivers");
             makerivers(neigh, rng);
         }        
@@ -625,7 +632,7 @@ struct Map {
         { 
             bm _x2("flatten");
             std::cout << nflatten << " " << nunflow << std::endl;
-            flatten(neigh, nflatten, nunflow);
+            flatten(neigh, nflatten, nunflow, progressbar);
         }
 
         for (const auto& xy : lakemap) {
@@ -643,11 +650,13 @@ struct Map {
 
         //
         {
+            progressbar("Placing karma...");
             bm _x2("make_karma");
             make_karma(rng);
         }
 
         {
+            progressbar("Combining...");
             bm _x3("set_maps");
             set_maps(neigh);
         }
