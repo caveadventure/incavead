@@ -383,7 +383,7 @@ struct Map {
             }
         }
 
-        std::vector< std::pair<double,pt> > walk_r;
+        std::map< double, std::vector<pt> > walk_r;
 
         for (const pt& xy : gout) {
 
@@ -392,24 +392,23 @@ struct Map {
             if (h <= 0) {
                 walkmap.insert(xy);
 
-                walk_r.push_back(std::make_pair(h, xy));
+                walk_r[h].push_back(xy);
             }
         }
 
         ///
-
-        std::sort(walk_r.begin(), walk_r.end());
+        /// 0.1 quantile
 
         size_t walk_r_n = walk_r.size() / 10;
         if (walk_r_n == 0 && walk_r.size() >= 1) {
             walk_r_n = 1;
         }
 
-        walk_r.resize(walk_r_n);
+        auto walk_r_i = walk_r.begin();
 
-        for (const auto& xy : walk_r) {
-            // MEDIAN/QUANTILE!
-            lowlands.insert(xy.second);
+        while (walk_r_i != walk_r.end() && walk_r_n > 0) {
+            lowlands.insert(walk_r_i->second.begin(), walk_r_i->second.end());
+            --walk_r_n;
         }
 
         ///
