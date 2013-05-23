@@ -2,7 +2,6 @@
 #define __ASTAR_H
 
 #include <vector>
-#include <list>
 #include <algorithm>
 
 namespace astar {
@@ -25,7 +24,7 @@ struct Path {
 
     std::vector<size_t> heap;   // min_heap used in the algorithm. stores the offset in grid/heur (offset=x+y*w)
 
-    std::list< std::pair<unsigned int, unsigned int> > path;
+    std::vector< std::pair<unsigned int, unsigned int> > path;
 
     Path() {}
 
@@ -52,7 +51,6 @@ struct Path {
             return true;
 
         if (ox >= w || dx >= w || oy >= h || dy >= h) {
-            std::cout << "Fail 1" << std::endl;
             return false;
         }
 
@@ -67,7 +65,6 @@ struct Path {
         _set_cells(cutoff, walk_cost);
 
         if (grid[dx + dy * w] == 0) {
-            std::cout << "Fail 2" << std::endl;
             return false;
         }
 
@@ -95,9 +92,9 @@ struct Path {
         if (path.empty())
             return false;
 
-        rx = path.front().first;
-        ry = path.front().second;
-        path.pop_front();
+        rx = path.back().first;
+        ry = path.back().second;
+        path.pop_back();
         return true;
     }
 
@@ -112,12 +109,12 @@ private:
 
             stepstaken++;
             if (stepstaken > cutoff) {
-                std::cout << "Cutoff!" << std::endl;
                 break;
             }
 
             size_t offset = heap[0];
             std::pop_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
+            heap.pop_back();
 
             unsigned int x = offset % w;
             unsigned int y = offset / w;
@@ -146,30 +143,31 @@ private:
                         continue;
 
                     float covered = distance + walk_cost * (i>=4 ? diagonalCost : 1.0f);
-                    float previousCovered = grid[cx + cy*w];
+
+                    size_t coffset = cx + cy*w;
+
+                    float previousCovered = grid[coffset];
 
                     if (previousCovered == 0) {
 
-                        unsigned int offset = cx + cy*w;
                         float remaining = ::sqrt((cx-dx)*(cx-dx) + (cy-dy)*(cy-dy));
 
-                        grid[offset] = covered;
-                        heur[offset] = covered + remaining;
-                        prev[offset] = prevdirs[i];
+                        grid[coffset] = covered;
+                        heur[coffset] = covered + remaining;
+                        prev[coffset] = prevdirs[i];
 
-                        heap.push_back(offset);
+                        heap.push_back(coffset);
 
                         std::push_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
 
                     } else if (previousCovered > covered) {
 
-                        unsigned int offset = cx + cy*w;
-                        grid[offset] = covered;
-                        heur[offset] -= (previousCovered - covered);
-                        prev[offset] =  prevdirs[i];
-
+                        grid[coffset] = covered;
+                        heur[coffset] -= (previousCovered - covered);
+                        prev[coffset] =  prevdirs[i];
 
                         std::make_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
+
                     }
                 }
             }
