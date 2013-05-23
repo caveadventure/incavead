@@ -408,6 +408,7 @@ struct Map {
         walk_r.resize(walk_r_n);
 
         for (const auto& xy : walk_r) {
+            // MEDIAN/QUANTILE!
             lowlands.insert(xy.second);
         }
 
