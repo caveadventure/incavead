@@ -397,9 +397,9 @@ struct Map {
         }
 
         ///
-        /// 0.1 quantile
+        /// 0.25 quantile
 
-        size_t walk_r_n = walk_r.size() / 10;
+        size_t walk_r_n = walk_r.size() / 4;
         if (walk_r_n == 0 && walk_r.size() >= 1) {
             walk_r_n = 1;
         }
@@ -467,6 +467,7 @@ struct Map {
         for (const auto& z : nwater) {
             if (z.second >= 3) {
                 watermap.insert(z.first);
+                walkmap.insert(z.first);
             }
         }
 
