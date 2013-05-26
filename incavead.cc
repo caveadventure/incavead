@@ -1413,6 +1413,34 @@ void client_mainloop(int client_fd, bool singleplayer) {
 }
 
 
+void do_genmaps() {
+
+    std::cout << "Generating a new set of maps. Please wait." << std::endl;
+
+    mainloop::GameState state;
+    state.neigh.init(Game::GRID_W, Game::GRID_H);
+    state.grid.init(Game::GRID_W, Game::GRID_H);
+
+    for (int worldz = 0; worldz <= 25; ++worldz) {
+        for (int worldx = -1; worldx <= 1; ++worldx) {
+            for (int worldy = -1; worldy <= 1; ++worldy) {
+
+                uint64_t gridseed;
+                std::string filename;
+
+                bm _x("total");
+
+                Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
+
+                std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
+                Game::make_map(worldx, worldy, worldz, state, gridseed, filename,
+                               [](const std::string& msg) { std::cout << msg << std::endl; });
+            }
+        }
+    }
+}
+
+
 int main(int argc, char** argv) {
 
     maudit::server_socket server("0.0.0.0", 20020);
@@ -1437,30 +1465,7 @@ int main(int argc, char** argv) {
     }
 
     if (genmaps) {
-        std::cout << "Generating a new set of maps. Please wait." << std::endl;
-
-        mainloop::GameState state;
-        state.neigh.init(Game::GRID_W, Game::GRID_H);
-        state.grid.init(Game::GRID_W, Game::GRID_H);
-
-        for (int worldz = 0; worldz <= 25; ++worldz) {
-            for (int worldx = -1; worldx <= 1; ++worldx) {
-                for (int worldy = -1; worldy <= 1; ++worldy) {
-
-                    uint64_t gridseed;
-                    std::string filename;
-
-                    bm _x("total");
-
-                    Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
-
-                    std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
-                    Game::make_map(worldx, worldy, worldz, state, gridseed, filename,
-                                   [](const std::string& msg) { std::cout << msg << std::endl; });
-                }
-            }
-        }
-
+        do_genmaps();
         return 0;
     }
 

@@ -400,7 +400,7 @@ struct Main {
 
 
 
-    bool mainloop(bool singleplayer) {
+    std::string _mainloop_start(bool singleplayer) {
 
         screen_params_t sp;
 
@@ -435,6 +435,10 @@ struct Main {
         // //
 
         start(savefile, window, sp);
+        return savefile;
+    }
+
+    bool _mainloop_main(const std::string& savefile) {
 
         size_t oldticks = 0;
 
@@ -485,6 +489,20 @@ struct Main {
         }
     }
     
+    
+
+    bool mainloop(bool singleplayer) {
+
+        std::string savefile = _mainloop_start(singleplayer);
+
+        try {
+            return _mainloop_main(savefile);
+
+        } catch (...) {
+            save(savefile);
+            throw;
+        }
+    }
 
 };
 
