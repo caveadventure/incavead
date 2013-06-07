@@ -87,6 +87,10 @@ struct Monsters {
             if (!grid.is_corner(xy.first, xy.second)) return false;
             break;
 
+        case Species::move_t::shoreline:
+            if (!grid.is_shore(xy.first, xy.second)) return false;
+            break;
+
         default:
             if (!grid.is_walk(xy.first, xy.second)) return false;
             break;

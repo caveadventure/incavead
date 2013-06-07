@@ -19,7 +19,8 @@ enum class type_t : unsigned int {
     make_meat,
     scare,
     vampiric,
-    heavenly_fire
+    heavenly_fire,
+    electric
 };
 
 struct val_t {

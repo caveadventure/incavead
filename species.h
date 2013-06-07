@@ -32,7 +32,8 @@ struct Species {
         walk,
         floor,
         water,
-        corner
+        corner,
+        shoreline
     };
 
     tag_t tag;

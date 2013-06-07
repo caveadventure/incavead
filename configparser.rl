@@ -201,7 +201,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'make_meat'     %{ dmgval.type = damage::type_t::make_meat; }     |
             'scare'         %{ dmgval.type = damage::type_t::scare; }         |
             'vampiric'      %{ dmgval.type = damage::type_t::vampiric; }      |
-            'heavenly_fire' %{ dmgval.type = damage::type_t::heavenly_fire; } ;
+            'heavenly_fire' %{ dmgval.type = damage::type_t::heavenly_fire; } |
+            'electric'      %{ dmgval.type = damage::type_t::electric; }      ;
 
 
         damage_val = 
@@ -232,10 +233,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'random' %{ spe.idle_ai = Species::idle_ai_t::random; } ;
 
         move = 
-            'walk'   %{ spe.move = Species::move_t::walk; }    | 
-            'floor'  %{ spe.move = Species::move_t::floor; }  | 
-            'water'  %{ spe.move = Species::move_t::water; }  |
-            'corner' %{ spe.move = Species::move_t::corner; } ;
+            'walk'      %{ spe.move = Species::move_t::walk; }      | 
+            'floor'     %{ spe.move = Species::move_t::floor; }     | 
+            'water'     %{ spe.move = Species::move_t::water; }     |
+            'corner'    %{ spe.move = Species::move_t::corner; }    |
+            'shoreline' %{ spe.move = Species::move_t::shoreline; } ;
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;

@@ -325,7 +325,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::psi ||
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric) {
+                   v.type == damage::type_t::vampiric ||
+                   v.type == damage::type_t::electric) {
 
             p.health.dec(v.val);
         }
@@ -365,6 +366,9 @@ inline void defend(Player& p,
 
             } else if (v.type == damage::type_t::drain) {
                 state.render.do_message(nlp::message("%s is draining your vital forces!", s));
+
+            } else if (v.type == damage::type_t::electric) {
+                state.render.do_message(nlp::message("%s shocks you with lightning!", s));
 
             } else if (v.type == damage::type_t::heavenly_fire) {
 
@@ -427,7 +431,8 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric) {
+                   v.type == damage::type_t::vampiric ||
+                   v.type == damage::type_t::electric) {
 
             do_hurt = true;
         }
@@ -493,7 +498,8 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric) {
+                   v.type == damage::type_t::vampiric ||
+                   v.type == damage::type_t::electric) {
 
             do_hurt = true;
         }
