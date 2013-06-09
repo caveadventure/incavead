@@ -50,7 +50,9 @@ inline bool handle_input_inv_item(Player& p, mainloop::GameState& state,
         state.window_stack.clear();
         return true;
 
-    } else if (k.letter == 'f' && start_blast_item(p, p.inv.selected_slot, state, ticks)) {
+    } else if (k.letter == 'f' && 
+               (start_blast_item(p, p.inv.selected_slot, state, ticks) ||
+                start_cloud_item(p, p.inv.selected_slot, state, ticks))) {
 
         state.window_stack.clear();
         return true;

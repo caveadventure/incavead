@@ -25,6 +25,7 @@ struct inventory_t {
         make_slot(slot_t{"h",  " Helmet", 'h'});
         make_slot(slot_t{"l",  "  Light", 'l'});
         make_slot(slot_t{"m1", "Magical", 'z'});
+        make_slot(slot_t{"m2", "Magical", 'Z'});
         make_slot(slot_t{"p",  " Potion", 'p'});
         make_slot(slot_t{"r1", "   Ring", 'r'});
         make_slot(slot_t{"r2", "   Ring", 'R'});

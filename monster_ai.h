@@ -36,22 +36,6 @@ inline bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int 
 }
 
 
-inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
-                       tag_t terraintag) {
-
-    state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
-                             [&](unsigned int _x, unsigned int _y) {
-
-                                 features::Feature tmp;
-                                 if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
-
-                                 if (!state.grid.is_walk(_x, _y)) return;
-
-                                 state.features.set(_x, _y, terraintag, state.render);
-                             });
-}
-
-
 inline void monster_blast_process_point(Player& p, mainloop::GameState& state, const Species& s,
                                         unsigned int _x, unsigned int _y, const damage::attacks_t& attacks) {
 

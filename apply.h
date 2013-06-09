@@ -2,6 +2,24 @@
 #define __APPLY_H
 
 
+inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
+                       tag_t terraintag) {
+
+    std::cout << "Casting cloud" << std::endl;
+
+    state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
+                             [&](unsigned int _x, unsigned int _y) {
+
+                                 features::Feature tmp;
+                                 if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
+
+                                 if (!state.grid.is_walk(_x, _y)) return;
+
+                                 state.features.set(_x, _y, terraintag, state.render);
+                             });
+}
+
+
 inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state) {
 
     items::Item tmp;
@@ -82,17 +100,17 @@ inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, 
 
     const Design& d = designs().get(tmp.tag);
 
-    if (distance(p.px, p.py, lx, ly) > d.blastrange) {
+    if (distance(p.px, p.py, lx, ly) > d.blast.range) {
         return false;
     }
 
-    if (d.blastradius == 0) {
+    if (d.blast.radius == 0) {
 
         blast_process_point(p, state, d, lx, ly);
 
     } else {
 
-        state.render.draw_circle(lx, ly, d.blastradius, true, d.skin.fore, maudit::color::bright_black,
+        state.render.draw_circle(lx, ly, d.blast.radius, true, d.skin.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
                                      blast_process_point(p, state, d, _x, _y);
@@ -111,13 +129,13 @@ inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameS
 
     const Design& d = designs().get(tmp.tag);
 
-    if (d.blastradius == 0 && d.blastrange == 0) {
+    if (d.blast.radius == 0 && d.blast.range == 0) {
         return false;
     }
 
-    if (d.blastrange > 0) {
+    if (d.blast.range > 0) {
         
-        start_look_target(p.state, p.look, p.px, p.py, state, 0, d.blastrange);
+        start_look_target(p.state, p.look, p.px, p.py, state, 0, d.blast.range);
         p.state |= Player::BLASTING;
 
     } else {
@@ -127,6 +145,29 @@ inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameS
 
         ++ticks;
     }
+
+    return true;
+}
+
+
+inline bool start_cloud_item(Player& p, const std::string& slot, mainloop::GameState& state, size_t& ticks) {
+
+    std::cout << "Cast cloud " << std::endl;
+
+    items::Item tmp;
+    if (!p.inv.get(slot, tmp)) {
+        return false;
+    }
+
+    const Design& d = designs().get(tmp.tag);
+
+    if (d.cast_cloud.radius == 0) {
+        return false;
+    }
+
+    cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
+
+    ++ticks;
 
     return true;
 }

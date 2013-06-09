@@ -346,8 +346,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_blink      = 'blink' %{ des.flags.blink = true; };
 
         design_blast      = 'blast' 
-            ws1 number %{ des.blastradius = toint(state.match); }
-            ws1 number %{ des.blastrange = toint(state.match); }
+            ws1 number %{ des.blast.radius = toint(state.match); }
+            ws1 number %{ des.blast.range = toint(state.match); }
+            ;
+
+        design_cast_cloud = 'cast_cloud' 
+            ws1 string %{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
+            ws1 number %{ des.cast_cloud.radius = toint(state.match); }
             ;
 
         design_gencount = 'gencount' 
@@ -359,7 +364,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed |
-            design_lightradius | design_digging | design_blink |
+            design_lightradius | design_digging | design_blink | design_cast_cloud |
             '}'
             ${ fret; })
             ;

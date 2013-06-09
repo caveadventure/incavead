@@ -1249,6 +1249,19 @@ struct Game {
             p.level++;
             state.render.do_message("Level gained.");
             break;
+
+        case 'i':
+        {
+            std::map<tag_t, unsigned int> q = state.designs_counts.take(state.rng, p.worldz, 1);
+
+            if (q.size() == 1) {
+                state.items.place(p.px, p.py, 
+                                  state.items.make_item(q.begin()->first, items::pt(p.px, p.py), state.rng),
+                                  state.render);
+            }
+            break;
+        }
+
         }
 
         p.state &= ~(Player::DEBUG);

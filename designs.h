@@ -29,8 +29,14 @@ struct Design {
 
     unsigned int throwrange;
 
-    unsigned int blastradius;
-    unsigned int blastrange;
+    struct blast_t {
+        unsigned int radius;
+        unsigned int range;
+
+        blast_t() : radius(0), range(0) {}
+    };
+
+    blast_t blast;
 
     struct mean_deviation_t {
         double mean;
@@ -55,9 +61,17 @@ struct Design {
 
     useflags_t flags;
 
+    struct cloud_t {
+        tag_t terraintag;
+        unsigned int radius;
+
+        cloud_t() : radius(0) {}
+    };
+
+    cloud_t cast_cloud;
 
     Design() : level(0), count(0), stackrange(0), heal(0), feed(0), usable(false), throwrange(0),
-               blastradius(0), blastrange(0), gencount(1, 0), melee(false), lightradius(0), digging(0) {}
+               gencount(1, 0), melee(false), lightradius(0), digging(0) {}
     
 };
 
