@@ -5,17 +5,18 @@
 inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
-    const Terrain& t = terrain().get(terraintag);
-
-    bool do_force = t.cloud_force;
-
     state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
                              [&](unsigned int _x, unsigned int _y) {
 
-                                 if (!do_force) {
-                                     features::Feature tmp;
-                                     if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
+                                 features::Feature tmp;
+                                 if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) {
+
+                                     const Terrain& t = terrain().get(tmp.tag);
+
+                                     if (!t.air) 
+                                         return;
                                  }
+
 
                                  if (!state.grid.is_walk(_x, _y)) return;
 
