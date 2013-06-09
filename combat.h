@@ -129,8 +129,10 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else if (v.type == damage::type_t::heavenly_fire) {
 
-        if (s.karma < 0) {
-            totdamage += dmg;
+        if (s.karma > 0) {
+            double factor = (s.karma)/2;
+            factor = factor * factor;
+            totdamage += dmg * factor;
         }
 
     } else {
@@ -317,8 +319,12 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::heavenly_fire) {
 
-            if (p.karma.val < 0)
-                p.health.dec(v.val);
+            if (p.karma.val < 0) {
+                double factor = (-p.karma.val)/2;
+                factor = factor * factor;
+
+                p.health.dec(v.val * factor);
+            }
 
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
