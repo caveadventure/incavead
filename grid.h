@@ -15,19 +15,6 @@
 #include <iostream>
 
 
-namespace std {
-
-template <typename A, typename B>
-struct hash< pair<A,B> > {
-    size_t operator()(const pair<A,B>& p) const {
-        return hash<A>()(p.first) ^ hash<B>()(p.second);
-    }
-};
-
-}
-
-
-
 namespace grid {
 
 typedef std::pair<unsigned int, unsigned int> pt;

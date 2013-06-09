@@ -676,6 +676,9 @@ struct Game {
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
         state.camap.step(
+            state.neigh,
+
+            // Find new cells
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 std::set<neighbors::pt> ret;
@@ -688,6 +691,7 @@ struct Game {
                 return ret;
             },
 
+            // Cell on
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 if (ca.make_walk) {
@@ -699,6 +703,7 @@ struct Game {
                 state.grid.get_karma(x, y) += ca.karma_step;
             },
 
+            // Cell off
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 state.features.x_unset(x, y, ca.terrain, state.render);
@@ -981,7 +986,7 @@ struct Game {
             if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
                 continue;
 
-            state.camap.seed(x, y, tag);
+            state.camap.seed(state.neigh, celauto::pt(x, y), tag);
         }
     }
 

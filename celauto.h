@@ -105,61 +105,89 @@ struct CaMap {
     typedef std::map<pt, ca_element> camap_t;
     camap_t camap;
 
+    std::unordered_map< pt, std::map<tag_t, size_t> > count_of_n;
+
+    bool need_init_count;
+
+    CaMap() : need_init_count(true) {}
+
     void init() {
         camap.clear();
+        count_of_n.clear();
     }
 
     void clear() {
         init();
     }
 
-    void seed(unsigned int x, unsigned int y, tag_t tag) {
-        camap[pt(x,y)] = ca_element(tag, 0);
+    void seed(neighbors::Neighbors& neigh, const pt& xy, tag_t tag) {
+
+        camap_t::iterator i = camap.find(xy);
+
+        if (i != camap.end())
+            return;
+
+        camap[xy] = ca_element(tag, 0);
+
+        const CelAuto& rul = celautos().get(tag);
+
+        for (const auto& xy_ : neigh(xy)) {
+            count_of_n[xy_][rul.tag]++;
+        }
     }
     
     template <typename FUNC>
-    void clear(const pt& xy, FUNC funcoff) {
+    void clear(neighbors::Neighbors& neigh, const pt& xy, FUNC funcoff) {
+
         camap_t::iterator i = camap.find(xy);
 
-        if (i != camap.end()) {
-            funcoff(xy.first, xy.second, celautos().get(i->second.tag));
-            camap.erase(i);
-        }
-    } 
+        if (i == camap.end())
+            return;
 
-    template <typename FUNC>
-    unsigned int find_n(FUNC& neigh,
-                        const pt& xy, 
-                        const CelAuto& rul, camap_t* que = NULL) {
+        const CelAuto& rul = celautos().get(i->second.tag);
 
-        unsigned int n = 0;
+        for (const auto& xy_ : neigh(xy)) {
 
-        for (const auto& xy_ : neigh(xy.first, xy.second, rul)) {
-
-            camap_t::const_iterator i = camap.find(xy_);
-
-            if (i != camap.end()) {
-                if (i->second.tag == rul.tag && i->second.age == 0) {
-                    n++;
-                }
-
-            } else if (que != NULL) {
-                (*que)[xy_] = ca_element(rul.tag, 0);
+            size_t qq = count_of_n[xy_][rul.tag];
+            if (qq == 0) {
+                std::cout << "[] " << xy_.first << " " << xy_.second << std::endl;
+                throw std::runtime_error("Sanity error in camap::clear");
             }
+            
+            count_of_n[xy_][rul.tag]--;
         }
 
-        return n;
-    }
+        funcoff(xy.first, xy.second, rul);
+        camap.erase(i);
+    } 
 
 
     template <typename FUNC1, typename FUNC2, typename FUNC3>
-    inline void step(FUNC1 neigh, FUNC2 funcon, FUNC3 funcoff) {
+    inline void step(neighbors::Neighbors& neigh_plain, FUNC1 neigh, FUNC2 funcon, FUNC3 funcoff) {
 
         std::cout << "[[ " << camap.size() << std::endl;
         bm _zz("celauto::step()");
+
+        /// ///
+
+        if (need_init_count) {
+
+            for (const auto& i : camap) {
+                const pt& xy = i.first;
+                tag_t tag = i.second.tag;
+
+                for (const auto& xy_ : neigh_plain(xy)) {
+                    count_of_n[xy_][tag]++;
+                }
+            }
+
+            need_init_count = false;
+        }
+
+        /// ///
     
-        camap_t remove;
-        camap_t insert;
+        std::map<pt, tag_t> for_remove;
+        std::map<pt, tag_t> edges_for_new;
 
         {
             bm _z1("iter1");
@@ -180,52 +208,50 @@ struct CaMap {
                     age_add = 1;
 
                 } else {
-                    remove[xy] = i->second;
+                    for_remove[xy] = rul.tag;
                 }
 
             } else {
                 // Check if we survive
 
-                unsigned int n = find_n(neigh, xy, rul, &insert);
+                unsigned int n = count_of_n[xy][rul.tag];
 
                 if (rul.survive.count(n) == 0) {
                     age_add = 1;
+                }
+
+                for (const auto& xy_ : neigh(xy.first, xy.second, rul)) {
+                    if (camap.count(xy_) == 0) {
+                        edges_for_new[xy_] = rul.tag;
+                    }
                 }
             }
         }
         }
 
-        camap_t born;
-
         {
             bm _z2("iter2");
         
         // Check for newborn cells.
-        for (camap_t::iterator i = insert.begin(); i != insert.end(); ++i) {
+        for (const auto& i : edges_for_new) {
 
-            const pt& xy = i->first;
-            const CelAuto& rul = celautos().get(i->second.tag);
+            const pt& xy = i.first;
+            const CelAuto& rul = celautos().get(i.second);
 
-            unsigned int n = find_n(neigh, xy, rul);
+            unsigned int n = count_of_n[xy][rul.tag];
+
+            //std::cout << "++ " << xy.first << "," << xy.second << " " << n << std::endl;
 
             if (rul.born.count(n) != 0) {
-                born[xy] = ca_element(rul.tag, 0);
+
+                camap[xy] = ca_element(rul.tag, 0);
+
+                for (const auto& xy_ : neigh_plain(xy)) {
+                    count_of_n[xy_][rul.tag]++;
+                }
+
+                funcon(xy.first, xy.second, rul);
             }
-        }
-
-        }
-
-        {
-            bm _z3("iter3");
-
-        for (camap_t::iterator i = born.begin(); i != born.end(); ++i) {        
-
-            const pt& xy = i->first;
-            const CelAuto& rul = celautos().get(i->second.tag);
-
-            camap[xy] = i->second;
-
-            funcon(xy.first, xy.second, rul);
         }
 
         }
@@ -234,10 +260,10 @@ struct CaMap {
             bm _z4("iter4");
 
         // Leave remains of dead cells.
-        for (camap_t::iterator i = remove.begin(); i != remove.end(); ++i) {
+        for (const auto& i : for_remove) {
 
-            const pt& xy = i->first;
-            const CelAuto& rul = celautos().get(i->second.tag);
+            const pt& xy = i.first;
+            const CelAuto& rul = celautos().get(i.second);
 
             camap.erase(xy);
         
@@ -250,8 +276,26 @@ struct CaMap {
             bm _z5("iter5");
 
 	for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
-	  i->second.age += i->second.age_add;
-	}
+
+            const pt& xy = i->first;
+            ca_element& cae = i->second;
+
+            if (cae.age == 0 && cae.age_add > 0) {
+
+                for (const auto& xy_ : neigh_plain(xy)) {
+
+                    size_t qq = count_of_n[xy_][cae.tag];
+                    if (qq == 0) {
+                        //std::cout << "[] " << xy_.first << " " << xy_.second << std::endl;
+                        throw std::runtime_error("Sanity error in camap");
+                    }
+
+                    count_of_n[xy_][cae.tag]--;
+                }
+            }
+
+            cae.age += cae.age_add;
+        }
         }
     }
 
@@ -279,6 +323,8 @@ struct reader<celauto::CaMap> {
 
             t.camap[key] = ca;
         }
+
+        t.need_init_count = true;
     }
 };
 
