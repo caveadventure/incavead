@@ -1228,11 +1228,26 @@ struct Game {
             state.render.do_message("Descended.");
             break;
 
+        case 't':
+        {
+            grid::pt xy;
+            if (state.grid.one_of_walk(state.rng, xy)) {
+
+                state.render.invalidate(p.px, p.py);
+                p.px = xy.first;
+                p.py = xy.second;
+                state.render.invalidate(p.px, p.py);
+            }
+            break;
+        }
+
         case '+':
             p.level++;
             state.render.do_message("Level gained.");
             break;
         }
+
+        p.state &= ~(Player::DEBUG);
     }
 
 

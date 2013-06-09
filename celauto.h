@@ -154,9 +154,15 @@ struct CaMap {
 
     template <typename FUNC1, typename FUNC2, typename FUNC3>
     inline void step(FUNC1 neigh, FUNC2 funcon, FUNC3 funcoff) {
+
+        std::cout << "[[ " << camap.size() << std::endl;
+        bm _zz("celauto::step()");
     
         camap_t remove;
         camap_t insert;
+
+        {
+            bm _z1("iter1");
 
         for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
@@ -187,8 +193,12 @@ struct CaMap {
                 }
             }
         }
+        }
 
         camap_t born;
+
+        {
+            bm _z2("iter2");
         
         // Check for newborn cells.
         for (camap_t::iterator i = insert.begin(); i != insert.end(); ++i) {
@@ -203,6 +213,11 @@ struct CaMap {
             }
         }
 
+        }
+
+        {
+            bm _z3("iter3");
+
         for (camap_t::iterator i = born.begin(); i != born.end(); ++i) {        
 
             const pt& xy = i->first;
@@ -212,6 +227,11 @@ struct CaMap {
 
             funcon(xy.first, xy.second, rul);
         }
+
+        }
+
+        {
+            bm _z4("iter4");
 
         // Leave remains of dead cells.
         for (camap_t::iterator i = remove.begin(); i != remove.end(); ++i) {
@@ -224,9 +244,15 @@ struct CaMap {
             funcoff(xy.first, xy.second, rul);
         }
 
+        }
+
+        {
+            bm _z5("iter5");
+
 	for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 	  i->second.age += i->second.age_add;
 	}
+        }
     }
 
 };

@@ -548,7 +548,7 @@ struct Map {
             bm _x2("unflow");
 
         for (unsigned int i = 0; i < nunflow; ++i) {
-            progressbar("Flowing water, " + std::to_string((int)((double)i/nflatten*100)) + "%...");
+            progressbar("Flowing water, " + std::to_string((int)((double)i/nunflow*100)) + "%...");
             unflow(neigh);
         }
         }
