@@ -1158,8 +1158,12 @@ struct Game {
 
         case 'Z':
             p.inv.selected_slot = "m1";
-            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f')))
-                state.render.do_message("You have nothing in your 'magical' slot.");
+            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f'))) {
+
+                p.inv.selected_slot = "m2";
+                if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f')))
+                    state.render.do_message("You have nothing in your 'magical' slot.");
+            }
             break;
 
         case '?':

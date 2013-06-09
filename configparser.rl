@@ -411,6 +411,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         
         terrain_is_lit    = 'is_lit' %{ ter.is_lit = true; } ;
 
+        terrain_cloud_force = 'cloud_force' %{ ter.cloud_force = true; };
+
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
         terrain_grant_spell = 'grant_spell'
@@ -423,7 +425,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
-            terrain_charges | terrain_grant_spell | terrain_is_lit |
+            terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_cloud_force |
             '}' 
             ${ fret; })
             ;

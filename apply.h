@@ -5,13 +5,17 @@
 inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
-    std::cout << "Casting cloud" << std::endl;
+    const Terrain& t = terrain().get(terraintag);
+
+    bool do_force = t.cloud_force;
 
     state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
                              [&](unsigned int _x, unsigned int _y) {
 
-                                 features::Feature tmp;
-                                 if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
+                                 if (!do_force) {
+                                     features::Feature tmp;
+                                     if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) return;
+                                 }
 
                                  if (!state.grid.is_walk(_x, _y)) return;
 
@@ -152,8 +156,6 @@ inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameS
 
 inline bool start_cloud_item(Player& p, const std::string& slot, mainloop::GameState& state, size_t& ticks) {
 
-    std::cout << "Cast cloud " << std::endl;
-
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
         return false;
@@ -164,6 +166,9 @@ inline bool start_cloud_item(Player& p, const std::string& slot, mainloop::GameS
     if (d.cast_cloud.radius == 0) {
         return false;
     }
+
+    if (!p.inv.take(slot, tmp, 1))
+        return false;
 
     cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
 
