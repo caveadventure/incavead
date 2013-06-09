@@ -678,17 +678,16 @@ struct Game {
         state.camap.step(
             state.neigh,
 
-            // Find new cells
+            // Check for cells
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
-                std::set<neighbors::pt> ret;
-                for (const auto& xy : state.neigh(neighbors::pt(x,y))) {
+                if (state.grid.is_walk(x, y) == ca.is_walk && 
+                    state.grid.get_karma(x, y) * ca.karma_scale < 1.0) {
 
-                    if (state.grid.is_walk(xy.first, xy.second) == ca.is_walk && 
-                        state.grid.get_karma(xy.first, xy.second) * ca.karma_scale < 1.0)
-                        ret.insert(xy);
+                    return true;
                 }
-                return ret;
+
+                return false;
             },
 
             // Cell on
