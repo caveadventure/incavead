@@ -10,6 +10,7 @@ struct inventory_t {
 
     struct slot_t {
         std::string slot;
+        std::string label;
         std::string name;
         char letter;
     };
@@ -18,20 +19,10 @@ struct inventory_t {
     std::map<char, std::string> slot_keys;
 
     inventory_t() {
-        make_slot(slot_t{"a",  " Armour", 'a'});
-        make_slot(slot_t{"d",  "   Tool", 't'});
-        make_slot(slot_t{"e",  "Medical", 'm'});
-        make_slot(slot_t{"f",  "   Food", 'f'});
-        make_slot(slot_t{"h",  " Helmet", 'h'});
-        make_slot(slot_t{"l",  "  Light", 'l'});
-        make_slot(slot_t{"m1", "Magical", 'z'});
-        make_slot(slot_t{"m2", "Magical", 'Z'});
-        make_slot(slot_t{"p",  " Potion", 'p'});
-        make_slot(slot_t{"r1", "   Ring", 'r'});
-        make_slot(slot_t{"r2", "   Ring", 'R'});
-        make_slot(slot_t{"s",  " Shield", 's'});
-        make_slot(slot_t{"t",  "Missile", 'i'});
-        make_slot(slot_t{"w",  " Weapon", 'w'});
+
+        for (const auto& s : constants().slots) {
+            make_slot(slot_t{s.slot, s.label, s.name, s.letter});
+        }
     }
 
     void make_slot(const slot_t& s) {
@@ -153,25 +144,6 @@ struct inventory_t {
 
         return true;
     }
-
-    /*
-    template <typename T>
-    T get_inv_sum(T Design::* ptr) {
-        T ret{};
-
-        for (const auto& i : stuff) {
-            const Design& dp = designs().get(i.second.tag);
-
-            ret += (dp.*ptr) * i.second.count;
-        }
-
-        return ret;
-    }
-
-    double get_attack() {
-        return get_inv_sum(&Design::attack);
-    }
-    */
 
     void get_attack(damage::attacks_t& out) {
 

@@ -6,6 +6,17 @@ struct ConstantsBank {
     tag_t meat;
     tag_t bad_meat;
 
+    struct slot_t {
+        std::string slot;
+        std::string label;
+        std::string name;
+        char letter;
+
+        slot_t() : letter(0) {}
+    };
+
+    std::vector<slot_t> slots;
+
 };
 
 ConstantsBank& __constants__() {

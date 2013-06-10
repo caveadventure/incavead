@@ -581,7 +581,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
 
-        one_constant = constant_meat | constant_bad_meat;
+        constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
+            ws1 tag      %{ __constants__().slots.back().slot = state.match; }
+            ws1 '\'' any ${ __constants__().slots.back().letter = fc; } '\''
+            ws1 string   %{ __constants__().slots.back().label = state.match; }
+            ws1 string   %{ __constants__().slots.back().name = state.match; }
+            ;
+
+
+        one_constant = constant_meat | constant_bad_meat | constant_slot;
 
         constant = 'constant' ws1 one_constant ws ';';
 
