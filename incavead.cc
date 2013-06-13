@@ -138,13 +138,22 @@ struct Game {
 
         state.rng.init(gridseed);
 
-        unsigned int nflatten = std::max(0, 4 - 2*(worldx + worldy));
-        unsigned int nunflow = std::min(std::max(0, worldz), 8);
+        const Levelskin& lev = levelskins().get(worldz);
+
+        auto genparams = lev.genparams;
+
+        if (genparams.nflatten < 0) {
+            genparams.nflatten = std::max(0, 4 - 2*(worldx + worldy));
+        }
+
+        if (genparams.nunflow < 0) {
+            genparams.nunflow = std::min(std::max(0, worldz), 8);
+        }
 
         std::cout << "  Generating... " << gridseed << " " 
-                  << nflatten << " " << nunflow << std::endl;
+                  << genparams.nflatten << " " << genparams.nunflow << std::endl;
 
-        state.grid.generate(state.neigh, state.rng, nflatten, nunflow, progressbar);
+        state.grid.generate(state.neigh, state.rng, genparams, progressbar);
 
         std::cout << "  Generating OK" << std::endl;
 

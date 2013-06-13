@@ -552,6 +552,24 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
 
+        levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
+        levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
+        levelskin_flow_volume            = 'flow_volume'         ws1 real   %{ lev.genparams.flow_volume = toreal(state.match); };
+        levelskin_flow_erosion           = 'flow_erosion'        ws1 real   %{ lev.genparams.flow_erosion = toreal(state.match); };
+        levelskin_flow_renorm_freq       = 'flow_renorm_freq'    ws1 number %{ lev.genparams.flow_renorm_freq = toint(state.match); };
+        levelskin_flow_renorm_scale      = 'flow_renorm_scale'   ws1 real   %{ lev.genparams.flow_renorm_scale = toreal(state.match); }; 
+        levelskin_walk_threshold         = 'walk_threshold'      ws1 real   %{ lev.genparams.walk_threshold = toreal(state.match); };
+        levelskin_lowlands_quantile      = 'lowlands_quantile'   ws1 number %{ lev.genparams.lowlands_quantile = toint(state.match); };
+        levelskin_water_quantile_mean    = 'water_quantile_mean' ws1 real   %{ lev.genparams.water_quantile_mean = toreal(state.match); };
+        levelskin_water_quantile_dev     = 'water_quantile_dev'  ws1 real   %{ lev.genparams.water_quantile_dev = toreal(state.match); };
+        levelskin_flatten_walk_ng        = 'flatten_walk_ng'     ws1 number %{ lev.genparams.flatten_walk_ng = toint(state.match); };
+        levelskin_flatten_water_ng       = 'flatten_water_ng'    ws1 number %{ lev.genparams.flatten_water_ng = toint(state.match); };
+        levelskin_unflow_ng              = 'unflow_ng'           ws1 number %{ lev.genparams.unflow_ng = toint(state.match); };
+        levelskin_karma_mean             = 'karma_mean'          ws1 real   %{ lev.genparams.karma_mean = toreal(state.match); };
+        levelskin_karma_dev              = 'karma_dev'           ws1 real   %{ lev.genparams.karma_dev = toreal(state.match); };
+        levelskin_nflatten               = 'nflatten'            ws1 number %{ lev.genparams.nflatten = toint(state.match); };
+        levelskin_nunflow                = 'nunflow'             ws1 number %{ lev.genparams.nunflow = toint(state.match); };
+
         levelskin_one_data =
             (levelskin_deep_water | levelskin_shallow_water | levelskin_wall | 
             levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
@@ -559,6 +577,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max |
             levelskin_exclusive |
+            levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
+            levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
+            levelskin_walk_threshold | levelskin_lowlands_quantile | levelskin_water_quantile_mean |
+            levelskin_water_quantile_dev | levelskin_flatten_walk_ng | levelskin_flatten_water_ng |
+            levelskin_unflow_ng | levelskin_karma_mean | levelskin_karma_dev |
+            levelskin_nflatten | levelskin_nunflow |
             '}' 
             ${ fret; })
             ;

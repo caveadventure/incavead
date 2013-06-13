@@ -147,6 +147,9 @@ struct Map {
         }
     };
 
+
+
+
     void init(unsigned int _w, unsigned int _h) {
         w = _w;
         h = _h;
@@ -271,13 +274,11 @@ struct Map {
     }
 
 
-    void flow(neighbors::Neighbors& neigh,
-              rnd::Generator& rng,
-              const pt& xy,
-              std::unordered_set<pt>& out, 
-              double n) {
+    template <typename PARAMS>
+    void flow(neighbors::Neighbors& neigh, rnd::Generator& rng, const PARAMS& genparams,
+              const pt& xy, std::unordered_set<pt>& out, double n) {
 
-        if (n < 1e-5) {
+        if (n < genparams.flow_epsilon) {
             return;
         }
 
@@ -307,12 +308,14 @@ struct Map {
         }
 
         for (auto& i : l) {
-            flow(neigh, rng, i.second, out, n * (i.first / vtotal));
+            flow(neigh, rng, genparams, i.second, out, n * (i.first / vtotal));
         }
     }
 
+    template <typename PARAMS>
     void makeflow(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
+                  const PARAMS& genparams,
                   std::discrete_distribution<size_t>& ddist,
                   std::unordered_set<pt>& gout, 
                   std::unordered_map<pt, int>& watr,
@@ -325,7 +328,7 @@ struct Map {
 
         std::unordered_set<pt> out;
 
-        flow(neigh, rng, pt(x, y), out, n);
+        flow(neigh, rng, genparams, pt(x, y), out, n);
 
         for (const pt& xy : out) {
 
@@ -340,14 +343,15 @@ struct Map {
         gout.insert(out.begin(), out.end());
     }
 
-    void makerivers(neighbors::Neighbors& neigh,
-                    rnd::Generator& rng) {
+    template <typename PARAMS>
+    void makerivers(neighbors::Neighbors& neigh, rnd::Generator& rng, const PARAMS& genparams) {
 
         std::unordered_set<pt> gout;
         std::unordered_map<pt, int> watr;
 
-        unsigned int N1 = grid.size() / 20; //100;
-        double N2 = 50.0;
+        unsigned int N1 = grid.size() / genparams.flow_n_freq; //100;
+        double N2 = genparams.flow_volume;
+        double N3 = genparams.flow_erosion;
 
         {
             bm _x("makeflows");
@@ -356,17 +360,17 @@ struct Map {
 
             for (unsigned int i = 0; i < N1; i++) {
 
-                if (i % 500 == 0) {
+                if (i % genparams.flow_renorm_freq == 0) {
                     std::vector<double> grid_norm;
 
                     for (double v : grid) {
-                        grid_norm.push_back((v + 10.0) * 15); //5);
+                        grid_norm.push_back((v + 10.0) * genparams.flow_renorm_scale); //5);
                     }
 
                     ddist = std::discrete_distribution<size_t>(grid_norm.begin(), grid_norm.end());
                 }
 
-                makeflow(neigh, rng, ddist, gout, watr, N2, 1);
+                makeflow(neigh, rng, genparams, ddist, gout, watr, N2, N3);
             }
         }
 
@@ -376,7 +380,7 @@ struct Map {
 
             double h = _get(xy);
 
-            if (h <= 0) {
+            if (h <= genparams.walk_threshold) {
                 walkmap.insert(xy);
 
                 walk_r[h].push_back(xy);
@@ -386,7 +390,7 @@ struct Map {
         ///
         /// 0.25 quantile
 
-        size_t walk_r_n = walk_r.size() / 4;
+        size_t walk_r_n = walk_r.size() / genparams.lowlands_quantile;
         if (walk_r_n == 0 && walk_r.size() >= 1) {
             walk_r_n = 1;
         }
@@ -409,7 +413,7 @@ struct Map {
         std::sort(watr_r.begin(), watr_r.end());
         std::reverse(watr_r.begin(), watr_r.end());
 
-        unsigned int pctwater = rng.gauss(5.0, 1.0);
+        unsigned int pctwater = rng.gauss(genparams.water_quantile_mean, genparams.water_quantile_dev);
         if (pctwater <= 1) pctwater = 1;
 
         pctwater = watr_r.size() / pctwater;
@@ -424,7 +428,8 @@ struct Map {
 
     }
 
-    void flatten_pass(neighbors::Neighbors& neigh) {
+    template <typename PARAMS>
+    void flatten_pass(neighbors::Neighbors& neigh, const PARAMS& genparams) {
 
         std::unordered_map<pt, size_t> nwalk;
         std::unordered_map<pt, size_t> nwater;
@@ -446,13 +451,13 @@ struct Map {
         }
 
         for (const auto& z : nwalk) {
-            if (z.second >= 5) {
+            if (z.second >= genparams.flatten_walk_ng) {
                 walkmap.insert(z.first);
             }
         }
 
         for (const auto& z : nwater) {
-            if (z.second >= 3) {
+            if (z.second >= genparams.flatten_water_ng) {
                 watermap.insert(z.first);
                 walkmap.insert(z.first);
             }
@@ -496,12 +501,13 @@ struct Map {
     }
 
 
-    void unflow(neighbors::Neighbors& neigh) {
+    template <typename PARAMS>
+    void unflow(neighbors::Neighbors& neigh, const PARAMS& genparams) {
 
         std::unordered_set<pt> unwater;
 
         for (const pt& xy : watermap) {
-            int nwater = 0;
+            unsigned int nwater = 0;
 
             for (const auto& xy_ : neigh(xy)) {
 
@@ -509,7 +515,7 @@ struct Map {
                     nwater++;
             }
 
-            if (nwater < 5) {
+            if (nwater < genparams.unflow_ng) {
                 unwater.insert(xy);
             }
         }
@@ -519,24 +525,24 @@ struct Map {
         }
     }
 
-    template <typename FUNC>
-    void flatten(neighbors::Neighbors& neigh, unsigned int nflatten, unsigned int nunflow, FUNC progressbar) {
+    template <typename PARAMS, typename FUNC>
+    void flatten(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar) {
 
         {
             bm _x1("flatten");
 
-        for (unsigned int i = 0; i < nflatten; ++i) {
-            progressbar("Aging rock, " + std::to_string((int)((double)i/nflatten*100)) + "%...");
-            flatten_pass(neigh);
+        for (unsigned int i = 0; i < genparams.nflatten; ++i) {
+            progressbar("Aging rock, " + std::to_string((int)((double)i/genparams.nflatten*100)) + "%...");
+            flatten_pass(neigh, genparams);
         }
         }
 
         {
             bm _x2("unflow");
 
-        for (unsigned int i = 0; i < nunflow; ++i) {
-            progressbar("Flowing water, " + std::to_string((int)((double)i/nunflow*100)) + "%...");
-            unflow(neigh);
+        for (unsigned int i = 0; i < genparams.nunflow; ++i) {
+            progressbar("Flowing water, " + std::to_string((int)((double)i/genparams.nunflow*100)) + "%...");
+            unflow(neigh, genparams);
         }
         }
     }
@@ -573,7 +579,8 @@ struct Map {
         }
     }
 
-    void make_karma(rnd::Generator& rng) {
+    template <typename PARAMS>
+    void make_karma(rnd::Generator& rng, const PARAMS& genparams) {
 
         for (unsigned int y = 0; y < h; ++y) {
             for (unsigned int x = 0; x < w; ++x) {
@@ -584,17 +591,17 @@ struct Map {
                     k = ((get_karma(x-1, y) + get_karma(x, y-1) + get_karma(x-1, y-1)) / 3.0);
                 }
 
-                k += rng.gauss(0.0, 0.2);
+                k += rng.gauss(genparams.karma_mean, genparams.karma_dev);
 
                 k = std::min(std::max(k, -1.0), 1.0);
             }
         }
     }
 
-    template <typename FUNC>
+    template <typename PARAMS, typename FUNC>
     void generate(neighbors::Neighbors& neigh,
                   rnd::Generator& rng,
-                  unsigned int nflatten, unsigned int nunflow,
+                  const PARAMS& genparams,
                   FUNC progressbar) {
 
         bm _x("generate");
@@ -610,7 +617,7 @@ struct Map {
         {
             progressbar("Placing water...");
             bm _x1("makerivers");
-            makerivers(neigh, rng);
+            makerivers(neigh, rng, genparams);
         }        
 
         // nflatten, nunflow:
@@ -619,8 +626,8 @@ struct Map {
 
         { 
             bm _x2("flatten");
-            std::cout << nflatten << " " << nunflow << std::endl;
-            flatten(neigh, nflatten, nunflow, progressbar);
+            std::cout << genparams.nflatten << " " << genparams.nunflow << std::endl;
+            flatten(neigh, genparams, progressbar);
         }
 
         for (const auto& xy : lakemap) {
@@ -640,7 +647,7 @@ struct Map {
         {
             progressbar("Placing karma...");
             bm _x2("make_karma");
-            make_karma(rng);
+            make_karma(rng, genparams);
         }
 
         {
