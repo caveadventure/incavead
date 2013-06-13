@@ -25,7 +25,7 @@ struct Vault {
 
     std::map<unsigned char, brush> brushes;
     std::vector<std::string> pic;
-    
+
     unsigned int ax;
     unsigned int ay;
 
@@ -40,7 +40,11 @@ struct Vault {
     unsigned int w;
     unsigned int h;
 
-    Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), w(0), h(0) {}
+    tag_t inherit;
+    bool transpose;
+
+    Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
+              w(0), h(0), transpose(false) {}
 
     void postprocess() {
 

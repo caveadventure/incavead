@@ -471,8 +471,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         vault_line = 'l' ws1 string %{ vau.pic.push_back(state.match); } ;
 
+        vault_inherit = 'inherit' ws1 tag %{ vau.inherit = tag_t(state.match, tagmem); };
+
+        vault_transpose = 'transpose' %{ vau.transpose = true; };
+
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
+            vault_inherit | vault_transpose |
             '}'
              ${ fret; })
             ;

@@ -45,6 +45,10 @@
 #include "apply.h"
 #include "monster_ai.h"
 
+#include "vault_place.h"
+
+
+
 enum class screens_t : unsigned int {
     messages = 0,
     inventory,
@@ -161,104 +165,6 @@ struct Game {
         serialize::write(sink, state.grid);
     }
 
-    void generate_vault(const Vault& vault, mainloop::GameState& state, std::vector<summons_t>& summons) {
-
-        grid::pt xy;
-
-        for (unsigned int i = 0; i < 10; ++i) {
-
-            switch (vault.placement) {
-            case Vault::placement_t::floor:
-                if (!state.grid.one_of_floor(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::water:
-                if (!state.grid.one_of_lake(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::corner:
-                if (!state.grid.one_of_corner(state.rng, xy)) return;
-                break;
-            }
-            
-            if (xy.first  >= state.grid.w - vault.w ||
-                xy.second >= state.grid.h - vault.h)
-                continue;
-
-            if (i >= 9) return;
-
-            break;
-        }
-
-        std::set<grid::pt> affected;
-
-        for (int i = -1; i <= (int)vault.w; ++i) {
-            affected.insert(grid::pt(xy.first + i, xy.second - 1));
-            affected.insert(grid::pt(xy.first + i, xy.second + vault.h));
-        }
-
-        for (int i = 0; i < (int)vault.h; ++i) {
-            affected.insert(grid::pt(xy.first - 1, xy.second + i));
-            affected.insert(grid::pt(xy.first + vault.w, xy.second + i));
-        }
-
-        for (unsigned int y = 0; y < vault.h; ++y) {
-             for (unsigned int x = 0; x < vault.w; ++x) {
-
-                 const std::string& line = vault.pic[y];
-                 if (x >= line.size()) 
-                     continue;
-
-                 unsigned int c = line[x];
-                 auto bi = vault.brushes.find(c);
-
-                 if (bi == vault.brushes.end()) {
-                     throw std::runtime_error("Invalid brush char: '" + 
-                                              std::string(1, c) + "'");
-                 }
-
-                 const Vault::brush& b = bi->second;
-
-                 unsigned int xi = xy.first + x;
-                 unsigned int yi = xy.second + y;
-
-                 affected.insert(grid::pt(xi, yi));
-
-                 if (!b.is_blank) {
-
-                     if (b.is_walk) {
-                         state.grid.walkmap.insert(grid::pt(xi, yi));
-                     } else {
-                         state.grid.walkmap.erase(grid::pt(xi, yi));
-                     }
-
-                     if (b.is_water) {
-                         state.grid.watermap.insert(grid::pt(xi, yi));
-                     } else {
-                         state.grid.watermap.erase(grid::pt(xi, yi));
-                     }
-                 }
-
-                 if (!b.terrain.null()) {
-                     state.features.set(xi, yi, b.terrain, state.render);
-                 }
-
-                 if (!b.design.null()) {
-                     state.items.place(xi, yi, 
-                                       state.items.make_item(b.design, items::pt(xi, yi), state.rng), 
-                                       state.render);
-                 }
-
-                 if (!b.species.null()) {
-                     if (!state.grid.is_walk(xi, yi))
-                         throw std::runtime_error("Invalid vault monster placement");
-
-                     summons.push_back(summons_t{xi, yi, b.species, tag_t()});
-                 }
-             }
-        }
-
-
-        state.grid._set_maps_of(state.neigh, affected);
-    }
 
     template <typename FUNC>
     void generate(mainloop::GameState& state, FUNC progressbar) {
