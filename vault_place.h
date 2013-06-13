@@ -6,8 +6,8 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
 
     grid::pt xy;
 
-    unsigned int _w = (vault.inherit.null() ? vault.w : vaults.get(vault.inherit).w);
-    unsigned int _h = (vault.inherit.null() ? vault.h : vaults.get(vault.inherit).h);
+    unsigned int _w = (vault.inherit.null() ? vault.w : vaults().get(vault.inherit).w);
+    unsigned int _h = (vault.inherit.null() ? vault.h : vaults().get(vault.inherit).h);
 
     unsigned int w = (vault.transpose ? _h : _w);
     unsigned int h = (vault.transpose ? _w : _h);
@@ -77,8 +77,8 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
         affected.insert(grid::pt(xy.first + w, xy.second + i));
     }
 
-    for (unsigned int y = 0; y < h; ++y) {
-        for (unsigned int x = 0; x < w; ++x) {
+    for (unsigned int y = 0; y < _h; ++y) {
+        for (unsigned int x = 0; x < _w; ++x) {
 
             const std::string& line = pic[y];
             if (x >= line.size()) 
