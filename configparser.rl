@@ -342,6 +342,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
         design_lightradius = 'lightradius' ws1 number   %{ des.lightradius = toint(state.match); };
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
+        design_descend    = 'descend' ws1 number        %{ des.descend = toint(state.match); };
 
         design_blink      = 'blink' %{ des.flags.blink = true; };
 
@@ -556,6 +557,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
+        levelskin_noterrain     = 'noterrain'     %{ lev.noterrain = true; };
 
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
         levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
@@ -581,7 +583,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max |
-            levelskin_exclusive |
+            levelskin_exclusive | levelskin_noterrain |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_quantile | levelskin_water_quantile_mean |

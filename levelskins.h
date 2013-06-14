@@ -23,6 +23,8 @@ struct Levelskin {
 
     bool exclusive;
 
+    bool noterrain;
+
     struct mapgen_params_t {
         double flow_epsilon;
         unsigned int flow_n_freq;
@@ -66,7 +68,7 @@ struct Levelskin {
 
     mapgen_params_t genparams;
 
-    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false) {}
+    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false), noterrain(false) {}
 };
 
 struct Levelskins {

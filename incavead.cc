@@ -257,7 +257,10 @@ struct Game {
 
         grid::Map::genmaps_t maps(state.grid);
 
-        {
+        const Levelskin& lev = levelskins().get(p.worldz);
+
+        if (!lev.noterrain) {
+
             progressbar("Placing features...");
             bm _gg("feature generation");
 
@@ -322,8 +325,6 @@ struct Game {
                 state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
                                       state.render, s.x, s.y, s.summontag);
             }
-
-            const Levelskin& lev = levelskins().get(p.worldz);
 
             unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
 

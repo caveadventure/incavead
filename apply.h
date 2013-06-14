@@ -25,7 +25,7 @@ inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int 
 }
 
 
-inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state) {
+inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state, bool& regen) {
 
     items::Item tmp;
 
@@ -68,6 +68,12 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
         p.py = xy.second;
 
         state.render.invalidate(p.px, p.py);
+        ret = true;
+    }
+
+    if (d.descend > 0) {
+        p.worldz += d.descend;
+        regen = true;
         ret = true;
     }
 
