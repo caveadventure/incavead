@@ -728,8 +728,10 @@ struct Map {
             cornermap.erase(xy);
             lakemap.erase(xy);
 
-            if (walkmap.count(xy) == 0) 
+            if (walkmap.count(xy) == 0) {
+                lowlands.erase(xy);
                 continue;
+            }
 
             floormap.insert(xy);
                 
