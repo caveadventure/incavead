@@ -18,16 +18,20 @@ include_directories(../libmaudit)
 find_program(RAGEL ragel)
 
 add_custom_command(
-  OUTPUT configparser.h
+  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h
   COMMAND ${RAGEL} -G2 -o configparser.h configparser.rl
-  DEPENDS configparser.rl
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/configparser.rl
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(incavead incavead.cc)
+#add_custom_target(configparserh DEPENDS configparser.h)
+#set_source_files_properties(configparser.h PROPERTIES GENERATED TRUE ) 
 
-add_custom_target(configparserh DEPENDS configparser.h)
-add_dependencies(incavead configparserh)
+add_executable(incavead incavead.cc ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h)
 
 target_link_libraries(incavead m)
+
+install(TARGETS incavead DESTINATION games/incavead)
+install(FILES data/celauto.cfg data/constants.cfg data/designs.cfg data/levelskins.cfg data/species.cfg data/terrain.cfg data/vaults.cfg
+        DESTINATION games/incavead)
 
