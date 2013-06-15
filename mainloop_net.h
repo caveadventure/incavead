@@ -3,7 +3,10 @@
 
 #include <functional>
 
+#include "logging.h"
+
 #include "serialize.h"
+
 #include "neighbors.h"
 #include "celauto.h"
 #include "render_maudit.h"
@@ -217,9 +220,7 @@ struct Main {
     }
 
 
-    bool start(const std::string& savefile,
-               std::string& window,
-               const screen_params_t& sp) {
+    bool start(const std::string& savefile, std::string& window, const screen_params_t& sp) {
 
         if (load(savefile)) {
             return false;
@@ -395,15 +396,15 @@ struct Main {
 
 
 
-    std::string _mainloop_start(bool singleplayer) {
+    std::string _mainloop_start(bool singleplayer, 
+                                std::string& name, unsigned int& seed, bool& new_game) {
 
         screen_params_t sp;
 
         game.make_screen(sp);
 
         // //
-
-        std::string name;
+        name.clear();
         std::string pass;
 
         std::string window = 
@@ -428,8 +429,9 @@ struct Main {
         }
 
         // //
+        new_game = start(savefile, window, sp);
+        seed = game.game_seed;
 
-        start(savefile, window, sp);
         return savefile;
     }
 
@@ -487,13 +489,45 @@ struct Main {
 
     bool mainloop(bool singleplayer) {
 
-        std::string savefile = _mainloop_start(singleplayer);
+        std::string name;
+        unsigned int seed;
+        bool new_game;
+
+        std::string savefile = _mainloop_start(singleplayer, name, seed, new_game);
 
         try {
-            return _mainloop_main(savefile);
+            
+            {
+                log::Sink gamelog("game.log");
+
+                if (new_game) {
+                    gamelog << "START\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                } else {
+                    gamelog << "LOAD\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                }
+            }
+
+            bool dead = _mainloop_main(savefile);
+
+            {
+                log::Sink gamelog("game.log");
+
+                if (dead) {
+                    gamelog << "DEAD\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                } else {
+                    gamelog << "QUIT\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                }
+            }
 
         } catch (...) {
+
             save(savefile);
+
+            {
+                log::Sink gamelog("game.log");
+                gamelog << "OOPS\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+            }
+
             throw;
         }
     }
