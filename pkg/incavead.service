@@ -1,0 +1,9 @@
+[Unit]
+Description=Infinite Cave Adventure telnet server
+
+[Service]
+Type=idle
+ExecStart=/opt/games/incavead/incavead
+Restart=always
+WorkingDirectory=/opt/games/incavead
+
