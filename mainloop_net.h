@@ -181,7 +181,6 @@ struct Main {
 
     bool load(const std::string& filename) {
         try {
-            bm _l("loading savefile");
 
             serialize::Source s(filename);
 
@@ -202,7 +201,6 @@ struct Main {
     }
 
     void save(const std::string& filename) {
-        bm _s("saving savefile");
 
         serialize::Sink s(filename);
 
@@ -286,7 +284,6 @@ struct Main {
     }
 
     void draw() {
-        bm _p("draw");
 
         drawing_context_t ctx;
         ctx.view_w = view_w;
@@ -314,8 +311,6 @@ struct Main {
         }
 
         oldticks = ticks;
-
-        bm _p("process");
 
         game.process_world(state, ticks, done, dead, regen, need_input, draw);
 
@@ -453,7 +448,6 @@ struct Main {
             bool need_input = false;
 
             do {
-                bm _p("frame");
 
                 bool do_draw = false;
                 bool time_passed = process(oldticks, done, dead, regen, need_input, do_draw);

@@ -56,14 +56,11 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
             continue;
 
         if (i >= 9) {
-            std::cout << "VAULT FAIL " << w << "," << h << std::endl;
             return;
         }
 
         break;
     }
-
-    std::cout << "vault ok " << w << "," << h << std::endl;
 
     std::set<grid::pt> affected;
 

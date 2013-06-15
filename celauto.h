@@ -150,7 +150,6 @@ struct CaMap {
 
             size_t qq = count_of_n[xy_][rul.tag];
             if (qq == 0) {
-                std::cout << "[] " << xy_.first << " " << xy_.second << std::endl;
                 throw std::runtime_error("Sanity error in camap::clear");
             }
             
@@ -164,9 +163,6 @@ struct CaMap {
 
     template <typename FUNC1, typename FUNC2, typename FUNC3>
     inline void step(neighbors::Neighbors& neigh_plain, FUNC1 cell_good, FUNC2 funcon, FUNC3 funcoff) {
-
-        std::cout << "[[ " << camap.size() << std::endl;
-        bm _zz("celauto::step()");
 
         /// ///
 
@@ -189,9 +185,6 @@ struct CaMap {
         std::map<pt, tag_t> for_remove;
         std::map<pt, tag_t> for_add;
         std::set<pt> no_more_count_of_n;
-
-        {
-            bm _z1("iter1");
 
         for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
@@ -222,10 +215,6 @@ struct CaMap {
                 }
             }
         }
-        }
-
-        {
-            bm _z1("iter1.1");
 
         for (const auto& i : count_of_n) {
 
@@ -278,11 +267,6 @@ struct CaMap {
             funcon(xy.first, xy.second, rul);
         }
 
-        }
-
-        {
-            bm _z4("iter4");
-
         // Leave remains of dead cells.
         for (const auto& i : for_remove) {
 
@@ -293,11 +277,6 @@ struct CaMap {
         
             funcoff(xy.first, xy.second, rul);
         }
-
-        }
-
-        {
-            bm _z5("iter5");
 
 	for (camap_t::iterator i = camap.begin(); i != camap.end(); ++i) {
 
@@ -310,7 +289,6 @@ struct CaMap {
 
                     size_t qq = count_of_n[xy_][cae.tag];
                     if (qq == 0) {
-                        //std::cout << "[] " << xy_.first << " " << xy_.second << std::endl;
                         throw std::runtime_error("Sanity error in camap");
                     }
 
@@ -319,7 +297,6 @@ struct CaMap {
             }
 
             cae.age += cae.age_add;
-        }
         }
     }
 

@@ -154,12 +154,7 @@ struct Game {
             genparams.nunflow = std::min(std::max(0, worldz), 8);
         }
 
-        std::cout << "  Generating... " << gridseed << " " 
-                  << genparams.nflatten << " " << genparams.nunflow << std::endl;
-
         state.grid.generate(state.neigh, state.rng, genparams, progressbar);
-
-        std::cout << "  Generating OK" << std::endl;
 
         serialize::Sink sink(cached_grid);
         serialize::write(sink, state.grid);
@@ -169,8 +164,6 @@ struct Game {
     template <typename FUNC>
     void generate(mainloop::GameState& state, FUNC progressbar) {
 
-        bm _zz("level generation");
-
         // Read or generate cached map.
 
         uint64_t gridseed;
@@ -178,7 +171,6 @@ struct Game {
         make_mapname(p.worldx, p.worldy, p.worldz, gridseed, filename);
 
         try {
-            bm _rg("reading grid");
 
             serialize::Source source(filename);
             serialize::read(source, state.grid);
@@ -214,7 +206,6 @@ struct Game {
 
         {
             progressbar("Placing vaults...");
-            bm _gg("vault generation");
 
             std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
 
@@ -262,7 +253,6 @@ struct Game {
         if (!lev.noterrain) {
 
             progressbar("Placing features...");
-            bm _gg("feature generation");
 
             // Place some dungeon features on the same spots every time.
 
@@ -287,8 +277,6 @@ struct Game {
         state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
 
         {
-            bm _y("placing player");
-
             grid::pt xy;
             if (!maps.one_of_lowlands(state.rng, xy))
                 throw std::runtime_error("Failed to generate grid");
@@ -301,7 +289,6 @@ struct Game {
 
         {
             progressbar("Placing items...");
-            bm _y("item generation");
 
             unsigned int itemgroups = ::fabs(state.rng.gauss(300.0, 50.0));
 
@@ -319,7 +306,6 @@ struct Game {
 
         {
             progressbar("Placing monsters...");
-            bm _z("monster generation");
 
             for (const auto& s : summons) {
                 state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
@@ -1349,16 +1335,14 @@ void client_mainloop(int client_fd, bool singleplayer) {
 
         typedef maudit::screen<maudit::client_socket> screen_t;
 
-        std::cout << "Making screen..." << std::endl;
         screen_t screen(client);
 
         mainloop::Main<Game, screen_t> main(screen);
 
-        std::cout << "Starting mainloop..." << std::endl;
         main.mainloop(singleplayer);
 
     } catch (std::exception& e) {
-        std::cout << "Caught error: " << e.what() << std::endl;
+        std::cerr << "Caught error: " << e.what() << std::endl;
 
     } catch (...) {
     }
@@ -1379,8 +1363,6 @@ void do_genmaps() {
 
                 uint64_t gridseed;
                 std::string filename;
-
-                bm _x("total");
 
                 Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
 

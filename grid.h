@@ -354,8 +354,6 @@ struct Map {
         double N3 = genparams.flow_erosion;
 
         {
-            bm _x("makeflows");
-
             std::discrete_distribution<size_t> ddist;
 
             for (unsigned int i = 0; i < N1; i++) {
@@ -528,22 +526,14 @@ struct Map {
     template <typename PARAMS, typename FUNC>
     void flatten(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar) {
 
-        {
-            bm _x1("flatten");
-
         for (unsigned int i = 0; i < genparams.nflatten; ++i) {
             progressbar("Aging rock, " + std::to_string((int)((double)i/genparams.nflatten*100)) + "%...");
             flatten_pass(neigh, genparams);
         }
-        }
-
-        {
-            bm _x2("unflow");
 
         for (unsigned int i = 0; i < genparams.nunflow; ++i) {
             progressbar("Flowing water, " + std::to_string((int)((double)i/genparams.nunflow*100)) + "%...");
             unflow(neigh, genparams);
-        }
         }
     }
 
@@ -604,19 +594,15 @@ struct Map {
                   const PARAMS& genparams,
                   FUNC progressbar) {
 
-        bm _x("generate");
-
         clear();
 
         {
             progressbar("Placing shiprock...");
-            bm _x0("makegrid");
             makegrid(rng);
         }
 
         {
             progressbar("Placing water...");
-            bm _x1("makerivers");
             makerivers(neigh, rng, genparams);
         }        
 
@@ -624,11 +610,7 @@ struct Map {
         // 5, 0; 
         // 1, 6;
 
-        { 
-            bm _x2("flatten");
-            std::cout << genparams.nflatten << " " << genparams.nunflow << std::endl;
-            flatten(neigh, genparams, progressbar);
-        }
+        flatten(neigh, genparams, progressbar);
 
         for (const auto& xy : lakemap) {
             if (walkmap.count(xy) == 0)
@@ -644,17 +626,9 @@ struct Map {
         }
 
         //
-        {
-            progressbar("Placing karma...");
-            bm _x2("make_karma");
-            make_karma(rng, genparams);
-        }
+        make_karma(rng, genparams);
 
-        {
-            progressbar("Combining...");
-            bm _x3("set_maps");
-            set_maps(neigh);
-        }
+        set_maps(neigh);
     }
 
     void set_maps(neighbors::Neighbors& neigh) {
