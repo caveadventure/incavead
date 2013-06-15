@@ -1,6 +1,19 @@
 #ifndef __DEBUG_BENCHMARK
 #define __DEBUG_BENCHMARK
 
+#ifdef _WIN32
+
+struct bm {
+    bm(const std::string& s) {}
+};
+
+struct bm_s {
+    bm_s(double& s) {}
+};
+
+
+#else
+
 #include <sys/time.h>
 
 struct bm {
@@ -33,5 +46,6 @@ struct bm_s {
     }
 };
 
+#endif
 
 #endif
