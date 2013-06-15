@@ -17,17 +17,25 @@ include_directories(../libmaudit)
 
 find_program(RAGEL ragel)
 
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h
-  COMMAND ${RAGEL} -G2 -o configparser.h configparser.rl
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/configparser.rl
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
+if(NOT RAGEL) 
+  
+  add_executable(incavead incavead.cc)
 
-#add_custom_target(configparserh DEPENDS configparser.h)
-#set_source_files_properties(configparser.h PROPERTIES GENERATED TRUE ) 
+else(NOT RAGEL)
 
-add_executable(incavead incavead.cc ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h)
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h
+    COMMAND ${RAGEL} -G2 -o configparser.h configparser.rl
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/configparser.rl
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+  #add_custom_target(configparserh DEPENDS configparser.h)
+  #set_source_files_properties(configparser.h PROPERTIES GENERATED TRUE ) 
+
+  add_executable(incavead incavead.cc ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h)
+
+endif(NOT RAGEL)
 
 target_link_libraries(incavead m)
 
