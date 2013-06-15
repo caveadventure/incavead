@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-namespace log {
+namespace logger {
 
 struct Sink {
     std::ofstream out;

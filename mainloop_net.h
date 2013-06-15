@@ -498,7 +498,7 @@ struct Main {
         try {
             
             {
-                log::Sink gamelog("game.log");
+                logger::Sink gamelog("game.log");
 
                 if (new_game) {
                     gamelog << "START\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
@@ -510,7 +510,7 @@ struct Main {
             bool dead = _mainloop_main(savefile);
 
             {
-                log::Sink gamelog("game.log");
+                logger::Sink gamelog("game.log");
 
                 if (dead) {
                     gamelog << "DEAD\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
@@ -519,12 +519,14 @@ struct Main {
                 }
             }
 
+            return dead;
+
         } catch (...) {
 
             save(savefile);
 
             {
-                log::Sink gamelog("game.log");
+                logger::Sink gamelog("game.log");
                 gamelog << "OOPS\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
             }
 
