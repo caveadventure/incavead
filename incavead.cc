@@ -1005,12 +1005,14 @@ struct Game {
         if (bone.cause.name.empty())
             bone.cause.name = "unnatural causes";
 
-        return nlp::message("\n\n\2Here lies \3%S\2.\n\n"
-                            "\1He was a valiant adventurer of level \2%d\1.\n"
-                            "He was killed by \2%s\1.\n"
-                            "His net worth was \2%d\1 zorkmids.",
+        return nlp::message("\n\n"
+                            "    \2.--==~  Here lies \3%S\2  ~==--.\n\n"
+                            "    \1He was a valiant adventurer of level \2%d\1.\n"
+                            "    \1He was killed by \2%s\1.\n"
+                            "    \1His net worth was \2%d\1 zorkmids.\n\n"
+                            "    \1May ye rest in peace.",
                             bone.name,
-                            bone.level, 
+                            bone.level+1, 
                             bone.cause, 
                             bone.worth);
     }
