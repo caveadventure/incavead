@@ -31,9 +31,15 @@ struct key_t {
 
 struct bone_t {
 
-    std::string name;
+    struct fakeobj {
+        std::string name;
+        fakeobj() {}
+        fakeobj(const std::string& s) : name(s) {}
+    };
+
+    fakeobj name;
     unsigned int level;
-    std::string cause;
+    fakeobj cause;
     double worth;
 
     bone_t() : level(0), worth(0)
@@ -70,9 +76,9 @@ struct writer<bones::key_t> {
 template <>
 struct reader<bones::bone_t> {
     void read(Source& s, bones::bone_t& t) {
-        serialize::read(s, t.name);
+        serialize::read(s, t.name.name);
         serialize::read(s, t.level);
-        serialize::read(s, t.cause);
+        serialize::read(s, t.cause.name);
         serialize::read(s, t.worth);
     }
 };
@@ -80,9 +86,9 @@ struct reader<bones::bone_t> {
 template <>
 struct writer<bones::bone_t> {
     void write(Sink& s, const bones::bone_t& t) {
-        serialize::write(s, t.name);
+        serialize::write(s, t.name.name);
         serialize::write(s, t.level);
-        serialize::write(s, t.cause);
+        serialize::write(s, t.cause.name);
         serialize::write(s, t.worth);
     }
 };

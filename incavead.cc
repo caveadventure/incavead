@@ -999,13 +999,19 @@ struct Game {
             return "\n\nHm, this tombstone is blank...";
         }
 
-        return nlp::message("\n\n\1Here lies \3%S\1.\n\n"
+        if (bone.name.name.empty())
+            bone.name.name = "anonymous";
+
+        if (bone.cause.name.empty())
+            bone.cause.name = "unnatural causes";
+
+        return nlp::message("\n\n\2Here lies \3%S\2.\n\n"
                             "\1He was a valiant adventurer of level \2%d\1.\n"
                             "He was killed by \2%s\1.\n"
                             "His net worth was \2%d\1 zorkmids.",
-                            (bone.name.empty() ? std::string("anonymous") : bone.name),
+                            bone.name,
                             bone.level, 
-                            (bone.cause.empty() ? std::string("unnatural causes") : bone.cause), 
+                            bone.cause, 
                             bone.worth);
     }
 
