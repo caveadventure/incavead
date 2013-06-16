@@ -110,41 +110,6 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
             return;
         }
 
-    // REMOVEME
-    case 'x':
-    {
-        astar::Path path;
-        path.init(state.grid.w, state.grid.h);
-
-        bool tmp = path.compute(look.x, look.y, px, py, 1.41, 100, 
-                                [&](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-
-                                    if (state.render.is_walkblock(c, d)) return 0.0f;
-                         
-                                    if (state.render.is_viewblock(c, d)) return 3.0f;
-                         
-                                    return 1.0f;
-                                });
-
-        if (tmp) {
-            unsigned int xx = 0;
-            while (1) {
-                unsigned int xo, yo;
-                if (!path.walk(xo, yo))
-                    break;
-
-                state.render._overlay_set(grender::pt(xo, yo)) = 
-                    grender::Grid::skin(std::string(1, 'A' + (xx % 24)), 
-                                        grender::color_t::bright_red, grender::color_t::bright_black);
-                ++xx;
-            }
-        } else {
-            state.render._overlay_set(grender::pt(px, py)) = 
-                grender::Grid::skin("!", grender::color_t::bright_yellow, grender::color_t::bright_red);
-        }
-        break;
-    }
-
     default:
         ++stop;
         break;

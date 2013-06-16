@@ -868,9 +868,6 @@ struct Game {
 
     void rest(mainloop::GameState& state, size_t& ticks) {
 
-        //REMOVEME
-        state.render.do_message(nlp::message("%d %d", p.px, p.py));
-
         ++ticks;
     }
 
@@ -1075,9 +1072,9 @@ struct Game {
             ////
             // REMOVEME
 
-        case 'd':
-            p.state = Player::DEBUG;
-            break;
+        //case 'd':
+        //    p.state = Player::DEBUG;
+        //    break;
 
         default:
             break;
