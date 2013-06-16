@@ -110,6 +110,10 @@ struct Features {
         case Terrain::placement_t::corner:
             if (!ptsource.one_of_corner(rng, ret)) return false;
             break;
+
+        case Terrain::placement_t::lowlands:
+            if (!ptsource.one_of_lowlands(rng, ret)) return false;
+            break;
         }
 
         ptsource.add_nogen(ret.first, ret.second);

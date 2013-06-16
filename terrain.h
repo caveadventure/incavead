@@ -7,7 +7,8 @@ struct Terrain {
     enum class placement_t : unsigned int {
         floor,
         water,
-        corner
+        corner,
+        lowlands
     };
 
     tag_t tag;

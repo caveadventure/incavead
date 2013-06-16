@@ -391,9 +391,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         ####
 
         tplacement = 
-            'floor'   %{ ter.placement = Terrain::placement_t::floor; }     | 
-            'water'   %{ ter.placement = Terrain::placement_t::water; }     | 
-            'corner'  %{ ter.placement = Terrain::placement_t::corner; }    ;
+            'floor'    %{ ter.placement = Terrain::placement_t::floor; }     | 
+            'water'    %{ ter.placement = Terrain::placement_t::water; }     | 
+            'corner'   %{ ter.placement = Terrain::placement_t::corner; }    |
+            'lowlands' %{ ter.placement = Terrain::placement_t::lowlands; }  ;
 
         terrain_tunnel   = 'tunnel' 
             ws1 snumber %{ ter.tunnel_x = toint(state.match); }

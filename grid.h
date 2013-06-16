@@ -372,16 +372,18 @@ struct Map {
             }
         }
 
-        std::map< double, std::vector<pt> > walk_r;
+        std::map< int, std::vector<pt> > walk_r;
 
         for (const pt& xy : gout) {
 
             double h = _get(xy);
+            auto tmp = watr.find(xy);
+            int w = (tmp == watr.end() ? 0 : tmp->second);
 
             if (h <= genparams.walk_threshold) {
                 walkmap.insert(xy);
 
-                walk_r[h].push_back(xy);
+                walk_r[w].push_back(xy);
             }
         }
 
@@ -626,9 +628,15 @@ struct Map {
         }
 
         //
-        make_karma(rng, genparams);
+        {
+            progressbar("Allotting karma...");
+            make_karma(rng, genparams);
+        }
 
-        set_maps(neigh);
+        {
+            progressbar("Combining...");
+            set_maps(neigh);
+        }
     }
 
     void set_maps(neighbors::Neighbors& neigh) {
