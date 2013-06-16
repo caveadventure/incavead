@@ -942,11 +942,15 @@ struct Game {
             "\n\3Shortcut commands:\1\n"
             "  \2T\1 :          Take the first item laying on the floor.\n"
             "  \2,\1 :          Examine the first item laying on the floor.\n"
-            "  \2H\1 :          Use medicine if you have any.\n"
-            "  \2F\1 :          Eat food if you have any.\n"
-            "  \2Z\1 :          Fire a magical item if you have one.\n"
-            "  \2D\1 :          Tunnel at rock if you have a instrument for digging.\n"
             ;
+
+        for (const auto& shortcut : constants().shortcuts) {
+            ret += "  \2";
+            ret += shortcut.first;
+            ret += "\1 :          ";
+            ret += shortcut.second.help_message;
+            ret += '\n';
+        }
 
         return ret;
     }
@@ -1036,35 +1040,6 @@ struct Game {
             start_look_cycle(p.state, p.look, p.px, p.py, state, k);
             break;
 
-            //
-        case 'D':
-            p.inv.selected_slot = "d";
-            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('D')))
-                state.render.do_message("You don't have a tool you can dig with.");
-            break;
-
-        case 'H':
-            p.inv.selected_slot = "e";
-            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
-                state.render.do_message("You have nothing in your 'medical' slot.");
-            break;
-
-        case 'F':
-            p.inv.selected_slot = "f";
-            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('a')))
-                state.render.do_message("You have nothing in your 'food' slot.");
-            break;
-
-        case 'Z':
-            p.inv.selected_slot = "m1";
-            if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f'))) {
-
-                p.inv.selected_slot = "m2";
-                if (!handle_input_inv_item(p, state, ticks, done, dead, regen, maudit::keypress('f')))
-                    state.render.do_message("You have nothing in your 'magical' slot.");
-            }
-            break;
-
         case '?':
             state.push_window(help_text(), screens_t::help);
             break;
@@ -1108,6 +1083,28 @@ struct Game {
         default:
             break;
         }            
+
+        {
+            const auto& shortcut = constants().shortcuts.find(k.letter);
+
+            if (shortcut != constants().shortcuts.end()) {
+
+                bool ok = false;
+                for (const auto& slot_keypress : shortcut->second.slot_keypress) {
+
+                    p.inv.selected_slot = slot_keypress.first;
+                    if (handle_input_inv_item(p, state, ticks, done, dead, regen, 
+                                              maudit::keypress(slot_keypress.second))) {
+                        ok = true;
+                        break;
+                    }
+                }
+
+                if (!ok) {
+                    state.render.do_message(shortcut->second.fail_message);
+                }
+            }
+        }
 
         if (redraw) {
             state.render.clear();

@@ -106,6 +106,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     Vault::brush vbrush;
 
+    unsigned char shortcut_key;
+
     %%{
 
         machine ConfigParser;
@@ -619,8 +621,22 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 string   %{ __constants__().slots.back().name = state.match; }
             ;
 
+        constant_shortcut_messages = 'shortcut' ws1 'messages'
+            ws1 '\'' any ${ shortcut_key = fc; } '\''
+            ws1 string %{ __constants__().shortcuts[shortcut_key].help_message = state.match; }
+            ws1 string %{ __constants__().shortcuts[shortcut_key].fail_message = state.match; }
+            ;
 
-        one_constant = constant_meat | constant_bad_meat | constant_slot;
+        constant_shortcut_action = 'shortcut' ws1 'action'
+            ws1 '\'' any ${ shortcut_key = fc; } '\''
+            ws1 tag      ${ __constants__().shortcuts[shortcut_key].slot_keypress.
+                                            push_back(std::make_pair(state.match, 0)); } 
+            ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
+            ;
+
+        one_constant = constant_meat | constant_bad_meat | constant_slot | 
+                       constant_shortcut_messages | constant_shortcut_action
+                       ;
 
         constant = 'constant' ws1 one_constant ws ';';
 

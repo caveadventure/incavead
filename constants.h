@@ -17,6 +17,14 @@ struct ConstantsBank {
 
     std::vector<slot_t> slots;
 
+    struct shortcut_t {
+        std::vector< std::pair<std::string, unsigned char> > slot_keypress;
+        std::string fail_message;
+        std::string help_message;
+    };
+
+    std::map<unsigned char, shortcut_t> shortcuts;
+
 };
 
 ConstantsBank& __constants__() {
