@@ -501,9 +501,9 @@ struct Main {
                 logger::Sink gamelog("game.log");
 
                 if (new_game) {
-                    gamelog << "START\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                    gamelog << nlp::message("START\t%s\t%s\t%d\n", name, rcode::encode(seed), ::time(NULL));
                 } else {
-                    gamelog << "LOAD\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                    gamelog << nlp::message("LOAD\t%s\t%s\t%d\n", name, rcode::encode(seed), ::time(NULL));
                 }
             }
 
@@ -513,9 +513,9 @@ struct Main {
                 logger::Sink gamelog("game.log");
 
                 if (dead) {
-                    gamelog << "DEAD\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                    gamelog << nlp::message("DEAD\t%s\t%s\t%d\n", name, rcode::encode(seed), ::time(NULL));
                 } else {
-                    gamelog << "QUIT\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                    gamelog << nlp::message("QUIT\t%s\t%s\t%d\n", name, rcode::encode(seed), ::time(NULL));
                 }
             }
 
@@ -527,7 +527,7 @@ struct Main {
 
             {
                 logger::Sink gamelog("game.log");
-                gamelog << "OOPS\t" << name << "\t" << rcode::encode(seed) << "\t" << ::time(NULL) << "\n";
+                gamelog << nlp::message("OOPS\t%s\t%s\t%d\n", name, rcode::encode(seed), ::time(NULL));
             }
 
             throw;

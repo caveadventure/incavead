@@ -1,5 +1,6 @@
 
 #include <thread>
+#include <mutex>
 
 #include <sstream>
 
@@ -156,8 +157,15 @@ struct Game {
 
         state.grid.generate(state.neigh, state.rng, genparams, progressbar);
 
-        serialize::Sink sink(cached_grid);
-        serialize::write(sink, state.grid);
+        {
+            // Having two threads generate the same level at the same time is very rare,
+            // but let's put a lock in place just in case anyways.
+            static std::mutex m;
+            std::unique_lock<std::mutex> l(m);
+
+            serialize::Sink sink(cached_grid);
+            serialize::write(sink, state.grid);
+        }
     }
 
 

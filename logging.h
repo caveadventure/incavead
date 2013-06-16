@@ -7,20 +7,24 @@
 namespace logger {
 
 struct Sink {
-    std::ofstream out;
+    std::string filename;
+    std::string msg;
 
-    Sink(const std::string& name) {
+    Sink(const std::string& name) : filename(name) {}
 
-	out.exceptions(std::ofstream::failbit|std::ofstream::badbit);
-	out.open(name, std::ios::out|std::ios::app);
+    ~Sink() {
+        try {
+            std::ofstream out;
+            out.exceptions(std::ofstream::failbit|std::ofstream::badbit);
+            out.open(filename, std::ios::out|std::ios::app);
+            out << msg;
+            out.close();
+        } catch(...) {
+        }
     }
 
-    ~Sink() { out.close(); }
-
-    template <typename T>
-    Sink& operator<<(const T& t) {
-        out << t;
-        return (*this);
+    void operator<<(const std::string& t) {
+        msg += t;
     }
 };
 

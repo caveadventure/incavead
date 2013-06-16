@@ -254,6 +254,23 @@ void message(_buffer& b, unsigned long v, const TAIL&... args) {
 }
 
 template <typename... TAIL>
+void message(_buffer& b, long v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%zd", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
 void message(_buffer& b, int v, const TAIL&... args) {
 
     unsigned char c = b.consume();
