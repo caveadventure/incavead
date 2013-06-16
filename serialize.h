@@ -14,10 +14,12 @@ namespace serialize {
 struct Sink {
     std::ofstream out;
 
-    Sink(const std::string& name) {
+    Sink(const std::string& name, bool append = false) {
 
 	out.exceptions(std::ofstream::failbit|std::ofstream::badbit);
-	out.open(name, std::ios::out|/*std::ios::app|*/std::ios::binary|std::ios::trunc);
+	out.open(name, (append ?
+                        std::ios::out|std::ios::app|std::ios::binary :
+                        std::ios::out|std::ios::trunc|std::ios::binary));
     }
 
     ~Sink() { out.close(); }

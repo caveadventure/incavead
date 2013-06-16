@@ -363,11 +363,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ des.gencount.deviation = toreal(state.match); } 
         ;
 
+        design_worth = 'worth' ws1 real %{ des.worth = toreal(state.match); };
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
+            design_worth |
             '}'
             ${ fret; })
             ;
@@ -612,6 +615,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
+        constant_grave    = 'grave'    ws1 string  %{ __constants__().grave = tag_t(state.match, tagmem); };
         constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
 
@@ -635,7 +639,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
-        one_constant = constant_meat | constant_bad_meat | constant_slot | 
+        one_constant = constant_grave | constant_meat | constant_bad_meat | 
+                       constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action
                        ;
 

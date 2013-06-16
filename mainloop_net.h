@@ -338,13 +338,13 @@ struct Main {
         }
     }
 
-    bool check_done(bool done, bool dead, const std::string& savefile) {
+    bool check_done(bool done, bool dead, const std::string& name, const std::string& savefile) {
 
         if (done) {
                 
             if (dead) {
 
-                game.endgame();
+                game.endgame(name);
 
                 clobber_savefile(savefile);
 
@@ -435,7 +435,7 @@ struct Main {
         return savefile;
     }
 
-    bool _mainloop_main(const std::string& savefile) {
+    bool _mainloop_main(const std::string& name, const std::string& savefile) {
 
         size_t oldticks = 0;
 
@@ -460,7 +460,7 @@ struct Main {
                     regen = false;
                 }
 
-                if (check_done(done, dead, savefile)) {
+                if (check_done(done, dead, name, savefile)) {
                     draw();
                     goodbye_message();
                     return dead;
@@ -477,7 +477,7 @@ struct Main {
 
             pump_event(need_input, done, dead, regen);
 
-            if (check_done(done, dead, savefile)) {
+            if (check_done(done, dead, name, savefile)) {
                 draw();
                 goodbye_message();
                 return dead;
@@ -507,7 +507,7 @@ struct Main {
                 }
             }
 
-            bool dead = _mainloop_main(savefile);
+            bool dead = _mainloop_main(name, savefile);
 
             {
                 logger::Sink gamelog("game.log");

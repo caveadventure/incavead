@@ -301,7 +301,6 @@ inline void defend(Player& p,
                    const damage::attacks_t& attacks, unsigned int alevel, 
                    mainloop::GameState& state, damage::attacks_t& attack_res) {
 
-
     if (attacks.empty())
         return;
 
@@ -314,8 +313,9 @@ inline void defend(Player& p,
 
         } else if (v.type == damage::type_t::make_meat) {
 
-            if (v.val > 0.5)
+            if (v.val > 0.5) {
                 p.health.dec(6.0);
+            }
 
         } else if (v.type == damage::type_t::heavenly_fire) {
 
@@ -353,6 +353,8 @@ inline void defend(Player& p,
         state.render.do_message(nlp::message("%s attacks but does no damage.", s));
 
     } else {
+
+        p.attacker = s.name;
 
         for (const auto& v : attack_res) {
 
@@ -412,6 +414,8 @@ inline void defend(Player& p,
     bool do_hurt = false;
     bool do_pois = false;
     bool do_psi = false;
+
+    p.attacker = t.name;
 
     for (const auto& v : attack_res) {
 
@@ -479,6 +483,8 @@ inline void defend(Player& p,
     bool do_hurt = false;
     bool do_pois = false;
     bool do_psi = false;
+
+    p.attacker = d.name;
 
     for (const auto& v : attack_res) {
 

@@ -45,6 +45,7 @@
 #include "combat.h"
 #include "apply.h"
 #include "monster_ai.h"
+#include "bones.h"
 
 #include "vault_place.h"
 
@@ -56,7 +57,8 @@ enum class screens_t : unsigned int {
     inv_item,
     floor_item,
     spells,
-    help
+    help,
+    tombstone
 };
 
 #include "inv_screens2.h"
@@ -280,6 +282,21 @@ struct Game {
             }
         }
 
+        // Place bones.
+        {
+            progressbar("Scattering bones...");
+
+            std::vector<bones::pt> bxy;
+
+            bones::bones().get_marks(p.worldx, p.worldy, p.worldz, bxy);
+
+            tag_t grave = constants().grave;
+
+            for (const bones::pt& xy : bxy) {
+                state.features.set(xy.first, xy.second, grave, state.render);
+            }
+        }
+
         // Place some random items.
 
         state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
@@ -453,7 +470,11 @@ struct Game {
         }
     }
 
-    void endgame() {}
+
+    void endgame(const std::string& name) {
+
+        bones::bones().add(name, p);
+    }
 
     template <typename SINK>
     void save(SINK& s) {
@@ -820,6 +841,12 @@ struct Game {
             return;
         }
 
+        if (feat.tag == constants().grave) {
+
+            state.push_window(tombstone_text(), screens_t::tombstone);
+            return;
+        }
+
         const Terrain& t = terrain().get(feat.tag);
 
         if (t.stairs > 0) {
@@ -963,6 +990,25 @@ struct Game {
         return ret;
     }
 
+    std::string tombstone_text() {
+
+        bones::bone_t bone;
+
+        if (!bones::bones().get(p, bone)) {
+
+            return "\n\nHm, this tombstone is blank...";
+        }
+
+        return nlp::message("\n\n\1Here lies \3%S\1.\n\n"
+                            "\1He was a valiant adventurer of level \2%d\1.\n"
+                            "He was killed by \2%s\1.\n"
+                            "His net worth was \2%d\1 zorkmids.",
+                            (bone.name.empty() ? std::string("anonymous") : bone.name),
+                            bone.level, 
+                            (bone.cause.empty() ? std::string("unnatural causes") : bone.cause), 
+                            bone.worth);
+    }
+
     void handle_input_main(mainloop::GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
                            maudit::keypress k) {
@@ -1055,9 +1101,9 @@ struct Game {
             ////
             // REMOVEME
 
-        //case 'd':
-        //    p.state = Player::DEBUG;
-        //    break;
+        case 'd':
+            p.state = Player::DEBUG;
+            break;
 
         default:
             break;
@@ -1152,6 +1198,10 @@ struct Game {
             }
             break;
         }
+
+        case '.':
+            state.render.do_message(nlp::message("%d %d", p.px, p.py));
+            break;
 
         case '+':
             p.level++;
@@ -1306,6 +1356,7 @@ struct Game {
 
         case screens_t::messages:
         case screens_t::help:
+        case screens_t::tombstone:
             handle_input_messages(state, k);
             break;
 
@@ -1382,6 +1433,8 @@ int main(int argc, char** argv) {
     maudit::server_socket server("0.0.0.0", 20020);
 
     init_statics();
+
+    bones::bones().load();
 
     bool singleplayer = false;
     bool genmaps = false;

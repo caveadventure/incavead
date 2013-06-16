@@ -72,8 +72,10 @@ struct Design {
 
     cloud_t cast_cloud;
 
+    double worth;
+
     Design() : level(0), count(0), stackrange(0), heal(0), feed(0), usable(false), throwrange(0),
-               gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0) {}
+               gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0), worth(0) {}
     
 };
 

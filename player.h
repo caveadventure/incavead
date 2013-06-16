@@ -73,6 +73,8 @@ struct Player {
 
     std::vector<Terrain::spell_t> spells;
 
+    std::string attacker;
+
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
                sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN) 
         {

@@ -191,6 +191,17 @@ struct inventory_t {
 
         return ret;
     }
+
+    double get_worth() const {
+        double ret = 0;
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+            ret += (dp.worth * i.second.count);
+        }
+
+        return ret;
+    }
 };
 
 namespace serialize {
