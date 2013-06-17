@@ -17,7 +17,8 @@ struct key_t {
     key_t(int x = 0, int y = 0, int z = 0) : worldx(x), worldy(y), worldz(z)
         {}
         
-    key_t(const Player& p) :
+    template <typename PLAYER>
+    key_t(const PLAYER& p) :
         worldx(p.worldx), worldy(p.worldy), worldz(p.worldz)
         {}
 
@@ -45,7 +46,8 @@ struct bone_t {
     bone_t() : level(0), worth(0)
         {}
 
-    bone_t(const std::string& _name, const Player& p) :
+    template <typename PLAYER>
+    bone_t(const std::string& _name, const PLAYER& p) :
         name(_name), level(p.level), cause(p.attacker), worth(p.inv.get_worth())
         {}
 };
@@ -104,7 +106,8 @@ struct Bones {
     
     std::mutex mutex;
 
-    void add(const std::string& name, const Player& p) {
+    template <typename PLAYER>
+    void add(const std::string& name, const PLAYER& p) {
 
         key_t key(p);
         pt xy(p.px, p.py);
@@ -157,7 +160,8 @@ struct Bones {
         }
     }
 
-    bool get(const Player& p, bone_t& ret) {
+    template <typename PLAYER>
+    bool get(const PLAYER& p, bone_t& ret) {
 
         std::unique_lock<std::mutex> l(mutex);
         

@@ -39,7 +39,9 @@ endif(NOT RAGEL)
 
 target_link_libraries(incavead m)
 
-install(TARGETS incavead DESTINATION games/incavead)
+add_executable(highscore util/highscore.cc)
+
+install(TARGETS incavead highscore DESTINATION games/incavead)
 install(FILES data/celauto.cfg data/constants.cfg data/designs.cfg data/levelskins.cfg data/species.cfg data/terrain.cfg data/vaults.cfg
         DESTINATION games/incavead)
 
