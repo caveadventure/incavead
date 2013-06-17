@@ -1026,6 +1026,7 @@ struct Game {
         switch (k.letter) {
         case 'Q':
             state.render.do_message("You quit the game.", true);
+            p.attacker = "suicide";
             done = true;
             dead = true;
             break;
