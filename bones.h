@@ -179,7 +179,7 @@ struct Bones {
         return true;
     }
 
-    void get_marks(int x, int y, int z, std::vector<pt>& out) {
+    void get_marks(int x, int y, int z, std::vector< std::pair<pt,double> >& out) {
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -189,7 +189,7 @@ struct Bones {
             return;
 
         for (const auto& j : i->second) {
-            out.push_back(j.first);
+            out.push_back(std::make_pair(j.first, j.second.worth));
         }
     }
 };

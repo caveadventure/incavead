@@ -286,14 +286,36 @@ struct Game {
         {
             progressbar("Scattering bones...");
 
-            std::vector<bones::pt> bxy;
+            std::vector< std::pair<bones::pt, double> > bxy;
 
             bones::bones().get_marks(p.worldx, p.worldy, p.worldz, bxy);
 
             tag_t grave = constants().grave;
 
-            for (const bones::pt& xy : bxy) {
+            for (const bones::pt& marks : bxy) {
+
+                const bones::pt& xy = marks.first;
+                double worth = marks.second;
+
                 state.features.set(xy.first, xy.second, grave, state.render);
+
+                for (const auto& nxy : state.neigh(xy)) {
+
+                    if (!state.grid.is_walk(nxy.first, nxy.second))
+                        continue;
+
+                    const Design& d = designs().get(constants().money);
+                    unsigned int stackcount = d.stackcount;
+
+                    while (worth >= 1) {
+                        unsigned int c = (worth < stackcount ? worth : stackcount);
+                        items::Item zm(constants().money, nxy, c);
+                        state.items.place(nxy.first, nxy.second, zm, state.render);
+                        worth -= c;
+                    }
+
+                    break;
+                }
             }
         }
 

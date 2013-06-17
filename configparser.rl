@@ -618,6 +618,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_grave    = 'grave'    ws1 string  %{ __constants__().grave = tag_t(state.match, tagmem); };
         constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
+        constant_money    = 'money'    ws1 string  %{ __constants__().money = tag_t(state.match, tagmem); };
 
         constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
             ws1 tag      %{ __constants__().slots.back().slot = state.match; }
@@ -639,7 +640,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
-        one_constant = constant_grave | constant_meat | constant_bad_meat | 
+        one_constant = constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action
                        ;
