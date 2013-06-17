@@ -1109,9 +1109,9 @@ struct Game {
             ////
             // REMOVEME
 
-        case 'd':
-            p.state = Player::DEBUG;
-            break;
+        //case 'd':
+        //    p.state = Player::DEBUG;
+        //    break;
 
         default:
             break;
