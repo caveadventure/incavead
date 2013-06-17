@@ -292,7 +292,7 @@ struct Game {
 
             tag_t grave = constants().grave;
 
-            for (const bones::pt& marks : bxy) {
+            for (const auto& marks : bxy) {
 
                 const bones::pt& xy = marks.first;
                 double worth = marks.second;
@@ -305,10 +305,10 @@ struct Game {
                         continue;
 
                     const Design& d = designs().get(constants().money);
-                    unsigned int stackcount = d.stackcount;
+                    unsigned int stackrange = d.stackrange;
 
                     while (worth >= 1) {
-                        unsigned int c = (worth < stackcount ? worth : stackcount);
+                        unsigned int c = (worth < stackrange ? worth : stackrange);
                         items::Item zm(constants().money, nxy, c);
                         state.items.place(nxy.first, nxy.second, zm, state.render);
                         worth -= c;
