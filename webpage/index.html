@@ -78,7 +78,7 @@
           <h3>Highscore table</h3>
           <p>Here's a list of top-10 best players from the public server:</p>
           <p>
-            <ol id="highscore">
+            <ol id="highscore_table">
             </ol>
           </p>
         </div>
@@ -188,7 +188,7 @@
       $.getJSON("hs.json", {}, 
                 function(data) {
                    $.each(data, function(i,item) {
-                          $("<li/>").html(format_scoreline(item)).appendTo("#highscore")
+                          $("<li/>").html(format_scoreline(item)).appendTo("#highscore_table")
                    });
       });
     </script>
