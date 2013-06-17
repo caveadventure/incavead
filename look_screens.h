@@ -174,6 +174,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
     std::string msg;
     monsters::Monster mon;
     items::Item itm;
+    features::Feature feat;
 
     unsigned int x = look.x;
     unsigned int y = look.y;
@@ -190,6 +191,10 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
     } else if (n == 1 && state.items.get(x, y, 0, itm)) {
             
         msg = nlp::message(" %s", nlp::count(), designs().get(itm.tag), itm.count);
+
+    } else if (state.features.get(x, y, feat)) {
+
+        msg = nlp::message(" %s", terrain().get(feat.tag));
 
     } else if (x == px && y == py) {
         msg = " This is you";
