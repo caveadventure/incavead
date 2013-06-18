@@ -732,7 +732,7 @@ struct Game {
 
             std::string code = rcode::encode(game_seed);
 
-            state.render.do_message("You are dead. (Press space to quit.)", true);
+            state.render.do_message("You are dead. (Press space to exit.)", true);
             state.render.do_message(nlp::message("Replay code: %s", code), true);
             dead = true;
             done = true;
@@ -1047,14 +1047,14 @@ struct Game {
 
         switch (k.letter) {
         case 'Q':
-            state.render.do_message("You quit the game.", true);
+            state.render.do_message("You quit the game. (Press space to exit.)", true);
             p.attacker = "suicide";
             done = true;
             dead = true;
             break;
 
         case 'S':
-            state.render.do_message("Your game has been saved. Press any key.", true);
+            state.render.do_message("Your game has been saved. (Press space to exit.)", true);
             done = true;
             dead = false;
             break;
