@@ -378,7 +378,7 @@ struct Main {
                 prompt += (secret ? '*' : k.letter);
                 continue;
 
-            } else if (k.letter == '\x7F' || k.key == maudit::keycode::del) {
+            } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
 
                 if (out.size() > 0) {
                     out.resize(out.size() - 1);
