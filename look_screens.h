@@ -198,6 +198,19 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
 
     } else if (x == px && y == py) {
         msg = " This is you";
+
+    } else {
+
+        bool walk = state.grid.is_walk(x, y);
+        bool water = state.grid.is_water(x, y);
+
+        if (!walk) {
+            msg = " rock";
+        } else if (water) {
+            msg = " water";
+        } else {
+            msg = " floor";
+        }
     }
 
     state.render.draw_text(look.x+1, look.y, msg, maudit::color::bright_white, maudit::color::dim_blue);
