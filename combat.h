@@ -108,8 +108,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else if (v.type == damage::type_t::make_meat) {
 
-        // HACK hardcode SUXX
-        // FIXME
+        //
         if (dmg > 0.5 && !s.flags.robot) {
             if (s.karma < 0 || s.flags.undead) {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
@@ -127,15 +126,31 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
             totvamp += dmg;
         }
 
-    } else if (v.type == damage::type_t::heavenly_fire) {
+    } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
 
-        if (s.karma > 0) {
-            double factor = (s.karma)/2;
+        double fac = (v.type == damage::type_t::hellish_fire ? -1 : 1);
+        double karma = s.karma * fac;
+
+        if (karma > 0) {
+            double factor = (karma)/2;
             factor = factor * factor;
             totdamage += dmg * factor;
         }
 
+    } else if (v.type == damage::type_t::sonic) {
+
+        if (s.flags.robot) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+            totdamage += dmg;
+        }
+
     } else {
+        // physical
+        // poison
+        // psi
+        // eat_brain
+        // drain
+        // electric
         
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
         totdamage += dmg;
@@ -317,10 +332,13 @@ inline void defend(Player& p,
                 p.health.dec(6.0);
             }
 
-        } else if (v.type == damage::type_t::heavenly_fire) {
+        } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
 
-            if (p.karma.val < 0) {
-                double factor = (-p.karma.val)/2;
+            double fac = (v.type == damage::type_t::hellish_fire ? -1 : 1);
+            double karma = p.karma.val * fac;
+
+            if (karma < 0) {
+                double factor = (-karma)/2;
                 factor = factor * factor;
 
                 p.health.dec(v.val * factor);
@@ -333,6 +351,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::drain ||
                    v.type == damage::type_t::vampiric ||
                    v.type == damage::type_t::electric) {
+
+            // No sonic damage for the player.
 
             p.health.dec(v.val);
         }
@@ -382,6 +402,11 @@ inline void defend(Player& p,
 
                 if (p.karma.val < 0)
                     state.render.do_message(nlp::message("%s blasts you with heavenly fire.", s));
+
+            } else if (v.type == damage::type_t::hellish_fire) {
+
+                if (p.karma.val > 0)
+                    state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
 
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison) {
@@ -436,7 +461,12 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::heavenly_fire) {
 
             if (p.karma.val < 0)
-                do_hurt = true;
+                state.render.do_message("You are blasted with heavenly fire.");
+
+        } else if (v.type == damage::type_t::hellish_fire) {
+
+            if (p.karma.val > 0)
+                state.render.do_message("You are blasted with hellfire.");
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||
@@ -505,7 +535,12 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::heavenly_fire) {
 
             if (p.karma.val < 0)
-                do_hurt = true;
+                state.render.do_message("You are blasted with heavenly fire.");
+
+        } else if (v.type == damage::type_t::hellish_fire) {
+
+            if (p.karma.val > 0)
+                state.render.do_message("You are blasted with hellfire.");
 
         } else if (v.type == damage::type_t::physical ||
                    v.type == damage::type_t::eat_brain ||

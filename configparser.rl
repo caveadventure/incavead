@@ -204,7 +204,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'scare'         %{ dmgval.type = damage::type_t::scare; }         |
             'vampiric'      %{ dmgval.type = damage::type_t::vampiric; }      |
             'heavenly_fire' %{ dmgval.type = damage::type_t::heavenly_fire; } |
-            'electric'      %{ dmgval.type = damage::type_t::electric; }      ;
+            'hellish_fire'  %{ dmgval.type = damage::type_t::hellish_fire; }  |
+            'electric'      %{ dmgval.type = damage::type_t::electric; }      |
+            'sonic'         %{ dmgval.type = damage::type_t::sonic; }         ;
 
 
         damage_val = 

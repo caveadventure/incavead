@@ -20,7 +20,9 @@ enum class type_t : unsigned int {
     scare,
     vampiric,
     heavenly_fire,
-    electric
+    hellish_fire,
+    electric,
+    sonic
 };
 
 struct val_t {
