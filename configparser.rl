@@ -341,6 +341,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
         design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
         design_feed       = 'feed'       ws1 real       %{ des.feed = toreal(state.match); };
+        design_karma      = 'karma'      ws1 real       %{ des.karma = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_melee      = 'melee'                     %{ des.melee = true; };
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };

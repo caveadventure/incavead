@@ -24,6 +24,7 @@ struct Design {
 
     double heal;
     double feed;
+    double karma;
 
     bool usable;
 
@@ -74,7 +75,7 @@ struct Design {
 
     double worth;
 
-    Design() : level(0), count(0), stackrange(0), heal(0), feed(0), usable(false), throwrange(0),
+    Design() : level(0), count(0), stackrange(0), heal(0), feed(0), karma(0), usable(false), throwrange(0),
                gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0), worth(0) {}
     
 };

@@ -111,7 +111,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     unsigned char shortcut_key;
 
     
-#line 658 "configparser.rl"
+#line 659 "configparser.rl"
 
 /*
 
@@ -133,7 +133,7 @@ static const int ConfigParser_en_one_levelskin = 2055;
 static const int ConfigParser_en_main = 1;
 
 
-#line 664 "configparser.rl"
+#line 665 "configparser.rl"
     
 #line 139 "configparser.h"
 	{
@@ -141,7 +141,7 @@ static const int ConfigParser_en_main = 1;
 	 state.top = 0;
 	}
 
-#line 665 "configparser.rl"
+#line 666 "configparser.rl"
 
     bool done = false;
     int have = 0;
@@ -3794,15 +3794,15 @@ st0:
  state.cs = 0;
 	goto _out;
 tr4964:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st2;
 tr4971:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st2;
 tr4978:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st2;
 tr4985:
@@ -3810,11 +3810,11 @@ tr4985:
 	{ init_species(spe); }
 	goto st2;
 tr4992:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st2;
 tr4999:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st2;
 st2:
@@ -3874,7 +3874,7 @@ case 8:
 		goto tr15;
 	goto st0;
 tr15:
-#line 545 "configparser.rl"
+#line 546 "configparser.rl"
 	{ cel = CelAuto(); }
 	goto st9;
 st9:
@@ -3939,7 +3939,7 @@ case 10:
 		goto tr19;
 	goto st0;
 tr18:
-#line 541 "configparser.rl"
+#line 542 "configparser.rl"
 	{ cel.tag = tag_t(state.match, tagmem); }
 	goto st11;
 st11:
@@ -3956,13 +3956,13 @@ case 11:
 		goto st11;
 	goto st0;
 tr20:
-#line 541 "configparser.rl"
+#line 542 "configparser.rl"
 	{ cel.tag = tag_t(state.match, tagmem); }
-#line 547 "configparser.rl"
+#line 548 "configparser.rl"
 	{{ state.stack[ state.top++] = 3579; goto st1985;}}
 	goto st3579;
 tr22:
-#line 547 "configparser.rl"
+#line 548 "configparser.rl"
 	{{ state.stack[ state.top++] = 3579; goto st1985;}}
 	goto st3579;
 st3579:
@@ -3984,39 +3984,39 @@ case 3579:
 		goto tr4963;
 	goto st0;
 tr128:
-#line 622 "configparser.rl"
+#line 623 "configparser.rl"
 	{ __constants__().bad_meat = tag_t(state.match, tagmem); }
 	goto st3580;
 tr141:
-#line 620 "configparser.rl"
+#line 621 "configparser.rl"
 	{ __constants__().grave = tag_t(state.match, tagmem); }
 	goto st3580;
 tr152:
-#line 621 "configparser.rl"
+#line 622 "configparser.rl"
 	{ __constants__().meat = tag_t(state.match, tagmem); }
 	goto st3580;
 tr162:
-#line 623 "configparser.rl"
+#line 624 "configparser.rl"
 	{ __constants__().money = tag_t(state.match, tagmem); }
 	goto st3580;
 tr212:
-#line 635 "configparser.rl"
+#line 636 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].fail_message = state.match; }
 	goto st3580;
 tr236:
-#line 629 "configparser.rl"
+#line 630 "configparser.rl"
 	{ __constants__().slots.back().name = state.match; }
 	goto st3580;
 tr4963:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st3580;
 tr4970:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st3580;
 tr4977:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st3580;
 tr4984:
@@ -4024,11 +4024,11 @@ tr4984:
 	{ init_species(spe); }
 	goto st3580;
 tr4991:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st3580;
 tr4998:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st3580;
 st3580:
@@ -4050,15 +4050,15 @@ case 3580:
 		goto st3580;
 	goto st0;
 tr4965:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st12;
 tr4972:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st12;
 tr4979:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st12;
 tr4986:
@@ -4066,11 +4066,11 @@ tr4986:
 	{ init_species(spe); }
 	goto st12;
 tr4993:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st12;
 tr5000:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st12;
 st12:
@@ -4121,7 +4121,7 @@ case 17:
 		goto tr28;
 	goto st0;
 tr28:
-#line 390 "configparser.rl"
+#line 391 "configparser.rl"
 	{ des = Design(); }
 	goto st18;
 st18:
@@ -4171,7 +4171,7 @@ case 19:
 		goto tr31;
 	goto st0;
 tr31:
-#line 383 "configparser.rl"
+#line 384 "configparser.rl"
 	{ des.level = toint(state.match); }
 	goto st20;
 st20:
@@ -4236,7 +4236,7 @@ case 21:
 		goto tr36;
 	goto st0;
 tr35:
-#line 386 "configparser.rl"
+#line 387 "configparser.rl"
 	{ des.tag = tag_t(state.match, tagmem); }
 	goto st22;
 st22:
@@ -4253,13 +4253,13 @@ case 22:
 		goto st22;
 	goto st0;
 tr37:
-#line 386 "configparser.rl"
+#line 387 "configparser.rl"
 	{ des.tag = tag_t(state.match, tagmem); }
-#line 392 "configparser.rl"
+#line 393 "configparser.rl"
 	{{ state.stack[ state.top++] = 3581; goto st963;}}
 	goto st3581;
 tr39:
-#line 392 "configparser.rl"
+#line 393 "configparser.rl"
 	{{ state.stack[ state.top++] = 3581; goto st963;}}
 	goto st3581;
 st3581:
@@ -4281,15 +4281,15 @@ case 3581:
 		goto tr4970;
 	goto st0;
 tr4966:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st23;
 tr4973:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st23;
 tr4980:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st23;
 tr4987:
@@ -4297,11 +4297,11 @@ tr4987:
 	{ init_species(spe); }
 	goto st23;
 tr4994:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st23;
 tr5001:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st23;
 st23:
@@ -4373,7 +4373,7 @@ case 31:
 		goto tr48;
 	goto st0;
 tr48:
-#line 612 "configparser.rl"
+#line 613 "configparser.rl"
 	{ lev = Levelskin(); }
 	goto st32;
 st32:
@@ -4424,7 +4424,7 @@ case 33:
 		goto tr51;
 	goto st0;
 tr51:
-#line 608 "configparser.rl"
+#line 609 "configparser.rl"
 	{ lev.level = toint(state.match); }
 	goto st34;
 st34:
@@ -4441,13 +4441,13 @@ case 34:
 		goto st34;
 	goto st0;
 tr53:
-#line 608 "configparser.rl"
+#line 609 "configparser.rl"
 	{ lev.level = toint(state.match); }
-#line 614 "configparser.rl"
+#line 615 "configparser.rl"
 	{{ state.stack[ state.top++] = 3582; goto st2055;}}
 	goto st3582;
 tr55:
-#line 614 "configparser.rl"
+#line 615 "configparser.rl"
 	{{ state.stack[ state.top++] = 3582; goto st2055;}}
 	goto st3582;
 st3582:
@@ -4469,15 +4469,15 @@ case 3582:
 		goto tr4977;
 	goto st0;
 tr4967:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st35;
 tr4974:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st35;
 tr4981:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st35;
 tr4988:
@@ -4485,11 +4485,11 @@ tr4988:
 	{ init_species(spe); }
 	goto st35;
 tr4995:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st35;
 tr5002:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st35;
 st35:
@@ -4707,15 +4707,15 @@ case 3583:
 		goto tr4984;
 	goto st0;
 tr4968:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st47;
 tr4975:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st47;
 tr4982:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st47;
 tr4989:
@@ -4723,11 +4723,11 @@ tr4989:
 	{ init_species(spe); }
 	goto st47;
 tr4996:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st47;
 tr5003:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st47;
 st47:
@@ -4785,7 +4785,7 @@ case 53:
 		goto tr80;
 	goto st0;
 tr80:
-#line 448 "configparser.rl"
+#line 449 "configparser.rl"
 	{ ter = Terrain(); }
 	goto st54;
 st54:
@@ -4850,7 +4850,7 @@ case 55:
 		goto tr84;
 	goto st0;
 tr83:
-#line 444 "configparser.rl"
+#line 445 "configparser.rl"
 	{ ter.tag = tag_t(state.match, tagmem); }
 	goto st56;
 st56:
@@ -4867,13 +4867,13 @@ case 56:
 		goto st56;
 	goto st0;
 tr85:
-#line 444 "configparser.rl"
+#line 445 "configparser.rl"
 	{ ter.tag = tag_t(state.match, tagmem); }
-#line 450 "configparser.rl"
+#line 451 "configparser.rl"
 	{{ state.stack[ state.top++] = 3584; goto st1496;}}
 	goto st3584;
 tr87:
-#line 450 "configparser.rl"
+#line 451 "configparser.rl"
 	{{ state.stack[ state.top++] = 3584; goto st1496;}}
 	goto st3584;
 st3584:
@@ -4895,15 +4895,15 @@ case 3584:
 		goto tr4991;
 	goto st0;
 tr4969:
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	goto st57;
 tr4976:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	goto st57;
 tr4983:
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	goto st57;
 tr4990:
@@ -4911,11 +4911,11 @@ tr4990:
 	{ init_species(spe); }
 	goto st57;
 tr4997:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	goto st57;
 tr5004:
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	goto st57;
 st57:
@@ -4959,7 +4959,7 @@ case 61:
 		goto tr92;
 	goto st0;
 tr92:
-#line 504 "configparser.rl"
+#line 505 "configparser.rl"
 	{ vau = Vault(); }
 	goto st62;
 st62:
@@ -5009,7 +5009,7 @@ case 63:
 		goto tr95;
 	goto st0;
 tr95:
-#line 497 "configparser.rl"
+#line 498 "configparser.rl"
 	{ vau.level = toint(state.match); }
 	goto st64;
 st64:
@@ -5074,7 +5074,7 @@ case 65:
 		goto tr100;
 	goto st0;
 tr99:
-#line 500 "configparser.rl"
+#line 501 "configparser.rl"
 	{ vau.tag = tag_t(state.match, tagmem); }
 	goto st66;
 st66:
@@ -5091,13 +5091,13 @@ case 66:
 		goto st66;
 	goto st0;
 tr101:
-#line 500 "configparser.rl"
+#line 501 "configparser.rl"
 	{ vau.tag = tag_t(state.match, tagmem); }
-#line 506 "configparser.rl"
+#line 507 "configparser.rl"
 	{{ state.stack[ state.top++] = 3585; goto st1883;}}
 	goto st3585;
 tr103:
-#line 506 "configparser.rl"
+#line 507 "configparser.rl"
 	{{ state.stack[ state.top++] = 3585; goto st1883;}}
 	goto st3585;
 st3585:
@@ -5297,27 +5297,27 @@ case 85:
 		goto tr127;
 	goto st0;
 tr127:
-#line 622 "configparser.rl"
+#line 623 "configparser.rl"
 	{ __constants__().bad_meat = tag_t(state.match, tagmem); }
 	goto st86;
 tr140:
-#line 620 "configparser.rl"
+#line 621 "configparser.rl"
 	{ __constants__().grave = tag_t(state.match, tagmem); }
 	goto st86;
 tr151:
-#line 621 "configparser.rl"
+#line 622 "configparser.rl"
 	{ __constants__().meat = tag_t(state.match, tagmem); }
 	goto st86;
 tr161:
-#line 623 "configparser.rl"
+#line 624 "configparser.rl"
 	{ __constants__().money = tag_t(state.match, tagmem); }
 	goto st86;
 tr211:
-#line 635 "configparser.rl"
+#line 636 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].fail_message = state.match; }
 	goto st86;
 tr235:
-#line 629 "configparser.rl"
+#line 630 "configparser.rl"
 	{ __constants__().slots.back().name = state.match; }
 	goto st86;
 st86:
@@ -5727,7 +5727,7 @@ st125:
 case 125:
 	goto tr181;
 tr181:
-#line 639 "configparser.rl"
+#line 640 "configparser.rl"
 	{ shortcut_key = (*( state.p)); }
 	goto st126;
 st126:
@@ -5779,7 +5779,7 @@ tr184:
 	{
             state.match += (*( state.p));
         }
-#line 640 "configparser.rl"
+#line 641 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.
                                             push_back(std::make_pair(state.match, 0)); }
 	goto st129;
@@ -5788,7 +5788,7 @@ tr186:
 	{
             state.match += (*( state.p));
         }
-#line 640 "configparser.rl"
+#line 641 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.
                                             push_back(std::make_pair(state.match, 0)); }
 	goto st129;
@@ -5832,7 +5832,7 @@ st131:
 case 131:
 	goto tr188;
 tr188:
-#line 642 "configparser.rl"
+#line 643 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = (*( state.p)); }
 	goto st132;
 st132:
@@ -5921,7 +5921,7 @@ st142:
 case 142:
 	goto tr198;
 tr198:
-#line 633 "configparser.rl"
+#line 634 "configparser.rl"
 	{ shortcut_key = (*( state.p)); }
 	goto st143;
 st143:
@@ -5993,7 +5993,7 @@ case 147:
 		goto tr205;
 	goto st0;
 tr205:
-#line 634 "configparser.rl"
+#line 635 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].help_message = state.match; }
 	goto st148;
 st148:
@@ -6073,7 +6073,7 @@ case 153:
 		goto tr215;
 	goto st0;
 tr215:
-#line 625 "configparser.rl"
+#line 626 "configparser.rl"
 	{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
 	goto st154;
 st154:
@@ -6137,7 +6137,7 @@ case 155:
 		goto tr219;
 	goto st0;
 tr218:
-#line 626 "configparser.rl"
+#line 627 "configparser.rl"
 	{ __constants__().slots.back().slot = state.match; }
 	goto st156;
 st156:
@@ -6159,7 +6159,7 @@ st157:
 case 157:
 	goto tr222;
 tr222:
-#line 627 "configparser.rl"
+#line 628 "configparser.rl"
 	{ __constants__().slots.back().letter = (*( state.p)); }
 	goto st158;
 st158:
@@ -6231,7 +6231,7 @@ case 162:
 		goto tr229;
 	goto st0;
 tr229:
-#line 628 "configparser.rl"
+#line 629 "configparser.rl"
 	{ __constants__().slots.back().label = state.match; }
 	goto st163;
 st163:
@@ -14985,7 +14985,7 @@ case 985:
 		goto tr1308;
 	goto st0;
 tr1276:
-#line 377 "configparser.rl"
+#line 378 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st986;
 tr1308:
@@ -14995,15 +14995,15 @@ tr1308:
 	{ des.attacks.add(dmgval); }
 	goto st986;
 tr1324:
-#line 355 "configparser.rl"
+#line 356 "configparser.rl"
 	{ des.blast.range = toint(state.match); }
 	goto st986;
 tr1329:
-#line 351 "configparser.rl"
+#line 352 "configparser.rl"
 	{ des.flags.blink = true; }
 	goto st986;
 tr1349:
-#line 360 "configparser.rl"
+#line 361 "configparser.rl"
 	{ des.cast_cloud.radius = toint(state.match); }
 	goto st986;
 tr1357:
@@ -15017,7 +15017,7 @@ tr1394:
 	{ des.defenses.add(dmgval); }
 	goto st986;
 tr1519:
-#line 349 "configparser.rl"
+#line 350 "configparser.rl"
 	{ des.descend = toint(state.match); }
 	goto st986;
 tr1527:
@@ -15025,7 +15025,7 @@ tr1527:
 	{ des.descr = state.match; }
 	goto st986;
 tr1538:
-#line 348 "configparser.rl"
+#line 349 "configparser.rl"
 	{ des.digging = toreal(state.match); }
 	goto st986;
 tr1549:
@@ -15033,7 +15033,7 @@ tr1549:
 	{ des.feed = toreal(state.match); }
 	goto st986;
 tr1570:
-#line 365 "configparser.rl"
+#line 366 "configparser.rl"
 	{ des.gencount.deviation = toreal(state.match); }
 	goto st986;
 tr1582:
@@ -15041,11 +15041,11 @@ tr1582:
 	{ des.heal = toreal(state.match); }
 	goto st986;
 tr1598:
-#line 347 "configparser.rl"
+#line 348 "configparser.rl"
 	{ des.lightradius = toint(state.match); }
 	goto st986;
 tr1605:
-#line 345 "configparser.rl"
+#line 346 "configparser.rl"
 	{ des.melee = true; }
 	goto st986;
 tr1615:
@@ -15115,15 +15115,15 @@ tr1800:
 	{ des.stackrange = toint(state.match); }
 	goto st986;
 tr1814:
-#line 346 "configparser.rl"
+#line 347 "configparser.rl"
 	{ des.throwrange = toint(state.match); }
 	goto st986;
 tr1822:
-#line 344 "configparser.rl"
+#line 345 "configparser.rl"
 	{ des.usable = true; }
 	goto st986;
 tr1832:
-#line 368 "configparser.rl"
+#line 369 "configparser.rl"
 	{ des.worth = toreal(state.match); }
 	goto st986;
 st986:
@@ -15146,15 +15146,15 @@ tr1310:
 	{ des.attacks.add(dmgval); }
 	goto st3588;
 tr1326:
-#line 355 "configparser.rl"
+#line 356 "configparser.rl"
 	{ des.blast.range = toint(state.match); }
 	goto st3588;
 tr1330:
-#line 351 "configparser.rl"
+#line 352 "configparser.rl"
 	{ des.flags.blink = true; }
 	goto st3588;
 tr1351:
-#line 360 "configparser.rl"
+#line 361 "configparser.rl"
 	{ des.cast_cloud.radius = toint(state.match); }
 	goto st3588;
 tr1359:
@@ -15168,7 +15168,7 @@ tr1396:
 	{ des.defenses.add(dmgval); }
 	goto st3588;
 tr1521:
-#line 349 "configparser.rl"
+#line 350 "configparser.rl"
 	{ des.descend = toint(state.match); }
 	goto st3588;
 tr1528:
@@ -15176,7 +15176,7 @@ tr1528:
 	{ des.descr = state.match; }
 	goto st3588;
 tr1540:
-#line 348 "configparser.rl"
+#line 349 "configparser.rl"
 	{ des.digging = toreal(state.match); }
 	goto st3588;
 tr1551:
@@ -15184,7 +15184,7 @@ tr1551:
 	{ des.feed = toreal(state.match); }
 	goto st3588;
 tr1572:
-#line 365 "configparser.rl"
+#line 366 "configparser.rl"
 	{ des.gencount.deviation = toreal(state.match); }
 	goto st3588;
 tr1584:
@@ -15192,11 +15192,11 @@ tr1584:
 	{ des.heal = toreal(state.match); }
 	goto st3588;
 tr1600:
-#line 347 "configparser.rl"
+#line 348 "configparser.rl"
 	{ des.lightradius = toint(state.match); }
 	goto st3588;
 tr1606:
-#line 345 "configparser.rl"
+#line 346 "configparser.rl"
 	{ des.melee = true; }
 	goto st3588;
 tr1616:
@@ -15318,15 +15318,15 @@ tr1802:
 	{ des.stackrange = toint(state.match); }
 	goto st3588;
 tr1816:
-#line 346 "configparser.rl"
+#line 347 "configparser.rl"
 	{ des.throwrange = toint(state.match); }
 	goto st3588;
 tr1823:
-#line 344 "configparser.rl"
+#line 345 "configparser.rl"
 	{ des.usable = true; }
 	goto st3588;
 tr1834:
-#line 368 "configparser.rl"
+#line 369 "configparser.rl"
 	{ des.worth = toreal(state.match); }
 	goto st3588;
 st3588:
@@ -15443,7 +15443,7 @@ case 993:
 		goto tr1320;
 	goto st0;
 tr1320:
-#line 354 "configparser.rl"
+#line 355 "configparser.rl"
 	{ des.blast.radius = toint(state.match); }
 	goto st994;
 st994:
@@ -15645,7 +15645,7 @@ case 1011:
 		goto tr1346;
 	goto st0;
 tr1346:
-#line 359 "configparser.rl"
+#line 360 "configparser.rl"
 	{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
 	goto st1012;
 st1012:
@@ -17481,7 +17481,7 @@ case 1193:
 		goto tr1564;
 	goto st0;
 tr1564:
-#line 364 "configparser.rl"
+#line 365 "configparser.rl"
 	{ des.gencount.mean = toreal(state.match); }
 	goto st1194;
 st1194:
@@ -20497,135 +20497,135 @@ case 1499:
 		goto tr1967;
 	goto st0;
 tr1963:
-#line 438 "configparser.rl"
+#line 439 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st1500;
 tr1967:
-#line 422 "configparser.rl"
+#line 423 "configparser.rl"
 	{ ter.air = true; }
 	goto st1500;
 tr1980:
-#line 419 "configparser.rl"
+#line 420 "configparser.rl"
 	{ ter.charges = toint(state.match); }
 	goto st1500;
 tr1988:
-#line 409 "configparser.rl"
+#line 410 "configparser.rl"
 	{ ter.count = toint(state.match); }
 	goto st1500;
 tr1997:
-#line 416 "configparser.rl"
+#line 417 "configparser.rl"
 	{ ter.decay = toint(state.match); }
 	goto st1500;
 tr2033:
-#line 430 "configparser.rl"
+#line 431 "configparser.rl"
 	{ ter.grant_spell.name = state.match; }
 	goto st1500;
 tr2042:
-#line 421 "configparser.rl"
+#line 422 "configparser.rl"
 	{ ter.is_lit = true; }
 	goto st1500;
 tr2052:
-#line 410 "configparser.rl"
+#line 411 "configparser.rl"
 	{ ter.name = state.match; }
 	goto st1500;
 tr2072:
-#line 401 "configparser.rl"
+#line 402 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::corner; }
 	goto st1500;
 tr2078:
-#line 399 "configparser.rl"
+#line 400 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::floor; }
 	goto st1500;
 tr2087:
-#line 402 "configparser.rl"
+#line 403 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::lowlands; }
 	goto st1500;
 tr2093:
-#line 400 "configparser.rl"
+#line 401 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::water; }
 	goto st1500;
 tr2157:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2160:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2165:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2171:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2179:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2184:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2188:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2194:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2201:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1500;
 tr2265:
-#line 413 "configparser.rl"
+#line 414 "configparser.rl"
 	{ ter.stairs = toint(state.match); }
 	goto st1500;
 tr2271:
-#line 418 "configparser.rl"
+#line 419 "configparser.rl"
 	{ ter.sticky = true; }
 	goto st1500;
 tr2287:
-#line 406 "configparser.rl"
+#line 407 "configparser.rl"
 	{ ter.tunnel_y = toint(state.match); }
 	goto st1500;
 tr2297:
-#line 414 "configparser.rl"
+#line 415 "configparser.rl"
 	{ ter.viewblock = true; }
 	goto st1500;
 tr2307:
-#line 415 "configparser.rl"
+#line 416 "configparser.rl"
 	{ ter.walkblock = true; }
 	goto st1500;
 tr2340:
 #line 214 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
-#line 417 "configparser.rl"
+#line 418 "configparser.rl"
 	{ ter.attacks.add(dmgval); }
 	goto st1500;
 tr2465:
-#line 424 "configparser.rl"
+#line 425 "configparser.rl"
 	{ ter.attack_level = toint(state.match); }
 	goto st1500;
 st1500:
@@ -20642,183 +20642,183 @@ case 1500:
 		goto st1500;
 	goto st0;
 tr1968:
-#line 422 "configparser.rl"
+#line 423 "configparser.rl"
 	{ ter.air = true; }
 	goto st3589;
 tr1982:
-#line 419 "configparser.rl"
+#line 420 "configparser.rl"
 	{ ter.charges = toint(state.match); }
 	goto st3589;
 tr1990:
-#line 409 "configparser.rl"
+#line 410 "configparser.rl"
 	{ ter.count = toint(state.match); }
 	goto st3589;
 tr1999:
-#line 416 "configparser.rl"
+#line 417 "configparser.rl"
 	{ ter.decay = toint(state.match); }
 	goto st3589;
 tr2034:
-#line 430 "configparser.rl"
+#line 431 "configparser.rl"
 	{ ter.grant_spell.name = state.match; }
 	goto st3589;
 tr2043:
-#line 421 "configparser.rl"
+#line 422 "configparser.rl"
 	{ ter.is_lit = true; }
 	goto st3589;
 tr2053:
-#line 410 "configparser.rl"
+#line 411 "configparser.rl"
 	{ ter.name = state.match; }
 	goto st3589;
 tr2073:
-#line 401 "configparser.rl"
+#line 402 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::corner; }
 	goto st3589;
 tr2079:
-#line 399 "configparser.rl"
+#line 400 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::floor; }
 	goto st3589;
 tr2088:
-#line 402 "configparser.rl"
+#line 403 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::lowlands; }
 	goto st3589;
 tr2094:
-#line 400 "configparser.rl"
+#line 401 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::water; }
 	goto st3589;
 tr2137:
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2158:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2161:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2166:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2172:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2180:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2185:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2189:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2195:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2202:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2205:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2210:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2216:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2224:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2228:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2234:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2241:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2257:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st3589;
 tr2267:
-#line 413 "configparser.rl"
+#line 414 "configparser.rl"
 	{ ter.stairs = toint(state.match); }
 	goto st3589;
 tr2272:
-#line 418 "configparser.rl"
+#line 419 "configparser.rl"
 	{ ter.sticky = true; }
 	goto st3589;
 tr2288:
-#line 406 "configparser.rl"
+#line 407 "configparser.rl"
 	{ ter.tunnel_y = toint(state.match); }
 	goto st3589;
 tr2298:
-#line 414 "configparser.rl"
+#line 415 "configparser.rl"
 	{ ter.viewblock = true; }
 	goto st3589;
 tr2308:
-#line 415 "configparser.rl"
+#line 416 "configparser.rl"
 	{ ter.walkblock = true; }
 	goto st3589;
 tr2342:
 #line 214 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
-#line 417 "configparser.rl"
+#line 418 "configparser.rl"
 	{ ter.attacks.add(dmgval); }
 	goto st3589;
 tr2467:
-#line 424 "configparser.rl"
+#line 425 "configparser.rl"
 	{ ter.attack_level = toint(state.match); }
 	goto st3589;
 st3589:
@@ -21240,7 +21240,7 @@ case 1536:
 		goto tr2015;
 	goto st0;
 tr2015:
-#line 427 "configparser.rl"
+#line 428 "configparser.rl"
 	{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); }
 	goto st1537;
 st1537:
@@ -21310,7 +21310,7 @@ case 1539:
 		goto tr2020;
 	goto st0;
 tr2020:
-#line 428 "configparser.rl"
+#line 429 "configparser.rl"
 	{ ter.grant_spell.karma_bound = toreal(state.match); }
 	goto st1540;
 st1540:
@@ -21380,7 +21380,7 @@ case 1542:
 		goto tr2026;
 	goto st0;
 tr2026:
-#line 429 "configparser.rl"
+#line 430 "configparser.rl"
 	{ ter.grant_spell.timeout = toreal(state.match); }
 	goto st1543;
 st1543:
@@ -22138,55 +22138,55 @@ case 1616:
 		goto tr2136;
 	goto st0;
 tr2136:
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2204:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2209:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2215:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2223:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2227:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2233:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2240:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 tr2256:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 411 "configparser.rl"
+#line 412 "configparser.rl"
 	{ ter.skin = skin; }
 	goto st1617;
 st1617:
@@ -23221,7 +23221,7 @@ case 1723:
 		goto tr2282;
 	goto st0;
 tr2282:
-#line 405 "configparser.rl"
+#line 406 "configparser.rl"
 	{ ter.tunnel_x = toint(state.match); }
 	goto st1724;
 st1724:
@@ -24764,7 +24764,7 @@ case 1891:
 		goto tr2484;
 	goto st0;
 tr2484:
-#line 465 "configparser.rl"
+#line 466 "configparser.rl"
 	{ vau.ax = toint(state.match); }
 	goto st1892;
 st1892:
@@ -24815,39 +24815,39 @@ case 1893:
 		goto tr2488;
 	goto st0;
 tr2476:
-#line 491 "configparser.rl"
+#line 492 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st1894;
 tr2488:
-#line 466 "configparser.rl"
+#line 467 "configparser.rl"
 	{ vau.ay = toint(state.match); }
 	goto st1894;
 tr2547:
-#line 461 "configparser.rl"
+#line 462 "configparser.rl"
 	{ vau.count = toint(state.match); }
 	goto st1894;
 tr2558:
-#line 483 "configparser.rl"
+#line 484 "configparser.rl"
 	{ vau.inherit = tag_t(state.match, tagmem); }
 	goto st1894;
 tr2566:
-#line 481 "configparser.rl"
+#line 482 "configparser.rl"
 	{ vau.pic.push_back(state.match); }
 	goto st1894;
 tr2585:
-#line 459 "configparser.rl"
+#line 460 "configparser.rl"
 	{ vau.placement = Vault::placement_t::corner; }
 	goto st1894;
 tr2591:
-#line 457 "configparser.rl"
+#line 458 "configparser.rl"
 	{ vau.placement = Vault::placement_t::floor; }
 	goto st1894;
 tr2597:
-#line 458 "configparser.rl"
+#line 459 "configparser.rl"
 	{ vau.placement = Vault::placement_t::water; }
 	goto st1894;
 tr2607:
-#line 485 "configparser.rl"
+#line 486 "configparser.rl"
 	{ vau.transpose = true; }
 	goto st1894;
 st1894:
@@ -24864,35 +24864,35 @@ case 1894:
 		goto st1894;
 	goto st0;
 tr2490:
-#line 466 "configparser.rl"
+#line 467 "configparser.rl"
 	{ vau.ay = toint(state.match); }
 	goto st3590;
 tr2549:
-#line 461 "configparser.rl"
+#line 462 "configparser.rl"
 	{ vau.count = toint(state.match); }
 	goto st3590;
 tr2560:
-#line 483 "configparser.rl"
+#line 484 "configparser.rl"
 	{ vau.inherit = tag_t(state.match, tagmem); }
 	goto st3590;
 tr2567:
-#line 481 "configparser.rl"
+#line 482 "configparser.rl"
 	{ vau.pic.push_back(state.match); }
 	goto st3590;
 tr2586:
-#line 459 "configparser.rl"
+#line 460 "configparser.rl"
 	{ vau.placement = Vault::placement_t::corner; }
 	goto st3590;
 tr2592:
-#line 457 "configparser.rl"
+#line 458 "configparser.rl"
 	{ vau.placement = Vault::placement_t::floor; }
 	goto st3590;
 tr2598:
-#line 458 "configparser.rl"
+#line 459 "configparser.rl"
 	{ vau.placement = Vault::placement_t::water; }
 	goto st3590;
 tr2608:
-#line 485 "configparser.rl"
+#line 486 "configparser.rl"
 	{ vau.transpose = true; }
 	goto st3590;
 st3590:
@@ -24955,7 +24955,7 @@ case 1899:
 		goto tr2497;
 	goto st0;
 tr2497:
-#line 469 "configparser.rl"
+#line 470 "configparser.rl"
 	{ vbrush = Vault::brush(); }
 	goto st1900;
 st1900:
@@ -24974,7 +24974,7 @@ case 1900:
 		goto st1900;
 	goto st0;
 tr2499:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	goto st1901;
 st1901:
@@ -24986,7 +24986,7 @@ case 1901:
 		goto tr2502;
 	goto st0;
 tr2502:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	goto st1902;
 st1902:
@@ -24998,7 +24998,7 @@ case 1902:
 		goto tr2503;
 	goto st0;
 tr2503:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	goto st1903;
 st1903:
@@ -25010,7 +25010,7 @@ case 1903:
 		goto tr2504;
 	goto st0;
 tr2504:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	goto st1904;
 st1904:
@@ -25022,23 +25022,23 @@ case 1904:
 		goto tr2505;
 	goto st0;
 tr2505:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	goto st1905;
 tr2530:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	goto st1905;
 tr2540:
-#line 474 "configparser.rl"
+#line 475 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	goto st1905;
 tr2535:
-#line 473 "configparser.rl"
+#line 474 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = false; }
 	goto st1905;
 tr2537:
-#line 472 "configparser.rl"
+#line 473 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 	goto st1905;
 st1905:
@@ -25103,7 +25103,7 @@ case 1908:
 		goto tr2511;
 	goto st0;
 tr2511:
-#line 475 "configparser.rl"
+#line 476 "configparser.rl"
 	{ vbrush.terrain = tag_t(state.match, tagmem); }
 	goto st1909;
 st1909:
@@ -25157,7 +25157,7 @@ case 1911:
 		goto tr2517;
 	goto st0;
 tr2517:
-#line 476 "configparser.rl"
+#line 477 "configparser.rl"
 	{ vbrush.design = tag_t(state.match, tagmem); }
 	goto st1912;
 st1912:
@@ -25211,7 +25211,7 @@ case 1914:
 		goto tr2523;
 	goto st0;
 tr2523:
-#line 477 "configparser.rl"
+#line 478 "configparser.rl"
 	{ vbrush.species = tag_t(state.match, tagmem); }
 	goto st1915;
 st1915:
@@ -25233,7 +25233,7 @@ st1916:
 case 1916:
 	goto tr2526;
 tr2526:
-#line 478 "configparser.rl"
+#line 479 "configparser.rl"
 	{ vau.brushes[(*( state.p))] = vbrush; }
 	goto st1917;
 st1917:
@@ -25245,7 +25245,7 @@ case 1917:
 		goto st1894;
 	goto st0;
 tr2500:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	goto st1918;
 st1918:
@@ -25257,7 +25257,7 @@ case 1918:
 		goto tr2527;
 	goto st0;
 tr2527:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	goto st1919;
 st1919:
@@ -25269,7 +25269,7 @@ case 1919:
 		goto tr2528;
 	goto st0;
 tr2528:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	goto st1920;
 st1920:
@@ -25281,7 +25281,7 @@ case 1920:
 		goto tr2529;
 	goto st0;
 tr2529:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	goto st1921;
 st1921:
@@ -25293,11 +25293,11 @@ case 1921:
 		goto tr2530;
 	goto st0;
 tr2501:
-#line 472 "configparser.rl"
-	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 #line 473 "configparser.rl"
-	{ vbrush.is_walk = false; vbrush.is_water = false; }
+	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 #line 474 "configparser.rl"
+	{ vbrush.is_walk = false; vbrush.is_water = false; }
+#line 475 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	goto st1922;
 st1922:
@@ -25311,9 +25311,9 @@ case 1922:
 	}
 	goto st0;
 tr2531:
-#line 472 "configparser.rl"
-	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 #line 473 "configparser.rl"
+	{ vbrush.is_walk = true; vbrush.is_water = true;   }
+#line 474 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = false; }
 	goto st1923;
 st1923:
@@ -25327,7 +25327,7 @@ case 1923:
 	}
 	goto st0;
 tr2533:
-#line 473 "configparser.rl"
+#line 474 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = false; }
 	goto st1924;
 st1924:
@@ -25339,7 +25339,7 @@ case 1924:
 		goto tr2535;
 	goto st0;
 tr2534:
-#line 472 "configparser.rl"
+#line 473 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 	goto st1925;
 st1925:
@@ -25351,7 +25351,7 @@ case 1925:
 		goto tr2536;
 	goto st0;
 tr2536:
-#line 472 "configparser.rl"
+#line 473 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 	goto st1926;
 st1926:
@@ -25363,7 +25363,7 @@ case 1926:
 		goto tr2537;
 	goto st0;
 tr2532:
-#line 474 "configparser.rl"
+#line 475 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	goto st1927;
 st1927:
@@ -25375,7 +25375,7 @@ case 1927:
 		goto tr2538;
 	goto st0;
 tr2538:
-#line 474 "configparser.rl"
+#line 475 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	goto st1928;
 st1928:
@@ -25387,7 +25387,7 @@ case 1928:
 		goto tr2539;
 	goto st0;
 tr2539:
-#line 474 "configparser.rl"
+#line 475 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	goto st1929;
 st1929:
@@ -26010,35 +26010,35 @@ case 1988:
 		goto tr2620;
 	goto st0;
 tr2617:
-#line 535 "configparser.rl"
+#line 536 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st1989;
 tr2620:
-#line 516 "configparser.rl"
+#line 517 "configparser.rl"
 	{ cel.age = toint(state.match); }
 	goto st1989;
 tr2633:
-#line 520 "configparser.rl"
+#line 521 "configparser.rl"
 	{ cel.is_walk = true; }
 	goto st1989;
 tr2650:
-#line 523 "configparser.rl"
+#line 524 "configparser.rl"
 	{ cel.karma_scale = toreal(state.match); }
 	goto st1989;
 tr2660:
-#line 524 "configparser.rl"
+#line 525 "configparser.rl"
 	{ cel.karma_step  = toreal(state.match); }
 	goto st1989;
 tr2672:
-#line 521 "configparser.rl"
+#line 522 "configparser.rl"
 	{ cel.make_walk = true; }
 	goto st1989;
 tr2689:
-#line 528 "configparser.rl"
+#line 529 "configparser.rl"
 	{ cel.seed.back().second = toint(state.match); }
 	goto st1989;
 tr2702:
-#line 518 "configparser.rl"
+#line 519 "configparser.rl"
 	{ cel.terrain = tag_t(state.match, tagmem); }
 	goto st1989;
 st1989:
@@ -26055,31 +26055,31 @@ case 1989:
 		goto st1989;
 	goto st0;
 tr2622:
-#line 516 "configparser.rl"
+#line 517 "configparser.rl"
 	{ cel.age = toint(state.match); }
 	goto st3591;
 tr2634:
-#line 520 "configparser.rl"
+#line 521 "configparser.rl"
 	{ cel.is_walk = true; }
 	goto st3591;
 tr2652:
-#line 523 "configparser.rl"
+#line 524 "configparser.rl"
 	{ cel.karma_scale = toreal(state.match); }
 	goto st3591;
 tr2662:
-#line 524 "configparser.rl"
+#line 525 "configparser.rl"
 	{ cel.karma_step  = toreal(state.match); }
 	goto st3591;
 tr2673:
-#line 521 "configparser.rl"
+#line 522 "configparser.rl"
 	{ cel.make_walk = true; }
 	goto st3591;
 tr2690:
-#line 528 "configparser.rl"
+#line 529 "configparser.rl"
 	{ cel.seed.back().second = toint(state.match); }
 	goto st3591;
 tr2703:
-#line 518 "configparser.rl"
+#line 519 "configparser.rl"
 	{ cel.terrain = tag_t(state.match, tagmem); }
 	goto st3591;
 st3591:
@@ -26128,7 +26128,7 @@ case 1991:
 		goto st1991;
 	goto st0;
 tr2626:
-#line 514 "configparser.rl"
+#line 515 "configparser.rl"
 	{ cel.born.insert((*( state.p)) - '0'); }
 	goto st1992;
 st1992:
@@ -26608,7 +26608,7 @@ case 2034:
 		goto st2034;
 	goto st0;
 tr2676:
-#line 512 "configparser.rl"
+#line 513 "configparser.rl"
 	{ cel.survive.insert((*( state.p)) - '0'); }
 	goto st2035;
 st2035:
@@ -26653,7 +26653,7 @@ case 2038:
 		goto tr2679;
 	goto st0;
 tr2679:
-#line 526 "configparser.rl"
+#line 527 "configparser.rl"
 	{ cel.seed.push_back(std::make_pair(0,0)); }
 	goto st2039;
 st2039:
@@ -26722,7 +26722,7 @@ case 2041:
 		goto tr2684;
 	goto st0;
 tr2684:
-#line 527 "configparser.rl"
+#line 528 "configparser.rl"
 	{ cel.seed.back().first = toint(state.match); }
 	goto st2042;
 st2042:
@@ -27190,55 +27190,55 @@ case 2081:
 		goto tr2761;
 	goto st0;
 tr2761:
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4909:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4914:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4920:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4928:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4932:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4938:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4945:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 tr4961:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2082;
 st2082:
@@ -27256,1359 +27256,1359 @@ case 2082:
 		goto st2082;
 	goto st0;
 tr2762:
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr2775:
-#line 567 "configparser.rl"
+#line 568 "configparser.rl"
 	{ lev.exclusive = true; }
 	goto st3592;
 tr2797:
-#line 580 "configparser.rl"
+#line 581 "configparser.rl"
 	{ lev.genparams.flatten_walk_ng = toint(state.match); }
 	goto st3592;
 tr2807:
-#line 581 "configparser.rl"
+#line 582 "configparser.rl"
 	{ lev.genparams.flatten_water_ng = toint(state.match); }
 	goto st3592;
 tr2857:
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2878:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2881:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2886:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2892:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2900:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2905:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2909:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2915:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2922:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2925:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2930:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2936:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2944:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2948:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2954:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2961:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr2977:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st3592;
 tr3016:
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3037:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3040:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3045:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3051:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3059:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3064:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3068:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3074:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3081:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3084:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3089:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3095:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3103:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3107:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3113:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3120:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3136:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st3592;
 tr3175:
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3196:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3199:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3204:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3210:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3218:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3223:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3227:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3233:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3240:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3243:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3248:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3254:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3262:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3266:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3272:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3279:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3295:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st3592;
 tr3334:
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3355:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3358:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3363:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3369:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3377:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3382:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3386:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3392:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3399:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3402:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3407:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3413:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3421:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3425:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3431:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3438:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3454:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st3592;
 tr3493:
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3514:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3517:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3522:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3528:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3536:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3541:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3545:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3551:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3558:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3561:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3566:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3572:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3580:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3584:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3590:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3597:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3613:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st3592;
 tr3652:
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3673:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3676:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3681:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3687:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3695:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3700:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3704:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3710:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3717:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3720:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3725:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3731:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3739:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3743:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3749:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3756:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3772:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st3592;
 tr3811:
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3832:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3835:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3840:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3846:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3854:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3859:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3863:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3869:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3876:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3879:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3884:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3890:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3898:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3902:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3908:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3915:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3931:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st3592;
 tr3970:
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr3991:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr3994:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr3999:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4005:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4013:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4018:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4022:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4028:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4035:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4038:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4043:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4049:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4057:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4061:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4067:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4074:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4090:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st3592;
 tr4109:
-#line 570 "configparser.rl"
+#line 571 "configparser.rl"
 	{ lev.genparams.flow_epsilon = toreal(state.match); }
 	goto st3592;
 tr4122:
-#line 573 "configparser.rl"
+#line 574 "configparser.rl"
 	{ lev.genparams.flow_erosion = toreal(state.match); }
 	goto st3592;
 tr4133:
-#line 571 "configparser.rl"
+#line 572 "configparser.rl"
 	{ lev.genparams.flow_n_freq = toint(state.match); }
 	goto st3592;
 tr4149:
-#line 574 "configparser.rl"
+#line 575 "configparser.rl"
 	{ lev.genparams.flow_renorm_freq = toint(state.match); }
 	goto st3592;
 tr4160:
-#line 575 "configparser.rl"
+#line 576 "configparser.rl"
 	{ lev.genparams.flow_renorm_scale = toreal(state.match); }
 	goto st3592;
 tr4173:
-#line 572 "configparser.rl"
+#line 573 "configparser.rl"
 	{ lev.genparams.flow_volume = toreal(state.match); }
 	goto st3592;
 tr4190:
-#line 584 "configparser.rl"
+#line 585 "configparser.rl"
 	{ lev.genparams.karma_dev = toreal(state.match); }
 	goto st3592;
 tr4201:
-#line 583 "configparser.rl"
+#line 584 "configparser.rl"
 	{ lev.genparams.karma_mean = toreal(state.match); }
 	goto st3592;
 tr4219:
-#line 565 "configparser.rl"
+#line 566 "configparser.rl"
 	{ lev.lightradius = toint(state.match); }
 	goto st3592;
 tr4227:
-#line 566 "configparser.rl"
+#line 567 "configparser.rl"
 	{ lev.lightradius_max = toint(state.match); }
 	goto st3592;
 tr4247:
-#line 577 "configparser.rl"
+#line 578 "configparser.rl"
 	{ lev.genparams.lowlands_quantile = toint(state.match); }
 	goto st3592;
 tr4261:
-#line 585 "configparser.rl"
+#line 586 "configparser.rl"
 	{ lev.genparams.nflatten = toint(state.match); }
 	goto st3592;
 tr4270:
-#line 568 "configparser.rl"
+#line 569 "configparser.rl"
 	{ lev.noterrain = true; }
 	goto st3592;
 tr4280:
-#line 586 "configparser.rl"
+#line 587 "configparser.rl"
 	{ lev.genparams.nunflow = toint(state.match); }
 	goto st3592;
 tr4331:
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4352:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4355:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4360:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4366:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4374:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4379:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4383:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4389:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4396:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4399:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4404:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4410:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4418:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4422:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4428:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4435:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4451:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3592;
 tr4464:
-#line 582 "configparser.rl"
+#line 583 "configparser.rl"
 	{ lev.genparams.unflow_ng = toint(state.match); }
 	goto st3592;
 tr4486:
-#line 576 "configparser.rl"
+#line 577 "configparser.rl"
 	{ lev.genparams.walk_threshold = toreal(state.match); }
 	goto st3592;
 tr4526:
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4547:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4550:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4555:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4561:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4569:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4574:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4578:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4584:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4591:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4594:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4599:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4605:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4613:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4617:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4623:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4630:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4646:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3592;
 tr4670:
-#line 579 "configparser.rl"
+#line 580 "configparser.rl"
 	{ lev.genparams.water_quantile_dev = toreal(state.match); }
 	goto st3592;
 tr4681:
-#line 578 "configparser.rl"
+#line 579 "configparser.rl"
 	{ lev.genparams.water_quantile_mean = toreal(state.match); }
 	goto st3592;
 tr4724:
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4745:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4748:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4753:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4759:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4767:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4772:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4776:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4782:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4789:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4792:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4797:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4803:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4811:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4815:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4821:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4828:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4844:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3592;
 tr4863:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4866:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4871:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4877:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4885:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4890:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4894:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4900:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4907:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4910:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4915:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4921:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4929:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4933:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4939:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4946:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 tr4962:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st3592;
 st3592:
@@ -28702,739 +28702,739 @@ case 2091:
 		goto tr2774;
 	goto st0;
 tr2714:
-#line 602 "configparser.rl"
+#line 603 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top];goto _again;} }
 	goto st2092;
 tr2774:
-#line 567 "configparser.rl"
+#line 568 "configparser.rl"
 	{ lev.exclusive = true; }
 	goto st2092;
 tr2795:
-#line 580 "configparser.rl"
+#line 581 "configparser.rl"
 	{ lev.genparams.flatten_walk_ng = toint(state.match); }
 	goto st2092;
 tr2805:
-#line 581 "configparser.rl"
+#line 582 "configparser.rl"
 	{ lev.genparams.flatten_water_ng = toint(state.match); }
 	goto st2092;
 tr2877:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2880:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2885:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2891:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2899:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2904:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2908:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2914:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr2921:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2092;
 tr3036:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3039:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3044:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3050:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3058:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3063:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3067:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3073:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3080:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2092;
 tr3195:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3198:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3203:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3209:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3217:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3222:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3226:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3232:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3239:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2092;
 tr3354:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3357:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3362:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3368:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3376:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3381:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3385:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3391:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3398:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2092;
 tr3513:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3516:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3521:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3527:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3535:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3540:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3544:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3550:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3557:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2092;
 tr3672:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3675:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3680:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3686:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3694:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3699:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3703:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3709:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3716:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2092;
 tr3831:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3834:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3839:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3845:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3853:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3858:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3862:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3868:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3875:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2092;
 tr3990:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr3993:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr3998:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4004:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4012:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4017:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4021:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4027:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4034:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2092;
 tr4107:
-#line 570 "configparser.rl"
+#line 571 "configparser.rl"
 	{ lev.genparams.flow_epsilon = toreal(state.match); }
 	goto st2092;
 tr4120:
-#line 573 "configparser.rl"
+#line 574 "configparser.rl"
 	{ lev.genparams.flow_erosion = toreal(state.match); }
 	goto st2092;
 tr4131:
-#line 571 "configparser.rl"
+#line 572 "configparser.rl"
 	{ lev.genparams.flow_n_freq = toint(state.match); }
 	goto st2092;
 tr4147:
-#line 574 "configparser.rl"
+#line 575 "configparser.rl"
 	{ lev.genparams.flow_renorm_freq = toint(state.match); }
 	goto st2092;
 tr4158:
-#line 575 "configparser.rl"
+#line 576 "configparser.rl"
 	{ lev.genparams.flow_renorm_scale = toreal(state.match); }
 	goto st2092;
 tr4171:
-#line 572 "configparser.rl"
+#line 573 "configparser.rl"
 	{ lev.genparams.flow_volume = toreal(state.match); }
 	goto st2092;
 tr4188:
-#line 584 "configparser.rl"
+#line 585 "configparser.rl"
 	{ lev.genparams.karma_dev = toreal(state.match); }
 	goto st2092;
 tr4199:
-#line 583 "configparser.rl"
+#line 584 "configparser.rl"
 	{ lev.genparams.karma_mean = toreal(state.match); }
 	goto st2092;
 tr4217:
-#line 565 "configparser.rl"
+#line 566 "configparser.rl"
 	{ lev.lightradius = toint(state.match); }
 	goto st2092;
 tr4225:
-#line 566 "configparser.rl"
+#line 567 "configparser.rl"
 	{ lev.lightradius_max = toint(state.match); }
 	goto st2092;
 tr4245:
-#line 577 "configparser.rl"
+#line 578 "configparser.rl"
 	{ lev.genparams.lowlands_quantile = toint(state.match); }
 	goto st2092;
 tr4259:
-#line 585 "configparser.rl"
+#line 586 "configparser.rl"
 	{ lev.genparams.nflatten = toint(state.match); }
 	goto st2092;
 tr4269:
-#line 568 "configparser.rl"
+#line 569 "configparser.rl"
 	{ lev.noterrain = true; }
 	goto st2092;
 tr4278:
-#line 586 "configparser.rl"
+#line 587 "configparser.rl"
 	{ lev.genparams.nunflow = toint(state.match); }
 	goto st2092;
 tr4351:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4354:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4359:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4365:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4373:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4378:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4382:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4388:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4395:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st2092;
 tr4462:
-#line 582 "configparser.rl"
+#line 583 "configparser.rl"
 	{ lev.genparams.unflow_ng = toint(state.match); }
 	goto st2092;
 tr4484:
-#line 576 "configparser.rl"
+#line 577 "configparser.rl"
 	{ lev.genparams.walk_threshold = toreal(state.match); }
 	goto st2092;
 tr4546:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4549:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4554:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4560:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4568:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4573:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4577:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4583:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4590:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st2092;
 tr4668:
-#line 579 "configparser.rl"
+#line 580 "configparser.rl"
 	{ lev.genparams.water_quantile_dev = toreal(state.match); }
 	goto st2092;
 tr4679:
-#line 578 "configparser.rl"
+#line 579 "configparser.rl"
 	{ lev.genparams.water_quantile_mean = toreal(state.match); }
 	goto st2092;
 tr4744:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4747:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4752:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4758:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4766:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4771:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4775:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4781:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4788:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st2092;
 tr4862:
 #line 179 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4865:
 #line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4870:
 #line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4876:
 #line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4884:
 #line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4889:
 #line 178 "configparser.rl"
 	{ skin.back = maudit::color::none; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4893:
 #line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4899:
 #line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 tr4906:
 #line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
-#line 553 "configparser.rl"
+#line 554 "configparser.rl"
 	{ lev.deep_water = skin; }
 	goto st2092;
 st2092:
@@ -29944,55 +29944,55 @@ case 2137:
 		goto tr2856;
 	goto st0;
 tr2856:
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2924:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2929:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2935:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2943:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2947:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2953:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2960:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 tr2976:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ lev.floor1 = skin; }
 	goto st2138;
 st2138:
@@ -31008,55 +31008,55 @@ case 2241:
 		goto tr3015;
 	goto st0;
 tr3015:
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3083:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3088:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3094:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3102:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3106:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3112:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3119:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 tr3135:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 558 "configparser.rl"
+#line 559 "configparser.rl"
 	{ lev.floor2 = skin; }
 	goto st2242;
 st2242:
@@ -32072,55 +32072,55 @@ case 2345:
 		goto tr3174;
 	goto st0;
 tr3174:
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3242:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3247:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3253:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3261:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3265:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3271:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3278:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 tr3294:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ lev.floor3 = skin; }
 	goto st2346;
 st2346:
@@ -33136,55 +33136,55 @@ case 2449:
 		goto tr3333;
 	goto st0;
 tr3333:
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3401:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3406:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3412:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3420:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3424:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3430:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3437:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 tr3453:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 560 "configparser.rl"
+#line 561 "configparser.rl"
 	{ lev.floor4 = skin; }
 	goto st2450;
 st2450:
@@ -34200,55 +34200,55 @@ case 2553:
 		goto tr3492;
 	goto st0;
 tr3492:
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3560:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3565:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3571:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3579:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3583:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3589:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3596:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 tr3612:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ lev.floor5 = skin; }
 	goto st2554;
 st2554:
@@ -35264,55 +35264,55 @@ case 2657:
 		goto tr3651;
 	goto st0;
 tr3651:
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3719:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3724:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3730:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3738:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3742:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3748:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3755:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 tr3771:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 562 "configparser.rl"
+#line 563 "configparser.rl"
 	{ lev.floor6 = skin; }
 	goto st2658;
 st2658:
@@ -36328,55 +36328,55 @@ case 2761:
 		goto tr3810;
 	goto st0;
 tr3810:
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3878:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3883:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3889:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3897:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3901:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3907:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3914:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 tr3930:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ lev.floor7 = skin; }
 	goto st2762;
 st2762:
@@ -37392,55 +37392,55 @@ case 2865:
 		goto tr3969;
 	goto st0;
 tr3969:
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4037:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4042:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4048:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4056:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4060:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4066:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4073:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 tr4089:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 564 "configparser.rl"
+#line 565 "configparser.rl"
 	{ lev.floor8 = skin; }
 	goto st2866;
 st2866:
@@ -40310,55 +40310,55 @@ case 3134:
 		goto tr4330;
 	goto st0;
 tr4330:
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4398:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4403:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4409:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4417:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4421:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4427:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4434:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 tr4450:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 554 "configparser.rl"
+#line 555 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	goto st3135;
 st3135:
@@ -41695,55 +41695,55 @@ case 3268:
 		goto tr4525;
 	goto st0;
 tr4525:
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4593:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4598:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4604:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4612:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4616:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4622:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4629:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 tr4645:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 555 "configparser.rl"
+#line 556 "configparser.rl"
 	{ lev.wall = skin; }
 	goto st3269;
 st3269:
@@ -43136,55 +43136,55 @@ case 3405:
 		goto tr4723;
 	goto st0;
 tr4723:
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4791:
 #line 167 "configparser.rl"
 	{ add_color(skin.fore, 4); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4796:
 #line 169 "configparser.rl"
 	{ add_color(skin.fore, 6); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4802:
 #line 165 "configparser.rl"
 	{ add_color(skin.fore, 2); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4810:
 #line 168 "configparser.rl"
 	{ add_color(skin.fore, 5); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4814:
 #line 164 "configparser.rl"
 	{ add_color(skin.fore, 1); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4820:
 #line 170 "configparser.rl"
 	{ add_color(skin.fore, 7); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4827:
 #line 166 "configparser.rl"
 	{ add_color(skin.fore, 3); }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 tr4843:
 #line 173 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
-#line 556 "configparser.rl"
+#line 557 "configparser.rl"
 	{ lev.water_wall = skin; }
 	goto st3406;
 st3406:
@@ -48378,23 +48378,23 @@ case 3578:
 	{ init_species(spe); }
 	break;
 	case 3581: 
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ init_design(des); }
 	break;
 	case 3584: 
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ init_terrain(ter); }
 	break;
 	case 3585: 
-#line 507 "configparser.rl"
+#line 508 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	break;
 	case 3579: 
-#line 548 "configparser.rl"
+#line 549 "configparser.rl"
 	{ init_celauto(cel); }
 	break;
 	case 3582: 
-#line 615 "configparser.rl"
+#line 616 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
 #line 48401 "configparser.h"
@@ -48404,7 +48404,7 @@ case 3578:
 	_out: {}
 	}
 
-#line 687 "configparser.rl"
+#line 688 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;
