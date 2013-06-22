@@ -110,7 +110,9 @@ struct Game {
 
     unsigned int game_seed;
 
-    Game() {}
+    bool debug_enabled;
+
+    Game(bool debug) : debug_enabled(debug) {}
 
     void make_screen(mainloop::screen_params_t& sp) {
 
@@ -179,6 +181,8 @@ struct Game {
         uint64_t gridseed;
         std::string filename;
         make_mapname(p.worldx, p.worldy, p.worldz, gridseed, filename);
+
+        progressbar("Generating dungeon...");
 
         try {
 
@@ -1129,12 +1133,12 @@ struct Game {
             state.push_window(help_text(), screens_t::help);
             break;
 
-            ////
-            // REMOVEME
-
-        //case 'd':
-        //    p.state = Player::DEBUG;
-        //    break;
+            // WATCH OUT!
+        case '!':
+            if (debug_enabled) {
+                p.state = Player::DEBUG;
+            }
+            break;
 
         default:
             break;
@@ -1411,7 +1415,7 @@ struct Game {
 };
 
 
-void client_mainloop(int client_fd, bool singleplayer) {
+void client_mainloop(int client_fd, bool singleplayer, bool debug) {
 
     try {
 
@@ -1421,7 +1425,7 @@ void client_mainloop(int client_fd, bool singleplayer) {
 
         screen_t screen(client);
 
-        mainloop::Main<Game, screen_t> main(screen);
+        mainloop::Main<Game, screen_t> main(screen, debug);
 
         main.mainloop(singleplayer);
 
@@ -1469,6 +1473,7 @@ int main(int argc, char** argv) {
 
     bool singleplayer = false;
     bool genmaps = false;
+    bool debug = false;
 
     if (argc > 1) {
 
@@ -1481,6 +1486,10 @@ int main(int argc, char** argv) {
         } else if (arg == "-g" || arg == "--generate") {
 
             genmaps = true;
+
+        } else if (arg == "-d" || arg == "--debug") {
+            
+            debug = true;
         }
     }
 
@@ -1491,7 +1500,7 @@ int main(int argc, char** argv) {
 
     if (singleplayer) {
         int client = server.accept();
-        client_mainloop(client, true);
+        client_mainloop(client, true, false);
 
     } else {
 
@@ -1501,7 +1510,7 @@ int main(int argc, char** argv) {
             int client = server.accept();
 
             std::cout << "Making thread..." << std::endl;
-            std::thread thr(client_mainloop, client, false);
+            std::thread thr(client_mainloop, client, false, debug);
             thr.detach();
         }
     }

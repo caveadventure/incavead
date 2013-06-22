@@ -256,7 +256,12 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         monster_kill(state, mon, s);
 
         if (!s.flags.plant && s.level > p.level) {
+
             p.level = s.level;
+
+            // Don't gain a level twice.
+            mortal = false;
+            
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
 
@@ -292,9 +297,9 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (s.level == p.level && mortal && !s.flags.plant) {
+    if (s.level >= p.level && mortal && !s.flags.plant) {
 
-        ++p.level;
+        p.level = s.level+1;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
     }
 

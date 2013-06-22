@@ -178,7 +178,7 @@ struct Main {
     GameState state;
 
 
-    Main(SCREEN& s) : screen(s), view_w(0), view_h(0), ticks(1) {}
+    Main(SCREEN& s, bool debug) : game(debug), screen(s), view_w(0), view_h(0), ticks(1) {}
 
 
 

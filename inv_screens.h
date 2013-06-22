@@ -120,6 +120,11 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, int worl
                           letter,
                           nlp::count(), d, tmp.count);
         ++letter;
+
+        if (letter == '9') {
+            m += "               \1(There are more items here in the pile.)\n";
+            break;
+        }
     }
 
     return m;
