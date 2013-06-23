@@ -82,6 +82,21 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
         ret = true;
     }
 
+    if (d.safe_descend > 0) {
+        
+        const Levelskin& ls = levelskins().get(p.worldz);
+
+        if (ls.noterrain) {
+            state.render.do_message("Nothing happened. Strange.", true);
+            ret = false;
+
+        } else {
+            p.worldz += d.descend;
+            regen = true;
+            ret = true;
+        }
+    }
+
     return ret;
 }
 
