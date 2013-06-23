@@ -360,7 +360,7 @@ struct Game {
 
             for (const auto& s : summons) {
                 state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                      state.render, s.x, s.y, s.summontag);
+                                      state.render, s.x, s.y, s.summontag, false);
             }
 
             unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
@@ -695,7 +695,7 @@ struct Game {
         for (const auto& i : summons) {
 
             unsigned int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                                    state.render, i.x, i.y, i.summontag);
+                                                    state.render, i.x, i.y, i.summontag, true);
 
             if (nm > 0 && state.render.is_in_fov(i.x, i.y)) {
 

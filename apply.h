@@ -56,6 +56,11 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
         ret = true;
     } 
 
+    if (d.karma != 0) {
+        p.karma.inc(d.karma);
+        ret = true;
+    }
+
     if (d.flags.blink) {
 
         grid::pt xy;

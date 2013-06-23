@@ -297,7 +297,7 @@ struct Monsters {
     }
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
-                        grender::Grid& render, unsigned int x, unsigned int y, tag_t tag) {
+                        grender::Grid& render, unsigned int x, unsigned int y, tag_t tag, bool do_counts) {
 
 
         std::unordered_set<pt> n;
@@ -311,10 +311,15 @@ struct Monsters {
         pt start;
         if (filter_habitat_find_one(grid, grid, n, start, s.habitat)) {
 
-            unsigned int n2 = counts.take(s.level, tag, 1);
+            unsigned int n2 = 1;
 
-            if (n2 == 0) {
-                return 0;
+            if (do_counts) {
+
+                n2 = counts.take(s.level, tag, 1);
+
+                if (n2 == 0) {
+                    return 0;
+                }
             }
 
             std::unordered_set<pt> placed;

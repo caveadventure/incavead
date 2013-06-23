@@ -12,18 +12,6 @@ struct Counts {
 
     std::map< unsigned int, std::map<tag_t, unsigned int> > data;
 
-    /*
-    void print() {
-        std::cout << "====" << std::endl;
-        for (const auto& i : data) {
-            for (const auto& j : i.second) {
-                std::cout << i.first << " '" << j.first << "' " << j.second << std::endl;
-            }
-        }
-        std::cout << "-==-" << std::endl;
-    }
-    */
-
     void init(tag_t tag, unsigned int level, unsigned int maxc) {
 
         if (maxc > 0) {
