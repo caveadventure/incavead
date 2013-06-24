@@ -1268,6 +1268,19 @@ struct Game {
             break;
         }
 
+        case 'z':
+        {
+            for (const auto& c : celautos().bank) {
+                Terrain::spell_t s;
+                s.karma_bound = 0;
+                s.ca_tag = c.first;
+                s.timeout = 9999;
+                p.spells.push_back(s);
+            }
+            state.render.do_message("Granted spells.");
+            break;
+        }
+
         }
 
         p.state &= ~(Player::DEBUG);
