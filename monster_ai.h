@@ -158,7 +158,8 @@ inline bool move_monster(Player& p, mainloop::GameState& state, size_t ticks,
                          monsters::pt& nxy, bool& do_die) {
 
     features::Feature feat;
-    if (state.features.get(m.xy.first, m.xy.second, feat)) {
+    if (state.features.get(m.xy.first, m.xy.second, feat) && 
+        !s.flags.terrain_immune) {
 
         const Terrain& t = terrain().get(feat.tag);
 

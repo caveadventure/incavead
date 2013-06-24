@@ -308,13 +308,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_plant  = 'plant'  %{ spe.flags.plant = true; } ;
         species_robot  = 'robot'  %{ spe.flags.robot = true; } ;
 
+        species_terrain_immune = 'terrain_immune' %{ spe.flags.terrain_immune = true; } ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
-            species_robot |
+            species_robot | species_terrain_immune |
             species_karma | species_blast |
             '}'
             ${ fret; })
