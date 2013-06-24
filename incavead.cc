@@ -360,7 +360,7 @@ struct Game {
 
             for (const auto& s : summons) {
                 state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                      state.render, s.x, s.y, s.summontag, false);
+                                      state.render, s.x, s.y, s.summontag, 0);
             }
 
             unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
@@ -694,13 +694,26 @@ struct Game {
 
         for (const auto& i : summons) {
 
-            unsigned int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                                    state.render, i.x, i.y, i.summontag, true);
+            unsigned int nm = 0;
+
+            if (i.summontag.null()) {
+                nm = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
+                                               i.x, i.y, i.level, 1);
+
+            } else {
+                nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                           i.x, i.y, i.summontag, 1);
+            }
 
             if (nm > 0 && state.render.is_in_fov(i.x, i.y)) {
 
-                state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
-                                                     nlp::count(), species().get(i.summontag), nm));
+                if (i.summontag.null()) {
+                    state.render.do_message(nlp::message("%s summons monsters!", species().get(i.summonertag)));
+
+                } else {
+                    state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
+                                                         nlp::count(), species().get(i.summontag), nm));
+                }
             }
         }
 

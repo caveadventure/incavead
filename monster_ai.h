@@ -7,6 +7,7 @@ struct summons_t {
     unsigned int x;
     unsigned int y;
     tag_t summontag;
+    unsigned int level;
     tag_t summonertag;
 };
 
@@ -76,7 +77,7 @@ inline void do_monster_blast(Player& p, mainloop::GameState& state, const Specie
 
 
 inline bool do_monster_magic(Player& p, mainloop::GameState& state, size_t ticks, double dist, 
-                             std::vector<summons_t>& summons,
+                             std::vector<summons_t>& summons, 
                              const monsters::Monster& m, const Species& s) {
 
     bool reachd = false;
@@ -130,8 +131,21 @@ inline bool do_monster_magic(Player& p, mainloop::GameState& state, size_t ticks
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, m.tag});
+            summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, 0, m.tag});
         }
+    }
+
+    if (s.spawns.size() > 0 && dist < s.range) {
+
+        for (const auto& c : s.spawns) {
+
+            if ((ticks & c.turns) != 0) continue;
+
+            double v = state.rng.gauss(0.0, 1.0);
+            if (v <= c.chance) continue;
+
+            summons.push_back(summons_t{m.xy.first, m.xy.second, tag_t(), c.level, m.tag});
+        }        
     }
 
     return false;

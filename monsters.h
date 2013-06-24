@@ -256,10 +256,9 @@ struct Monsters {
                 n_ = rng.gauss(m, d);
             }
 
-            if (n_ <= 0)
-                n_ = 0;
-
-            n += counts.take(level, tag, n_);
+            if (n_ > 0) {
+                n += counts.take(level, tag, n_);
+            }
         }
 
         std::unordered_set<pt> clump;
@@ -297,7 +296,7 @@ struct Monsters {
     }
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
-                        grender::Grid& render, unsigned int x, unsigned int y, tag_t tag, bool do_counts) {
+                        grender::Grid& render, unsigned int x, unsigned int y, tag_t tag, unsigned int count) {
 
 
         std::unordered_set<pt> n;
@@ -311,19 +310,20 @@ struct Monsters {
         pt start;
         if (filter_habitat_find_one(grid, grid, n, start, s.habitat)) {
 
-            unsigned int n2 = 1;
+            if (count > 0) {
 
-            if (do_counts) {
+                count = counts.take(s.level, tag, count);
 
-                n2 = counts.take(s.level, tag, 1);
-
-                if (n2 == 0) {
+                if (count == 0) {
                     return 0;
                 }
+
+            } else {
+                count = 1;
             }
 
             std::unordered_set<pt> placed;
-            unsigned int ret = place(neigh, rng, grid, grid, counts, &start, placed, s.level, tag, n2);
+            unsigned int ret = place(neigh, rng, grid, grid, counts, &start, placed, s.level, tag, count);
 
             for (const pt& xy : placed) {
                 render.invalidate(xy.first, xy.second);
@@ -333,6 +333,24 @@ struct Monsters {
         }
 
         return 0;
+    }
+
+
+    unsigned int summon_any(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts,
+                            grender::Grid& render, unsigned int x, unsigned int y, 
+                            unsigned int level, unsigned int count) {
+
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, count);
+
+        unsigned int ret = 0;
+
+        for (auto& i : q) {
+
+            ret += summon(neigh, rng, grid, counts, render, x, y, 
+                          i.first, i.second);
+        }
+
+        return ret;
     }
 
 

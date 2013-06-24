@@ -102,6 +102,16 @@ struct Species {
 
     std::vector<summon_t> summon;
 
+    struct spawn_t {
+        double chance;
+        unsigned int level;
+        unsigned int turns;
+
+        spawn_t() : chance(0), turns(0) {}
+    };
+
+    std::vector<spawn_t> spawns;
+
     struct flags_t {
         bool undead;
         bool animal;

@@ -22,7 +22,8 @@ enum class type_t : unsigned int {
     heavenly_fire,
     hellish_fire,
     electric,
-    sonic
+    sonic,
+    magic
 };
 
 struct val_t {

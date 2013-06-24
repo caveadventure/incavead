@@ -151,6 +151,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         // eat_brain
         // drain
         // electric
+        // magic
         
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
         totdamage += dmg;
@@ -355,7 +356,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
                    v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric) {
+                   v.type == damage::type_t::electric ||
+                   v.type == damage::type_t::magic) {
 
             // No sonic damage for the player.
 
@@ -414,7 +416,8 @@ inline void defend(Player& p,
                     state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
 
             } else if (v.type == damage::type_t::physical || 
-                       v.type == damage::type_t::poison) {
+                       v.type == damage::type_t::poison ||
+                       v.type == damage::type_t::magic) {
 
                 state.render.do_message(nlp::message("%s hits!", s));
             }
@@ -477,7 +480,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
                    v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric) {
+                   v.type == damage::type_t::electric ||
+                   v.type == damage::type_t::magic) {
 
             do_hurt = true;
         }
@@ -551,7 +555,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::eat_brain ||
                    v.type == damage::type_t::drain ||
                    v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric) {
+                   v.type == damage::type_t::electric ||
+                   v.type == damage::type_t::magic) {
 
             do_hurt = true;
         }
