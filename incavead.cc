@@ -474,6 +474,7 @@ struct Game {
 
         } else {
             state.render.unset_skin(x, y, 2);
+            state.render.set_is_lit(x, y, 2, false);
         }
 
         // //
