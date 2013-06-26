@@ -384,23 +384,39 @@ struct Map {
                 walkmap.insert(xy);
 
                 walk_r[w].push_back(xy);
+
+                if (h <= -10) {
+                    lowlands.insert(xy);
+                }
             }
         }
 
+        if (walk_r.empty() || lowlands.empty())
+            throw std::runtime_error("Failed to generate map");
+
         ///
-        /// 0.25 quantile
+        /// 
+        /*
+        std::cout << "!!! " << walk_r.size() << "/" << genparams.lowlands_threshold << std::endl;
 
-        size_t walk_r_n = walk_r.size() / genparams.lowlands_quantile;
-        if (walk_r_n == 0 && walk_r.size() >= 1) {
-            walk_r_n = 1;
-        }
+        bool lowlands_ok = false;
+        auto walk_r_i = walk_r.rbegin();
 
-        auto walk_r_i = walk_r.begin();
+        while (walk_r_i != walk_r.rend()) {
 
-        while (walk_r_i != walk_r.end() && walk_r_n > 0) {
+            if (walk_r_i->first < genparams.lowlands_threshold)
+                break;
+
             lowlands.insert(walk_r_i->second.begin(), walk_r_i->second.end());
-            --walk_r_n;
+            lowlands_ok = true;
+            std::cout << "   " << walk_r_i->second.size() << std::endl;
+            ++walk_r_i;
         }
+
+        if (!lowlands_ok) {
+            lowlands.insert(walk_r.rbegin()->second.begin(), walk_r.rend()->second.end());
+        }
+        */
 
         ///
         

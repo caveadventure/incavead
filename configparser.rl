@@ -588,7 +588,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_flow_renorm_freq       = 'flow_renorm_freq'    ws1 number %{ lev.genparams.flow_renorm_freq = toint(state.match); };
         levelskin_flow_renorm_scale      = 'flow_renorm_scale'   ws1 real   %{ lev.genparams.flow_renorm_scale = toreal(state.match); }; 
         levelskin_walk_threshold         = 'walk_threshold'      ws1 real   %{ lev.genparams.walk_threshold = toreal(state.match); };
-        levelskin_lowlands_quantile      = 'lowlands_quantile'   ws1 number %{ lev.genparams.lowlands_quantile = toint(state.match); };
+        levelskin_lowlands_threshold     = 'lowlands_threshold'  ws1 number %{ lev.genparams.lowlands_threshold = toint(state.match); };
         levelskin_water_quantile_mean    = 'water_quantile_mean' ws1 real   %{ lev.genparams.water_quantile_mean = toreal(state.match); };
         levelskin_water_quantile_dev     = 'water_quantile_dev'  ws1 real   %{ lev.genparams.water_quantile_dev = toreal(state.match); };
         levelskin_flatten_walk_ng        = 'flatten_walk_ng'     ws1 number %{ lev.genparams.flatten_walk_ng = toint(state.match); };
@@ -608,7 +608,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_exclusive | levelskin_noterrain |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
-            levelskin_walk_threshold | levelskin_lowlands_quantile | levelskin_water_quantile_mean |
+            levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |
             levelskin_water_quantile_dev | levelskin_flatten_walk_ng | levelskin_flatten_water_ng |
             levelskin_unflow_ng | levelskin_karma_mean | levelskin_karma_dev |
             levelskin_nflatten | levelskin_nunflow |

@@ -9,7 +9,7 @@ namespace rnd {
 
 struct Generator {
 
-    std::mt19937 gen;
+    std::mt19937_64 gen;
 
     size_t seed;
 

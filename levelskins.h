@@ -33,7 +33,7 @@ struct Levelskin {
         unsigned int flow_renorm_freq;
         double flow_renorm_scale; 
         double walk_threshold;
-        unsigned int lowlands_quantile;
+        unsigned int lowlands_threshold;
         double water_quantile_mean;
         double water_quantile_dev;
         unsigned int flatten_walk_ng;
@@ -52,7 +52,7 @@ struct Levelskin {
             flow_renorm_freq(500), 
             flow_renorm_scale(15),
             walk_threshold(0),
-            lowlands_quantile(4), 
+            lowlands_threshold(4), 
             water_quantile_mean(5.0), 
             water_quantile_dev(1.0),
             flatten_walk_ng(5),
