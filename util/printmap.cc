@@ -20,9 +20,20 @@ int main(int argc, char** argv) {
             for (unsigned int x = 0; x < grid.w; ++x) {
 
                 if (grid.is_lowlands(x, y)) {
-                    z += 'o';
+
+                    if (grid.is_water(x, y)) {
+                        z += 'O';
+                    } else {
+                        z += 'o';
+                    }
+
                 } else if (grid.is_walk(x, y)) {
-                    z += '.';
+
+                    if (grid.is_water(x, y)) {
+                        z += '+';
+                    } else {
+                        z += '.';
+                    }
 
                 } else {
                     z += '#';
