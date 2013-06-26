@@ -91,7 +91,7 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
             ret = false;
 
         } else {
-            p.worldz += d.descend;
+            p.worldz += d.safe_descend;
             regen = true;
             ret = true;
         }

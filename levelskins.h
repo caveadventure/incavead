@@ -52,7 +52,7 @@ struct Levelskin {
             flow_renorm_freq(500), 
             flow_renorm_scale(15),
             walk_threshold(0),
-            lowlands_threshold(4), 
+            lowlands_threshold(1), 
             water_quantile_mean(5.0), 
             water_quantile_dev(1.0),
             flatten_walk_ng(5),

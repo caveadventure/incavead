@@ -385,7 +385,7 @@ struct Map {
 
                 walk_r[w].push_back(xy);
 
-                if (h <= -10) {
+                if (h <= -10 && w >= genparams.lowlands_threshold) {
                     lowlands.insert(xy);
                 }
             }
