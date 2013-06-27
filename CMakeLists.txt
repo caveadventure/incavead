@@ -40,6 +40,7 @@ endif(NOT RAGEL)
 target_link_libraries(incavead m)
 
 add_executable(highscore util/highscore.cc)
+add_executable(victory util/victory.cc)
 add_executable(printmap util/printmap.cc)
 
 install(TARGETS incavead highscore DESTINATION games/incavead)

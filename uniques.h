@@ -117,6 +117,8 @@ public:
 
         write();
 
+        std::cout << "GET true, " << ret.size() << std::endl;
+
         return ret;
     }
 
@@ -133,6 +135,8 @@ public:
 
         placetime = ::time(NULL);
 
+        std::cout << "PUT true, " << i.size() << " " << placetime << std::endl;
+
         write();
     }
 
@@ -147,6 +151,9 @@ public:
             ++series;
             out_series = series;
             write();
+
+            std::cout << "GEN true" << std::endl;
+
             return true;
         }
 

@@ -341,10 +341,10 @@ struct Main {
     bool check_done(bool done, bool dead, const std::string& name, const std::string& savefile) {
 
         if (done) {
-                
+
             if (dead) {
 
-                game.endgame(name);
+                game.endgame(state, name);
 
                 clobber_savefile(savefile);
 

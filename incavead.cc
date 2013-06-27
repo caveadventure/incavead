@@ -346,10 +346,11 @@ struct Game {
         {
             size_t unique_series;
 
-            if (uniques::uniques().generate(constants().uniques_timeout, unique_series)) {
+            if (p.worldx == 0 && p.worldy == 0 && p.worldz == 0 &&
+                uniques::uniques().generate(constants().uniques_timeout, unique_series)) {
 
                 grid::pt xy;
-                if (maps.one_of_corner(state.rng, xy)) {
+                if (maps.one_of_lowlands(state.rng, xy)) {
 
                     items::Item vi(constants().victory_item, xy, 1);
                     state.items.place(xy.first, xy.second, vi, state.render);
@@ -548,7 +549,9 @@ struct Game {
     }
 
 
-    void endgame(const std::string& name) {
+    void endgame(mainloop::GameState& state, const std::string& name) {
+
+        dispose(state);
 
         bones::bones().add(name, p);
     }
