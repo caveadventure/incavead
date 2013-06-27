@@ -105,7 +105,7 @@ public:
 
         std::unique_lock<std::mutex> l(mutex);
 
-        auto i = data.get(key_t{wx, wy, wz});
+        auto i = data.find(key_t{wx, wy, wz});
 
         if (i == data.end())
             return std::vector<items::Item>();
@@ -128,7 +128,8 @@ public:
             return;
         }
 
-        data[key_t{wx, wy, wz}].insert(i.begin(), i.end());
+        auto& v = data[key_t{wx, wy, wz}];
+        v.insert(v.end(), i.begin(), i.end());
 
         placetime = ::time(NULL);
 
