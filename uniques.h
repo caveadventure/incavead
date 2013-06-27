@@ -105,6 +105,12 @@ public:
 
         std::unique_lock<std::mutex> l(mutex);
 
+        std::cout << " ?get? " << wx << "," << "," << wz << std::endl;
+
+        for (const auto& j : data) {
+            std::cout << "  , " << j.first.wx << "," << j.first.wy << "," << j.first.wz << std::endl;
+        }
+
         auto i = data.find(key_t{wx, wy, wz});
 
         if (i == data.end())
@@ -117,7 +123,7 @@ public:
 
         write();
 
-        std::cout << "GET true, " << ret.size() << std::endl;
+        std::cout << "GET true, " << ret.size() << " // " << out_series << std::endl;
 
         return ret;
     }
@@ -136,7 +142,7 @@ public:
 
         placetime = ::time(NULL);
 
-        std::cout << "PUT true, " << i.size() << " " << placetime << std::endl;
+        std::cout << "PUT true, " << i.size() << " " << placetime << " / " << wx << "," << wy << "," << wz << std::endl;
 
         write();
     }

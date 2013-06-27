@@ -30,6 +30,11 @@ struct Player {
     int worldy;
     int worldz;
 
+    // Only needed in dispose(), so that we know the actual level, not the one being generated.
+    int current_wx;
+    int current_wy;
+    int current_wz;
+
     unsigned int level;
 
     stat_t health;
@@ -77,7 +82,8 @@ struct Player {
 
     size_t dungeon_unique_series;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
+    Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), 
+               current_wx(0), current_wy(0), current_wz(0), level(0),
                sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN),
                dungeon_unique_series(0)
         {

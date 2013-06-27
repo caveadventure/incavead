@@ -412,6 +412,10 @@ struct Game {
                 throw std::runtime_error("Sanity error 4");
         }
 
+        p.current_wx = p.worldx;
+        p.current_wy = p.worldy;
+        p.current_wz = p.worldz;
+
         progressbar("Done!");
     }
 
@@ -437,11 +441,36 @@ struct Game {
 
         if (vic.size() > 0) {
         
-            uniques::uniques().put(p.worldx, p.worldy, p.worldz, vic, p.dungeon_unique_series);
+            uniques::uniques().put(p.current_wx, p.current_wy, p.current_wz, vic, p.dungeon_unique_series);
         }
 
         p.dungeon_unique_series = 0;
     }
+
+    void endgame(mainloop::GameState& state, const std::string& name) {
+
+        const Design& d_victory = designs().get(constants().victory_item);
+
+        p.inv.inv_to_floor(d_victory.slot, p.px, p.py, state.items, state.render);
+
+        dispose(state);
+
+        bones::bones().add(name, p);
+    }
+
+    template <typename SINK>
+    void save(SINK& s) {
+        serialize::write(s, game_seed);
+        serialize::write(s, p);
+    }
+
+    template <typename SOURCE>
+    void load(SOURCE& s) {
+        serialize::read(s, game_seed);
+        serialize::read(s, p);
+    }
+
+
 
     void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
 
@@ -552,29 +581,6 @@ struct Game {
         }
     }
 
-
-    void endgame(mainloop::GameState& state, const std::string& name) {
-
-        const Design& d_victory = designs().get(constants().victory_item);
-
-        p.inv.inv_to_floor(d_victory.slot, p.px, p.py, state.items, state.render);
-
-        dispose(state);
-
-        bones::bones().add(name, p);
-    }
-
-    template <typename SINK>
-    void save(SINK& s) {
-        serialize::write(s, game_seed);
-        serialize::write(s, p);
-    }
-
-    template <typename SOURCE>
-    void load(SOURCE& s) {
-        serialize::read(s, game_seed);
-        serialize::read(s, p);
-    }
 
     void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
         
