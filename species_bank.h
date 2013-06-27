@@ -2,11 +2,11 @@
 #define __SPECIES_BANK
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 struct SpeciesBank {
 
-    std::map<tag_t,Species> bank;
+    std::unordered_map<tag_t,Species> bank;
     counters::Counts counts;
 
     void copy(const Species& s) {

@@ -3,6 +3,7 @@
 
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <memory>
 
@@ -30,7 +31,7 @@ struct CelAuto {
 
 struct CelAutoBank {
 
-    std::map<tag_t,CelAuto> bank;
+    std::unordered_map<tag_t,CelAuto> bank;
 
     template <typename... ARGS>
     void init(tag_t tag, ARGS... args) {

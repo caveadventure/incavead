@@ -2,11 +2,11 @@
 #define __VAULTS_BANK
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 struct VaultsBank {
 
-    std::map<tag_t,Vault> bank;
+    std::unordered_map<tag_t,Vault> bank;
     counters::Counts counts;
 
     void copy(const Vault& s) {

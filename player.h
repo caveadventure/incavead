@@ -75,8 +75,11 @@ struct Player {
 
     std::string attacker;
 
+    size_t dungeon_unique_series;
+
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(0), level(0),
-               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN) 
+               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN),
+               dungeon_unique_series(0)
         {
             karma.val = 0;
         }

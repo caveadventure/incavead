@@ -2,11 +2,11 @@
 #define __DESIGNS_BANK
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 struct DesignsBank {
 
-    std::map<tag_t,Design> bank;
+    std::unordered_map<tag_t,Design> bank;
     counters::Counts counts;
 
     void copy(const Design& d) {

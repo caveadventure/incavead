@@ -45,7 +45,9 @@
 #include "combat.h"
 #include "apply.h"
 #include "monster_ai.h"
+
 #include "bones.h"
+#include "uniques.h"
 
 #include "vault_place.h"
 
@@ -323,6 +325,7 @@ struct Game {
             }
         }
 
+
         // Place some random items.
 
         state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
@@ -337,6 +340,33 @@ struct Game {
 
             maps.add_nogen_expand(state.neigh, p.px, p.py, 3);
         }
+
+
+        // Place the victory item
+        {
+            size_t unique_series;
+
+            if (uniques::uniques().generate(6*3600, unique_series)) {
+
+                grid::pt xy;
+                if (maps.one_of_corner(state.rng, xy)) {
+
+                    items::Item vi(constants().victory_item, xy, 1);
+                    state.items.place(xy.first, xy.second, vi, state.render);
+                }
+
+            } else {
+
+                std::vector<items::Item> vic = uniques::uniques().get(p.worldx, p.worldy, p.worldz, unique_series);
+
+                for (const auto& i : vic) {
+                    state.items.place(i.xy.first, i.xy.second, i, state.render);
+                }
+            }
+
+            p.dungeon_unique_series = unique_series;
+        }
+
 
         {
             progressbar("Placing items...");
@@ -384,9 +414,26 @@ struct Game {
 
     void dispose(mainloop::GameState& state) {
 
-        state.items.dispose(state.designs_counts);
+        std::vector<items::Item> vic;
+        tag_t vic_tag = constants().victory_item;
+
+        state.items.dispose(state.designs_counts,
+                            [&vic, &vic_tag](const items::Item& i) {
+
+                                if (i.tag == vic_tag) {
+                                    vic.push_back(i);
+                                    return false;
+                                }
+
+                                return true;
+                            });
+
         state.monsters.dispose(state.species_counts);
 
+        if (vic.size() > 0) {
+        
+            uniques::uniques().put(p.worldx, p.worldy, p.worldz, vic, p.dungeon_unique_series);
+        }
     }
 
     void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
@@ -633,6 +680,27 @@ struct Game {
 
     void process_world(mainloop::GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
+
+
+        // Handle victory items.
+        {
+            tag_t victory_item = constants().victory_item;
+
+            const Design& d_victory = designs().get(victory_item);
+
+            items::Item vi;
+            items::Item tmp;
+
+            if (p.inv.take(d_victory.slot, vi)) {
+
+                std::cout << "!! " << vi.count << std::endl;
+                ++vi.count;
+                p.inv.place(d_victory.slot, vi, tmp);
+            }
+        }
+
+        //
+        //
 
         state.camap.step(
             state.neigh,
@@ -1498,6 +1566,7 @@ int main(int argc, char** argv) {
     init_statics();
 
     bones::bones().load();
+    uniques::uniques().load();
 
     bool singleplayer = false;
     bool genmaps = false;

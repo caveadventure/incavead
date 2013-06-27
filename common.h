@@ -11,7 +11,7 @@ namespace std {
 template <typename A, typename B>
 struct hash< pair<A,B> > {
     size_t operator()(const pair<A,B>& p) const {
-        return hash<A>()(p.first) ^ hash<B>()(p.second);
+        return hash<A>()(p.first) + hash<B>()(p.second);
     }
 };
 
@@ -87,6 +87,18 @@ template <>
 struct writer<tag_t> {
     void write(Sink& s, tag_t t) {
         serialize::write(s, t.v);
+    }
+};
+
+}
+
+
+namespace std {
+
+template <>
+struct hash<tag_t> {
+    size_t operator()(tag_t t) const {
+        return t.v;
     }
 };
 

@@ -185,10 +185,15 @@ struct Items {
         j->second.back().count = icount;
     }
 
-    void dispose(counters::Counts& counts) {
+    template <typename FUNC>
+    void dispose(counters::Counts& counts, FUNC callback) {
 
         for (const auto& j : stuff) {
             for (const Item& i : j.second) {
+
+                if (!callback(i))
+                    continue;
+
                 const Design& d = designs().get(i.tag);
                 counts.replace(d.level, d.tag);
             }

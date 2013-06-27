@@ -2,11 +2,11 @@
 #define __TERRAIN_BANK
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 struct TerrainBank {
 
-    std::map<tag_t,Terrain> bank;
+    std::unordered_map<tag_t,Terrain> bank;
     counters::Counts counts;
 
     void copy(const Terrain& t) {
