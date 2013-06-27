@@ -346,7 +346,7 @@ struct Game {
         {
             size_t unique_series;
 
-            if (uniques::uniques().generate(6*3600, unique_series)) {
+            if (uniques::uniques().generate(constants().uniques_timeout, unique_series)) {
 
                 grid::pt xy;
                 if (maps.one_of_corner(state.rng, xy)) {
@@ -434,6 +434,8 @@ struct Game {
         
             uniques::uniques().put(p.worldx, p.worldy, p.worldz, vic, p.dungeon_unique_series);
         }
+
+        p.dungeon_unique_series = 0;
     }
 
     void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {

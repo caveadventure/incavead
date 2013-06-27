@@ -132,6 +132,7 @@ struct reader<Player> {
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
         serialize::read(s, p.spells);
+        serialize::read(s, p.dungeon_unique_series);
     }
 };
 
@@ -158,6 +159,7 @@ struct writer<Player> {
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
         serialize::write(s, p.spells);
+        serialize::write(s, p.dungeon_unique_series);
     }
 };
 

@@ -28,6 +28,8 @@ struct ConstantsBank {
     };
 
     std::map<unsigned char, shortcut_t> shortcuts;
+    
+    unsigned int uniques_timeout;
 
 };
 

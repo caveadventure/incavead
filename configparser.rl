@@ -638,6 +638,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
         constant_money    = 'money'    ws1 string  %{ __constants__().money = tag_t(state.match, tagmem); };
 
+        constant_victory_item = 'victory_item' ws1 string %{ __constants__().victory_item = tag_t(state.match, tagmem); };
+
+        constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
+
         constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
             ws1 tag      %{ __constants__().slots.back().slot = state.match; }
             ws1 '\'' any ${ __constants__().slots.back().letter = fc; } '\''
@@ -660,7 +664,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
-                       constant_shortcut_messages | constant_shortcut_action
+                       constant_shortcut_messages | constant_shortcut_action |
+                       constant_victory_item | constant_uniques_timeout 
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
