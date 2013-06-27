@@ -695,6 +695,9 @@ struct Game {
 
                 std::cout << "!! " << vi.count << std::endl;
                 ++vi.count;
+
+                p.food.dec(1e-5 * vi.count);
+
                 p.inv.place(d_victory.slot, vi, tmp);
             }
         }

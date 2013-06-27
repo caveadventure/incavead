@@ -358,6 +358,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
         design_descend    = 'descend' ws1 number        %{ des.descend = toint(state.match); };
 
+        design_destructible = 'destructible' %{ des.destructible = true; };
+
         design_safe_descend = 'safe_descend' ws1 number %{ des.safe_descend = toint(state.match); };
 
         design_blink      = 'blink' %{ des.flags.blink = true; };
@@ -383,7 +385,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
-            design_attack | design_defense | design_stackrange | design_heal | design_usable |
+            design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit |

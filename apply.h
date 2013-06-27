@@ -101,6 +101,24 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
 }
 
 
+inline bool destroy_item(Player& p, const std::string& slot) {
+
+    items::Item tmp;
+
+    if (!p.inv.get(slot, tmp))
+        return false;
+
+    const Design& d = designs().get(tmp.tag);
+
+    if (!d.destructible) 
+        return false;
+        
+    if (!p.inv.take(slot, tmp))
+        return false;
+
+    return true;
+}
+
 inline void blast_process_point(Player& p, mainloop::GameState& state, const Design& d,
                                 unsigned int _x, unsigned int _y) {
 
