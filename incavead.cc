@@ -443,8 +443,6 @@ struct Game {
         
             uniques::uniques().put(p.current_wx, p.current_wy, p.current_wz, vic, p.dungeon_unique_series);
         }
-
-        p.dungeon_unique_series = 0;
     }
 
     void endgame(mainloop::GameState& state, const std::string& name) {
