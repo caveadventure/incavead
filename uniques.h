@@ -127,6 +127,7 @@ public:
         std::unique_lock<std::mutex> l(mutex);
 
         if (series != in_series) {
+            std::cout << " // PUT oops, " << series << " != " << in_series << std::endl;
             return;
         }
 

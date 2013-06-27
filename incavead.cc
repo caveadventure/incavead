@@ -344,7 +344,7 @@ struct Game {
 
         // Place the victory item
         {
-            size_t unique_series;
+            size_t unique_series = p.dungeon_unique_series;
 
             if (p.worldx == 0 && p.worldy == 0 && p.worldz == 0 &&
                 uniques::uniques().generate(constants().uniques_timeout, unique_series)) {
@@ -364,6 +364,8 @@ struct Game {
                     state.items.place(i.xy.first, i.xy.second, i, state.render);
                 }
             }
+
+            std::cout << "  // Series set: " << unique_series << " <- " << p.dungeon_unique_series << std::endl;
 
             p.dungeon_unique_series = unique_series;
         }
@@ -430,6 +432,8 @@ struct Game {
                             });
 
         state.monsters.dispose(state.species_counts);
+
+        std::cout << "  vic.size() == " << vic.size() << std::endl;
 
         if (vic.size() > 0) {
         
@@ -550,6 +554,10 @@ struct Game {
 
 
     void endgame(mainloop::GameState& state, const std::string& name) {
+
+        const Design& d_victory = designs().get(constants().victory_item);
+
+        p.inv.inv_to_floor(d_victory.slot, p.px, p.py, state.items, state.render);
 
         dispose(state);
 
