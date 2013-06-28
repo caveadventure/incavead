@@ -970,9 +970,12 @@ struct Game {
             return;
         }
 
-        if (!feat.victory_item.null()) {
+        const Terrain& t = terrain().get(feat.tag);
 
-            const Design& d_victory = designs().get(feat.victory_item);
+
+        if (!t.victory_item.null()) {
+
+            const Design& d_victory = designs().get(t.victory_item);
 
             items::Item vi;
 
@@ -995,8 +998,6 @@ struct Game {
             state.push_window(tombstone_text(), screens_t::tombstone);
             return;
         }
-
-        const Terrain& t = terrain().get(feat.tag);
 
         if (t.stairs > 0) {
             state.render.do_message("You climb down the hole.");
