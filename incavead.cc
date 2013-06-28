@@ -352,7 +352,7 @@ struct Game {
                 grid::pt xy;
                 if (maps.one_of_lowlands(state.rng, xy)) {
 
-                    items::Item vi(constants().victory_item, xy, 1);
+                    items::Item vi(constants().unique_item, xy, 1);
                     state.items.place(xy.first, xy.second, vi, state.render);
                 }
 
@@ -422,7 +422,7 @@ struct Game {
     void dispose(mainloop::GameState& state) {
 
         std::vector<items::Item> vic;
-        tag_t vic_tag = constants().victory_item;
+        tag_t vic_tag = constants().unique_item;
 
         state.items.dispose(state.designs_counts,
                             [&vic, &vic_tag](const items::Item& i) {
@@ -447,7 +447,7 @@ struct Game {
 
     void endgame(mainloop::GameState& state, const std::string& name) {
 
-        const Design& d_victory = designs().get(constants().victory_item);
+        const Design& d_victory = designs().get(constants().unique_item);
 
         p.inv.inv_to_floor(d_victory.slot, p.px, p.py, state.items, state.render);
 
@@ -701,9 +701,9 @@ struct Game {
 
         // Handle victory items.
         {
-            tag_t victory_item = constants().victory_item;
+            tag_t unique_item = constants().unique_item;
 
-            const Design& d_victory = designs().get(victory_item);
+            const Design& d_victory = designs().get(unique_item);
 
             items::Item vi;
             items::Item tmp;
@@ -962,12 +962,32 @@ struct Game {
         move_player(state);
     }
 
-    void use_terrain(mainloop::GameState& state, size_t& ticks, bool& regen) {
+    void use_terrain(mainloop::GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
 
         features::Feature feat;
         if (!state.features.get(p.px, p.py, feat)) {
             state.render.do_message("There is nothing here to use.");
             return;
+        }
+
+        if (!feat.victory_item.null()) {
+
+            const Design& d_victory = designs().get(feat.victory_item);
+
+            items::Item vi;
+
+            if (p.inv.take(d_victory.slot, vi)) {
+
+                state.render.do_message(" ~*~   You win the game!   ~*~ ", true);
+                state.render.do_message("Congratulations! (press space to close window)", true);
+
+                // HACK!
+                p.attacker = "VICTORY";
+                done = true;
+                dead = true;
+
+                return;
+            }
         }
 
         if (feat.tag == constants().grave) {
@@ -1192,7 +1212,7 @@ struct Game {
             break;
 
         case '>':
-            use_terrain(state, ticks, regen);
+            use_terrain(state, ticks, regen, done, dead);
             break;
 
         case '.':

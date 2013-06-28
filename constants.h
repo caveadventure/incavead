@@ -8,7 +8,7 @@ struct ConstantsBank {
     tag_t bad_meat;
     tag_t money;
 
-    tag_t victory_item;
+    tag_t unique_item;
 
     struct slot_t {
         std::string slot;

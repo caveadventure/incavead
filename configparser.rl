@@ -439,6 +439,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
+        terrain_victory_item = 'victory_item' ws1 string %{ ter.victory_item = tag_t(state.match, tagmem); } ;
+
         terrain_grant_spell = 'grant_spell'
             ws1 string %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
             ws1 real   %{ ter.grant_spell.karma_bound = toreal(state.match); }
@@ -450,6 +452,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
+            terrain_victory_item |
             '}' 
             ${ fret; })
             ;
@@ -638,7 +641,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
         constant_money    = 'money'    ws1 string  %{ __constants__().money = tag_t(state.match, tagmem); };
 
-        constant_victory_item = 'victory_item' ws1 string %{ __constants__().victory_item = tag_t(state.match, tagmem); };
+        constant_unique_item = 'unique_item' ws1 string %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
 
@@ -665,7 +668,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         one_constant = constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action |
-                       constant_victory_item | constant_uniques_timeout 
+                       constant_unique_item | constant_uniques_timeout 
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
