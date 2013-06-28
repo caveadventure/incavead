@@ -149,7 +149,9 @@
       <!-- This is source ordered to be pulled to the left on larger screens -->
       <div class="large-3 pull-9 columns">
 
-        <h1><img src="logo.png" width="158" height="248" /></h1>
+        <img style="display: block; margin-left: auto; margin-right: auto" 
+             src="logo.png" width="158" height="248" alt="Ye Olde Cthulhu" />
+        <div style="font-size: 8pt"></div>
 
         <p><hr/></p>
         
@@ -207,29 +209,40 @@
 
       function format_scoreline(item) {
 
-          return '<span class="success label">' + item["name"] +
-                 "</span>, level " + item["plev"] + 
-                 ".<br/><small>Killed on dungeon level <b>" + item["dlev"] + 
-                 "</b> by " + item["cause"] + 
-                 ". Net worth: <b>" + item["worth"] + 
-                 "</b> $ZM.</small>";
+          if (item["victory"]) {
+              return '<span class="success label">' + item["name"] +
+                     "</span>, a glorious victor of level " + item["plev"] +
+                     ".<br/><small>Last seen on level <b>" + item["dlev"] +
+                     "</b>. Net worth: <b>" + item["worth"] + "</b> $ZM.</small>";
+          } else {
+              return '<span class="success label">' + item["name"] +
+                     "</span>, level " + item["plev"] + 
+                     ".<br/><small>Killed on dungeon level <b>" + item["dlev"] + 
+                     "</b> by " + item["cause"] + 
+                     ". Net worth: <b>" + item["worth"] + 
+                     "</b> $ZM.</small>";
+          }
       }
 
 
       function format_ringstatus(data) {
 
           if (data["locations"].length == 0) {
-              if (data["ts"] == 0) {
+              var ts  = data["ts"]*1000;
+              var now = (new Date().getTime());
+              var dif = now - ts;
+
+              if (ts == 0 || dif >= 21600000) {
                   return "Ready to regenerate on dungeon level 1.";
               } else {
-                  return "Destroyed or in possession since " + (new Date(data["ts"]*1000).toLocaleString()) + 
-                         ". (" + Math.round(((new Date().getTime()) - (data["ts"]*1000))/60000) + " minutes left until regeneration.)";
+                  return "Destroyed or in possession since " + (new Date(ts).toLocaleString()) + 
+                         ". (" + Math.round((21600000 - dif)/60000) + " minutes left until regeneration.)";
               }
           } else {
               var loc = data["locations"][0];
               return "Found somewhere on dungeon level " + (loc["dlev"] + 1) + " (" + 
                      ((loc["dlev_offset"][0] == 0 && loc["dlev_offset"][1] == 0) ? "main branch" : "follow a tunnel") +
-                     "). It has been there since " + (new Date(data["ts"]*1000).toLocaleString()) + ".";
+                     ").<br/>It has been there since " + (new Date(data["ts"]*1000).toLocaleString()) + ".";
           }
       }
 
