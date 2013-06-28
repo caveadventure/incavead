@@ -70,15 +70,25 @@ int main(int argc, char** argv) {
 
         auto& u = uniques::uniques();
 
-        std::cout << u.data.size() << " " << u.series << " " << u.placetime << std::endl;
+        std::cout << nlp::message("{\"series\": %d, \"ts\": %d, \"locations\": [", u.series, u.placetime);
+
+        bool first = true;
 
         for (const auto& i : u.data) {
             for (const auto& j : i.second) {
-                std::cout << "  " << i.first.wz << " " << i.first.wx << "," << i.first.wy 
-                          << " @ " << j.xy.first << "," << j.xy.second 
-                          << " " << j.count << std::endl;
+                if (first) {
+                    first = false;
+                    std::cout << "\n";
+                } else {
+                    std::cout << ",\n";
+                }
+
+                std::cout << nlp::message("{\"dlev\": %d, \"dlev_offset\":[%d,%d], \"pt\": [%d,%d], \"count\": %d}",
+                                          i.first.wz, i.first.wx, i.first.wy, j.xy.first, j.xy.second, j.count);
             }
         }
+
+        std::cout << "]}" << std::endl;
 
     } catch (std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;
