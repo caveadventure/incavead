@@ -34,6 +34,7 @@
           <li><a href="#intro">Intro</a></li>
           <li><a href="#play">Play online</a></li>
           <li><a href="#highscore">Highscore table</a></li>
+          <li><a href="#winning">Winning the game</a></li>
           <li><a href="#news">News</a></li>
         </ul>
       </div>
@@ -83,6 +84,22 @@
           </p>
         </div>
 
+        <div id="winning">
+          <h3>Winning the game</h3>
+          <p>Winning the game is deceptively simple: all you need to do is find the Ring of Power and return it to the Astral Throne. However, there are caveats:</p>
+          <ul>
+            <li>There is one and only one Ring of Power in the game, regardless of the number of concurrent players.</li>
+            <li>The Ring of Power will stay where you left it, regardless of when or who is playing.</li>
+            <li>When the Ring of Power is in possession of a player, it grows in malignancy. The more malignant is the Ring, the more is affects your player's hunger stat.</li>
+            <li>The only way to "reset" the Ring's malignancy is by destroying it; you can destroy it at any time, but destroying the ring will make it impossible to win the game for the next six hours.</li>
+            <li>If the ring is destroyed it will regenerate on dungeon level 1 after six hours. The Ring will alse regenerate if it is in possession by a player for more than six hours.</li>
+          </ul>
+          <p></p>
+          <p>The Ring's current status, monitored online:</p>
+
+          <p> <span class="label" id="ringstatus"></span> </p>
+        </div>
+
         <div id="developer">
           <h3>Development notes</h3>
           <p>The game is written in pure C++11, for maximum performance and portability. Some highlights:</p>
@@ -99,6 +116,7 @@
 
         <div id="news">
           <h3>News</h3>
+          <p><b>2013-06-30</b>: A victory condition has been impletented! You can now win the game. :)</p>
           <p><b>2013-06-26</b>: Significant bugfixes. <em>Sorry, I had to reset the highscore table for technical reasons. :(</em></p>
           <p><b>2013-06-24</b>: Lots of new levels, lots of balance fixes! The game now has 15 full, original, filler-free dungeon levels. (Still no victory condition; stay tuned, that's coming soon and will be a surprise, I guarantee.)</p>
           <p><b>2013-06-19</b>: Bug and UI fixes.</p>
@@ -137,6 +155,7 @@
           <li><a href="#play">Play online</a></li>
           <li><a href="#why">Blurb</a></li>
           <li><a href="#highscore">Highscore table</a></li>
+          <li><a href="#winning">Winning the game</a></li>
           <li><a href="#developer">Developer info</a></li>
           <li><a href="#news">News</a></li>
           <li><a href="#comments">Leave a comment</a></li>
@@ -153,16 +172,18 @@
   
     <footer class="row">
       <div class="large-12 columns">
+        <p></p>
         <hr />
         <div class="row">
-          <div class="large-6 columns">
+          <div class="large-3 columns">
             <p></p>
           </div>
-          <div class="large-6 columns">
+          <div class="large-9 columns">
             <ul class="inline-list right">
               <li><a href="#intro">Intro</a></li>
               <li><a href="#play">Play online</a></li>
               <li><a href="#highscore">Highscore table</a></li>
+              <li><a href="#winning">Winning the game</a></li>
               <li><a href="#news">News</a></li>
             </ul>
           </div>
@@ -182,6 +203,7 @@
 
 
       function format_scoreline(item) {
+
           return '<span class="success label">' + item["name"] +
                  "</span>, level " + item["plev"] + 
                  ".<br/><small>Killed on dungeon level <b>" + item["dlev"] + 
@@ -190,12 +212,38 @@
                  "</b> $ZM.</small>";
       }
 
+
+      function format_ringstatus(data) {
+
+          if (data["locations"].length == 0) {
+              if (data["ts"] == 0) {
+                  return "Ready to regenerate on dungeon level 1.";
+              } else {
+                  return "Destroyed or in possession since " + (new Date(data["ts"]*1000).toLocaleString()) + 
+                         ". (" + Math.round(((new Date().getTime()) - (data["ts"]*1000))/60000) + " minutes left until regeneration.)";
+              }
+          } else {
+              var loc = data["locations"][0];
+              return "Found somewhere on dungeon level " + (loc["dlev"] + 1) + " (" + 
+                     ((loc["dlev_offset"][0] == 0 && loc["dlev_offset"][1] == 0) ? "main branch" : "follow a tunnel") +
+                     "). It has been there since " + (new Date(data["ts"]*1000).toLocaleString()) + ".";
+          }
+      }
+
       $.getJSON("hs.json", {}, 
                 function(data) {
                    $.each(data, function(i,item) {
                           $("<li/>").html(format_scoreline(item)).appendTo("#highscore_table")
                    });
-      });
+                }
+      );
+
+      $.getJSON("rs.json", {},
+                function(data) {
+                   $("<span/>").html(format_ringstatus(data)).appendTo("#ringstatus");
+                }
+      );
+
     </script>
 
 
