@@ -1117,7 +1117,7 @@ struct Game {
             "  \2S\1 :          Save and quit.\n"
             "  \2Q\1 :          Commit suicide and quit.\n"
             "  \2>\1 :          Use terrain. (Enter holes and tunnels, use statues.)\n"
-            "  \2i\1 :          Interact with inventory and show character info.\n"
+            "  \2i\1 :          Interact with inventory, use items and show character info.\n"
             "  \2z\1 :          Cast spells if you know them.\n"
             "  \2/\1 :          Look around you using arrow keys.\n"
             "  \2tab\1 :        Look at monsters and items in view.\n"

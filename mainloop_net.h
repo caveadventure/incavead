@@ -439,6 +439,8 @@ struct Main {
 
         size_t oldticks = 0;
 
+        state.render.do_message("Press '?' for help on controls.");
+
         draw();
 
         bool done = false;
