@@ -466,6 +466,10 @@ struct Game {
     void load(SOURCE& s) {
         serialize::read(s, game_seed);
         serialize::read(s, p);
+
+        p.current_wx = p.worldx;
+        p.current_wy = p.worldy;
+        p.current_wz = p.worldz;
     }
 
 

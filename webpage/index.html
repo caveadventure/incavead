@@ -236,7 +236,7 @@
                   return "Ready to regenerate on dungeon level 1.";
               } else {
                   return "Destroyed or in possession since " + (new Date(ts).toLocaleString()) + 
-                         ". (" + Math.round((21600000 - dif)/60000) + " minutes left until regeneration.)";
+                         ".<br/>(" + Math.round((21600000 - dif)/60000) + " minutes left until regeneration.)";
               }
           } else {
               var loc = data["locations"][0];

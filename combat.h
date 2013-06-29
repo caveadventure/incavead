@@ -15,6 +15,9 @@ inline double roll_attack(rnd::Generator& rng,
         d += rng.uniform(0.0, ddefense);
     }
 
+    std::cout << "ROLL: " << alevel << " " << aattack << " a " << a << " ; " 
+              << dlevel << " " << ddefense << " d " << d << std::endl;
+
     return std::max(a - d, 0.0);
 }
 

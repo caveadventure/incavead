@@ -49,6 +49,11 @@ inline void init_species(const Species& s) {
 
 inline void init_design(const Design& d) {
     init_design_copy(d);
+
+    for (const auto& x : d.defenses.defenses) {
+        std::cout << " | " << (int)x.first << " " << x.second << std::endl;
+    }
+    std::cout << "--" << std::endl;
 }
 
 inline void init_terrain(const Terrain& t) {
@@ -360,6 +365,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_destructible = 'destructible' %{ des.destructible = true; };
 
+        design_defense_only_one = 'defense_only_one' %{ des.defense_only_one = true; };
+
         design_safe_descend = 'safe_descend' ws1 number %{ des.safe_descend = toint(state.match); };
 
         design_blink      = 'blink' %{ des.flags.blink = true; };
@@ -388,7 +395,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
-            design_worth | design_safe_descend | design_is_lit |
+            design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
             '}'
             ${ fret; })
             ;

@@ -163,7 +163,9 @@ struct inventory_t {
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
 
-            for (unsigned int j = 0; j < i.second.count; ++j) {
+            unsigned int c = (dp.defense_only_one ? 1 : i.second.count);
+
+            for (unsigned int j = 0; j < c; ++j) {
                 out.add(dp.defenses);
             }
         }
