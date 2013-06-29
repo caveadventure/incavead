@@ -49,11 +49,6 @@ inline void init_species(const Species& s) {
 
 inline void init_design(const Design& d) {
     init_design_copy(d);
-
-    for (const auto& x : d.defenses.defenses) {
-        std::cout << " | " << (int)x.first << " " << x.second << std::endl;
-    }
-    std::cout << "--" << std::endl;
 }
 
 inline void init_terrain(const Terrain& t) {

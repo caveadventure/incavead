@@ -365,8 +365,6 @@ struct Game {
                 }
             }
 
-            std::cout << "  // Series set: " << unique_series << " <- " << p.dungeon_unique_series << std::endl;
-
             p.dungeon_unique_series = unique_series;
         }
 
@@ -436,8 +434,6 @@ struct Game {
                             });
 
         state.monsters.dispose(state.species_counts);
-
-        std::cout << "  vic.size() == " << vic.size() << std::endl;
 
         if (vic.size() > 0) {
         
@@ -714,7 +710,6 @@ struct Game {
 
             if (p.inv.take(d_victory.slot, vi)) {
 
-                std::cout << "!! " << vi.count << std::endl;
                 ++vi.count;
 
                 p.food.dec(1e-5 * vi.count);

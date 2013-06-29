@@ -105,12 +105,6 @@ public:
 
         std::unique_lock<std::mutex> l(mutex);
 
-        std::cout << " ?get? " << wx << "," << "," << wz << std::endl;
-
-        for (const auto& j : data) {
-            std::cout << "  , " << j.first.wx << "," << j.first.wy << "," << j.first.wz << std::endl;
-        }
-
         auto i = data.find(key_t{wx, wy, wz});
 
         if (i == data.end())
@@ -123,8 +117,6 @@ public:
 
         write();
 
-        std::cout << "GET true, " << ret.size() << " // " << out_series << std::endl;
-
         return ret;
     }
 
@@ -133,7 +125,6 @@ public:
         std::unique_lock<std::mutex> l(mutex);
 
         if (series != in_series) {
-            std::cout << " // PUT oops, " << series << " != " << in_series << std::endl;
             return;
         }
 
@@ -141,8 +132,6 @@ public:
         v.insert(v.end(), i.begin(), i.end());
 
         placetime = ::time(NULL);
-
-        std::cout << "PUT true, " << i.size() << " " << placetime << " / " << wx << "," << wy << "," << wz << std::endl;
 
         write();
     }
@@ -158,8 +147,6 @@ public:
             ++series;
             out_series = series;
             write();
-
-            std::cout << "GEN true" << std::endl;
 
             return true;
         }
