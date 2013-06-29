@@ -90,8 +90,8 @@
             <li>There is one and only one Ring of Power in the game, regardless of the number of concurrent players.</li>
             <li>The Ring of Power will stay where you left it, regardless of when or who is playing.</li>
             <li>When the Ring of Power is in possession of a player, it grows in malignancy. The more malignant is the Ring, the more is affects your player's hunger stat.</li>
-            <li>The only way to "reset" the Ring's malignancy is by destroying it; you can destroy it at any time, but destroying the ring will make it impossible to win the game for the next six hours.</li>
-            <li>If the ring is destroyed it will regenerate on dungeon level 1 after six hours. The Ring will alse regenerate if it is in possession by a player for more than six hours.</li>
+            <li>The only way to "reset" the Ring's malignancy is by destroying it; you can destroy it at any time, but destroying the ring will make it impossible to win the game for the next two hours.</li>
+            <li>If the ring is destroyed it will regenerate on dungeon level 1 after two hours. The Ring will alse regenerate if it is in possession by a player for more than two hours.</li>
           </ul>
           <p></p>
           <p>The Ring's current status, monitored online:</p>
@@ -232,11 +232,11 @@
               var now = (new Date().getTime());
               var dif = now - ts;
 
-              if (ts == 0 || dif >= 21600000) {
+              if (ts == 0 || dif >= 7200000) {
                   return "Ready to regenerate on dungeon level 1.";
               } else {
                   return "Destroyed or in possession since " + (new Date(ts).toLocaleString()) + 
-                         ".<br/>(" + Math.round((21600000 - dif)/60000) + " minutes left until regeneration.)";
+                         ".<br/>(" + Math.round((7200000 - dif)/60000) + " minutes left until regeneration.)";
               }
           } else {
               var loc = data["locations"][0];
