@@ -43,7 +43,7 @@ add_executable(highscore util/highscore.cc)
 add_executable(victory util/victory.cc)
 add_executable(printmap util/printmap.cc)
 
-install(TARGETS incavead highscore DESTINATION games/incavead)
+install(TARGETS incavead highscore victory DESTINATION games/incavead)
 install(FILES data/celauto.cfg data/constants.cfg data/designs.cfg data/levelskins.cfg data/species.cfg data/terrain.cfg data/vaults.cfg
         DESTINATION games/incavead)
 
