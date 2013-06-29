@@ -985,8 +985,8 @@ struct Game {
 
             if (p.inv.take(d_victory.slot, vi)) {
 
-                state.render.do_message(" ~*~   You win the game!   ~*~ ", true);
                 state.render.do_message("Congratulations! (press space to close window)", true);
+                state.render.do_message(" ~*~   You win the game!   ~*~ ", true);
 
                 // HACK!
                 p.attacker = "VICTORY";

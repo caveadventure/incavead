@@ -46,16 +46,30 @@ std::string quote(const std::string& s) {
 int main(int argc, char** argv) {
 
     try {
-
-        bones::bones().load();
-
+        
         std::vector<order_t> scores;
 
-        for (const auto& i : bones::bones().data) {
-            for (const auto& j : i.second) {
+        try {
+            serialize::Source source("bones.dat");
 
-                scores.push_back(order_t(i.first.worldz, j.second));
+            while (1) {
+                try {
+                    bones::key_t key;
+                    bones::pt xy;
+                    bones::bone_t bone;
+
+                    serialize::read(source, key);
+                    serialize::read(source, xy);
+                    serialize::read(source, bone);
+
+                    scores.push_back(order_t(key.worldz, bone));
+
+                } catch (...) {
+                    break;
+                }
             }
+
+        } catch (...) {
         }
 
         std::sort(scores.begin(), scores.end());
