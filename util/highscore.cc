@@ -74,11 +74,15 @@ int main(int argc, char** argv) {
 
         std::sort(scores.begin(), scores.end());
 
+        size_t ngames = scores.size();
+
         if (scores.size() > 10) {
             scores.resize(10);
         }
 
-        std::cout << "[";
+        std::cout << nlp::message("{\"num_games\": %d,\n", ngames);
+
+        std::cout << "\"highscores\": [";
 
         for (auto i = scores.begin(); i != scores.end(); ++i) {
 
@@ -101,7 +105,7 @@ int main(int argc, char** argv) {
                                       i->dlev+1, bone.level+1, bone.name, bone.cause, bone.worth, std::string(i->victory ? "true" : "false"));
         }
 
-        std::cout << std::endl << "]" << std::endl;
+        std::cout << std::endl << "]}" << std::endl;
 
     } catch (std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;

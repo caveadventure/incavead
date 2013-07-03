@@ -80,6 +80,7 @@
           <p>
             <ol id="highscore_table">
             </ol>
+            (From a total of <span id="num_games"></span> games logged so far.)
           </p>
         </div>
 
@@ -248,9 +249,12 @@
 
       $.getJSON("hs.json", {}, 
                 function(data) {
-                   $.each(data, function(i,item) {
+
+                   $.each(data["highscores"], function(i,item) {
                           $("<li/>").html(format_scoreline(item)).appendTo("#highscore_table")
                    });
+
+                  $("<span/>").html(data["num_games"]).appendTo("#num_games");
                 }
       );
 
