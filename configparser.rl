@@ -385,12 +385,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_is_lit = 'is_lit' %{ des.is_lit = true; };
 
+        design_place_permafeat = 'place_permafeat' 
+            ws1 string %{ des.place_permafeat = tag_t(state.match, tagmem); };
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
+            design_place_permafeat |
             '}'
             ${ fret; })
             ;
@@ -439,6 +443,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_is_lit    = 'is_lit' %{ ter.is_lit = true; } ;
         terrain_air       = 'air'    %{ ter.air = true; };
 
+        terrain_safebox   = 'safebox' %{ ter.safebox = true; };
+
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
         terrain_victory_item = 'victory_item' ws1 string %{ ter.victory_item = tag_t(state.match, tagmem); } ;
@@ -454,7 +460,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
-            terrain_victory_item |
+            terrain_victory_item | terrain_safebox |
             '}' 
             ${ fret; })
             ;

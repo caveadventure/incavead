@@ -84,7 +84,8 @@ int main(int argc, char** argv) {
                 }
 
                 std::cout << nlp::message("{\"dlev\": %d, \"dlev_offset\":[%d,%d], \"pt\": [%d,%d], \"count\": %d}",
-                                          i.first.wz, i.first.wx, i.first.wy, j.xy.first, j.xy.second, j.count);
+                                          i.first.worldz, i.first.worldx, i.first.worldy, 
+                                          j.xy.first, j.xy.second, j.count);
             }
         }
 

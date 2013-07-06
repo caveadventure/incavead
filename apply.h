@@ -76,6 +76,14 @@ inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& 
         ret = true;
     }
 
+    // WARNING, don't change the order of blocks, as worldz can be modified.
+    if (!d.place_permafeat.null()) {
+
+        state.features.set(p.px, p.py, d.place_permafeat, state.render);        
+        permafeats::features().add(p, d.place_permafeat);
+        ret = true;
+    }
+
     if (d.descend > 0) {
         p.worldz += d.descend;
         regen = true;

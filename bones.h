@@ -4,31 +4,13 @@
 #include <list>
 #include <mutex>
 
+#include "worldkey.h"
+
 namespace bones {
 
 typedef std::pair<unsigned int, unsigned int> pt;
 
-struct key_t {
-
-    int worldx;
-    int worldy;
-    int worldz;
-
-    key_t(int x = 0, int y = 0, int z = 0) : worldx(x), worldy(y), worldz(z)
-        {}
-        
-    template <typename PLAYER>
-    key_t(const PLAYER& p) :
-        worldx(p.worldx), worldy(p.worldy), worldz(p.worldz)
-        {}
-
-    bool operator<(const key_t& a) const {
-        if (worldz < a.worldz) return true;
-        if (worldz == a.worldz && worldx < a.worldx) return true;
-        if (worldz == a.worldz && worldx == a.worldx && worldy < a.worldy) return true;
-        return false;
-    }
-};
+using key_t = worldkey::key_t;
 
 struct bone_t {
 
@@ -54,26 +36,7 @@ struct bone_t {
 
 }
 
-
 namespace serialize {
-
-template <>
-struct reader<bones::key_t> {
-    void read(Source& s, bones::key_t& t) {
-        serialize::read(s, t.worldx);
-        serialize::read(s, t.worldy);
-        serialize::read(s, t.worldz);
-    }
-};
-
-template <>
-struct writer<bones::key_t> {
-    void write(Sink& s, const bones::key_t& t) {
-        serialize::write(s, t.worldx);
-        serialize::write(s, t.worldy);
-        serialize::write(s, t.worldz);
-    }
-};
 
 template <>
 struct reader<bones::bone_t> {
@@ -102,6 +65,8 @@ namespace bones {
 
 struct Bones {
 
+    static const size_t NUMBER = 1000;
+
     std::map< key_t, std::unordered_map<pt, bone_t> > data;
     
     std::mutex mutex;
@@ -118,7 +83,7 @@ struct Bones {
         auto& m = data[key];
         m[xy] = bone;
 
-        while (m.size() > 1000) {
+        while (m.size() > NUMBER) {
             m.erase(m.begin());
         }
 
@@ -154,7 +119,7 @@ struct Bones {
         }
 
         for (auto& i : data) {
-            while (i.second.size() > 1000) {
+            while (i.second.size() > NUMBER) {
                 i.second.erase(i.second.begin());
             }
         }

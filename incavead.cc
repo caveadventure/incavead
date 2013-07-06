@@ -37,6 +37,10 @@
 
 #include "configparser.h"
 
+#include "bones.h"
+#include "uniques.h"
+#include "permafeats.h"
+
 #include "utilstuff.h"
 #include "inventory.h"
 #include "inv_screens.h"
@@ -46,8 +50,6 @@
 #include "apply.h"
 #include "monster_ai.h"
 
-#include "bones.h"
-#include "uniques.h"
 
 #include "vault_place.h"
 
@@ -325,6 +327,15 @@ struct Game {
             }
         }
 
+        // Place saved features.
+        {
+            std::unordered_map<permafeats::pt,tag_t> feats = permafeats::features().get(p);
+
+            for (const auto& i : feats) {
+                state.features.set(i.first.first, i.first.second, i.second, state.render);
+            }
+        }
+
 
         // Place some random items.
 
@@ -368,6 +379,15 @@ struct Game {
             p.dungeon_unique_series = unique_series;
         }
 
+        // Place saved items.
+        {
+            size_t tmp;
+            std::vector<items::Item> perms = uniques::items().get(p.worldx, p.worldy, p.worldz, tmp);
+
+            for (const auto& i : perms) {
+                state.items.place(i.xy.first, i.xy.second, i, state.render);
+            }
+        }
 
         {
             progressbar("Placing items...");
@@ -420,15 +440,29 @@ struct Game {
     void dispose(mainloop::GameState& state) {
 
         std::vector<items::Item> vic;
+        std::map<items::pt,items::Item> safe;
+
         tag_t vic_tag = constants().unique_item;
 
         state.items.dispose(state.designs_counts,
-                            [&vic, &vic_tag](const items::Item& i) {
+                            [&](const items::Item& i) {
 
                                 if (i.tag == vic_tag) {
                                     vic.push_back(i);
                                     return false;
                                 }
+
+                                features::Feature feat;
+                                if (state.features.get(i.xy.first, i.xy.second, feat)) {
+
+                                    const Terrain& t = terrain().get(feat.tag);
+
+                                    if (t.safebox && safe.count(i.xy) == 0) {
+                                        safe[i.xy] = i;
+                                        return false;
+                                    }
+                                }
+
 
                                 return true;
                             });
@@ -438,6 +472,16 @@ struct Game {
         if (vic.size() > 0) {
         
             uniques::uniques().put(p.current_wx, p.current_wy, p.current_wz, vic, p.dungeon_unique_series);
+        }
+
+        vic.clear();
+        for (const auto& i : safe) {
+            vic.push_back(i.second);
+        }
+
+        if (vic.size() > 0) {
+
+            uniques::items().put(p.current_wx, p.current_wy, p.current_wz, vic, 1);
         }
     }
 
@@ -1607,6 +1651,9 @@ int main(int argc, char** argv) {
 
     bones::bones().load();
     uniques::uniques().load();
+    uniques::items().load();
+    permafeats::features().load();
+
 
     bool singleplayer = false;
     bool genmaps = false;

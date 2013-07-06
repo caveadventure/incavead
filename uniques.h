@@ -10,61 +10,21 @@
 
 #include "items.h"
 
+#include "worldkey.h"
+
 
 namespace uniques {
 
-struct key_t {
+using key_t = worldkey::key_t;
 
-    int wx;
-    int wy;
-    int wz;
-
-    bool operator==(const key_t& a) const {
-        return (wx == a.wx && wy == a.wy && wz == a.wz);
-    }
-};
-
-}
-
-namespace std {
-
-template <>
-struct hash<uniques::key_t> {
-    size_t operator()(const uniques::key_t& k) const {
-        return hash<int>()(k.wx) + hash<int>()(k.wy) + hash<int>()(k.wz);
-    }
-};
-
-}
-
-
-namespace serialize {
-
-template <>
-struct reader<uniques::key_t> {
-    void read(Source& s, uniques::key_t& t) {
-        serialize::read(s, t.wx);
-        serialize::read(s, t.wy);
-        serialize::read(s, t.wz);
-    }
-};
-
-template <>
-struct writer<uniques::key_t> {
-    void write(Sink& s, const uniques::key_t& t) {
-        serialize::write(s, t.wx);
-        serialize::write(s, t.wy);
-        serialize::write(s, t.wz);
-    }
-};
-
-}
-
-namespace uniques {
 
 struct Uniques {
 
     std::unordered_map< key_t, std::vector<items::Item> > data;
+
+    std::string filename;
+
+    Uniques(const std::string& fn) : filename(fn) {}
     
     size_t series;;
     time_t placetime;
@@ -77,7 +37,7 @@ struct Uniques {
 
         try {
 
-            serialize::Source source("uniques.dat");
+            serialize::Source source(filename);
             serialize::read(source, data);
             serialize::read(source, series);
             serialize::read(source, placetime);
@@ -92,7 +52,7 @@ struct Uniques {
 private:
 
     void write() {
-        serialize::Sink sink("uniques.dat");
+        serialize::Sink sink(filename);
         serialize::write(sink, data);
         serialize::write(sink, series);
         serialize::write(sink, placetime);
@@ -105,7 +65,7 @@ public:
 
         std::unique_lock<std::mutex> l(mutex);
 
-        auto i = data.find(key_t{wx, wy, wz});
+        auto i = data.find(key_t(wx, wy, wz));
 
         if (i == data.end())
             return std::vector<items::Item>();
@@ -128,7 +88,7 @@ public:
             return;
         }
 
-        auto& v = data[key_t{wx, wy, wz}];
+        auto& v = data[key_t(wx, wy, wz)];
         v.insert(v.end(), i.begin(), i.end());
 
         placetime = ::time(NULL);
@@ -157,7 +117,12 @@ public:
 
 
 Uniques& uniques() {
-    static Uniques ret;
+    static Uniques ret("uniques.dat");
+    return ret;
+}
+
+Uniques& items() {
+    static Uniques ret("permaitems.dat");
     return ret;
 }
 

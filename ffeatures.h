@@ -85,7 +85,7 @@ struct Features {
     }
 
     void set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
-        // Check that the tag exists.
+
         const Terrain& t = terrain().get(tag);
 
         pt xy(x, y);
