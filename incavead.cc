@@ -329,7 +329,7 @@ struct Game {
 
         // Place saved features.
         {
-            std::unordered_map<permafeats::pt,tag_t> feats = permafeats::features().get(p);
+            auto feats = permafeats::features().get(p);
 
             for (const auto& i : feats) {
                 state.features.set(i.first.first, i.first.second, i.second, state.render);
