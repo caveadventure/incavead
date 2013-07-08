@@ -1645,7 +1645,7 @@ void do_genmaps() {
 
 int main(int argc, char** argv) {
 
-    maudit::server_socket server("0.0.0.0", 20020);
+    maudit::server_socket server(20020);
 
     init_statics();
 

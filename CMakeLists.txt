@@ -37,7 +37,15 @@ else(NOT RAGEL)
 
 endif(NOT RAGEL)
 
-target_link_libraries(incavead m)
+if(WIN32)
+
+  target_link_libraries(incavead m pthread ws2_32)
+
+else(WIN32)
+
+  target_link_libraries(incavead m)
+
+endif(WIN32)
 
 add_executable(highscore util/highscore.cc)
 add_executable(victory util/victory.cc)

@@ -9,11 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <sys/socket.h>
-
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
+#include "network.h"
 
 
 namespace maudit {
@@ -64,7 +60,7 @@ public:
         if (buffi == buffe) {
 
             ssize_t tmp = 0;
-            tmp = ::recv(fd, &(buff[0]), buffsize, 0);
+            tmp = ::recv(fd, RECV_TYPE_CAST &(buff[0]), buffsize, 0);
 
             if (tmp < 0) {
                 return false;
@@ -110,7 +106,7 @@ public:
         }
     }
         
-    server_socket(const std::string& host, unsigned int port) : fd(-1) {
+    server_socket(unsigned int port) : fd(-1) {
 
         fd = ::socket(AF_INET, SOCK_STREAM, 0);
 
@@ -119,10 +115,10 @@ public:
         }
 
         int is_true = 1;
-        if (::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &is_true, sizeof(is_true)) < 0)
+        if (::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, SETSOCKOPT_TYPE_CAST &is_true, sizeof(is_true)) < 0)
             teardown("could not setsockopt(SO_REUSEADDR) : ");
 
-        if (::setsockopt(fd, SOL_TCP, TCP_NODELAY, &is_true, sizeof(is_true)) < 0)
+        if (::setsockopt(fd, SOL_TCP, TCP_NODELAY, SETSOCKOPT_TYPE_CAST &is_true, sizeof(is_true)) < 0)
             teardown("could not setsockopt(TCP_NODELAY) : ");
 
         struct sockaddr_in addr;
@@ -131,8 +127,10 @@ public:
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
 
-        if (::inet_pton(AF_INET, host.c_str(), (void*)&addr.sin_addr) <= 0)
-            teardown("could not inet_pton() : ");
+        addr.sin_addr.s_addr = 0;
+
+        //if (::inet_pton(AF_INET, host.c_str(), (void*)&addr.sin_addr) <= 0)
+        //    teardown("could not inet_pton() : ");
 
         if (::bind(fd, (struct sockaddr*)&addr, sizeof(addr)) < 0)
             teardown("could not bind() : ");

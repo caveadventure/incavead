@@ -67,6 +67,8 @@ double earth_radius = 6378.16;
 
 namespace c = moon_constants;
 
+#define THE_PI 3.14159265358979323846
+
 namespace moon {
 
 inline double fixangle(double a) {
@@ -74,11 +76,11 @@ inline double fixangle(double a) {
 }
 
 inline double torad(double d) {
-    return d * M_PI / 180.0;
+    return d * THE_PI / 180.0;
 }
 
 inline double todeg(double r) {
-    return r * 180.0 / M_PI;
+    return r * 180.0 / THE_PI;
 }
 
 inline double dsin(double d) {
