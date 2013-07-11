@@ -242,8 +242,19 @@
               }
           } else {
               var loc = data["locations"][0];
+              var off = loc["dlev_offset"];
+              var tab = [
+                          [ "follow a tunnel due north-west",
+                            "follow a tunnel due west", 
+                            "follow a tunnel due south-west" ],
+                          [ "follow a tunnel due north",
+                            "main branch", 
+                            "follow a tunnel due south" ],
+                          [ "follow a tunnel due north-east",
+                            "follow a tunnel due east", 
+                            "follow a tunnel due south-east" ] ];
               return "Found somewhere on dungeon level " + (loc["dlev"] + 1) + " (" + 
-                     ((loc["dlev_offset"][0] == 0 && loc["dlev_offset"][1] == 0) ? "main branch" : "follow a tunnel") +
+                     tab[off[0]+1][off[1]+1] +
                      ").<br/>It has been there since " + (new Date(data["ts"]*1000).toLocaleString()) + ".";
           }
       }
