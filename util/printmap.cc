@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <stdexcept>
 
 #include "../serialize.h"
 #include "../common.h"

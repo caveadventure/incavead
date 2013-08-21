@@ -2,6 +2,7 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
+#include <stdexcept>
 
 #include "../serialize.h"
 #include "../common.h"
