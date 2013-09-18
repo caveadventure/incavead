@@ -750,11 +750,11 @@ public:
 
 
     template <typename SCREEN>
-    void wait_for_anykey(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
+    void wait_for_anykey(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr) {
 
         keypress tmp;
-        
-        if (!screen.wait_key(tmp)) {
+
+        if (!screen.wait_key(tmp, is_cr)) {
 
             throw std::runtime_error("end of input");
         }
@@ -764,11 +764,11 @@ public:
     }
 
     template <typename SCREEN>
-    keypress wait_for_key(SCREEN& screen, unsigned int& view_w, unsigned int& view_h) {
+    keypress wait_for_key(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr) {
 
         keypress ret;
         
-        if (!screen.wait_key(ret)) {
+        if (!screen.wait_key(ret, is_cr)) {
 
             throw std::runtime_error("end of input");
         }
@@ -798,7 +798,7 @@ public:
     /////
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h,
+    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr,
                          const std::string& msg, unsigned int ix, unsigned int iy) {
 
         std::vector< std::vector<skin> > glyphs;
@@ -907,18 +907,18 @@ public:
         if (!ok)
             throw std::runtime_error("broken pipe");
 
-        return wait_for_key(screen, view_w, view_h);
+        return wait_for_key(screen, view_w, view_h, is_cr);
     }
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h,
+    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr,
                          const std::string& msg) {
 
         unsigned int ix = 0;
         unsigned int iy = 0;
         
         while (1) {
-            keypress k = draw_window(screen, view_w, view_h, msg, ix, iy);
+            keypress k = draw_window(screen, view_w, view_h, is_cr, msg, ix, iy);
 
             switch (k.key) {
             case maudit::keycode::up:

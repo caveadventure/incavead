@@ -173,12 +173,13 @@ struct Main {
 
     unsigned int view_w;
     unsigned int view_h;
+    bool is_cr;
     size_t ticks;
 
     GameState state;
 
 
-    Main(SCREEN& s, bool debug) : game(debug), screen(s), view_w(0), view_h(0), ticks(1) {}
+    Main(SCREEN& s, bool debug) : game(debug), screen(s), view_w(0), view_h(0), is_cr(false), ticks(1) {}
 
 
 
@@ -231,7 +232,7 @@ struct Main {
 
         {
             window += "\n\3Do you want to enter a replay code? (Y/N)\2";
-            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, window);
+            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, is_cr, window);
 
             if (k.letter == 'Y' || k.letter == 'y') {
                 window += "\n\3Enter a replay code (case insensitive):\2 ";
@@ -326,12 +327,12 @@ struct Main {
 
         if (need_input) {
 
-            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
+            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
             game.handle_input(state, ticks, done, dead, regen, k);
 
             while (state.window_stack.size() > 0) {
 
-                k = state.render.draw_window(screen, view_w, view_h, state.window_stack.back().message);
+                k = state.render.draw_window(screen, view_w, view_h, is_cr, state.window_stack.back().message);
 
                 game.handle_input(state, ticks, done, dead, regen, k);
             }
@@ -361,7 +362,7 @@ struct Main {
     void goodbye_message() {
 
         while (1) {
-            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h);
+            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
 
             if (k.letter == ' ')
                 break;
@@ -371,7 +372,7 @@ struct Main {
     void enter_text(std::string& prompt, std::string& out, bool secret) {
 
         while (1) {
-            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, prompt);
+            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, is_cr, prompt);
 
             if (k.letter >= ' ' && k.letter <= '~') {
                 out += k.letter;

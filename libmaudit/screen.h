@@ -103,7 +103,9 @@ struct screen {
             //io.write(CSI "18t");
             io.write("\xFF\xFD\x1F");
 
-            if (!wait_key(tmp)) {
+            bool is_cr = false;
+
+            if (!wait_key(tmp, is_cr)) {
                 throw std::runtime_error("Could not detect terminal size.");
             }
 
@@ -224,12 +226,16 @@ struct screen {
     }
 
 
-    bool wait_key(keypress& out) {
+    bool wait_key(keypress& out, bool& is_cr) {
 
         out.w = w;
         out.h = h;
 
+        bool prev_is_cr = is_cr;
+
       again:
+
+        is_cr = false;
 
         unsigned char c;
 
@@ -344,18 +350,23 @@ struct screen {
 
         // Handle CR/LF insane madness.
 
+        /*
+          \r   -> \n
+          \r\n -> \n
+          \r\0 -> \n
+        */
+
+        if (prev_is_cr && (c == '\n' || c == '\0')) {
+            goto again;
+        }
+
         if (c == '\r') {
 
-            ok = io.read(c);
-            if (!ok) return false;
+            is_cr = true;
+            out.letter = '\n';
 
-            if (c == '\0') {
-                c = '\n';
-                
-            } else if (c == '\n') {
-                c = '\n';
-            }
-        }
+            return true;
+        } 
 
         out.letter = c;
         return true;
