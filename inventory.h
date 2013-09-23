@@ -213,6 +213,7 @@ struct inventory_t {
 
             for (const auto& l : dp.luck) {
                 ret = std::max(ret, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
+                std::cout << "!luck " << ret << " " << l.height << " " << l.mean << " " << l.deviation << " " << moon_angle << std::endl;
             }
         }
 

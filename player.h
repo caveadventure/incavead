@@ -89,6 +89,7 @@ struct Player {
                dungeon_unique_series(0)
         {
             karma.val = 0;
+            luck.val = 0;
         }
 
     
@@ -104,6 +105,8 @@ struct Player {
             return level;
 
         int fudge = rng.geometric(p);
+
+        std::cout << "!X " << neg << " " << fudge << " " << l << std::endl;
 
         if (neg) {
 
