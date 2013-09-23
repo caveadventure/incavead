@@ -251,7 +251,7 @@ struct Main {
         state.render.init(sp.w2, sp.h2);
         state.render.keylog.clear();
         state.camap.init();
-        state.moon.init();
+        state.moon.init(seed);
 
         state.designs_counts = designs().counts;
         state.species_counts = species().counts;

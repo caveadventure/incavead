@@ -137,6 +137,28 @@ inline PHASE phase_n(double p) {
     return NEW;
 }
 
+/*
+
+[0.95, 1.00] NEW
+[0,    0.05] NEW
+[0.05, 0.20] WAXING_CRESCENT
+[0.20, 0.30] FIRST_QUARTER
+[0.30, 0.45] WAXING_GIBBOUS
+[0.45, 0.55] FULL
+[0.55, 0.70] WANING_GIBBOUS
+[0.70, 0.80] LAST_QUARTER
+[0.80, 0.95] WANING_CRESCENT
+[0.95, 1.00] NEW
+
+WANING  - 0.3
+WAXING  - 0.3
+QUARTER - 0.2
+NEW     - 0.1
+FULL    - 0.1
+
+*/
+
+
 
 inline std::string phase_string(PHASE p) {
     switch (p) {
@@ -185,7 +207,7 @@ struct PhaseInfo {
 };
 
   
-inline PhaseInfo phase(time_t _phase_date=time(NULL)) {
+inline PhaseInfo phase(time_t _phase_date) {
     /** Calculate phase of moon as a fraction:
 
         The argument is the time for which the phase is requested.
@@ -325,8 +347,8 @@ struct Moon {
 
     PhaseInfo pi;
 
-    void init() {
-        pi = phase();
+    void init(time_t date = ::time(NULL)) {
+        pi = phase(date);
     }
 
 };

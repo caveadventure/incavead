@@ -77,18 +77,19 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
 }
 
 
-inline std::string show_inventory(inventory_t& inv, unsigned int level, int worldz, 
+inline std::string show_inventory(inventory_t& inv, unsigned int level, int worldz, const std::string& moon_phase,
                                   items::Items& items, unsigned int px, unsigned int py) {
 
     std::string m;
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level: %d\n"
-                     "  Dungeon level:   %d\n"
+                     "  Dungeon level:   %d    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
                      level+1, 
-                     worldz+1);
+                     worldz+1,
+                     moon_phase);
 
     for (const auto& slot : inv.slots) {
 

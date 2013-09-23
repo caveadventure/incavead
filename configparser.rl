@@ -388,13 +388,19 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_place_permafeat = 'place_permafeat' 
             ws1 string %{ des.place_permafeat = tag_t(state.match, tagmem); };
 
+        design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
+            ws1 real %{ des.luck.back().height = toreal(state.match); }
+            ws1 real %{ des.luck.back().mean = toreal(state.match); }
+            ws1 real %{ des.luck.back().deviation = toreal(state.match); }
+            ;
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
-            design_place_permafeat |
+            design_place_permafeat | design_luck |
             '}'
             ${ fret; })
             ;

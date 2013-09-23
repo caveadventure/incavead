@@ -703,6 +703,10 @@ struct Game {
         draw_one_stat(state, p.food,   "Food");
         draw_one_stat(state, p.karma,  "Karma");
 
+        if (p.luck.val != 0) {
+            draw_one_stat(state, p.luck, "Luck");
+        }
+
         if (p.sleep > 0) {
             state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                        std::min(p.sleep / 15 + 1, (unsigned int)6), 
@@ -810,7 +814,7 @@ struct Game {
                 damage::defenses_t defenses;
                 p.inv.get_defense(defenses);
 
-                defend(p, defenses, p.level, t, state);
+                defend(p, defenses, p.get_computed_level(state.rng), t, state);
             }
         }
 
@@ -870,6 +874,9 @@ struct Game {
                 ++si;
             }
         }
+
+
+        p.luck.inc(p.inv.get_luck(state.moon.pi.phase_n));
 
         p.food.dec(0.003);
 
@@ -971,7 +978,7 @@ struct Game {
             damage::attacks_t attacks;
             p.inv.get_attack(attacks);
 
-            if (attack(p, attacks, p.level, state, mon)) {
+            if (attack(p, attacks, p.get_computed_level(state.rng), state, mon)) {
                 ++ticks;
             }
 
@@ -1277,7 +1284,7 @@ struct Game {
             break;
 
         case 'i':
-            state.push_window(show_inventory(p.inv, p.level, p.worldz, state.items, p.px, p.py), screens_t::inventory);
+            state.push_window(show_inventory(p.inv, p.level, p.worldz, state.moon.pi.phase_str, state.items, p.px, p.py), screens_t::inventory);
             break;
 
         case 'z':

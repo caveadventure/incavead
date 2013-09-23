@@ -135,7 +135,7 @@ inline void blast_process_point(Player& p, mainloop::GameState& state, const Des
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);
 
-        defend(p, defenses, p.level, d, state);
+        defend(p, defenses, p.get_computed_level(state.rng), d, state);
 
     } else {
 
@@ -252,7 +252,7 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
             
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 
-        unsigned int lev = (1 - v2) * p.level;
+        unsigned int lev = (1 - v2) * p.get_computed_level(state.rng);
 
         attack(p, d.attacks, lev, state, mon);
     }

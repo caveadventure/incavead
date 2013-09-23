@@ -204,6 +204,21 @@ struct inventory_t {
 
         return ret;
     }
+
+    double get_luck(double moon_angle) const {
+        double ret = 0;
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+
+            for (const auto& l : dp.luck) {
+                ret = std::max(ret, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
+            }
+        }
+
+        return ret;
+    }
+
 };
 
 namespace serialize {

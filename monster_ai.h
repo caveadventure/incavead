@@ -45,7 +45,7 @@ inline void monster_blast_process_point(Player& p, mainloop::GameState& state, c
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);
 
-        defend(p, defenses, p.level, s, attacks, state);
+        defend(p, defenses, p.get_computed_level(state.rng), s, attacks, state);
 
     } else {
 
@@ -251,7 +251,7 @@ inline bool move_monster(Player& p, mainloop::GameState& state, size_t ticks,
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);
 
-        defend(p, defenses, p.level, s, state);
+        defend(p, defenses, p.get_computed_level(state.rng), s, state);
         return false;
 
     } else {

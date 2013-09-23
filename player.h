@@ -40,6 +40,7 @@ struct Player {
     stat_t health;
     stat_t food;
     stat_t karma;
+    stat_t luck;
 
     unsigned int sleep;
 
@@ -90,6 +91,37 @@ struct Player {
             karma.val = 0;
         }
 
+    
+    unsigned int get_computed_level(rnd::Generator& rng) {
+
+        bool neg = (luck.val < 0);
+        double l = ::fabs(luck.val);
+
+        // Warning, magic numbers.
+        double p = (0.9 / l);
+
+        if (p > 1.0)
+            return level;
+
+        int fudge = rng.geometric(p);
+
+        if (neg) {
+
+            fudge = -std::max(-fudge, (int)(l - 3));
+
+            luck.dec(fudge);
+
+            return level - fudge;
+
+        } else {
+
+            fudge = std::min(fudge, (int)(l + 3));
+
+            luck.dec(fudge);
+
+            return level + fudge;
+        }
+    }
 };
 
 
