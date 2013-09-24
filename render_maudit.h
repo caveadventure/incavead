@@ -809,6 +809,8 @@ public:
         unsigned int nc = 0;
         unsigned int nl = 0;
 
+        unsigned int max_nc = 0;
+
         for (unsigned char c : msg) {
 
             if (c == '\n') {
@@ -819,6 +821,7 @@ public:
 
                 fore = gray_color;
                 nl++;
+                max_nc = std::max(nc, max_nc);
                 nc = 0;
                 continue;
             }
@@ -871,7 +874,7 @@ public:
 
                             } else if (x <= 0 || x >= view_w-1) {
 
-                                if (x >= view_w-1 && nc+4-ix > view_w) {
+                                if (x >= view_w-1 && max_nc+4-ix > view_w) {
                                     c = ">";
                                 } else if (x <= 0 && ix > 0) {
                                     c = "<";

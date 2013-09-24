@@ -19,11 +19,15 @@ struct Levelskin {
     unsigned int lightradius;
     unsigned int lightradius_max;
 
-    unsigned int level;
+    int level;
 
     bool exclusive;
 
     bool noterrain;
+
+    int species_level;
+    int designs_level;
+    int vaults_level;
 
     struct mapgen_params_t {
         double flow_epsilon;
@@ -68,13 +72,14 @@ struct Levelskin {
 
     mapgen_params_t genparams;
 
-    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false), noterrain(false) {}
+    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false), noterrain(false), species_level(-1), designs_level(-1), vaults_level(-1) {}
 };
 
 struct Levelskins {
-    std::map<unsigned int,Levelskin> skins;
 
-    const Levelskin& get(unsigned int level) const {
+    std::map<int,Levelskin> skins;
+
+    const Levelskin& get(int level) const {
 
         if (skins.size() == 0)
             throw std::runtime_error("sanity error: no levelskins defined");

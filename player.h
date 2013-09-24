@@ -162,6 +162,7 @@ struct reader<Player> {
         serialize::read(s, p.health.val);
         serialize::read(s, p.food.val);
         serialize::read(s, p.karma.val);
+        serialize::read(s, p.luck.val);
         serialize::read(s, p.sleep);
         serialize::read(s, p.dig_x);
         serialize::read(s, p.dig_y);
@@ -189,6 +190,7 @@ struct writer<Player> {
         serialize::write(s, p.health.val);
         serialize::write(s, p.food.val);
         serialize::write(s, p.karma.val);
+        serialize::write(s, p.luck.val);
         serialize::write(s, p.sleep);
         serialize::write(s, p.dig_x);
         serialize::write(s, p.dig_y);

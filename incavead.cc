@@ -220,12 +220,20 @@ struct Game {
 
         state.rng.init(gridseed);
 
+
+        const Levelskin& lev = levelskins().get(p.worldz);
+
+        unsigned int species_level = (lev.species_level >= 0 ? lev.species_level : std::max(p.worldz, 0));
+        unsigned int designs_level = (lev.designs_level >= 0 ? lev.designs_level : std::max(p.worldz, 0));
+        unsigned int vaults_level  = (lev.vaults_level  >= 0 ? lev.vaults_level  : std::max(p.worldz, 0));
+
+
         std::vector<summons_t> summons;
 
         {
             progressbar("Placing vaults...");
 
-            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, p.worldz, 100);
+            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, 100);
 
             for (const auto vi : vc) {
                 const Vault& v = vaults().get(vi.first);
@@ -264,9 +272,11 @@ struct Game {
                 throw std::runtime_error("Sanity error 3");
         }
 
+        // 
+        //
+
         grid::Map::genmaps_t maps(state.grid);
 
-        const Levelskin& lev = levelskins().get(p.worldz);
 
         if (!lev.noterrain) {
 
@@ -397,10 +407,9 @@ struct Game {
             for (unsigned int i = 0; i < itemgroups; ++i) {
 
                 unsigned int itemcount = std::max(1.0, state.rng.gauss(1.5, 1.0));
-                unsigned int itemlevel = p.worldz;
 
                 state.items.generate(state.neigh, state.rng, state.grid, maps,
-                                     state.designs_counts, itemlevel, itemcount);
+                                     state.designs_counts, designs_level, itemcount);
             }
         }
 
@@ -418,10 +427,8 @@ struct Game {
 
             for (unsigned int i = 0; i < mongroups; ++i) {
 
-                unsigned int monlevel = p.worldz;
-
                 state.monsters.generate(state.neigh, state.rng, state.grid, maps,
-                                        state.species_counts, monlevel, lev.exclusive);
+                                        state.species_counts, species_level, lev.exclusive);
             }
         }
 
@@ -703,7 +710,7 @@ struct Game {
         draw_one_stat(state, p.food,   "Food");
         draw_one_stat(state, p.karma,  "Karma");
 
-        if (p.luck.val != 0) {
+        if (p.luck.val > 0.1 || p.luck.val < 0.1) {
             draw_one_stat(state, p.luck, "Luck");
         }
 
@@ -1395,6 +1402,12 @@ struct Game {
             state.render.do_message("Descended.");
             break;
 
+        case '<':
+            p.worldz--;
+            regen = true;
+            state.render.do_message("Ascended.");
+            break;
+
         case 't':
         {
             grid::pt xy;
@@ -1632,7 +1645,7 @@ void do_genmaps() {
     state.neigh.init(Game::GRID_W, Game::GRID_H);
     state.grid.init(Game::GRID_W, Game::GRID_H);
 
-    for (int worldz = 0; worldz <= 15; ++worldz) {
+    for (int worldz = -1; worldz <= 15; ++worldz) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
 

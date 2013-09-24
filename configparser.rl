@@ -600,6 +600,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
         levelskin_noterrain     = 'noterrain'     %{ lev.noterrain = true; };
 
+        levelskin_species_level = 'species_level' ws1 number %{ lev.species_level = toint(state.match); };
+        levelskin_designs_level = 'designs_level' ws1 number %{ lev.designs_level = toint(state.match); };
+        levelskin_vaults_level  = 'vaults_level'  ws1 number %{ lev.vaults_level  = toint(state.match); };
+
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
         levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
         levelskin_flow_volume            = 'flow_volume'         ws1 real   %{ lev.genparams.flow_volume = toreal(state.match); };
@@ -625,6 +629,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max |
             levelskin_exclusive | levelskin_noterrain |
+            levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |
@@ -638,7 +643,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         one_levelskin := (ws levelskin_one_data ws ';')+
             ;
 
-        levelskin_level = number %{ lev.level = toint(state.match); } 
+        levelskin_level = snumber %{ lev.level = toint(state.match); } 
         ;
 
         levelskin =
