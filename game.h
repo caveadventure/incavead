@@ -609,7 +609,7 @@ struct Game {
 
         std::cout << "/L " << p.luck.val << std::endl;
 
-        if (p.luck.val > 0.1 || p.luck.val < 0.1) {
+        if (p.luck.val > 0.1 || p.luck.val < -0.1) {
             draw_one_stat(state, p.luck, "Luck");
         }
 

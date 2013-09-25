@@ -115,7 +115,7 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
                 state.features.set(xi, yi, b.terrain, state.render);
 
             } else {
-                state.features.unset(xi, yi);
+                state.features.unset(xi, yi, state.render);
             }
 
             if (!b.design.null()) {
