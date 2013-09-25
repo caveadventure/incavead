@@ -438,7 +438,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
         terrain_skin      = 'skin'      ws1 skin       %{ ter.skin = skin; };
         terrain_placement = 'placement' ws1 tplacement  ;
-        terrain_stairs    = 'stairs'    ws1 number     %{ ter.stairs = toint(state.match); } ;
+        terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
         terrain_walkblock = 'walkblock'                %{ ter.walkblock = true; } ;
         terrain_decay     = 'decay'     ws1 number     %{ ter.decay = toint(state.match); } ;

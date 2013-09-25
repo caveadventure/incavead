@@ -19,7 +19,7 @@ struct Terrain {
 
     placement_t placement;
 
-    unsigned int stairs;
+    int stairs;
     int tunnel_x;
     int tunnel_y;
 
