@@ -93,6 +93,13 @@ struct Features {
         render.invalidate(x, y);
     }
 
+    void unset(unsigned int x, unsigned int y, grender::Grid& render) {
+
+        pt xy(x, y);
+        feats.erase(xy);
+        render.invalidate(x, y);
+    }
+
     template <typename T>
     bool get_placement(rnd::Generator& rng, grid::Map& grid, T& ptsource,
                        Terrain::placement_t p, pt& ret) {
