@@ -130,7 +130,7 @@ struct Game {
         {
             progressbar("Placing vaults...");
 
-            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, 100);
+            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults);
 
             for (const auto vi : vc) {
                 const Vault& v = vaults().get(vi.first);
@@ -955,8 +955,14 @@ struct Game {
             return;
         }
 
-        if (t.stairs > 0) {
-            state.render.do_message("You climb down the hole.");
+        if (t.stairs != 0) {
+
+            if (t.stairs > 0) {
+                state.render.do_message("You climb down the hole.");
+            } else {
+                state.render.do_message("You are magically teleported!");
+            }
+
             p.worldz += t.stairs;
 
             ++ticks;
@@ -1169,6 +1175,7 @@ struct Game {
             break;
 
         case '>':
+        case '<':
             use_terrain(state, ticks, regen, done, dead);
             break;
 
