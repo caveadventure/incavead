@@ -114,6 +114,7 @@ struct Player {
 
             luck.dec(fudge);
 
+            std::cout << " -----> " << level - fudge << std::endl;
             return level - fudge;
 
         } else {
@@ -122,6 +123,7 @@ struct Player {
 
             luck.dec(fudge);
 
+            std::cout << " -----> " << level + fudge << std::endl;
             return level + fudge;
         }
     }
