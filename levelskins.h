@@ -19,6 +19,8 @@ struct Levelskin {
     unsigned int lightradius;
     unsigned int lightradius_max;
 
+    double damage;
+
     int level;
 
     bool exclusive;
@@ -76,7 +78,7 @@ struct Levelskin {
 
     mapgen_params_t genparams;
 
-    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false), noterrain(false), 
+    Levelskin() : lightradius(8), lightradius_max(8), damage(0), level(0), exclusive(false), noterrain(false), 
                   species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100) {}
 };
 

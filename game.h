@@ -786,6 +786,11 @@ struct Game {
 
         p.food.dec(0.003);
 
+        {
+            const Levelskin& ls = levelskins().get(p.worldz);
+            p.health.dec(ls.damage);
+        }
+
         if (p.food.val <= -3.0) {
             state.render.do_message("You desperately need something to eat!", true);
             p.health.dec(0.05);

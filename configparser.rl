@@ -318,7 +318,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune |
-            species_karma | species_blast |
+            species_karma | species_blast | species_true_level |
             '}'
             ${ fret; })
             ;
@@ -598,6 +598,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8 = skin; };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
+        levelskin_damage        = 'damage'        ws1 real   %{ lev.damage = toreal(state.match); };
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
         levelskin_noterrain     = 'noterrain'     %{ lev.noterrain = true; };
 
@@ -632,7 +633,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
-            levelskin_lightradius | levelskin_lightradius_max |
+            levelskin_lightradius | levelskin_lightradius_max | levelskin_damage |
             levelskin_exclusive | levelskin_noterrain |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_vaults | levelskin_name |
