@@ -172,7 +172,7 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
     }
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
         return;
@@ -202,6 +202,8 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
                    bool quiet = false) {
 
     const Species& s = species().get(mon.tag);
+
+    unsigned int species_level = s.get_computed_level();
         
     if (attacks.empty()) {
         state.render.do_message("You can't attack without a weapon!", true);
@@ -209,7 +211,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
     }
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.level+1, attacks, plevel+1, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
 
@@ -256,9 +258,9 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
         monster_kill(state, mon, s);
 
-        if (!s.flags.plant && s.level > p.level) {
+        if (!s.flags.plant && species_level > p.level) {
 
-            p.level = s.level;
+            p.level = species_level;
 
             // Don't gain a level twice.
             mortal = false;
@@ -298,9 +300,9 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
         }
     }
 
-    if (s.level >= p.level && mortal && !s.flags.plant) {
+    if (species_level >= p.level && mortal && !s.flags.plant) {
 
-        p.level = s.level+1;
+        p.level = species_level+1;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
     }
 
@@ -373,7 +375,7 @@ inline void defend(Player& p,
 
 
     damage::attacks_t attack_res;
-    defend(p, defenses, plevel, attacks, s.level, state, attack_res);
+    defend(p, defenses, plevel, attacks, s.get_computed_level(), state, attack_res);
 
     if (attack_res.empty()) {
 

@@ -247,6 +247,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
         species_skin        = 'skin'        ws1 skin       %{ spe.skin = skin; };
+        species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
         species_ai          = 'ai'          ws1 ai         ;
         species_idle_ai     = 'idle_ai'     ws1 idle_ai    ;
@@ -606,6 +607,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         levelskin_number_vaults = 'number_vaults' ws1 number %{ lev.number_vaults = toint(state.match); };
 
+        levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
+
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
         levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
         levelskin_flow_volume            = 'flow_volume'         ws1 real   %{ lev.genparams.flow_volume = toreal(state.match); };
@@ -632,7 +635,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_lightradius | levelskin_lightradius_max |
             levelskin_exclusive | levelskin_noterrain |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
-            levelskin_number_vaults |
+            levelskin_number_vaults | levelskin_name |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |

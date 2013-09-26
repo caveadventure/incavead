@@ -1197,7 +1197,11 @@ struct Game {
             break;
 
         case 'i':
-            state.push_window(show_inventory(p.inv, p.level, p.worldz, state.moon.pi.phase_str, state.items, p.px, p.py), screens_t::inventory);
+            state.push_window(show_inventory(p.inv, p.level, 
+                                             levelskins().get(p.worldz).name, 
+                                             state.moon.pi.phase_str, 
+                                             state.items, p.px, p.py), 
+                              screens_t::inventory);
             break;
 
         case 'z':

@@ -52,7 +52,7 @@ inline void monster_blast_process_point(Player& p, mainloop::GameState& state, c
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack(attacks, s.level, state, mon, species().get(mon.tag));
+            attack(attacks, s.get_computed_level(), state, mon, species().get(mon.tag));
         }
     }
 }

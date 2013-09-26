@@ -31,6 +31,8 @@ struct Levelskin {
 
     unsigned int number_vaults;
 
+    std::string name;
+
     struct mapgen_params_t {
         double flow_epsilon;
         unsigned int flow_n_freq;

@@ -43,6 +43,8 @@ struct Species {
     unsigned int level;
     unsigned int count;
 
+    int true_level;
+
     habitat_t habitat;
     ai_t ai;
     idle_ai_t idle_ai;
@@ -139,9 +141,13 @@ struct Species {
 
     std::vector<blast_t> blast;
 
-    Species() : level(0), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
+    Species() : level(0), true_level(-1), count(0), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::walk), range(0), clumpsize(), flags(), karma(0) {}
 
+
+    unsigned int get_computed_level() const {
+        return (true_level >= 0 ? true_level : level);
+    }
 };
 
 #endif
