@@ -145,6 +145,8 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
         }
     }
 
+
+    bm __y("vault set_maps_of");
     
     state.grid._set_maps_of(state.neigh, affected);
 }
