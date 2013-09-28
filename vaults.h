@@ -32,7 +32,8 @@ struct Vault {
     enum class placement_t : unsigned int {
         floor,
         water,
-        corner
+        corner,
+        shoreline
     };
 
     placement_t placement;

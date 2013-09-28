@@ -488,9 +488,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         ####
 
         vplacement = 
-            'floor'   %{ vau.placement = Vault::placement_t::floor; }     | 
-            'water'   %{ vau.placement = Vault::placement_t::water; }     | 
-            'corner'  %{ vau.placement = Vault::placement_t::corner; }    ;
+            'floor'     %{ vau.placement = Vault::placement_t::floor; }     | 
+            'water'     %{ vau.placement = Vault::placement_t::water; }     | 
+            'corner'    %{ vau.placement = Vault::placement_t::corner; }    |
+            'shoreline' %{ vau.placement = Vault::placement_t::shoreline; } ;
 
         vault_count     = 'count'     ws1 number     %{ vau.count = toint(state.match); } ;
         vault_placement = 'placement' ws1 vplacement  ;

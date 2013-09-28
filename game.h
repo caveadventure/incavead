@@ -129,6 +129,7 @@ struct Game {
 
         {
             progressbar("Placing vaults...");
+            bm __x("placing all vaults");
 
             std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults);
 
