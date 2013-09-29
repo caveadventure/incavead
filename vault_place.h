@@ -148,11 +148,12 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state,
 }
 
 
-inline void vault_generation_cleanup(mainloop::GameState& state, const std::set<grid::pt>& affected) {
+inline void vault_generation_cleanup(mainloop::GameState& state, std::set<grid::pt>& affected) {
 
     bm __y("vault set_maps_of");
     
     state.grid._set_maps_of(state.neigh, affected);
+    affected.clear();
 }
 
 

@@ -147,9 +147,9 @@ struct Game {
                         generate_vault(v, state, summons, affected);
                     }
                 }
-            }
 
-            vault_generation_cleanup(state, affected);
+                vault_generation_cleanup(state, affected);
+            }
         }
 
         for (const auto& xy : state.grid.cornermap) {
