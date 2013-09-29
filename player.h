@@ -125,15 +125,12 @@ struct Player {
 
         int fudge = rng.geometric(p);
 
-        std::cout << "!X " << neg << " " << fudge << " " << l << std::endl;
-
         if (neg) {
 
             fudge = -std::max(-fudge, (int)(l - 3));
 
             luck.dec(fudge);
 
-            std::cout << " -----> " << level - fudge << std::endl;
             return level - fudge;
 
         } else {
@@ -142,7 +139,6 @@ struct Player {
 
             luck.dec(fudge);
 
-            std::cout << " -----> " << level + fudge << std::endl;
             return level + fudge;
         }
     }

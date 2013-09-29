@@ -5,8 +5,6 @@
 inline void generate_vault(const Vault& vault, mainloop::GameState& state, 
                            std::vector<summons_t>& summons, std::set<grid::pt>& affected) {
 
-    bm __x("generating vault");
-
     grid::pt xy;
 
     unsigned int _w = (vault.inherit.null() ? vault.w : vaults().get(vault.inherit).w);
@@ -32,9 +30,6 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state,
                        vault.pic :
                        vaults().get(vault.inherit).pic);
 
-    {
-    bm __x("finding vault place");
-
 
     for (unsigned int i = 0; i < 10; ++i) {
 
@@ -53,8 +48,6 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state,
             break;
         }
 
-        std::cout << " " << i;
-
         if ((int)xy.first  - (int)ax < 0 ||
             (int)xy.second - (int)ay < 0) 
             continue;
@@ -71,8 +64,6 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state,
         }
 
         break;
-    }
-    std::cout << std::endl;
     }
 
     //
@@ -150,8 +141,6 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state,
 
 inline void vault_generation_cleanup(mainloop::GameState& state, std::set<grid::pt>& affected) {
 
-    bm __y("vault set_maps_of");
-    
     state.grid._set_maps_of(state.neigh, affected);
     affected.clear();
 }

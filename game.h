@@ -129,7 +129,6 @@ struct Game {
 
         {
             progressbar("Placing vaults...");
-            bm __x("placing all vaults");
 
             std::set<grid::pt> affected;
 
@@ -619,8 +618,6 @@ struct Game {
         draw_one_stat(state, p.health, "Health");
         draw_one_stat(state, p.food,   "Food");
         draw_one_stat(state, p.karma,  "Karma");
-
-        std::cout << "/L " << p.luck.val << std::endl;
 
         if (p.luck.val > 0.1 || p.luck.val < -0.1) {
             draw_one_stat(state, p.luck, "Luck");
