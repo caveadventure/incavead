@@ -205,19 +205,33 @@ struct inventory_t {
         return ret;
     }
 
-    double get_luck(double moon_angle) const {
-        double ret = 0;
+    void get_turn_coeffs(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) {
+
+        inc_luck = 0;
+        inc_hunger = 0;
+        inc_shield = 0;
+
+        double hunger_coeff = 0;
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
 
             for (const auto& l : dp.luck) {
-                ret = std::max(ret, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
-                std::cout << "!luck " << ret << " " << l.height << " " << l.mean << " " << l.deviation << " " << moon_angle << std::endl;
+                inc_luck = std::max(inc_luck, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
+                std::cout << "!luck " << inc_luck << " " << l.height << " " << l.mean << " " 
+                          << l.deviation << " " << moon_angle << std::endl;
             }
+
+            inc_hunger += (dp.hunger * i.second.count);
+
+            hunger_coeff = std::max(hunger_coeff, dp.other_hunger_multiplier);
+
+            inc_shield += dp.shield;
         }
 
-        return ret;
+        if (hunger_coeff > 1) {
+            inc_hunger *= hunger_coeff;
+        }
     }
 
 };

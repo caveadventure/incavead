@@ -131,15 +131,25 @@ struct Game {
             progressbar("Placing vaults...");
             bm __x("placing all vaults");
 
+            std::set<grid::pt> affected;
+
             std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults);
 
-            for (const auto vi : vc) {
-                const Vault& v = vaults().get(vi.first);
+            for (unsigned int priority = 0; priority <= 1; ++priority) {
 
-                for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                    generate_vault(v, state, summons);
+                for (const auto vi : vc) {
+                    const Vault& v = vaults().get(vi.first);
+
+                    if (v.priority != priority)
+                        continue;
+
+                    for (unsigned int ci = 0; ci < vi.second; ++ci) {
+                        generate_vault(v, state, summons, affected);
+                    }
                 }
             }
+
+            vault_generation_cleanup(state, affected);
         }
 
         for (const auto& xy : state.grid.cornermap) {
@@ -212,6 +222,8 @@ struct Game {
 
                 const bones::pt& xy = marks.first;
                 double worth = marks.second;
+
+                worth = std::min(worth, 1000.0);
 
                 state.features.set(xy.first, xy.second, grave, state.render);
 
@@ -614,6 +626,13 @@ struct Game {
             draw_one_stat(state, p.luck, "Luck");
         }
 
+        if (p.health.shield > 0) {
+            state.render.push_hud_line("Shield", maudit::color::dim_green,
+                                       std::min((unsigned int)(p.health.shield + 1), (unsigned int)6),
+                                       '*',
+                                       maudit::color::bright_yellow);
+        }
+
         if (p.sleep > 0) {
             state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                        std::min(p.sleep / 15 + 1, (unsigned int)6), 
@@ -666,8 +685,6 @@ struct Game {
             if (p.inv.take(d_victory.slot, vi)) {
 
                 ++vi.count;
-
-                p.food.dec(1e-5 * vi.count);
 
                 p.inv.place(d_victory.slot, vi, tmp);
             }
@@ -782,10 +799,22 @@ struct Game {
             }
         }
 
+        //
+        const auto& consts = constants();
 
-        p.luck.inc(p.inv.get_luck(state.moon.pi.phase_n));
+        double inc_luck;
+        double inc_hunger;
+        double inc_shield;
+        
+        p.inv.get_turn_coeffs(state.moon.pi.phase_n, inc_luck, inc_hunger, inc_shield);
 
-        p.food.dec(0.003);
+        p.luck.inc(inc_luck);
+
+        if (p.health.shield < consts.health_shield_max) {
+            p.health.shield += inc_shield;
+        }
+
+        p.food.dec(consts.hunger_rate + inc_hunger);
 
         {
             const Levelskin& ls = levelskins().get(p.worldz);
@@ -794,7 +823,7 @@ struct Game {
 
         if (p.food.val <= -3.0) {
             state.render.do_message("You desperately need something to eat!", true);
-            p.health.dec(0.05);
+            p.health.dec(consts.starvation_damage);
         }
 
         if (p.health.val <= -3.0) {

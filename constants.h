@@ -3,6 +3,9 @@
 
 struct ConstantsBank {
 
+    double hunger_rate;
+    double starvation_damage;
+
     tag_t grave;
     tag_t meat;
     tag_t bad_meat;
@@ -30,6 +33,10 @@ struct ConstantsBank {
     std::map<unsigned char, shortcut_t> shortcuts;
     
     unsigned int uniques_timeout;
+
+    double health_shield_max;
+
+    ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), health_shield_max(0) {}
 
 };
 

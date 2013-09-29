@@ -2,7 +2,8 @@
 #define __VAULT_PLACE_H
 
 
-inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::vector<summons_t>& summons) {
+inline void generate_vault(const Vault& vault, mainloop::GameState& state, 
+                           std::vector<summons_t>& summons, std::set<grid::pt>& affected) {
 
     bm __x("generating vault");
 
@@ -74,7 +75,7 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
     std::cout << std::endl;
     }
 
-    std::set<grid::pt> affected;
+    //
 
     for (int i = -1; i <= (int)w; ++i) {
         affected.insert(grid::pt(xy.first + i, xy.second - 1));
@@ -144,7 +145,10 @@ inline void generate_vault(const Vault& vault, mainloop::GameState& state, std::
             }
         }
     }
+}
 
+
+inline void vault_generation_cleanup(mainloop::GameState& state, const std::set<grid::pt>& affected) {
 
     bm __y("vault set_maps_of");
     

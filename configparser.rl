@@ -395,13 +395,21 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ des.luck.back().deviation = toreal(state.match); }
             ;
 
+        design_hunger = 'hunger' ws1 real %{ des.hunger = toreal(state.match); };
+
+        design_other_hunger_multiplier = 'other_hunger_multiplier' 
+            ws1 real %{ des.other_hunger_multiplier = toreal(state.match); };
+
+        design_shield = 'shield' ws1 real %{ des.shield = toreal(state.match); };
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
-            design_place_permafeat | design_luck |
+            design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
+            design_shield |
             '}'
             ${ fret; })
             ;
@@ -519,9 +527,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
 
+        vault_priority = 'priority' %{ vau.priority = 1; };
+
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
-            vault_inherit | vault_transpose |
+            vault_inherit | vault_transpose | vault_priority |
             '}'
              ${ fret; })
             ;
@@ -663,6 +673,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
+        constant_hunger_rate       = 'hunger_rate'       
+            ws1 real %{ __constants__().hunger_rate = toreal(state.match); };
+
+        constant_starvation_damage = 'starvation_damage' 
+            ws1 real %{ __constants__().starvation_damage = toreal(state.match); };
+
         constant_grave    = 'grave'    ws1 string  %{ __constants__().grave = tag_t(state.match, tagmem); };
         constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
@@ -671,6 +687,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_unique_item = 'unique_item' ws1 string %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
+
+        constant_health_shield_max = 'health_shield_max' 
+            ws1 real %{ __constants__().health_shield_max = toreal(state.match); };
 
         constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
             ws1 tag      %{ __constants__().slots.back().slot = state.match; }
@@ -692,10 +711,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
-        one_constant = constant_grave | constant_meat | constant_bad_meat | constant_money |
+        one_constant = constant_hunger_rate | constant_starvation_damage |
+                       constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action |
-                       constant_unique_item | constant_uniques_timeout 
+                       constant_unique_item | constant_uniques_timeout |
+                       constant_health_shield_max 
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

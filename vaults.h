@@ -44,8 +44,10 @@ struct Vault {
     tag_t inherit;
     bool transpose;
 
+    unsigned int priority;
+
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
-              w(0), h(0), transpose(false) {}
+              w(0), h(0), transpose(false), priority(0) {}
 
     void postprocess() {
 

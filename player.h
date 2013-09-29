@@ -20,6 +20,25 @@ struct stat_t {
     }
 };
 
+struct shielded_stat_t : stat_t {
+
+    double shield;
+
+    shielded_stat_t() : stat_t(), shield(0) {}
+
+    void dec(double v) {
+
+        if (shield > 0 && v > 0) {
+            double sm = std::min(shield, v);
+
+            shield -= sm;
+            v -= sm;
+        }
+
+        stat_t::dec(v);
+    }
+};
+
 
 struct Player {
 
@@ -37,7 +56,7 @@ struct Player {
 
     unsigned int level;
 
-    stat_t health;
+    shielded_stat_t health;
     stat_t food;
     stat_t karma;
     stat_t luck;
@@ -162,6 +181,7 @@ struct reader<Player> {
         serialize::read(s, p.worldz);
         serialize::read(s, p.level);
         serialize::read(s, p.health.val);
+        serialize::read(s, p.health.shield);
         serialize::read(s, p.food.val);
         serialize::read(s, p.karma.val);
         serialize::read(s, p.luck.val);
@@ -190,6 +210,7 @@ struct writer<Player> {
         serialize::write(s, p.worldz);
         serialize::write(s, p.level);
         serialize::write(s, p.health.val);
+        serialize::write(s, p.health.shield);
         serialize::write(s, p.food.val);
         serialize::write(s, p.karma.val);
         serialize::write(s, p.luck.val);
