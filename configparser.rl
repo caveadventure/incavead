@@ -619,6 +619,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         levelskin_number_vaults = 'number_vaults' ws1 number %{ lev.number_vaults = toint(state.match); };
 
+        levelskin_number_monsters = 'number_monsters' 
+            ws1 real %{ lev.number_monsters.mean = toreal(state.match); }
+            ws1 real %{ lev.number_monsters.deviation = toreal(state.match); }
+            ;
+
         levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
 
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
@@ -647,7 +652,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage |
             levelskin_exclusive | levelskin_noterrain |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
-            levelskin_number_vaults | levelskin_name |
+            levelskin_number_vaults | levelskin_number_monsters |
+            levelskin_name |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |

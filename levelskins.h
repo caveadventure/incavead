@@ -33,6 +33,15 @@ struct Levelskin {
 
     unsigned int number_vaults;
 
+    struct mean_deviation_t {
+        double mean;
+        double deviation;
+        
+        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
+    };
+
+    mean_deviation_t number_monsters;
+
     std::string name;
 
     struct mapgen_params_t {
@@ -79,7 +88,8 @@ struct Levelskin {
     mapgen_params_t genparams;
 
     Levelskin() : lightradius(8), lightradius_max(8), damage(0), level(0), exclusive(false), noterrain(false), 
-                  species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100) {}
+                  species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
+                  number_monsters(250.0, 20.0) {}
 };
 
 struct Levelskins {

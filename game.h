@@ -333,7 +333,7 @@ struct Game {
                                       state.render, s.x, s.y, nullptr, nullptr, s.summontag, 0);
             }
 
-            unsigned int mongroups = ::fabs(state.rng.gauss(250.0, 20.0));
+            unsigned int mongroups = ::fabs(state.rng.gauss(lev.number_monsters.mean, lev.number_monsters.deviation));
 
             for (unsigned int i = 0; i < mongroups; ++i) {
 
