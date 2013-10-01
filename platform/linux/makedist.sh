@@ -1,10 +1,13 @@
 # Run this script after building to make a distro-agnostic distributable binary package.
 
+BUILDDIR=$1
+DATADIR=$2
+
 mkdir dist
 mkdir dist/bin
-cp ../../build/incavead ../../build/highscore ../../build/victory ../../build/printmap dist/bin
+cp $BUILDDIR/incavead $BUILDDIR/highscore $BUILDDIR/victory $BUILDDIR/printmap dist/bin
 cp `ldd dist/bin/incavead | grep -o '\W/[^ ]*'` dist/bin
-cp ../../data/*.cfg dist
+cp $DATADIR/*.cfg dist
 cat << "EOF" > dist/incavead
 #!/bin/bash
 SCRIPT_PATH=$(dirname $(readlink -f $0))
