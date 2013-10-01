@@ -21,15 +21,40 @@ struct order_t {
 
     order_t() : dlev(0), plev(0), worth(0), victory(false) {}
     order_t(int l, const bones::bone_t& b) : dlev(l), plev(b.level), worth(b.worth), bone(b), victory(b.cause.name == "VICTORY") {}
-
-    bool operator<(const order_t& a) const {
-        if (victory > a.victory) return true;
-        if (victory == a.victory && plev > a.plev) return true;
-        if (victory == a.victory && plev == a.plev && dlev > a.dlev) return true;
-        if (victory == a.victory && plev == a.plev && dlev == a.dlev && worth > a.worth) return true;
-        return false;
-    }
 };
+
+bool sort_plev(const order_t& a, const order_t& b) {
+    if (a.victory > b.victory) return true;
+    if (a.victory == b.victory && a.plev > b.plev) return true;
+    if (a.victory == b.victory && a.plev == b.plev && a.dlev > b.dlev) return true;
+    if (a.victory == b.victory && a.plev == b.plev && a.dlev == b.dlev && a.worth > b.worth) return true;
+    return false;
+}
+
+bool sort_dlev_d(const order_t& a, const order_t& b) {
+    if (a.victory > b.victory) return true;
+    if (a.victory == b.victory && a.dlev > b.dlev) return true;
+    if (a.victory == b.victory && a.dlev == b.dlev && a.plev > b.plev) return true;
+    if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth) return true;
+    return false;
+}
+
+bool sort_dlev_a(const order_t& a, const order_t& b) {
+    if (a.victory > b.victory) return true;
+    if (a.victory == b.victory && a.dlev < b.dlev) return true;
+    if (a.victory == b.victory && a.dlev == b.dlev && a.plev > b.plev) return true;
+    if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth) return true;
+    return false;
+}
+
+bool sort_worth(const order_t& a, const order_t& b) {
+    if (a.victory > b.victory) return true;
+    if (a.victory == b.victory && a.worth > b.worth) return true;
+    if (a.victory == b.victory && a.worth == b.worth && a.plev > b.plev) return true;
+    if (a.victory == b.victory && a.worth == b.worth && a.plev == b.plev && a.dlev > b.dlev) return true;
+    return false;
+}
+
 
 std::string quote(const std::string& s) {
     std::string ret;
@@ -44,10 +69,40 @@ std::string quote(const std::string& s) {
     return ret;
 }
 
+template <typename FUNC>
+void process(std::vector<order_t>& scores, FUNC sorter) {
+
+    std::sort(scores.begin(), scores.end(), sorter);
+
+    size_t n = 0;
+
+    for (auto i = scores.begin(); i != scores.end() && n < 10; ++i, ++n) {
+
+        if (i != scores.begin())
+            std::cout << ",";
+
+        bones::bone_t& bone = i->bone;
+
+        if (bone.cause.name.empty())
+            bone.cause.name = "unnatural causes";
+        else
+            bone.cause.name = quote(bone.cause.name);
+
+        if (bone.name.name.empty())
+            bone.name.name = "anonymous";
+        else
+            bone.name.name = quote(bone.name.name);
+
+        std::cout << nlp::message("\n{\"dlev\": %d, \"plev\": %d, \"name\": \"%S\", \"cause\": \"%s\", \"worth\": %d, \"victory\": %s}",
+                                  i->dlev+1, bone.level+1, bone.name, bone.cause, bone.worth, std::string(i->victory ? "true" : "false"));
+    }
+}
+
+
 int main(int argc, char** argv) {
 
     try {
-        
+
         std::vector<order_t> scores;
 
         try {
@@ -73,40 +128,27 @@ int main(int argc, char** argv) {
         } catch (...) {
         }
 
-        std::sort(scores.begin(), scores.end());
 
-        size_t ngames = scores.size();
+        std::cout << nlp::message("{\"num_games\": %d,\n", scores.size());
+        std::cout << "\"highscores\": {";
 
-        if (scores.size() > 10) {
-            scores.resize(10);
-        }
+        std::cout << "\"plev\": [";
+        process(scores, sort_plev);
+        std::cout << "]," << std::endl;
 
-        std::cout << nlp::message("{\"num_games\": %d,\n", ngames);
+        std::cout << "\"dlev_d\": [";
+        process(scores, sort_dlev_d);
+        std::cout << "]," << std::endl;
 
-        std::cout << "\"highscores\": [";
+        std::cout << "\"dlev_a\": [";
+        process(scores, sort_dlev_a);
+        std::cout << "]," << std::endl;
 
-        for (auto i = scores.begin(); i != scores.end(); ++i) {
+        std::cout << "\"worth\": [";
+        process(scores, sort_worth);
+        std::cout << "]" << std::endl;
 
-            if (i != scores.begin())
-                std::cout << ",";
-
-            bones::bone_t& bone = i->bone;
-
-            if (bone.cause.name.empty())
-                bone.cause.name = "unnatural causes";
-            else
-                bone.cause.name = quote(bone.cause.name);
-
-            if (bone.name.name.empty())
-                bone.name.name = "anonymous";
-            else
-                bone.name.name = quote(bone.name.name);
-
-            std::cout << nlp::message("\n{\"dlev\": %d, \"plev\": %d, \"name\": \"%S\", \"cause\": \"%s\", \"worth\": %d, \"victory\": %s}",
-                                      i->dlev+1, bone.level+1, bone.name, bone.cause, bone.worth, std::string(i->victory ? "true" : "false"));
-        }
-
-        std::cout << std::endl << "]}" << std::endl;
+        std::cout << "}}" << std::endl;
 
     } catch (std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;
