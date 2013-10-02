@@ -18,14 +18,12 @@ build() {
   cd "${srcdir}/incavead"
   mkdir build
   cd build
-  cmake ..
+  cmake -DCMAKE_INSTALL_PREFIX=$pkgdir/opt ..
   make
 }
 
 package() {
-  cd "${srcdir}/incavead"
-  mkdir -p "$pkgdir/opt/games/incavead/"
-  install -Dm644 *.cfg "$pkgdir/opt/games/incavead/"
-  install build/incavead "$pkgdir/opt/games/incavead/"
+  cd "${srcdir}/incavead/build"
+  make install
 }
 
