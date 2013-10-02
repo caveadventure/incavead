@@ -124,6 +124,15 @@
               </div>
             </section>
 
+            <section>
+              <p class="title" data-section-title><a href="#panel_ts">Last 10 games</a></p>
+              <div class="content" data-section-content>
+                <p>
+                  <ol id="highscore_ts"></ol>
+                </p>
+              </div>
+            </section>
+
           </div>
 
           <p>
@@ -339,6 +348,10 @@
 
                    $.each(data["highscores"]["worth"], function(i,item) {
                           $("<li/>").html(format_scoreline(item)).appendTo("#highscore_worth")
+                   });
+
+                   $.each(data["highscores"]["ts"], function(i,item) {
+                          $("<li/>").html(format_scoreline(item)).appendTo("#highscore_ts")
                    });
 
                   $("<span/>").html(data["num_games"]).appendTo("#num_games");
