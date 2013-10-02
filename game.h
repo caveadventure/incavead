@@ -815,11 +815,14 @@ struct Game {
 
         {
             const Levelskin& ls = levelskins().get(p.worldz);
-            p.attacker = "void emanations";
-            p.health.dec(ls.damage);
+
+            if (ls.damage > 0 && p.health.val > -3.0) {
+                p.attacker = "void emanations";
+                p.health.dec(ls.damage);
+            }
         }
 
-        if (p.food.val <= -3.0) {
+        if (p.food.val <= -3.0 && p.health.val > -3.0) {
             state.render.do_message("You desperately need something to eat!", true);
             p.attacker = "starvation";
             p.health.dec(consts.starvation_damage);
