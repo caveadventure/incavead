@@ -69,10 +69,7 @@ std::string quote(const std::string& s) {
     return ret;
 }
 
-template <typename FUNC>
-void process(std::vector<order_t>& scores, FUNC sorter) {
-
-    std::sort(scores.begin(), scores.end(), sorter);
+void _process(std::vector<order_t>& scores) {
 
     size_t n = 0;
 
@@ -97,6 +94,20 @@ void process(std::vector<order_t>& scores, FUNC sorter) {
                                   i->dlev+1, bone.level+1, bone.name, bone.cause, bone.worth, std::string(i->victory ? "true" : "false"));
     }
 }
+
+template <typename FUNC>
+void process(std::vector<order_t>& scores, FUNC sorter) {
+
+    std::sort(scores.begin(), scores.end(), sorter);
+    _process(scores);
+}
+
+void process(std::vector<order_t>& scores) {
+
+    std::reverse(scores.begin(), scores.end());
+    _process(scores);
+}
+
 
 
 int main(int argc, char** argv) {
@@ -131,6 +142,10 @@ int main(int argc, char** argv) {
 
         std::cout << nlp::message("{\"num_games\": %d,\n", scores.size());
         std::cout << "\"highscores\": {";
+
+        std::cout << "\"ts\": [";
+        process(scores);
+        std::cout << "]," << std::endl;
 
         std::cout << "\"plev\": [";
         process(scores, sort_plev);
