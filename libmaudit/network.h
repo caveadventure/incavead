@@ -14,6 +14,18 @@
 #define RECV_TYPE_CAST (char*)
 #define SETSOCKOPT_TYPE_CAST (const char*)
 
+void NETWORK_INIT() {
+    WSAData wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) 
+        throw std::runtime_error("Could not WSAStartup()");
+}
+
+void NETWORK_STOP() {
+    WSACleanup();
+}
+
+#define CLOSE closesocket
+
 #else
 
 #include <sys/socket.h>
@@ -24,6 +36,11 @@
 
 #define RECV_TYPE_CAST 
 #define SETSOCKOPT_TYPE_CAST
+
+void NETWORK_INIT() {}
+void NETWORK_STOP() {}
+
+#define CLOSE close
 
 #endif
 

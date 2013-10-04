@@ -33,7 +33,7 @@ public:
     ~client_socket() {
         if (fd >= 0) {
             ::shutdown(fd, SHUT_RDWR);
-            ::close(fd);
+            ::CLOSE(fd);
         }
     }
 
@@ -89,7 +89,7 @@ private:
     void teardown(const std::string& msg) {
 
         ::shutdown(fd, SHUT_RDWR);
-        ::close(fd);
+        ::CLOSE(fd);
         fd = -1;
 
         throw std::runtime_error(msg);
@@ -102,11 +102,15 @@ public:
     ~server_socket() {
         if (fd >= 0) {
             ::shutdown(fd, SHUT_RDWR);
-            ::close(fd);
+            ::CLOSE(fd);
         }
+
+        NETWORK_STOP();
     }
         
     server_socket(unsigned int port) : fd(-1) {
+
+        NETWORK_INIT();
 
         fd = ::socket(AF_INET, SOCK_STREAM, 0);
 
