@@ -12,7 +12,7 @@ struct summons_t {
 };
 
 
-inline bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
+inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
     unsigned int _x = ax;
     unsigned int _y = ay;
 
@@ -37,7 +37,7 @@ inline bool reachable(mainloop::GameState& state, unsigned int ax, unsigned int 
 }
 
 
-inline void monster_blast_process_point(Player& p, mainloop::GameState& state, const Species& s,
+inline void monster_blast_process_point(Player& p, GameState& state, const Species& s,
                                         unsigned int _x, unsigned int _y, const damage::attacks_t& attacks) {
 
     if (_x == p.px && _y == p.py) {
@@ -57,7 +57,7 @@ inline void monster_blast_process_point(Player& p, mainloop::GameState& state, c
     }
 }
 
-inline void do_monster_blast(Player& p, mainloop::GameState& state, const Species& s, 
+inline void do_monster_blast(Player& p, GameState& state, const Species& s, 
                              unsigned int tx, unsigned int ty, unsigned int rad, 
                              const damage::attacks_t& attacks) {
 
@@ -76,7 +76,7 @@ inline void do_monster_blast(Player& p, mainloop::GameState& state, const Specie
 }
 
 
-inline bool do_monster_magic(Player& p, mainloop::GameState& state, size_t ticks, double dist, 
+inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double dist, 
                              std::vector<summons_t>& summons, 
                              const monsters::Monster& m, const Species& s) {
 
@@ -152,7 +152,7 @@ inline bool do_monster_magic(Player& p, mainloop::GameState& state, size_t ticks
 }
 
 
-inline bool move_monster(Player& p, mainloop::GameState& state, size_t ticks, 
+inline bool move_monster(Player& p, GameState& state, size_t ticks, 
                          std::vector<summons_t>& summons,
                          const monsters::Monster& m, const Species& s,
                          monsters::pt& nxy, bool& do_die) {

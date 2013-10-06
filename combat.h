@@ -51,7 +51,7 @@ inline void roll_attack(rnd::Generator& rng,
     }
 }
 
-inline void monster_kill(mainloop::GameState& state, const monsters::Monster& mon, 
+inline void monster_kill(GameState& state, const monsters::Monster& mon, 
                          const Species& s) {
 
     for (const auto& drop : s.drop) {
@@ -66,7 +66,7 @@ inline void monster_kill(mainloop::GameState& state, const monsters::Monster& mo
 
 
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
-                                  mainloop::GameState& state,
+                                  GameState& state,
                                   double& totdamage, double& totmagic, 
                                   double& totsleep, double& totfear, double& totvamp,
                                   bool& mortal) {
@@ -164,7 +164,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
 
 inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
-                   mainloop::GameState& state, const monsters::Monster& mon,
+                   GameState& state, const monsters::Monster& mon,
                    const Species& s) {
 
     if (attacks.empty()) {
@@ -198,7 +198,7 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
 
 
 inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                   mainloop::GameState& state, const monsters::Monster& mon, 
+                   GameState& state, const monsters::Monster& mon, 
                    bool quiet = false) {
 
     const Species& s = species().get(mon.tag);
@@ -310,7 +310,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 }
 
 
-inline void handle_post_defend(Player& p, mainloop::GameState& state) {
+inline void handle_post_defend(Player& p, GameState& state) {
 
     if (p.digging) {
         state.render.do_message("You stop digging.");
@@ -322,7 +322,7 @@ inline void handle_post_defend(Player& p, mainloop::GameState& state) {
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const damage::attacks_t& attacks, unsigned int alevel, 
-                   mainloop::GameState& state, damage::attacks_t& attack_res) {
+                   GameState& state, damage::attacks_t& attack_res) {
 
     if (attacks.empty())
         return;
@@ -371,7 +371,7 @@ inline void defend(Player& p,
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Species& s, const damage::attacks_t& attacks,
-                   mainloop::GameState& state) {
+                   GameState& state) {
 
 
     damage::attacks_t attack_res;
@@ -432,7 +432,7 @@ inline void defend(Player& p,
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Species& s,
-                   mainloop::GameState& state) {
+                   GameState& state) {
 
     defend(p, defenses, plevel, s, s.attacks, state);
 }
@@ -440,7 +440,7 @@ inline void defend(Player& p,
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Terrain& t, 
-                   mainloop::GameState& state) {
+                   GameState& state) {
 
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, t.attacks, t.attack_level, state, attack_res);
@@ -515,7 +515,7 @@ inline void defend(Player& p,
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Design& d, 
-                   mainloop::GameState& state) {
+                   GameState& state) {
 
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, d.attacks, d.level, state, attack_res);

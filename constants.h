@@ -40,12 +40,12 @@ struct ConstantsBank {
 
 };
 
-ConstantsBank& __constants__() {
+inline ConstantsBank& __constants__() {
     static ConstantsBank ret;
     return ret;
 }
 
-const ConstantsBank& constants() {
+inline const ConstantsBank& constants() {
     return __constants__();
 }
 

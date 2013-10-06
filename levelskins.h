@@ -118,16 +118,16 @@ struct Levelskins {
 };
 
 
-Levelskins& __levelskins__() {
+inline Levelskins& __levelskins__() {
     static Levelskins ret;
     return ret;
 }
 
-const Levelskins& levelskins() {
+inline const Levelskins& levelskins() {
     return __levelskins__();
 }
 
-void init_levelskin(const Levelskin& skin) {
+inline void init_levelskin(const Levelskin& skin) {
     __levelskins__().set(skin);
 }
 

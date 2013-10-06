@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "counters.h"
-
 struct Species {
     enum class habitat_t : unsigned int {
         walk,

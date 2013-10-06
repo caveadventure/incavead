@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "../serialize.h"
+#include "../common_types.h"
 #include "../common.h"
 
 #define __ITEMS_H

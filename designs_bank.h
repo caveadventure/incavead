@@ -30,16 +30,16 @@ struct DesignsBank {
     }
 };
 
-DesignsBank& __designs__() {
+inline DesignsBank& __designs__() {
     static DesignsBank ret;
     return ret;
 }
 
-const DesignsBank& designs() {
+inline const DesignsBank& designs() {
     return __designs__();
 }
 
-void init_design_copy(const Design& d) {
+inline void init_design_copy(const Design& d) {
     __designs__().copy(d);
 }
 

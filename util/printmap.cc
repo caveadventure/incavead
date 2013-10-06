@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "../serialize.h"
+#include "../common_types.h"
 #include "../common.h"
 #include "../random.h"
 #include "../grid.h"

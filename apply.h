@@ -2,7 +2,7 @@
 #define __APPLY_H
 
 
-inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int y, unsigned int r,
+inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
     state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
@@ -25,7 +25,7 @@ inline void cast_cloud(mainloop::GameState& state, unsigned int x, unsigned int 
 }
 
 
-inline bool apply_item(Player& p, const std::string& slot, mainloop::GameState& state, bool& regen) {
+inline bool apply_item(Player& p, const std::string& slot, GameState& state, bool& regen) {
 
     items::Item tmp;
 
@@ -127,7 +127,7 @@ inline bool destroy_item(Player& p, const std::string& slot) {
     return true;
 }
 
-inline void blast_process_point(Player& p, mainloop::GameState& state, const Design& d,
+inline void blast_process_point(Player& p, GameState& state, const Design& d,
                                 unsigned int _x, unsigned int _y) {
 
     if (_x == p.px && _y == p.py) {
@@ -148,7 +148,7 @@ inline void blast_process_point(Player& p, mainloop::GameState& state, const Des
 }
 
 inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly, 
-                           mainloop::GameState& state) {
+                           GameState& state) {
 
     items::Item tmp;
         
@@ -177,7 +177,7 @@ inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, 
     return true;
 }
 
-inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameState& state, size_t& ticks) {
+inline bool start_blast_item(Player& p, const std::string& slot, GameState& state, size_t& ticks) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -207,7 +207,7 @@ inline bool start_blast_item(Player& p, const std::string& slot, mainloop::GameS
 }
 
 
-inline bool start_cloud_item(Player& p, const std::string& slot, mainloop::GameState& state, size_t& ticks) {
+inline bool start_cloud_item(Player& p, const std::string& slot, GameState& state, size_t& ticks) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -232,7 +232,7 @@ inline bool start_cloud_item(Player& p, const std::string& slot, mainloop::GameS
 
 
 inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly,
-                           mainloop::GameState& state) {
+                           GameState& state) {
 
     items::Item tmp;
         
@@ -262,7 +262,7 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     return true;
 }
 
-inline bool start_throw_item(Player& p, const std::string& slot, mainloop::GameState& state) {
+inline bool start_throw_item(Player& p, const std::string& slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp))
@@ -279,7 +279,7 @@ inline bool start_throw_item(Player& p, const std::string& slot, mainloop::GameS
     return true;
 }
 
-inline bool start_digging(Player& p, const std::string& slot, mainloop::GameState& state) {
+inline bool start_digging(Player& p, const std::string& slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp))
@@ -297,7 +297,7 @@ inline bool start_digging(Player& p, const std::string& slot, mainloop::GameStat
 
 
 inline bool take_item(unsigned int x, unsigned int y, unsigned int z, 
-                      Player& p, mainloop::GameState& state, size_t& ticks) {
+                      Player& p, GameState& state, size_t& ticks) {
 
     items::Item disc;
         

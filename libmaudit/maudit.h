@@ -3,6 +3,7 @@
 
 #include "io.h"
 #include "server.h"
+#include "types.h"
 #include "screen.h"
 
 #endif

@@ -7,8 +7,6 @@
 #include <list>
 #include <stdexcept>
 
-#include "celauto.h"
-
 #include "libmaudit/maudit.h"
 
 //#include <iostream>

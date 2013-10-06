@@ -9,7 +9,7 @@ inline void center_draw_text(grender::Grid& render, unsigned int x, unsigned int
     render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
 }
 
-inline void look_move(Player::look_t& look, mainloop::GameState& state, int dx, int dy) {
+inline void look_move(Player::look_t& look, GameState& state, int dx, int dy) {
 
     int nx = look.x + dx;
     int ny = look.y + dy;
@@ -27,7 +27,7 @@ inline void look_move(Player::look_t& look, mainloop::GameState& state, int dx, 
 }
 
 inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
-                       mainloop::GameState& state) {
+                       GameState& state) {
 
     (look.target)++;
 
@@ -69,7 +69,7 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
 }
 
 inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
-                                 mainloop::GameState& state, maudit::keypress k) {
+                                 GameState& state, maudit::keypress k) {
 
     int stop = 0;
 
@@ -217,7 +217,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
 }
 
 inline void start_look_target(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
-                              mainloop::GameState& state, int rangemin, int rangemax) {
+                              GameState& state, int rangemin, int rangemax) {
 
     pstate = (Player::LOOKING | Player::TARGET);
     look = Player::look_t(px, py);
@@ -229,7 +229,7 @@ inline void start_look_target(unsigned int& pstate, Player::look_t& look, unsign
 }
 
 inline void start_look_plain(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
-                             mainloop::GameState& state) {
+                             GameState& state) {
 
     pstate = Player::LOOKING;
     look = Player::look_t(px, py);
@@ -239,7 +239,7 @@ inline void start_look_plain(unsigned int& pstate, Player::look_t& look, unsigne
 }
 
 inline void start_look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
-                             mainloop::GameState& state, maudit::keypress k) {
+                             GameState& state, maudit::keypress k) {
 
     pstate = Player::LOOKING;
     look = Player::look_t(px, py);

@@ -30,16 +30,16 @@ struct SpeciesBank {
     }
 };
 
-SpeciesBank& __species__() {
+inline SpeciesBank& __species__() {
     static SpeciesBank ret;
     return ret;
 }
 
-const SpeciesBank& species() {
+inline const SpeciesBank& species() {
     return __species__();
 }
 
-void init_species_copy(const Species& s) {
+inline void init_species_copy(const Species& s) {
     __species__().copy(s);
 }
 

@@ -19,13 +19,13 @@ find_program(RAGEL ragel)
 
 if(NOT RAGEL) 
   
-  add_executable(incavead incavead.cc)
+  add_executable(incavead configparser.cc incavead.cc)
 
 else(NOT RAGEL)
 
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h
-    COMMAND ${RAGEL} -G2 -o configparser.h configparser.rl
+    COMMAND ${RAGEL} -s -T0 -o configparser.h configparser.rl
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/configparser.rl
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
@@ -33,7 +33,7 @@ else(NOT RAGEL)
   #add_custom_target(configparserh DEPENDS configparser.h)
   #set_source_files_properties(configparser.h PROPERTIES GENERATED TRUE ) 
 
-  add_executable(incavead incavead.cc ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h)
+  add_executable(incavead configparser.cc incavead.cc ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h)
 
 endif(NOT RAGEL)
 

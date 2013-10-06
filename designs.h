@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "counters.h"
-
 struct Design {
 
     tag_t tag;

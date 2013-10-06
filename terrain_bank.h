@@ -30,16 +30,16 @@ struct TerrainBank {
     }
 };
 
-TerrainBank& __terrain__() {
+inline TerrainBank& __terrain__() {
     static TerrainBank ret;
     return ret;
 }
 
-const TerrainBank& terrain() {
+inline const TerrainBank& terrain() {
     return __terrain__();
 }
 
-void init_terrain_copy(const Terrain& t) {
+inline void init_terrain_copy(const Terrain& t) {
     __terrain__().copy(t);
 }
 

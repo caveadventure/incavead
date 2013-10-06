@@ -42,7 +42,7 @@ struct Game {
     }
 
     template <typename FUNC>
-    static void make_map(int worldx, int worldy, int worldz, mainloop::GameState& state,
+    static void make_map(int worldx, int worldy, int worldz, GameState& state,
                          uint64_t gridseed, const std::string& cached_grid,
                          FUNC progressbar) {
 
@@ -75,7 +75,7 @@ struct Game {
 
 
     template <typename FUNC>
-    void generate(mainloop::GameState& state, FUNC progressbar) {
+    void generate(GameState& state, FUNC progressbar) {
 
         // Read or generate cached map.
 
@@ -353,7 +353,7 @@ struct Game {
         progressbar("Done!");
     }
 
-    void dispose(mainloop::GameState& state) {
+    void dispose(GameState& state) {
 
         std::vector<items::Item> vic;
         std::map<items::pt,items::Item> safe;
@@ -401,7 +401,7 @@ struct Game {
         }
     }
 
-    void endgame(mainloop::GameState& state, const std::string& name) {
+    void endgame(GameState& state, const std::string& name) {
 
         const Design& d_victory = designs().get(constants().unique_item);
 
@@ -430,7 +430,7 @@ struct Game {
 
 
 
-    void set_skin(mainloop::GameState& state, unsigned int x, unsigned int y) {
+    void set_skin(GameState& state, unsigned int x, unsigned int y) {
 
         bool walkable = state.grid.is_walk(x, y);
         bool water = state.grid.is_water(x, y);
@@ -594,7 +594,7 @@ struct Game {
         }
     }
 
-    void draw_one_stat(mainloop::GameState& state, const stat_t& s, const std::string& name) {
+    void draw_one_stat(GameState& state, const stat_t& s, const std::string& name) {
 
         double v = s.val;
         int vp = 0;
@@ -613,7 +613,7 @@ struct Game {
         }
     }
 
-    void draw_hud(mainloop::GameState& state, size_t ticks) {
+    void draw_hud(GameState& state, size_t ticks) {
 
         draw_one_stat(state, p.health, "Health");
         draw_one_stat(state, p.food,   "Food");
@@ -654,7 +654,7 @@ struct Game {
         //                           4, '+', maudit::color::bright_green);
     }
 
-    bool process_feature(mainloop::GameState& state, features::Feature& f, const Terrain& t) {
+    bool process_feature(GameState& state, features::Feature& f, const Terrain& t) {
 
         if (f.decay > 0) {
             --(f.decay);
@@ -666,7 +666,7 @@ struct Game {
         return true;
     }
 
-    void process_world(mainloop::GameState& state, size_t& ticks, 
+    void process_world(GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
 
@@ -875,7 +875,7 @@ struct Game {
         }
     }
 
-    void move_player(mainloop::GameState& state) {
+    void move_player(GameState& state) {
         
         size_t nstack = state.items.stack_size(p.px, p.py);
 
@@ -902,7 +902,7 @@ struct Game {
         }
     }
 
-    void move(mainloop::GameState& state, int dx, int dy, size_t& ticks) {
+    void move(GameState& state, int dx, int dy, size_t& ticks) {
         int nx = p.px + dx;
         int ny = p.py + dy;
 
@@ -955,7 +955,7 @@ struct Game {
         move_player(state);
     }
 
-    void use_terrain(mainloop::GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
+    void use_terrain(GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
 
         features::Feature feat;
         if (!state.features.get(p.px, p.py, feat)) {
@@ -1050,12 +1050,12 @@ struct Game {
         state.render.do_message("There is nothing here to use.");
     }
 
-    void rest(mainloop::GameState& state, size_t& ticks) {
+    void rest(GameState& state, size_t& ticks) {
 
         ++ticks;
     }
 
-    void seed_celauto(mainloop::GameState& state, 
+    void seed_celauto(GameState& state, 
                       unsigned int _x, unsigned int _y, tag_t tag) {
 
         const CelAuto& ca = celautos().get(tag);
@@ -1088,7 +1088,7 @@ struct Game {
         return m;
     }
 
-    void handle_input_spells(mainloop::GameState& state, size_t& ticks, maudit::keypress k) {
+    void handle_input_spells(GameState& state, size_t& ticks, maudit::keypress k) {
 
         int z = k.letter - 'a';
 
@@ -1166,7 +1166,7 @@ struct Game {
                             bone.worth);
     }
 
-    void handle_input_main(mainloop::GameState& state,
+    void handle_input_main(GameState& state,
                            size_t& ticks, bool& done, bool& dead, bool& regen, 
                            maudit::keypress k) {
 
@@ -1329,7 +1329,7 @@ struct Game {
     }
 
 
-    void handle_input_debug(mainloop::GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
+    void handle_input_debug(GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
 
         switch (k.letter) {
 
@@ -1409,7 +1409,7 @@ struct Game {
 
 
     void handle_input_pick_direction(unsigned int& pstate, unsigned int px, unsigned int py, size_t& ticks,
-                                     mainloop::GameState& state, maudit::keypress k) {
+                                     GameState& state, maudit::keypress k) {
 
         unsigned int nx = px;
         unsigned int ny = py;
@@ -1489,12 +1489,12 @@ struct Game {
         }
     }
 
-    void handle_input_messages(mainloop::GameState& state, maudit::keypress k) {
+    void handle_input_messages(GameState& state, maudit::keypress k) {
 
         state.window_stack.pop_back();
     }
 
-    void handle_input(mainloop::GameState& state,
+    void handle_input(GameState& state,
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k) {
 

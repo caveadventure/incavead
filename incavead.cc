@@ -12,6 +12,7 @@
 
 #include "rcode.h"
 #include "serialize.h"
+#include "common_types.h"
 #include "common.h"
 
 ////
@@ -24,22 +25,32 @@
 #include "species.h"
 #include "vaults.h"
 
+#include "counters.h"
+
 #include "terrain_bank.h"
 #include "designs_bank.h"
 #include "species_bank.h"
 #include "vaults_bank.h"
+#include "celauto_bank.h"
 
 #include "levelskins.h"
 
 #include "nlp.h"
 
-#include "mainloop_net.h"
 
-#include "configparser.h"
+#include "gamestate.h"
+
+#include "mainloop_net.h"
 
 #include "bones.h"
 #include "uniques.h"
 #include "permafeats.h"
+
+
+//#include "configparser.h"
+namespace configparser {
+extern void parse_config(const std::string& filename, tag_mem_t& tagmem);
+}
 
 #include "utilstuff.h"
 #include "inventory.h"
@@ -71,6 +82,8 @@ enum class screens_t : unsigned int {
 
 void init_statics() {
 
+    bm _x("parsing config");
+
     tag_mem_t tagmem;
 
     configparser::parse_config("species.cfg", tagmem);
@@ -101,7 +114,7 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug) {
 
         screen_t screen(client);
 
-        mainloop::Main<Game, screen_t> main(screen, debug);
+        mainloop::Main<Game, GameState, screen_t> main(screen, debug);
 
         main.mainloop(singleplayer);
 
@@ -117,7 +130,7 @@ void do_genmaps() {
 
     std::cout << "Generating a new set of maps. Please wait." << std::endl;
 
-    mainloop::GameState state;
+    GameState state;
     state.neigh.init(Game::GRID_W, Game::GRID_H);
     state.grid.init(Game::GRID_W, Game::GRID_H);
 

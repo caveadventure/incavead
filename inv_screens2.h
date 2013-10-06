@@ -2,7 +2,7 @@
 #define __INV_SCREENS2_H
 
 
-inline void handle_input_inventory(Player& p, mainloop::GameState& state,
+inline void handle_input_inventory(Player& p, GameState& state,
                                    size_t& ticks, bool& done, bool& dead, bool& regen, 
                                    maudit::keypress k) {
 
@@ -28,7 +28,7 @@ inline void handle_input_inventory(Player& p, mainloop::GameState& state,
     state.window_stack.pop_back();
 }
 
-inline bool handle_input_inv_item(Player& p, mainloop::GameState& state,
+inline bool handle_input_inv_item(Player& p, GameState& state,
                                   size_t& ticks, bool& done, bool& dead, bool& regen, 
                                   maudit::keypress k) {
 
@@ -77,7 +77,7 @@ inline bool handle_input_inv_item(Player& p, mainloop::GameState& state,
     return false;
 }
 
-inline void handle_input_floor_item(Player& p, mainloop::GameState& state,
+inline void handle_input_floor_item(Player& p, GameState& state,
                                     size_t& ticks, bool& done, bool& dead, bool& regen, 
                                     maudit::keypress k) {
 

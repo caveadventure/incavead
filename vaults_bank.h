@@ -30,16 +30,16 @@ struct VaultsBank {
     }
 };
 
-VaultsBank& __vaults__() {
+inline VaultsBank& __vaults__() {
     static VaultsBank ret;
     return ret;
 }
 
-const VaultsBank& vaults() {
+inline const VaultsBank& vaults() {
     return __vaults__();
 }
 
-void init_vault_copy(const Vault& s) {
+inline void init_vault_copy(const Vault& s) {
     __vaults__().copy(s);
 }
 
