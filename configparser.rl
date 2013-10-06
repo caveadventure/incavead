@@ -44,6 +44,7 @@ struct ragel_state {
 };
 
 inline void init_species(const Species& s) {
+    std::cout << "Ready to copy species" << std::endl;
     init_species_copy(s);
 }
 

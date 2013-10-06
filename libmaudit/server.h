@@ -110,7 +110,11 @@ public:
         
     server_socket(unsigned int port) : fd(-1) {
 
+        std::cout << "NETWORK_INIT" << std::endl;
+
         NETWORK_INIT();
+
+        std::cout << "socket()" << std::endl;
 
         fd = ::socket(AF_INET, SOCK_STREAM, 0);
 
@@ -118,12 +122,18 @@ public:
             throw std::runtime_error("could not socket()");
         }
 
+        std::cout << "setsockopt() 1" << std::endl;
+
         int is_true = 1;
         if (::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, SETSOCKOPT_TYPE_CAST &is_true, sizeof(is_true)) < 0)
             teardown("could not setsockopt(SO_REUSEADDR) : ");
 
+        std::cout << "setsockopt() 2" << std::endl;
+
         if (::setsockopt(fd, SOL_TCP, TCP_NODELAY, SETSOCKOPT_TYPE_CAST &is_true, sizeof(is_true)) < 0)
             teardown("could not setsockopt(TCP_NODELAY) : ");
+
+        std::cout << "make addr" << std::endl;
 
         struct sockaddr_in addr;
         ::memset(&addr, 0, sizeof(addr));
@@ -136,8 +146,12 @@ public:
         //if (::inet_pton(AF_INET, host.c_str(), (void*)&addr.sin_addr) <= 0)
         //    teardown("could not inet_pton() : ");
 
+        std::cout << "bind()" << std::endl;
+
         if (::bind(fd, (struct sockaddr*)&addr, sizeof(addr)) < 0)
             teardown("could not bind() : ");
+
+        std::cout << "listen()" << std::endl;
 
         if (::listen(fd, 1024) < 0)
             teardown("could not listen() : ");

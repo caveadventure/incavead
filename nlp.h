@@ -237,6 +237,23 @@ void message(_buffer& b, unsigned int v, const TAIL&... args) {
 }
 
 template <typename... TAIL>
+void message(_buffer& b, unsigned long long v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%llu", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
 void message(_buffer& b, unsigned long v, const TAIL&... args) {
 
     unsigned char c = b.consume();
@@ -246,7 +263,24 @@ void message(_buffer& b, unsigned long v, const TAIL&... args) {
 
     if (c == 'd') {
         char tmp[256];
-        ::snprintf(tmp, 255, "%zu", v);
+        ::snprintf(tmp, 255, "%lu", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
+void message(_buffer& b, long long v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%lld", v);
         b.out += tmp;
     }
 

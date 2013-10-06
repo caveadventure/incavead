@@ -10,6 +10,11 @@ SET(CMAKE_BUILD_TYPE "Release")
 
 SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O4 -pthread -ftime-report -fmem-report")
 
+if(WIN32)
+  SET(CMAKE_EXE_LINKER_FLAGS "-static -pthread")
+endif()
+
+
 SET(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dist)
 
@@ -39,7 +44,7 @@ endif(NOT RAGEL)
 
 if(WIN32)
 
-  target_link_libraries(incavead m pthread ws2_32)
+  target_link_libraries(incavead m ws2_32)
 
 else(WIN32)
 

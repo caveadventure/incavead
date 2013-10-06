@@ -46,6 +46,7 @@ struct ragel_state {
 };
 
 inline void init_species(const Species& s) {
+    std::cout << "Ready to copy species" << std::endl;
     init_species_copy(s);
 }
 
@@ -111,14 +112,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     unsigned char shortcut_key;
 
     
-#line 736 "configparser.rl"
+#line 737 "configparser.rl"
 
 /*
 
 */
 
     
-#line 122 "configparser.h"
+#line 123 "configparser.h"
 static const short _ConfigParser_actions[] = {
 	0, 1, 0, 1, 1, 1, 2, 1, 
 	3, 1, 4, 1, 5, 1, 14, 1, 
@@ -6929,15 +6930,15 @@ static const int ConfigParser_en_one_levelskin = 2362;
 static const int ConfigParser_en_main = 1;
 
 
-#line 742 "configparser.rl"
+#line 743 "configparser.rl"
     
-#line 6935 "configparser.h"
+#line 6936 "configparser.h"
 	{
 	 state.cs = ConfigParser_start;
 	 state.top = 0;
 	}
 
-#line 743 "configparser.rl"
+#line 744 "configparser.rl"
 
     bool done = false;
     int have = 0;
@@ -6960,7 +6961,7 @@ static const int ConfigParser_en_main = 1;
         }
 
         
-#line 6964 "configparser.h"
+#line 6965 "configparser.h"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -7035,1179 +7036,1179 @@ _match:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 120 "configparser.rl"
+#line 121 "configparser.rl"
 	{
             state.match.clear();
         }
 	break;
 	case 1:
-#line 124 "configparser.rl"
+#line 125 "configparser.rl"
 	{
             state.match += (*( state.p));
         }
 	break;
 	case 2:
-#line 149 "configparser.rl"
+#line 150 "configparser.rl"
 	{ state.match += '"';  { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 3:
-#line 150 "configparser.rl"
+#line 151 "configparser.rl"
 	{ state.match += '\n'; { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 4:
-#line 151 "configparser.rl"
+#line 152 "configparser.rl"
 	{ state.match += '\\'; { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 5:
-#line 155 "configparser.rl"
+#line 156 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 250; goto _again;}}
 	break;
 	case 6:
-#line 164 "configparser.rl"
+#line 165 "configparser.rl"
 	{ add_color(skin.fore, 1); }
 	break;
 	case 7:
-#line 165 "configparser.rl"
+#line 166 "configparser.rl"
 	{ add_color(skin.fore, 2); }
 	break;
 	case 8:
-#line 166 "configparser.rl"
+#line 167 "configparser.rl"
 	{ add_color(skin.fore, 3); }
 	break;
 	case 9:
-#line 167 "configparser.rl"
+#line 168 "configparser.rl"
 	{ add_color(skin.fore, 4); }
 	break;
 	case 10:
-#line 168 "configparser.rl"
+#line 169 "configparser.rl"
 	{ add_color(skin.fore, 5); }
 	break;
 	case 11:
-#line 169 "configparser.rl"
+#line 170 "configparser.rl"
 	{ add_color(skin.fore, 6); }
 	break;
 	case 12:
-#line 170 "configparser.rl"
+#line 171 "configparser.rl"
 	{ add_color(skin.fore, 7); }
 	break;
 	case 13:
-#line 173 "configparser.rl"
+#line 174 "configparser.rl"
 	{ skin.fore = maudit::color::none; }
 	break;
 	case 14:
-#line 174 "configparser.rl"
+#line 175 "configparser.rl"
 	{ skin.fore = maudit::color::dim_black; }
 	break;
 	case 15:
-#line 175 "configparser.rl"
+#line 176 "configparser.rl"
 	{ skin.fore = maudit::color::bright_black; }
 	break;
 	case 16:
-#line 178 "configparser.rl"
+#line 179 "configparser.rl"
 	{ skin.back = maudit::color::none; }
 	break;
 	case 17:
-#line 179 "configparser.rl"
+#line 180 "configparser.rl"
 	{ skin.back = maudit::color::bright_black; }
 	break;
 	case 18:
-#line 180 "configparser.rl"
+#line 181 "configparser.rl"
 	{ skin.back = maudit::color::bright_red; }
 	break;
 	case 19:
-#line 181 "configparser.rl"
+#line 182 "configparser.rl"
 	{ skin.back = maudit::color::bright_green; }
 	break;
 	case 20:
-#line 182 "configparser.rl"
+#line 183 "configparser.rl"
 	{ skin.back = maudit::color::bright_yellow; }
 	break;
 	case 21:
-#line 183 "configparser.rl"
+#line 184 "configparser.rl"
 	{ skin.back = maudit::color::bright_blue; }
 	break;
 	case 22:
-#line 184 "configparser.rl"
+#line 185 "configparser.rl"
 	{ skin.back = maudit::color::bright_magenta; }
 	break;
 	case 23:
-#line 185 "configparser.rl"
+#line 186 "configparser.rl"
 	{ skin.back = maudit::color::bright_cyan; }
 	break;
 	case 24:
-#line 186 "configparser.rl"
+#line 187 "configparser.rl"
 	{ skin.back = maudit::color::bright_white; }
 	break;
 	case 25:
-#line 188 "configparser.rl"
+#line 189 "configparser.rl"
 	{ skin.text = state.match; skin.back = maudit::color::bright_black; }
 	break;
 	case 26:
-#line 194 "configparser.rl"
+#line 195 "configparser.rl"
 	{ dmgval.type = damage::type_t::physical; }
 	break;
 	case 27:
-#line 195 "configparser.rl"
+#line 196 "configparser.rl"
 	{ dmgval.type = damage::type_t::sleep; }
 	break;
 	case 28:
-#line 196 "configparser.rl"
+#line 197 "configparser.rl"
 	{ dmgval.type = damage::type_t::poison; }
 	break;
 	case 29:
-#line 197 "configparser.rl"
+#line 198 "configparser.rl"
 	{ dmgval.type = damage::type_t::turn_undead; }
 	break;
 	case 30:
-#line 198 "configparser.rl"
+#line 199 "configparser.rl"
 	{ dmgval.type = damage::type_t::cancellation; }
 	break;
 	case 31:
-#line 199 "configparser.rl"
+#line 200 "configparser.rl"
 	{ dmgval.type = damage::type_t::scare_animal; }
 	break;
 	case 32:
-#line 200 "configparser.rl"
+#line 201 "configparser.rl"
 	{ dmgval.type = damage::type_t::psi; }
 	break;
 	case 33:
-#line 201 "configparser.rl"
+#line 202 "configparser.rl"
 	{ dmgval.type = damage::type_t::eat_brain; }
 	break;
 	case 34:
-#line 202 "configparser.rl"
+#line 203 "configparser.rl"
 	{ dmgval.type = damage::type_t::drain; }
 	break;
 	case 35:
-#line 203 "configparser.rl"
+#line 204 "configparser.rl"
 	{ dmgval.type = damage::type_t::make_meat; }
 	break;
 	case 36:
-#line 204 "configparser.rl"
+#line 205 "configparser.rl"
 	{ dmgval.type = damage::type_t::scare; }
 	break;
 	case 37:
-#line 205 "configparser.rl"
+#line 206 "configparser.rl"
 	{ dmgval.type = damage::type_t::vampiric; }
 	break;
 	case 38:
-#line 206 "configparser.rl"
+#line 207 "configparser.rl"
 	{ dmgval.type = damage::type_t::heavenly_fire; }
 	break;
 	case 39:
-#line 207 "configparser.rl"
+#line 208 "configparser.rl"
 	{ dmgval.type = damage::type_t::hellish_fire; }
 	break;
 	case 40:
-#line 208 "configparser.rl"
+#line 209 "configparser.rl"
 	{ dmgval.type = damage::type_t::electric; }
 	break;
 	case 41:
-#line 209 "configparser.rl"
+#line 210 "configparser.rl"
 	{ dmgval.type = damage::type_t::sonic; }
 	break;
 	case 42:
-#line 210 "configparser.rl"
+#line 211 "configparser.rl"
 	{ dmgval.type = damage::type_t::magic; }
 	break;
 	case 43:
-#line 215 "configparser.rl"
+#line 216 "configparser.rl"
 	{ dmgval.val = toreal(state.match); }
 	break;
 	case 44:
-#line 222 "configparser.rl"
+#line 223 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::walk; }
 	break;
 	case 45:
-#line 223 "configparser.rl"
+#line 224 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::floor; }
 	break;
 	case 46:
-#line 224 "configparser.rl"
+#line 225 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::water; }
 	break;
 	case 47:
-#line 225 "configparser.rl"
+#line 226 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::corner; }
 	break;
 	case 48:
-#line 226 "configparser.rl"
+#line 227 "configparser.rl"
 	{ spe.habitat = Species::habitat_t::shoreline; }
 	break;
 	case 49:
-#line 229 "configparser.rl"
+#line 230 "configparser.rl"
 	{ spe.ai = Species::ai_t::none; }
 	break;
 	case 50:
-#line 230 "configparser.rl"
+#line 231 "configparser.rl"
 	{ spe.ai = Species::ai_t::seek_player; }
 	break;
 	case 51:
-#line 231 "configparser.rl"
+#line 232 "configparser.rl"
 	{ spe.ai = Species::ai_t::random; }
 	break;
 	case 52:
-#line 232 "configparser.rl"
+#line 233 "configparser.rl"
 	{ spe.ai = Species::ai_t::inrange_random; }
 	break;
 	case 53:
-#line 233 "configparser.rl"
+#line 234 "configparser.rl"
 	{ spe.ai = Species::ai_t::seek_nosleep; }
 	break;
 	case 54:
-#line 234 "configparser.rl"
+#line 235 "configparser.rl"
 	{ spe.ai = Species::ai_t::none_nosleep; }
 	break;
 	case 55:
-#line 237 "configparser.rl"
+#line 238 "configparser.rl"
 	{ spe.idle_ai = Species::idle_ai_t::none; }
 	break;
 	case 56:
-#line 238 "configparser.rl"
+#line 239 "configparser.rl"
 	{ spe.idle_ai = Species::idle_ai_t::random; }
 	break;
 	case 57:
-#line 241 "configparser.rl"
+#line 242 "configparser.rl"
 	{ spe.move = Species::move_t::walk; }
 	break;
 	case 58:
-#line 242 "configparser.rl"
+#line 243 "configparser.rl"
 	{ spe.move = Species::move_t::floor; }
 	break;
 	case 59:
-#line 243 "configparser.rl"
+#line 244 "configparser.rl"
 	{ spe.move = Species::move_t::water; }
 	break;
 	case 60:
-#line 244 "configparser.rl"
+#line 245 "configparser.rl"
 	{ spe.move = Species::move_t::corner; }
 	break;
 	case 61:
-#line 245 "configparser.rl"
+#line 246 "configparser.rl"
 	{ spe.move = Species::move_t::shoreline; }
 	break;
 	case 62:
-#line 247 "configparser.rl"
+#line 248 "configparser.rl"
 	{ spe.count = toint(state.match); }
 	break;
 	case 63:
-#line 248 "configparser.rl"
+#line 249 "configparser.rl"
 	{ spe.name = state.match; }
 	break;
 	case 64:
-#line 249 "configparser.rl"
+#line 250 "configparser.rl"
 	{ spe.skin = skin; }
 	break;
 	case 65:
-#line 250 "configparser.rl"
+#line 251 "configparser.rl"
 	{ spe.true_level = toint(state.match); }
 	break;
 	case 66:
-#line 255 "configparser.rl"
+#line 256 "configparser.rl"
 	{ spe.range = toint(state.match); }
 	break;
 	case 67:
-#line 256 "configparser.rl"
+#line 257 "configparser.rl"
 	{ spe.attacks.add(dmgval); }
 	break;
 	case 68:
-#line 257 "configparser.rl"
+#line 258 "configparser.rl"
 	{ spe.defenses.add(dmgval); }
 	break;
 	case 69:
-#line 258 "configparser.rl"
+#line 259 "configparser.rl"
 	{ spe.karma = toreal(state.match); }
 	break;
 	case 70:
-#line 261 "configparser.rl"
+#line 262 "configparser.rl"
 	{ spe.clumpsize.mean = toreal(state.match); }
 	break;
 	case 71:
-#line 262 "configparser.rl"
+#line 263 "configparser.rl"
 	{ spe.clumpsize.deviation = toreal(state.match); }
 	break;
 	case 72:
-#line 265 "configparser.rl"
+#line 266 "configparser.rl"
 	{ spe.companion.push_back(Species::companion_t()); }
 	break;
 	case 73:
-#line 266 "configparser.rl"
+#line 267 "configparser.rl"
 	{ spe.companion.back().chance = toreal(state.match); }
 	break;
 	case 74:
-#line 267 "configparser.rl"
+#line 268 "configparser.rl"
 	{ spe.companion.back().tag = tag_t(state.match, tagmem); }
 	break;
 	case 75:
-#line 270 "configparser.rl"
+#line 271 "configparser.rl"
 	{ spe.drop.push_back(Species::drop_t()); }
 	break;
 	case 76:
-#line 271 "configparser.rl"
+#line 272 "configparser.rl"
 	{ spe.drop.back().tag = tag_t(state.match, tagmem); }
 	break;
 	case 77:
-#line 272 "configparser.rl"
+#line 273 "configparser.rl"
 	{ spe.drop.back().chance = toreal(state.match); }
 	break;
 	case 78:
-#line 275 "configparser.rl"
+#line 276 "configparser.rl"
 	{ spe.cast_cloud.push_back(Species::cloud_t()); }
 	break;
 	case 79:
-#line 276 "configparser.rl"
+#line 277 "configparser.rl"
 	{ spe.cast_cloud.back().chance = toreal(state.match); }
 	break;
 	case 80:
-#line 277 "configparser.rl"
+#line 278 "configparser.rl"
 	{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
 	break;
 	case 81:
-#line 278 "configparser.rl"
+#line 279 "configparser.rl"
 	{ spe.cast_cloud.back().radius = toint(state.match); }
 	break;
 	case 82:
-#line 279 "configparser.rl"
+#line 280 "configparser.rl"
 	{ spe.cast_cloud.back().turns = toint(state.match); }
 	break;
 	case 83:
-#line 280 "configparser.rl"
+#line 281 "configparser.rl"
 	{ spe.cast_cloud.back().name = state.match; }
 	break;
 	case 84:
-#line 283 "configparser.rl"
+#line 284 "configparser.rl"
 	{ spe.summon.push_back(Species::summon_t()); }
 	break;
 	case 85:
-#line 284 "configparser.rl"
+#line 285 "configparser.rl"
 	{ spe.summon.back().chance = toreal(state.match); }
 	break;
 	case 86:
-#line 285 "configparser.rl"
+#line 286 "configparser.rl"
 	{ spe.summon.back().speciestag = tag_t(state.match, tagmem); }
 	break;
 	case 87:
-#line 286 "configparser.rl"
+#line 287 "configparser.rl"
 	{ spe.summon.back().turns = toint(state.match); }
 	break;
 	case 88:
-#line 289 "configparser.rl"
+#line 290 "configparser.rl"
 	{ spe.spawns.push_back(Species::spawn_t()); }
 	break;
 	case 89:
-#line 290 "configparser.rl"
+#line 291 "configparser.rl"
 	{ spe.spawns.back().chance = toreal(state.match); }
 	break;
 	case 90:
-#line 291 "configparser.rl"
+#line 292 "configparser.rl"
 	{ spe.spawns.back().level = toint(state.match); }
 	break;
 	case 91:
-#line 292 "configparser.rl"
+#line 293 "configparser.rl"
 	{ spe.spawns.back().turns = toint(state.match); }
 	break;
 	case 92:
-#line 295 "configparser.rl"
+#line 296 "configparser.rl"
 	{ spe.blast.push_back(Species::blast_t()); }
 	break;
 	case 93:
-#line 296 "configparser.rl"
+#line 297 "configparser.rl"
 	{ spe.blast.back().chance = toreal(state.match); }
 	break;
 	case 94:
-#line 297 "configparser.rl"
+#line 298 "configparser.rl"
 	{ spe.blast.back().radius = toint(state.match); }
 	break;
 	case 95:
-#line 298 "configparser.rl"
+#line 299 "configparser.rl"
 	{ spe.blast.back().range = toint(state.match); }
 	break;
 	case 96:
-#line 299 "configparser.rl"
+#line 300 "configparser.rl"
 	{ spe.blast.back().turns = toint(state.match); }
 	break;
 	case 97:
-#line 302 "configparser.rl"
+#line 303 "configparser.rl"
 	{ spe.blast.back().attacks.add(dmgval); }
 	break;
 	case 98:
-#line 306 "configparser.rl"
+#line 307 "configparser.rl"
 	{ spe.flags.animal = true; }
 	break;
 	case 99:
-#line 307 "configparser.rl"
+#line 308 "configparser.rl"
 	{ spe.flags.undead = true; }
 	break;
 	case 100:
-#line 308 "configparser.rl"
+#line 309 "configparser.rl"
 	{ spe.flags.magic = true; }
 	break;
 	case 101:
-#line 309 "configparser.rl"
+#line 310 "configparser.rl"
 	{ spe.flags.plant = true; }
 	break;
 	case 102:
-#line 310 "configparser.rl"
+#line 311 "configparser.rl"
 	{ spe.flags.robot = true; }
 	break;
 	case 103:
-#line 312 "configparser.rl"
+#line 313 "configparser.rl"
 	{ spe.flags.terrain_immune = true; }
 	break;
 	case 104:
-#line 323 "configparser.rl"
+#line 324 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 105:
-#line 329 "configparser.rl"
+#line 330 "configparser.rl"
 	{ spe.level = toint(state.match); }
 	break;
 	case 106:
-#line 332 "configparser.rl"
+#line 333 "configparser.rl"
 	{ spe.tag = tag_t(state.match, tagmem); }
 	break;
 	case 107:
-#line 336 "configparser.rl"
+#line 337 "configparser.rl"
 	{ spe = Species(); }
 	break;
 	case 108:
-#line 338 "configparser.rl"
+#line 339 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 251; goto _again;}}
 	break;
 	case 109:
-#line 339 "configparser.rl"
+#line 340 "configparser.rl"
 	{ init_species(spe); }
 	break;
 	case 110:
-#line 344 "configparser.rl"
+#line 345 "configparser.rl"
 	{ des.count = toint(state.match); }
 	break;
 	case 111:
-#line 345 "configparser.rl"
+#line 346 "configparser.rl"
 	{ des.name = state.match; }
 	break;
 	case 112:
-#line 346 "configparser.rl"
+#line 347 "configparser.rl"
 	{ des.skin = skin; }
 	break;
 	case 113:
-#line 347 "configparser.rl"
+#line 348 "configparser.rl"
 	{ des.slot = state.match; }
 	break;
 	case 114:
-#line 348 "configparser.rl"
+#line 349 "configparser.rl"
 	{ des.descr = state.match; }
 	break;
 	case 115:
-#line 349 "configparser.rl"
+#line 350 "configparser.rl"
 	{ des.attacks.add(dmgval); }
 	break;
 	case 116:
-#line 350 "configparser.rl"
+#line 351 "configparser.rl"
 	{ des.defenses.add(dmgval); }
 	break;
 	case 117:
-#line 351 "configparser.rl"
+#line 352 "configparser.rl"
 	{ des.stackrange = toint(state.match); }
 	break;
 	case 118:
-#line 352 "configparser.rl"
+#line 353 "configparser.rl"
 	{ des.heal = toreal(state.match); }
 	break;
 	case 119:
-#line 353 "configparser.rl"
+#line 354 "configparser.rl"
 	{ des.feed = toreal(state.match); }
 	break;
 	case 120:
-#line 354 "configparser.rl"
+#line 355 "configparser.rl"
 	{ des.karma = toreal(state.match); }
 	break;
 	case 121:
-#line 355 "configparser.rl"
+#line 356 "configparser.rl"
 	{ des.usable = true; }
 	break;
 	case 122:
-#line 356 "configparser.rl"
+#line 357 "configparser.rl"
 	{ des.melee = true; }
 	break;
 	case 123:
-#line 357 "configparser.rl"
+#line 358 "configparser.rl"
 	{ des.throwrange = toint(state.match); }
 	break;
 	case 124:
-#line 358 "configparser.rl"
+#line 359 "configparser.rl"
 	{ des.lightradius = toint(state.match); }
 	break;
 	case 125:
-#line 359 "configparser.rl"
+#line 360 "configparser.rl"
 	{ des.digging = toreal(state.match); }
 	break;
 	case 126:
-#line 360 "configparser.rl"
+#line 361 "configparser.rl"
 	{ des.descend = toint(state.match); }
 	break;
 	case 127:
-#line 362 "configparser.rl"
+#line 363 "configparser.rl"
 	{ des.destructible = true; }
 	break;
 	case 128:
-#line 364 "configparser.rl"
+#line 365 "configparser.rl"
 	{ des.defense_only_one = true; }
 	break;
 	case 129:
-#line 366 "configparser.rl"
+#line 367 "configparser.rl"
 	{ des.safe_descend = toint(state.match); }
 	break;
 	case 130:
-#line 368 "configparser.rl"
+#line 369 "configparser.rl"
 	{ des.flags.blink = true; }
 	break;
 	case 131:
-#line 371 "configparser.rl"
+#line 372 "configparser.rl"
 	{ des.blast.radius = toint(state.match); }
 	break;
 	case 132:
-#line 372 "configparser.rl"
+#line 373 "configparser.rl"
 	{ des.blast.range = toint(state.match); }
 	break;
 	case 133:
-#line 376 "configparser.rl"
+#line 377 "configparser.rl"
 	{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
 	break;
 	case 134:
-#line 377 "configparser.rl"
+#line 378 "configparser.rl"
 	{ des.cast_cloud.radius = toint(state.match); }
 	break;
 	case 135:
-#line 381 "configparser.rl"
+#line 382 "configparser.rl"
 	{ des.gencount.mean = toreal(state.match); }
 	break;
 	case 136:
-#line 382 "configparser.rl"
+#line 383 "configparser.rl"
 	{ des.gencount.deviation = toreal(state.match); }
 	break;
 	case 137:
-#line 385 "configparser.rl"
+#line 386 "configparser.rl"
 	{ des.worth = toreal(state.match); }
 	break;
 	case 138:
-#line 387 "configparser.rl"
+#line 388 "configparser.rl"
 	{ des.is_lit = true; }
 	break;
 	case 139:
-#line 390 "configparser.rl"
+#line 391 "configparser.rl"
 	{ des.place_permafeat = tag_t(state.match, tagmem); }
 	break;
 	case 140:
-#line 392 "configparser.rl"
+#line 393 "configparser.rl"
 	{ des.luck.push_back(Design::luck_t()); }
 	break;
 	case 141:
-#line 393 "configparser.rl"
+#line 394 "configparser.rl"
 	{ des.luck.back().height = toreal(state.match); }
 	break;
 	case 142:
-#line 394 "configparser.rl"
+#line 395 "configparser.rl"
 	{ des.luck.back().mean = toreal(state.match); }
 	break;
 	case 143:
-#line 395 "configparser.rl"
+#line 396 "configparser.rl"
 	{ des.luck.back().deviation = toreal(state.match); }
 	break;
 	case 144:
-#line 398 "configparser.rl"
+#line 399 "configparser.rl"
 	{ des.hunger = toreal(state.match); }
 	break;
 	case 145:
-#line 401 "configparser.rl"
+#line 402 "configparser.rl"
 	{ des.other_hunger_multiplier = toreal(state.match); }
 	break;
 	case 146:
-#line 403 "configparser.rl"
+#line 404 "configparser.rl"
 	{ des.shield = toreal(state.match); }
 	break;
 	case 147:
-#line 414 "configparser.rl"
+#line 415 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 148:
-#line 420 "configparser.rl"
+#line 421 "configparser.rl"
 	{ des.level = toint(state.match); }
 	break;
 	case 149:
-#line 423 "configparser.rl"
+#line 424 "configparser.rl"
 	{ des.tag = tag_t(state.match, tagmem); }
 	break;
 	case 150:
-#line 427 "configparser.rl"
+#line 428 "configparser.rl"
 	{ des = Design(); }
 	break;
 	case 151:
-#line 429 "configparser.rl"
+#line 430 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 1094; goto _again;}}
 	break;
 	case 152:
-#line 430 "configparser.rl"
+#line 431 "configparser.rl"
 	{ init_design(des); }
 	break;
 	case 153:
-#line 436 "configparser.rl"
+#line 437 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::floor; }
 	break;
 	case 154:
-#line 437 "configparser.rl"
+#line 438 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::water; }
 	break;
 	case 155:
-#line 438 "configparser.rl"
+#line 439 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::corner; }
 	break;
 	case 156:
-#line 439 "configparser.rl"
+#line 440 "configparser.rl"
 	{ ter.placement = Terrain::placement_t::lowlands; }
 	break;
 	case 157:
-#line 442 "configparser.rl"
+#line 443 "configparser.rl"
 	{ ter.tunnel_x = toint(state.match); }
 	break;
 	case 158:
-#line 443 "configparser.rl"
+#line 444 "configparser.rl"
 	{ ter.tunnel_y = toint(state.match); }
 	break;
 	case 159:
-#line 446 "configparser.rl"
+#line 447 "configparser.rl"
 	{ ter.count = toint(state.match); }
 	break;
 	case 160:
-#line 447 "configparser.rl"
+#line 448 "configparser.rl"
 	{ ter.name = state.match; }
 	break;
 	case 161:
-#line 448 "configparser.rl"
+#line 449 "configparser.rl"
 	{ ter.skin = skin; }
 	break;
 	case 162:
-#line 450 "configparser.rl"
+#line 451 "configparser.rl"
 	{ ter.stairs = toint(state.match); }
 	break;
 	case 163:
-#line 451 "configparser.rl"
+#line 452 "configparser.rl"
 	{ ter.viewblock = true; }
 	break;
 	case 164:
-#line 452 "configparser.rl"
+#line 453 "configparser.rl"
 	{ ter.walkblock = true; }
 	break;
 	case 165:
-#line 453 "configparser.rl"
+#line 454 "configparser.rl"
 	{ ter.decay = toint(state.match); }
 	break;
 	case 166:
-#line 454 "configparser.rl"
+#line 455 "configparser.rl"
 	{ ter.attacks.add(dmgval); }
 	break;
 	case 167:
-#line 455 "configparser.rl"
+#line 456 "configparser.rl"
 	{ ter.sticky = true; }
 	break;
 	case 168:
-#line 456 "configparser.rl"
+#line 457 "configparser.rl"
 	{ ter.charges = toint(state.match); }
 	break;
 	case 169:
-#line 458 "configparser.rl"
+#line 459 "configparser.rl"
 	{ ter.is_lit = true; }
 	break;
 	case 170:
-#line 459 "configparser.rl"
+#line 460 "configparser.rl"
 	{ ter.air = true; }
 	break;
 	case 171:
-#line 461 "configparser.rl"
+#line 462 "configparser.rl"
 	{ ter.safebox = true; }
 	break;
 	case 172:
-#line 463 "configparser.rl"
+#line 464 "configparser.rl"
 	{ ter.attack_level = toint(state.match); }
 	break;
 	case 173:
-#line 465 "configparser.rl"
+#line 466 "configparser.rl"
 	{ ter.victory_item = tag_t(state.match, tagmem); }
 	break;
 	case 174:
-#line 468 "configparser.rl"
+#line 469 "configparser.rl"
 	{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); }
 	break;
 	case 175:
-#line 469 "configparser.rl"
+#line 470 "configparser.rl"
 	{ ter.grant_spell.karma_bound = toreal(state.match); }
 	break;
 	case 176:
-#line 470 "configparser.rl"
+#line 471 "configparser.rl"
 	{ ter.grant_spell.timeout = toreal(state.match); }
 	break;
 	case 177:
-#line 471 "configparser.rl"
+#line 472 "configparser.rl"
 	{ ter.grant_spell.name = state.match; }
 	break;
 	case 178:
-#line 480 "configparser.rl"
+#line 481 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 179:
-#line 486 "configparser.rl"
+#line 487 "configparser.rl"
 	{ ter.tag = tag_t(state.match, tagmem); }
 	break;
 	case 180:
-#line 490 "configparser.rl"
+#line 491 "configparser.rl"
 	{ ter = Terrain(); }
 	break;
 	case 181:
-#line 492 "configparser.rl"
+#line 493 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 1764; goto _again;}}
 	break;
 	case 182:
-#line 493 "configparser.rl"
+#line 494 "configparser.rl"
 	{ init_terrain(ter); }
 	break;
 	case 183:
-#line 499 "configparser.rl"
+#line 500 "configparser.rl"
 	{ vau.placement = Vault::placement_t::floor; }
 	break;
 	case 184:
-#line 500 "configparser.rl"
+#line 501 "configparser.rl"
 	{ vau.placement = Vault::placement_t::water; }
 	break;
 	case 185:
-#line 501 "configparser.rl"
+#line 502 "configparser.rl"
 	{ vau.placement = Vault::placement_t::corner; }
 	break;
 	case 186:
-#line 502 "configparser.rl"
+#line 503 "configparser.rl"
 	{ vau.placement = Vault::placement_t::shoreline; }
 	break;
 	case 187:
-#line 504 "configparser.rl"
+#line 505 "configparser.rl"
 	{ vau.count = toint(state.match); }
 	break;
 	case 188:
-#line 508 "configparser.rl"
+#line 509 "configparser.rl"
 	{ vau.ax = toint(state.match); }
 	break;
 	case 189:
-#line 509 "configparser.rl"
+#line 510 "configparser.rl"
 	{ vau.ay = toint(state.match); }
 	break;
 	case 190:
-#line 512 "configparser.rl"
+#line 513 "configparser.rl"
 	{ vbrush = Vault::brush(); }
 	break;
 	case 191:
-#line 513 "configparser.rl"
+#line 514 "configparser.rl"
 	{ vbrush.is_blank = true; }
 	break;
 	case 192:
-#line 514 "configparser.rl"
+#line 515 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = false;  }
 	break;
 	case 193:
-#line 515 "configparser.rl"
+#line 516 "configparser.rl"
 	{ vbrush.is_walk = true; vbrush.is_water = true;   }
 	break;
 	case 194:
-#line 516 "configparser.rl"
+#line 517 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = false; }
 	break;
 	case 195:
-#line 517 "configparser.rl"
+#line 518 "configparser.rl"
 	{ vbrush.is_walk = false; vbrush.is_water = true;  }
 	break;
 	case 196:
-#line 518 "configparser.rl"
+#line 519 "configparser.rl"
 	{ vbrush.terrain = tag_t(state.match, tagmem); }
 	break;
 	case 197:
-#line 519 "configparser.rl"
+#line 520 "configparser.rl"
 	{ vbrush.design = tag_t(state.match, tagmem); }
 	break;
 	case 198:
-#line 520 "configparser.rl"
+#line 521 "configparser.rl"
 	{ vbrush.species = tag_t(state.match, tagmem); }
 	break;
 	case 199:
-#line 521 "configparser.rl"
+#line 522 "configparser.rl"
 	{ vau.brushes[(*( state.p))] = vbrush; }
 	break;
 	case 200:
-#line 524 "configparser.rl"
+#line 525 "configparser.rl"
 	{ vau.pic.push_back(state.match); }
 	break;
 	case 201:
-#line 526 "configparser.rl"
+#line 527 "configparser.rl"
 	{ vau.inherit = tag_t(state.match, tagmem); }
 	break;
 	case 202:
-#line 528 "configparser.rl"
+#line 529 "configparser.rl"
 	{ vau.transpose = true; }
 	break;
 	case 203:
-#line 530 "configparser.rl"
+#line 531 "configparser.rl"
 	{ vau.priority = 1; }
 	break;
 	case 204:
-#line 536 "configparser.rl"
+#line 537 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 205:
-#line 542 "configparser.rl"
+#line 543 "configparser.rl"
 	{ vau.level = toint(state.match); }
 	break;
 	case 206:
-#line 545 "configparser.rl"
+#line 546 "configparser.rl"
 	{ vau.tag = tag_t(state.match, tagmem); }
 	break;
 	case 207:
-#line 549 "configparser.rl"
+#line 550 "configparser.rl"
 	{ vau = Vault(); }
 	break;
 	case 208:
-#line 551 "configparser.rl"
+#line 552 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 2174; goto _again;}}
 	break;
 	case 209:
-#line 552 "configparser.rl"
+#line 553 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	break;
 	case 210:
-#line 557 "configparser.rl"
+#line 558 "configparser.rl"
 	{ cel.survive.insert((*( state.p)) - '0'); }
 	break;
 	case 211:
-#line 559 "configparser.rl"
+#line 560 "configparser.rl"
 	{ cel.born.insert((*( state.p)) - '0'); }
 	break;
 	case 212:
-#line 561 "configparser.rl"
+#line 562 "configparser.rl"
 	{ cel.age = toint(state.match); }
 	break;
 	case 213:
-#line 563 "configparser.rl"
+#line 564 "configparser.rl"
 	{ cel.terrain = tag_t(state.match, tagmem); }
 	break;
 	case 214:
-#line 565 "configparser.rl"
+#line 566 "configparser.rl"
 	{ cel.is_walk = true; }
 	break;
 	case 215:
-#line 566 "configparser.rl"
+#line 567 "configparser.rl"
 	{ cel.make_walk = true; }
 	break;
 	case 216:
-#line 568 "configparser.rl"
+#line 569 "configparser.rl"
 	{ cel.karma_scale = toreal(state.match); }
 	break;
 	case 217:
-#line 569 "configparser.rl"
+#line 570 "configparser.rl"
 	{ cel.karma_step  = toreal(state.match); }
 	break;
 	case 218:
-#line 571 "configparser.rl"
+#line 572 "configparser.rl"
 	{ cel.seed.push_back(std::make_pair(0,0)); }
 	break;
 	case 219:
-#line 572 "configparser.rl"
+#line 573 "configparser.rl"
 	{ cel.seed.back().first = toint(state.match); }
 	break;
 	case 220:
-#line 573 "configparser.rl"
+#line 574 "configparser.rl"
 	{ cel.seed.back().second = toint(state.match); }
 	break;
 	case 221:
-#line 580 "configparser.rl"
+#line 581 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 222:
-#line 586 "configparser.rl"
+#line 587 "configparser.rl"
 	{ cel.tag = tag_t(state.match, tagmem); }
 	break;
 	case 223:
-#line 590 "configparser.rl"
+#line 591 "configparser.rl"
 	{ cel = CelAuto(); }
 	break;
 	case 224:
-#line 592 "configparser.rl"
+#line 593 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 2292; goto _again;}}
 	break;
 	case 225:
-#line 593 "configparser.rl"
+#line 594 "configparser.rl"
 	{ init_celauto(cel); }
 	break;
 	case 226:
-#line 598 "configparser.rl"
+#line 599 "configparser.rl"
 	{ lev.deep_water = skin; }
 	break;
 	case 227:
-#line 599 "configparser.rl"
+#line 600 "configparser.rl"
 	{ lev.shallow_water = skin; }
 	break;
 	case 228:
-#line 600 "configparser.rl"
+#line 601 "configparser.rl"
 	{ lev.wall = skin; }
 	break;
 	case 229:
-#line 601 "configparser.rl"
+#line 602 "configparser.rl"
 	{ lev.water_wall = skin; }
 	break;
 	case 230:
-#line 602 "configparser.rl"
+#line 603 "configparser.rl"
 	{ lev.floor1 = skin; }
 	break;
 	case 231:
-#line 603 "configparser.rl"
+#line 604 "configparser.rl"
 	{ lev.floor2 = skin; }
 	break;
 	case 232:
-#line 604 "configparser.rl"
+#line 605 "configparser.rl"
 	{ lev.floor3 = skin; }
 	break;
 	case 233:
-#line 605 "configparser.rl"
+#line 606 "configparser.rl"
 	{ lev.floor4 = skin; }
 	break;
 	case 234:
-#line 606 "configparser.rl"
+#line 607 "configparser.rl"
 	{ lev.floor5 = skin; }
 	break;
 	case 235:
-#line 607 "configparser.rl"
+#line 608 "configparser.rl"
 	{ lev.floor6 = skin; }
 	break;
 	case 236:
-#line 608 "configparser.rl"
+#line 609 "configparser.rl"
 	{ lev.floor7 = skin; }
 	break;
 	case 237:
-#line 609 "configparser.rl"
+#line 610 "configparser.rl"
 	{ lev.floor8 = skin; }
 	break;
 	case 238:
-#line 610 "configparser.rl"
+#line 611 "configparser.rl"
 	{ lev.lightradius = toint(state.match); }
 	break;
 	case 239:
-#line 611 "configparser.rl"
+#line 612 "configparser.rl"
 	{ lev.lightradius_max = toint(state.match); }
 	break;
 	case 240:
-#line 612 "configparser.rl"
+#line 613 "configparser.rl"
 	{ lev.damage = toreal(state.match); }
 	break;
 	case 241:
-#line 613 "configparser.rl"
+#line 614 "configparser.rl"
 	{ lev.exclusive = true; }
 	break;
 	case 242:
-#line 614 "configparser.rl"
+#line 615 "configparser.rl"
 	{ lev.noterrain = true; }
 	break;
 	case 243:
-#line 616 "configparser.rl"
+#line 617 "configparser.rl"
 	{ lev.species_level = toint(state.match); }
 	break;
 	case 244:
-#line 617 "configparser.rl"
+#line 618 "configparser.rl"
 	{ lev.designs_level = toint(state.match); }
 	break;
 	case 245:
-#line 618 "configparser.rl"
+#line 619 "configparser.rl"
 	{ lev.vaults_level  = toint(state.match); }
 	break;
 	case 246:
-#line 620 "configparser.rl"
+#line 621 "configparser.rl"
 	{ lev.number_vaults = toint(state.match); }
 	break;
 	case 247:
-#line 623 "configparser.rl"
+#line 624 "configparser.rl"
 	{ lev.number_monsters.mean = toreal(state.match); }
 	break;
 	case 248:
-#line 624 "configparser.rl"
+#line 625 "configparser.rl"
 	{ lev.number_monsters.deviation = toreal(state.match); }
 	break;
 	case 249:
-#line 627 "configparser.rl"
+#line 628 "configparser.rl"
 	{ lev.name = state.match; }
 	break;
 	case 250:
-#line 629 "configparser.rl"
+#line 630 "configparser.rl"
 	{ lev.genparams.flow_epsilon = toreal(state.match); }
 	break;
 	case 251:
-#line 630 "configparser.rl"
+#line 631 "configparser.rl"
 	{ lev.genparams.flow_n_freq = toint(state.match); }
 	break;
 	case 252:
-#line 631 "configparser.rl"
+#line 632 "configparser.rl"
 	{ lev.genparams.flow_volume = toreal(state.match); }
 	break;
 	case 253:
-#line 632 "configparser.rl"
+#line 633 "configparser.rl"
 	{ lev.genparams.flow_erosion = toreal(state.match); }
 	break;
 	case 254:
-#line 633 "configparser.rl"
+#line 634 "configparser.rl"
 	{ lev.genparams.flow_renorm_freq = toint(state.match); }
 	break;
 	case 255:
-#line 634 "configparser.rl"
+#line 635 "configparser.rl"
 	{ lev.genparams.flow_renorm_scale = toreal(state.match); }
 	break;
 	case 256:
-#line 635 "configparser.rl"
+#line 636 "configparser.rl"
 	{ lev.genparams.walk_threshold = toreal(state.match); }
 	break;
 	case 257:
-#line 636 "configparser.rl"
+#line 637 "configparser.rl"
 	{ lev.genparams.lowlands_threshold = toint(state.match); }
 	break;
 	case 258:
-#line 637 "configparser.rl"
+#line 638 "configparser.rl"
 	{ lev.genparams.water_quantile_mean = toreal(state.match); }
 	break;
 	case 259:
-#line 638 "configparser.rl"
+#line 639 "configparser.rl"
 	{ lev.genparams.water_quantile_dev = toreal(state.match); }
 	break;
 	case 260:
-#line 639 "configparser.rl"
+#line 640 "configparser.rl"
 	{ lev.genparams.flatten_walk_ng = toint(state.match); }
 	break;
 	case 261:
-#line 640 "configparser.rl"
+#line 641 "configparser.rl"
 	{ lev.genparams.flatten_water_ng = toint(state.match); }
 	break;
 	case 262:
-#line 641 "configparser.rl"
+#line 642 "configparser.rl"
 	{ lev.genparams.unflow_ng = toint(state.match); }
 	break;
 	case 263:
-#line 642 "configparser.rl"
+#line 643 "configparser.rl"
 	{ lev.genparams.karma_mean = toreal(state.match); }
 	break;
 	case 264:
-#line 643 "configparser.rl"
+#line 644 "configparser.rl"
 	{ lev.genparams.karma_dev = toreal(state.match); }
 	break;
 	case 265:
-#line 644 "configparser.rl"
+#line 645 "configparser.rl"
 	{ lev.genparams.nflatten = toint(state.match); }
 	break;
 	case 266:
-#line 645 "configparser.rl"
+#line 646 "configparser.rl"
 	{ lev.genparams.nunflow = toint(state.match); }
 	break;
 	case 267:
-#line 664 "configparser.rl"
+#line 665 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 268:
-#line 670 "configparser.rl"
+#line 671 "configparser.rl"
 	{ lev.level = toint(state.match); }
 	break;
 	case 269:
-#line 674 "configparser.rl"
+#line 675 "configparser.rl"
 	{ lev = Levelskin(); }
 	break;
 	case 270:
-#line 676 "configparser.rl"
+#line 677 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 2362; goto _again;}}
 	break;
 	case 271:
-#line 677 "configparser.rl"
+#line 678 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
 	case 272:
-#line 683 "configparser.rl"
+#line 684 "configparser.rl"
 	{ __constants__().hunger_rate = toreal(state.match); }
 	break;
 	case 273:
-#line 686 "configparser.rl"
+#line 687 "configparser.rl"
 	{ __constants__().starvation_damage = toreal(state.match); }
 	break;
 	case 274:
-#line 688 "configparser.rl"
+#line 689 "configparser.rl"
 	{ __constants__().grave = tag_t(state.match, tagmem); }
 	break;
 	case 275:
-#line 689 "configparser.rl"
+#line 690 "configparser.rl"
 	{ __constants__().meat = tag_t(state.match, tagmem); }
 	break;
 	case 276:
-#line 690 "configparser.rl"
+#line 691 "configparser.rl"
 	{ __constants__().bad_meat = tag_t(state.match, tagmem); }
 	break;
 	case 277:
-#line 691 "configparser.rl"
+#line 692 "configparser.rl"
 	{ __constants__().money = tag_t(state.match, tagmem); }
 	break;
 	case 278:
-#line 693 "configparser.rl"
+#line 694 "configparser.rl"
 	{ __constants__().unique_item = tag_t(state.match, tagmem); }
 	break;
 	case 279:
-#line 695 "configparser.rl"
+#line 696 "configparser.rl"
 	{ __constants__().uniques_timeout = toint(state.match); }
 	break;
 	case 280:
-#line 698 "configparser.rl"
+#line 699 "configparser.rl"
 	{ __constants__().health_shield_max = toreal(state.match); }
 	break;
 	case 281:
-#line 700 "configparser.rl"
+#line 701 "configparser.rl"
 	{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
 	break;
 	case 282:
-#line 701 "configparser.rl"
+#line 702 "configparser.rl"
 	{ __constants__().slots.back().slot = state.match; }
 	break;
 	case 283:
-#line 702 "configparser.rl"
+#line 703 "configparser.rl"
 	{ __constants__().slots.back().letter = (*( state.p)); }
 	break;
 	case 284:
-#line 703 "configparser.rl"
+#line 704 "configparser.rl"
 	{ __constants__().slots.back().label = state.match; }
 	break;
 	case 285:
-#line 704 "configparser.rl"
+#line 705 "configparser.rl"
 	{ __constants__().slots.back().name = state.match; }
 	break;
 	case 286:
-#line 708 "configparser.rl"
+#line 709 "configparser.rl"
 	{ shortcut_key = (*( state.p)); }
 	break;
 	case 287:
-#line 709 "configparser.rl"
+#line 710 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].help_message = state.match; }
 	break;
 	case 288:
-#line 710 "configparser.rl"
+#line 711 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].fail_message = state.match; }
 	break;
 	case 289:
-#line 714 "configparser.rl"
+#line 715 "configparser.rl"
 	{ shortcut_key = (*( state.p)); }
 	break;
 	case 290:
-#line 715 "configparser.rl"
+#line 716 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.
                                             push_back(std::make_pair(state.match, 0)); }
 	break;
 	case 291:
-#line 717 "configparser.rl"
+#line 718 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = (*( state.p)); }
 	break;
-#line 8211 "configparser.h"
+#line 8212 "configparser.h"
 		}
 	}
 
@@ -8224,30 +8225,30 @@ _again:
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
 	case 109:
-#line 339 "configparser.rl"
+#line 340 "configparser.rl"
 	{ init_species(spe); }
 	break;
 	case 152:
-#line 430 "configparser.rl"
+#line 431 "configparser.rl"
 	{ init_design(des); }
 	break;
 	case 182:
-#line 493 "configparser.rl"
+#line 494 "configparser.rl"
 	{ init_terrain(ter); }
 	break;
 	case 209:
-#line 552 "configparser.rl"
+#line 553 "configparser.rl"
 	{ vau.postprocess(); init_vault(vau); }
 	break;
 	case 225:
-#line 593 "configparser.rl"
+#line 594 "configparser.rl"
 	{ init_celauto(cel); }
 	break;
 	case 271:
-#line 677 "configparser.rl"
+#line 678 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
-#line 8251 "configparser.h"
+#line 8252 "configparser.h"
 		}
 	}
 	}
@@ -8255,7 +8256,7 @@ _again:
 	_out: {}
 	}
 
-#line 765 "configparser.rl"
+#line 766 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;

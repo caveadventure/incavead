@@ -11,12 +11,18 @@ struct SpeciesBank {
 
     void copy(const Species& s) {
 
+        std::cout << " " << s.name << " " << s.level << " " << s.count << std::endl;
+
         if (bank.count(s.tag) != 0) {
+            std::cout << "OOPS!" << std::endl;
             throw std::runtime_error("Duplicate species tag: " + s.name);
         }
 
+        std::cout << "  added to bank" << std::endl;
         bank[s.tag] = s;
+        std::cout << "  initted counts" << std::endl;
         counts.init(s.tag, s.level, s.count);
+        std::cout << "    -" << std::endl;
     }
 
     const Species& get(tag_t tag) const {
@@ -41,6 +47,7 @@ inline const SpeciesBank& species() {
 
 inline void init_species_copy(const Species& s) {
     __species__().copy(s);
+    std::cout << "Copied species." << std::endl;
 }
 
 #endif
