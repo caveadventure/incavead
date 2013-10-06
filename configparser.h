@@ -31,14 +31,14 @@ struct ragel_state {
     char* eof;
 
     // Iterator for start and end of token.
-    char* ts;
-    char* te;
+    //char* ts;
+    //char* te;
 
     // Internal state and rollback variables.
     int cs, act;
 
     // Stack for ragel machine states.
-    int stack[32];
+    int stack[256];
     int top;
 
     // Not part of ragel's variables; this is a buffer to hold the current match.
@@ -6949,8 +6949,12 @@ static const int ConfigParser_en_main = 1;
             throw std::runtime_error("Token too big!");
         }
 
+        std::cout << "  -- readloop " << space << " " << have << " " << sizeof(buf) << std::endl;
+
         state.p = buf + have;
         int len = ::fread(state.p, 1, space, fn);
+
+        std::cout << "  -- readloop ~ fread " << len << std::endl;
         
         state.pe = state.p + len;
         state.eof = 0;
@@ -6961,7 +6965,7 @@ static const int ConfigParser_en_main = 1;
         }
 
         
-#line 6965 "configparser.h"
+#line 6969 "configparser.h"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -7317,7 +7321,7 @@ _match:
 	break;
 	case 69:
 #line 259 "configparser.rl"
-	{ spe.karma = toreal(state.match); }
+	{ spe.karma = toreal(state.match); std::cout << "OUT_KARMA " << state.match << std::endl; }
 	break;
 	case 70:
 #line 262 "configparser.rl"
@@ -7353,7 +7357,7 @@ _match:
 	break;
 	case 78:
 #line 276 "configparser.rl"
-	{ spe.cast_cloud.push_back(Species::cloud_t()); }
+	{ std::cout << "IN_CAST_CLOUD" << std::endl; spe.cast_cloud.push_back(Species::cloud_t()); }
 	break;
 	case 79:
 #line 277 "configparser.rl"
@@ -7373,7 +7377,7 @@ _match:
 	break;
 	case 83:
 #line 281 "configparser.rl"
-	{ spe.cast_cloud.back().name = state.match; }
+	{ spe.cast_cloud.back().name = state.match; std::cout << "OUT_CAST_CLOUD " << state.match << std::endl; }
 	break;
 	case 84:
 #line 284 "configparser.rl"
@@ -7457,7 +7461,7 @@ _match:
 	break;
 	case 104:
 #line 324 "configparser.rl"
-	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
+	{ std::cout << "IN_FRET" << std::endl; { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 105:
 #line 330 "configparser.rl"
@@ -8208,7 +8212,7 @@ _match:
 #line 718 "configparser.rl"
 	{ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = (*( state.p)); }
 	break;
-#line 8212 "configparser.h"
+#line 8216 "configparser.h"
 		}
 	}
 
@@ -8248,7 +8252,7 @@ _again:
 #line 678 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
-#line 8252 "configparser.h"
+#line 8256 "configparser.h"
 		}
 	}
 	}
@@ -8256,7 +8260,7 @@ _again:
 	_out: {}
 	}
 
-#line 766 "configparser.rl"
+#line 770 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;
@@ -8273,15 +8277,18 @@ _again:
             throw std::runtime_error("Parse error. Unconsumed input: " + std::string(state.p, state.pe));
         }
 
+        /*
         if (state.ts == 0) {
             have = 0;
 
         } else {
             have = state.pe - state.ts;
+            std::cout << "  -- memmove " << have << std::endl;
             ::memmove(buf, state.ts, have);
             state.te = buf + (state.te - state.ts);
             state.ts = buf;
         }
+*/
     }
 }
 

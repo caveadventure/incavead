@@ -29,8 +29,8 @@ struct ragel_state {
     char* eof;
 
     // Iterator for start and end of token.
-    char* ts;
-    char* te;
+    //char* ts;
+    //char* te;
 
     // Internal state and rollback variables.
     int cs, act;
@@ -783,6 +783,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             throw std::runtime_error("Parse error. Unconsumed input: " + std::string(state.p, state.pe));
         }
 
+        /*
         if (state.ts == 0) {
             have = 0;
 
@@ -793,6 +794,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             state.te = buf + (state.te - state.ts);
             state.ts = buf;
         }
+        */
     }
 }
 
