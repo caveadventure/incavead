@@ -82,13 +82,10 @@ enum class screens_t : unsigned int {
 
 void init_statics() {
 
-    std::cout << "Tagmem" << std::endl;
     tag_mem_t tagmem;
 
-    std::cout << "Parse species.cfg" << std::endl;
     configparser::parse_config("species.cfg", tagmem);
 
-    std::cout << "Parse designs.cfg" << std::endl;
     configparser::parse_config("designs.cfg", tagmem);
 
     configparser::parse_config("terrain.cfg", tagmem);
@@ -109,18 +106,14 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug) {
 
     try {
 
-        std::cout << "Making client socket" << std::endl;
         maudit::client_socket client(client_fd);
 
         typedef maudit::screen<maudit::client_socket> screen_t;
 
-        std::cout << "Making screen" << std::endl;
         screen_t screen(client);
 
-        std::cout << "Making mainloop" << std::endl;
         mainloop::Main<Game, GameState, screen_t> main(screen, debug);
 
-        std::cout << "Starting mainloop" << std::endl;
         main.mainloop(singleplayer);
 
     } catch (std::exception& e) {
@@ -159,22 +152,13 @@ void do_genmaps() {
 
 int main(int argc, char** argv) {
 
-    std::cout << "Making server socket." << std::endl;
-
     maudit::server_socket server(20020);
-
-    std::cout << "Server socket OK." << std::endl;
-    std::cout << "Initting statics" << std::endl;
 
     init_statics();
 
-    std::cout << "Loading bones" << std::endl;
     bones::bones().load();
-    std::cout << "Loading uniques" << std::endl;
     uniques::uniques().load();
-    std::cout << "Loading items" << std::endl;
     uniques::items().load();
-    std::cout << "Loading features" << std::endl;
     permafeats::features().load();
 
 
@@ -206,7 +190,6 @@ int main(int argc, char** argv) {
     }
 
     if (singleplayer) {
-        std::cout << "Accepting from server." << std::endl;
         int client = server.accept();
         client_mainloop(client, true, false);
 
@@ -214,10 +197,8 @@ int main(int argc, char** argv) {
 
         while (1) {
 
-            std::cout << "Accepting..." << std::endl;
             int client = server.accept();
 
-            std::cout << "Making thread..." << std::endl;
             std::thread thr(client_mainloop, client, false, debug);
             thr.detach();
         }
