@@ -28,10 +28,6 @@ struct ragel_state {
     // Iterator for 'end of file'.
     char* eof;
 
-    // Iterator for start and end of token.
-    //char* ts;
-    //char* te;
-
     // Internal state and rollback variables.
     int cs, act;
 
@@ -44,7 +40,6 @@ struct ragel_state {
 };
 
 inline void init_species(const Species& s) {
-    std::cout << "Ready to copy species" << std::endl;
     init_species_copy(s);
 }
 
@@ -256,7 +251,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_range       = 'range'       ws1 number     %{ spe.range = toint(state.match); } ;
         species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
         species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
-        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); std::cout << "OUT_KARMA " << state.match << std::endl; };
+        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); };
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -273,12 +268,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
-        species_cast_cloud = 'cast_cloud' %{ std::cout << "IN_CAST_CLOUD" << std::endl; spe.cast_cloud.push_back(Species::cloud_t()); }
+        species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }
             ws1 real   %{ spe.cast_cloud.back().chance = toreal(state.match); }
             ws1 string %{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.cast_cloud.back().radius = toint(state.match); }
             ws1 number %{ spe.cast_cloud.back().turns = toint(state.match); }
-            ws1 string %{ spe.cast_cloud.back().name = state.match; std::cout << "OUT_CAST_CLOUD " << state.match << std::endl; }
+            ws1 string %{ spe.cast_cloud.back().name = state.match; }
             ;
 
         species_summon = 'summon' %{ spe.summon.push_back(Species::summon_t()); }
@@ -321,7 +316,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_robot | species_terrain_immune |
             species_karma | species_blast | species_true_level |
             '}'
-            ${ std::cout << "IN_FRET" << std::endl; fret; })
+            ${ fret; })
             ;
 
         one_species :=  (ws species_one_data ws ';')+
@@ -743,20 +738,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     %% write init;
 
     bool done = false;
-    int have = 0;
 
     while (!done) {
-        int space = sizeof(buf) - have;
-        if (space == 0) {
-            throw std::runtime_error("Token too big!");
-        }
+        int space = sizeof(buf) ;
 
-        std::cout << "  -- readloop " << space << " " << have << " " << sizeof(buf) << std::endl;
-
-        state.p = buf + have;
+        state.p = buf;
         int len = ::fread(state.p, 1, space, fn);
-
-        std::cout << "  -- readloop ~ fread " << len << std::endl;
         
         state.pe = state.p + len;
         state.eof = 0;
@@ -782,19 +769,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         if (state.cs == ConfigParser_error) {
             throw std::runtime_error("Parse error. Unconsumed input: " + std::string(state.p, state.pe));
         }
-
-        /*
-        if (state.ts == 0) {
-            have = 0;
-
-        } else {
-            have = state.pe - state.ts;
-            std::cout << "  -- memmove " << have << std::endl;
-            ::memmove(buf, state.ts, have);
-            state.te = buf + (state.te - state.ts);
-            state.ts = buf;
-        }
-        */
     }
 }
 

@@ -5,8 +5,6 @@
 #include <time.h>
 #include <string>
 
-#include "serialize.h"
-
 namespace moon_constants {
 
 // JDN stands for Julian Day Number

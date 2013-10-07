@@ -395,30 +395,6 @@ struct Map {
             throw std::runtime_error("Failed to generate map");
 
         ///
-        /// 
-        /*
-        std::cout << "!!! " << walk_r.size() << "/" << genparams.lowlands_threshold << std::endl;
-
-        bool lowlands_ok = false;
-        auto walk_r_i = walk_r.rbegin();
-
-        while (walk_r_i != walk_r.rend()) {
-
-            if (walk_r_i->first < genparams.lowlands_threshold)
-                break;
-
-            lowlands.insert(walk_r_i->second.begin(), walk_r_i->second.end());
-            lowlands_ok = true;
-            std::cout << "   " << walk_r_i->second.size() << std::endl;
-            ++walk_r_i;
-        }
-
-        if (!lowlands_ok) {
-            lowlands.insert(walk_r.rbegin()->second.begin(), walk_r.rend()->second.end());
-        }
-        */
-
-        ///
         
         std::vector< std::pair<int,pt> > watr_r;
 

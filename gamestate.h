@@ -2,6 +2,7 @@
 #define __GAMESTATE_H
 
 #include "random.h"
+#include "random_serialize.h"
 #include "neighbors.h"
 #include "celauto.h"
 #include "grid.h"
@@ -11,6 +12,7 @@
 #include "moon.h"
 
 #include "counters.h"
+#include "counters_serialize.h"
 #include "ffeatures.h"
 #include "items.h"
 #include "monsters.h"

@@ -11,7 +11,7 @@
 #include "species.h"
 #include "vaults.h"
 
-#include "counters_types.h"
+#include "counters.h"
 
 #include "terrain_bank.h"
 #include "designs_bank.h"
