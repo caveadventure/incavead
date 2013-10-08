@@ -12,13 +12,24 @@ cp $BUILDDIR/incavead.exe $BUILDDIR/highscore.exe $BUILDDIR/victory.exe $BUILDDI
 $MINGW/bin/objdump -x dist/bin/incavead.exe | grep 'DLL Name: ' | grep -o ': .*' | grep -o '[^: ]*' | xargs -IX find $MINGW -name X | xargs -IX cp X dist/bin
 
 cp $DATADIR/*.cfg dist
-cp putty_settings.reg dist
 
 cat << "EOF" > dist/incavead.bat
+@ECHO OFF
 start "" /b bin\incavead.exe --singleplayer
-regedit /s putty_settings.reg
-puttytel 127.0.0.1 20020
+putty telnet://127.0.0.1:20020
 EOF
 
-wget -Pdist 'http://the.earth.li/~sgtatham/putty/latest/x86/puttytel.exe'
+#wget -Pdist 'http://the.earth.li/~sgtatham/putty/latest/x86/puttytel.exe'
+
+# http://jakub.kotrla.net/putty/
+cp putty.exe dist
+cp putty.conf dist
+
+cat << "EOF" > dist/README.txt
+
+Run 'incavead.bat' to launch the game.
+
+(Note: the game does not require Internet access. Everything is purely offline, Putty is used only as a convenient text-mode rendering client.)
+EOF
+
 
