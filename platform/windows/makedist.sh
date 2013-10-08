@@ -16,7 +16,7 @@ cp $DATADIR/*.cfg dist
 cat << "EOF" > dist/incavead.bat
 @ECHO OFF
 start "" /b bin\incavead.exe --singleplayer
-putty telnet://127.0.0.1:20020
+start putty -load game telnet://127.0.0.1:20020
 EOF
 
 #wget -Pdist 'http://the.earth.li/~sgtatham/putty/latest/x86/puttytel.exe'
