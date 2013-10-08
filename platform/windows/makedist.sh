@@ -24,6 +24,8 @@ EOF
 # http://jakub.kotrla.net/putty/
 cp putty.exe dist
 cp putty.conf dist
+mkdir -p dist/putty/sessions
+cp game.session dist/putty/sessions
 
 cat << "EOF" > dist/README.txt
 
