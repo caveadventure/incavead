@@ -6,6 +6,8 @@ struct Game {
 
     Player p;
 
+    // HACK TODO WARNING
+    // Magic number
     static const unsigned int GRID_W = 256;
     static const unsigned int GRID_H = 256;
 
@@ -217,14 +219,26 @@ struct Game {
 
             tag_t grave = constants().grave;
 
+            double net_worth = 0;
+
             for (const auto& marks : bxy) {
+                net_worth += marks.second;
+            }
+
+
+            for (const auto& marks : bxy) {
+
 
                 const bones::pt& xy = marks.first;
                 double worth = marks.second;
 
-                worth = std::min(worth, 1000.0);
-
                 state.features.set(xy.first, xy.second, grave, state.render);
+
+                if (net_worth <= 0 || worth < 0)
+                    continue;
+
+                worth = std::max(net_worth, std::min(worth, 1000.0));
+                net_worth -= worth;
 
                 for (const auto& nxy : state.neigh(xy)) {
 
@@ -992,6 +1006,28 @@ struct Game {
             return;
         }
 
+        if (t.protection_racket.shield_bonus != 0) {
+
+            const Design& d = designs().get(constants().money);
+
+            items::Item vi;
+
+            if (p.inv.take(d.slot, vi)) {
+
+                double shield_bonus = d.protection_racket.shield_bonus * vi.count;
+                double money_curse = d.protection_racket.money_curse * vi.count;
+
+                if (shield_bonus > 0) {
+                    p.health.shield += shield_bonus;
+                    state.render.do_message("Your body starts glowing with a shiny gold aura.");
+                }
+
+                if (money_curse > 0) {
+                    p.money_curse -= money_curse;
+                }
+            }
+        }
+
         if (t.stairs != 0) {
 
             if (t.stairs > 0) {
@@ -1163,7 +1199,7 @@ struct Game {
                             bone.name,
                             bone.level+1, 
                             bone.cause, 
-                            bone.worth);
+                            std::max(bone.worth, 0.0));
     }
 
     void handle_input_main(GameState& state,

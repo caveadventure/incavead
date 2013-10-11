@@ -16,6 +16,8 @@ using key_t = worldkey::key_t;
 
 struct Features {
 
+    // HACK TODO WARNING
+    // Magic number
     static const size_t NUMBER = 150;
 
     struct q_t {

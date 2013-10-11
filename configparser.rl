@@ -466,12 +466,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
 
+        terrain_protection_racket = 'protection_racket' 
+            ws1 real   %{ ter.protection_racket.shield_bonus = toreal(state.match); }
+            ws1 real   %{ ter.protection_racket.money_curse = toreal(state.match); } ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
-            terrain_victory_item | terrain_safebox |
+            terrain_victory_item | terrain_safebox | terrain_protection_racket |
             '}' 
             ${ fret; })
             ;

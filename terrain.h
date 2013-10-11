@@ -51,6 +51,15 @@ struct Terrain {
 
     bool safebox;
 
+    struct racket_t {
+        double shield_bonus;
+        double money_curse;
+
+        racket_t() : shield_bonus(0), money_curse(0) {}
+    };
+
+    racket_t protection_racket;
+
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),
                 sticky(false), is_lit(false), air(false), charges(0), safebox(false) {}

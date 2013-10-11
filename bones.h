@@ -30,7 +30,10 @@ struct bone_t {
 
     template <typename PLAYER>
     bone_t(const std::string& _name, const PLAYER& p) :
-        name(_name), level(p.level), cause(p.attacker), worth(p.inv.get_worth())
+        name(_name), 
+        level(p.level), 
+        cause(p.attacker), 
+        worth(p.inv.get_worth() + p.money_curse)
         {}
 };
 
@@ -65,6 +68,8 @@ namespace bones {
 
 struct Bones {
 
+    // HACK TODO WARNING
+    // Magic number
     static const size_t NUMBER = 1000;
 
     std::map< key_t, std::unordered_map<pt, bone_t> > data;

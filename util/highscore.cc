@@ -21,7 +21,14 @@ struct order_t {
     // HACK!
 
     order_t() : dlev(0), plev(0), worth(0), victory(false) {}
-    order_t(int l, const bones::bone_t& b) : dlev(l), plev(b.level), worth(b.worth), bone(b), victory(b.cause.name == "VICTORY") {}
+
+    order_t(int l, const bones::bone_t& b) : 
+        dlev(l), 
+        plev(b.level), 
+        worth(std::max(b.worth, 0.0)), 
+        bone(b), 
+        victory(b.cause.name == "VICTORY") 
+        {}
 };
 
 bool sort_plev(const order_t& a, const order_t& b) {
