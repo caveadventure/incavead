@@ -1014,8 +1014,8 @@ struct Game {
 
             if (p.inv.take(d.slot, vi)) {
 
-                double shield_bonus = d.protection_racket.shield_bonus * vi.count;
-                double money_curse = d.protection_racket.money_curse * vi.count;
+                double shield_bonus = t.protection_racket.shield_bonus * vi.count;
+                double money_curse = t.protection_racket.money_curse * vi.count;
 
                 if (shield_bonus > 0) {
                     p.health.shield += shield_bonus;
