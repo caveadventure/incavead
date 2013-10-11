@@ -99,7 +99,10 @@ void _process(std::vector<order_t>& scores) {
             bone.name.name = quote(bone.name.name);
 
         std::cout << nlp::message("\n{\"dlev\": %d, \"plev\": %d, \"name\": \"%S\", \"cause\": \"%s\", \"worth\": %d, \"victory\": %s}",
-                                  i->dlev+1, bone.level+1, bone.name, bone.cause, bone.worth, std::string(i->victory ? "true" : "false"));
+                                  i->dlev+1, bone.level+1, 
+                                  bone.name, bone.cause, 
+                                  std::max(bone.worth, 0.0), 
+                                  std::string(i->victory ? "true" : "false"));
     }
 }
 

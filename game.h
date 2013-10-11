@@ -117,6 +117,11 @@ struct Game {
                 throw std::runtime_error("Sanity error 1.3");
         }
 
+        for (const auto& xy : state.grid.floormap) {
+            if (state.grid.watermap.count(xy) != 0)
+                throw std::runtime_error("Sanity error 1.4");
+        }
+
         state.rng.init(gridseed);
 
 
@@ -174,6 +179,11 @@ struct Game {
         for (const auto& xy : state.grid.floormap) {
             if (state.grid.walkmap.count(xy) == 0)
                 throw std::runtime_error("Sanity error 2.4");
+        }
+
+        for (const auto& xy : state.grid.floormap) {
+            if (state.grid.watermap.count(xy) != 0)
+                throw std::runtime_error("Sanity error 2.5");
         }
 
         for (const auto& mv : state.monsters.mons) {
@@ -237,7 +247,7 @@ struct Game {
                 if (net_worth <= 0 || worth < 0)
                     continue;
 
-                worth = std::max(net_worth, std::min(worth, 1000.0));
+                worth = std::min(net_worth, std::min(worth, (double)constants().max_gold_per_grave));
                 net_worth -= worth;
 
                 for (const auto& nxy : state.neigh(xy)) {
@@ -1025,7 +1035,11 @@ struct Game {
                 if (money_curse > 0) {
                     p.money_curse -= money_curse;
                 }
+
+            } else {
+                state.render.do_message("You don't have any gold to sacrifice.");
             }
+            return;
         }
 
         if (t.stairs != 0) {

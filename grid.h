@@ -706,11 +706,11 @@ struct Map {
                 lowlands.erase(xy);
                 continue;
             }
-
-            floormap.insert(xy);
                 
             if (watermap.count(xy) != 0) {
                 lakemap.insert(xy);
+            } else {
+                floormap.insert(xy);
             }
 
             for (const auto& v : neigh(xy)) {
