@@ -1031,12 +1031,14 @@ struct Game {
 
                 if (shield_bonus > 0) {
                     p.health.shield += shield_bonus;
-                    state.render.do_message("Your body starts glowing with a shiny gold aura.");
+                    state.render.do_message("Your body glows with a shiny gold aura.");
                 }
 
                 if (money_curse > 0) {
                     p.money_curse -= money_curse;
                 }
+
+                ++ticks;
 
             } else {
                 state.render.do_message("You don't have any gold to sacrifice.");
