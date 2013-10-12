@@ -1177,7 +1177,8 @@ struct Game {
             "  \2?\1 :          Show this help message.\n"
             "\n\3Shortcut commands:\1\n"
             "  \2T\1 :          Take the first item laying on the floor.\n"
-            "  \2a\1 :          (Same as 'T'.)\n"
+            "  \1a\1 :            (Same as 'T'.)\n"
+            "  \1s\1 :            (Same as '>'.)\n"
             "  \2,\1 :          Examine the first item laying on the floor.\n"
             ;
 
@@ -1266,6 +1267,7 @@ struct Game {
 
         case '>':
         case '<':
+        case 's':
             use_terrain(state, ticks, regen, done, dead);
             break;
 

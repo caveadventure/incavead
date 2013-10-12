@@ -166,10 +166,11 @@ int main(int argc, char** argv) {
     bool singleplayer = false;
     bool genmaps = false;
     bool debug = false;
+    bool utf = false;
 
-    if (argc > 1) {
+    for (int argi = 1; argi < argc; ++argi) {
 
-        std::string arg(argv[1]);
+        std::string arg(argv[argi]);
 
         if (arg == "-s" || arg == "--singleplayer") {
 
@@ -182,6 +183,10 @@ int main(int argc, char** argv) {
         } else if (arg == "-d" || arg == "--debug") {
             
             debug = true;
+
+        } else if (arg == "-u" || arg == "--unicode") {
+
+            utf = true;
         }
     }
 
@@ -192,15 +197,31 @@ int main(int argc, char** argv) {
 
     if (singleplayer) {
         int client = server.accept();
-        client_mainloop(client, true, false, 1);
+        client_mainloop(client, true, false, (utf ? 1 : 0));
 
     } else {
+
+
+        std::thread thru([&]() {
+
+                maudit::server_socket serveru(20022);
+
+                while (1) {
+
+                    int client = serveru.accept();
+                
+                    std::thread thr(client_mainloop, client, false, debug, 1);
+                    thr.detach();
+                }
+            });
+
+        thru.detach();
 
         while (1) {
 
             int client = server.accept();
 
-            std::thread thr(client_mainloop, client, false, debug, 1);
+            std::thread thr(client_mainloop, client, false, debug, 0);
             thr.detach();
         }
     }
