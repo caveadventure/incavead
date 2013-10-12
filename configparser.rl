@@ -99,6 +99,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     damage::val_t dmgval;
 
     maudit::glyph skin;
+    maudit::glyph skin_b;
 
     Vault::brush vbrush;
 
@@ -182,7 +183,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'white'   %{ skin.back = maudit::color::bright_white; }   ;
 
         skin = string %{ skin.text = state.match; skin.back = maudit::color::bright_black; } 
-               ws1 color (ws1 'back' ws1 back_color)? ;
+               ws1 color 
+               ws
+               ('back' ws1 back_color)? 
+               %{ skin_b = skin; }
+               ('|' ws1 string %{ skin_b.text = state.match; })?
+               ;
 
         ####
 
@@ -242,7 +248,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
-        species_skin        = 'skin'        ws1 skin       %{ spe.skin = skin; };
+        species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(skin, skin_b); };
         species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
         species_ai          = 'ai'          ws1 ai         ;
@@ -339,7 +345,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_count      = 'count'      ws1 number     %{ des.count = toint(state.match); } ;
         design_name       = 'name'       ws1 string     %{ des.name = state.match; } ;
-        design_skin       = 'skin'       ws1 skin       %{ des.skin = skin; };
+        design_skin       = 'skin'       ws1 skin       %{ des.skin.set(skin, skin_b); };
         design_slot       = 'slot'       ws1 string     %{ des.slot = state.match; } ;
         design_descr      = 'descr'      ws1 string     %{ des.descr = state.match; } ;
         design_attack     = 'attack'     ws1 damage_val %{ des.attacks.add(dmgval); } ;
@@ -441,7 +447,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_count     = 'count'     ws1 number     %{ ter.count = toint(state.match); } ;
         terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
-        terrain_skin      = 'skin'      ws1 skin       %{ ter.skin = skin; };
+        terrain_skin      = 'skin'      ws1 skin       %{ ter.skin.set(skin, skin_b); };
         terrain_placement = 'placement' ws1 tplacement  ;
         terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
@@ -595,18 +601,18 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water = skin; };
-        levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water = skin; };
-        levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall = skin; };
-        levelskin_water_wall    = 'water_wall'    ws1 skin   %{ lev.water_wall = skin; };
-        levelskin_floor1        = 'floor1'        ws1 skin   %{ lev.floor1 = skin; };
-        levelskin_floor2        = 'floor2'        ws1 skin   %{ lev.floor2 = skin; };
-        levelskin_floor3        = 'floor3'        ws1 skin   %{ lev.floor3 = skin; };
-        levelskin_floor4        = 'floor4'        ws1 skin   %{ lev.floor4 = skin; };
-        levelskin_floor5        = 'floor5'        ws1 skin   %{ lev.floor5 = skin; };
-        levelskin_floor6        = 'floor6'        ws1 skin   %{ lev.floor6 = skin; };
-        levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7 = skin; };
-        levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8 = skin; };
+        levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water.set(skin, skin_b); };
+        levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water.set(skin, skin_b); };
+        levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall.set(skin, skin_b); };
+        levelskin_water_wall    = 'water_wall'    ws1 skin   %{ lev.water_wall.set(skin, skin_b); };
+        levelskin_floor1        = 'floor1'        ws1 skin   %{ lev.floor1.set(skin, skin_b); };
+        levelskin_floor2        = 'floor2'        ws1 skin   %{ lev.floor2.set(skin, skin_b); };
+        levelskin_floor3        = 'floor3'        ws1 skin   %{ lev.floor3.set(skin, skin_b); };
+        levelskin_floor4        = 'floor4'        ws1 skin   %{ lev.floor4.set(skin, skin_b); };
+        levelskin_floor5        = 'floor5'        ws1 skin   %{ lev.floor5.set(skin, skin_b); };
+        levelskin_floor6        = 'floor6'        ws1 skin   %{ lev.floor6.set(skin, skin_b); };
+        levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7.set(skin, skin_b); };
+        levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8.set(skin, skin_b); };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_damage        = 'damage'        ws1 real   %{ lev.damage = toreal(state.match); };

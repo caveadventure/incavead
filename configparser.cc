@@ -2,6 +2,7 @@
 #include "libmaudit/types.h"
 
 #include "common_types.h"
+#include "skins.h"
 
 #include "damage.h"
 

@@ -60,7 +60,6 @@ struct tag_t {
     }
 };
 
-
 namespace std {
 
 template <>

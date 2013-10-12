@@ -67,7 +67,7 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 
     } else {
 
-        state.render.draw_circle(tx, ty, rad, true, s.skin.fore, maudit::color::bright_black,
+        state.render.draw_circle(tx, ty, rad, true, s.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
                                      monster_blast_process_point(p, state, s, _x, _y, attacks);

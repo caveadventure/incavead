@@ -14,6 +14,7 @@
 #include "serialize.h"
 #include "common_types.h"
 #include "common.h"
+#include "skins.h"
 
 ////
 
@@ -102,7 +103,7 @@ void init_statics() {
 }
 
 
-void client_mainloop(int client_fd, bool singleplayer, bool debug) {
+void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin) {
 
     try {
 
@@ -112,7 +113,7 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug) {
 
         screen_t screen(client);
 
-        mainloop::Main<Game, GameState, screen_t> main(screen, debug);
+        mainloop::Main<Game, GameState, screen_t> main(screen, debug, n_skin);
 
         main.mainloop(singleplayer);
 
@@ -191,7 +192,7 @@ int main(int argc, char** argv) {
 
     if (singleplayer) {
         int client = server.accept();
-        client_mainloop(client, true, false);
+        client_mainloop(client, true, false, 1);
 
     } else {
 
@@ -199,7 +200,7 @@ int main(int argc, char** argv) {
 
             int client = server.accept();
 
-            std::thread thr(client_mainloop, client, false, debug);
+            std::thread thr(client_mainloop, client, false, debug, 1);
             thr.detach();
         }
     }

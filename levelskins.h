@@ -3,18 +3,18 @@
 
 struct Levelskin {
 
-    maudit::glyph deep_water;
-    maudit::glyph shallow_water;
-    maudit::glyph wall;
-    maudit::glyph water_wall;
-    maudit::glyph floor1;
-    maudit::glyph floor2;
-    maudit::glyph floor3;
-    maudit::glyph floor4;
-    maudit::glyph floor5;
-    maudit::glyph floor6;
-    maudit::glyph floor7;
-    maudit::glyph floor8;
+    skins deep_water;
+    skins shallow_water;
+    skins wall;
+    skins water_wall;
+    skins floor1;
+    skins floor2;
+    skins floor3;
+    skins floor4;
+    skins floor5;
+    skins floor6;
+    skins floor7;
+    skins floor8;
 
     unsigned int lightradius;
     unsigned int lightradius_max;

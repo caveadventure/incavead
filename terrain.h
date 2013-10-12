@@ -13,7 +13,7 @@ struct Terrain {
 
     tag_t tag;
     std::string name;
-    maudit::glyph skin;
+    skins skin;
 
     unsigned int count;
 

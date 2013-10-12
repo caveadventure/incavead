@@ -63,8 +63,14 @@ struct Main {
     GAMESTATE state;
 
 
-    Main(SCREEN& s, bool debug) : game(debug), screen(s), view_w(0), view_h(0), is_cr(false), ticks(1) {}
-
+    Main(SCREEN& s, bool debug, size_t n_skin) : 
+        game(debug, n_skin), 
+        screen(s), 
+        view_w(0), 
+        view_h(0), 
+        is_cr(false), 
+        ticks(1) 
+        {}
 
 
     bool load(const std::string& filename) {

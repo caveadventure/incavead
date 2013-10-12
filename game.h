@@ -15,7 +15,9 @@ struct Game {
 
     bool debug_enabled;
 
-    Game(bool debug) : debug_enabled(debug) {}
+    size_t n_skin;
+
+    Game(bool debug, size_t _n_skin) : debug_enabled(debug), n_skin(_n_skin) {}
 
     void make_screen(mainloop::screen_params_t& sp) {
 
@@ -472,37 +474,37 @@ struct Game {
             if (water) {
 
                 if (z <= -5) {
-                    s = lev.deep_water;
+                    s = lev.deep_water[n_skin];
                 } else {
-                    s = lev.shallow_water;
+                    s = lev.shallow_water[n_skin];
                 }
 
             } else {
 
                 if (z <= -8) {
-                    s = lev.floor1;
+                    s = lev.floor1[n_skin];
                 } else if (z <= -7) {
-                    s = lev.floor2;
+                    s = lev.floor2[n_skin];
                 } else if (z <= -6) {
-                    s = lev.floor3;
+                    s = lev.floor3[n_skin];
                 } else if (z <= -5) {
-                    s = lev.floor4;
+                    s = lev.floor4[n_skin];
                 } else if (z <= -4) {
-                    s = lev.floor5;
+                    s = lev.floor5[n_skin];
                 } else if (z <= -3) {
-                    s = lev.floor6;
+                    s = lev.floor6[n_skin];
                 } else if (z <= -2) {
-                    s = lev.floor7;
+                    s = lev.floor7[n_skin];
                 } else {
-                    s = lev.floor8;
+                    s = lev.floor8[n_skin];
                 }
             }
 
         } else {
             if (water) {
-                s = lev.water_wall;
+                s = lev.water_wall[n_skin];
             } else {
-                s = lev.wall;
+                s = lev.wall[n_skin];
             }
         }
 
@@ -515,7 +517,7 @@ struct Game {
         if (state.features.get(x, y, feat)) {
 
             const Terrain& t = terrain().get(feat.tag);
-            state.render.set_skin(x, y, 1, t.skin);
+            state.render.set_skin(x, y, 1, t.skin[n_skin]);
             state.render.set_is_viewblock(x, y, 1, t.viewblock);
             state.render.set_is_walkblock(x, y, 1, t.walkblock);
             state.render.set_is_lit(x, y, 1, t.is_lit);
@@ -534,7 +536,7 @@ struct Game {
         if (state.items.get(x, y, 0, item)) {
 
             const Design& d = designs().get(item.tag);
-            state.render.set_skin(x, y, 2, d.skin);
+            state.render.set_skin(x, y, 2, d.skin[n_skin]);
             state.render.set_is_lit(x, y, 2, d.is_lit);
 
         } else {
@@ -554,7 +556,7 @@ struct Game {
         } else if (state.monsters.get(x, y, mon)) {
 
             const Species& s = species().get(mon.tag);
-            state.render.set_skin(x, y, 5, s.skin);
+            state.render.set_skin(x, y, 5, s.skin[n_skin]);
             state.render.set_is_walkblock(x, y, 5, true);
 
         } else {
@@ -1175,6 +1177,7 @@ struct Game {
             "  \2?\1 :          Show this help message.\n"
             "\n\3Shortcut commands:\1\n"
             "  \2T\1 :          Take the first item laying on the floor.\n"
+            "  \2a\1 :          (Same as 'T'.)\n"
             "  \2,\1 :          Examine the first item laying on the floor.\n"
             ;
 
@@ -1271,6 +1274,7 @@ struct Game {
             break;
 
         case 'T':
+        case 'a':
             take_item(p.px, p.py, 0, p, state, ticks);
             break;
 
