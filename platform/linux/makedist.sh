@@ -10,7 +10,7 @@ cp $BUILDDIR/incavead $BUILDDIR/highscore $BUILDDIR/victory $BUILDDIR/printmap d
 cp `ldd dist/bin/incavead | grep -o '\W/[^ ]*'` dist/bin
 cp $DATADIR/*.cfg dist
 
-cat << "EOF" > dist/incavead_server
+cat << "EOF" > dist/.incavead_server
 #!/bin/bash
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 $SCRIPT_PATH/bin/ld-*.so.2 --library-path $SCRIPT_PATH/bin $SCRIPT_PATH/bin/incavead $* &
@@ -21,8 +21,8 @@ cat << "EOF" > dist/incavead
 #!/bin/bash
 
 case $2 in 
-ascii) ./incavead_server --singleplayer ;;
-unicode) ./incavead_server --unicode --singleplayer ;;
+ascii) ./.incavead_server --singleplayer ;;
+unicode) ./.incavead_server --unicode --singleplayer ;;
 *) echo "Usage: ./incavead {putty|telnet} {unicode|ascii}. See README."; exit 1 ;;
 esac
 
@@ -33,7 +33,7 @@ telnet) telnet 0.0.0.0 20020; echo -e '\033[0m' ;;
 esac
 EOF
 
-chmod +x dist/incavead_server
+chmod +x dist/.incavead_server
 chmod +x dist/incavead
 
 cat << "EOF" > dist/README
