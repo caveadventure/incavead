@@ -13,22 +13,24 @@ cp $DATADIR/*.cfg dist
 cat << "EOF" > dist/incavead_server
 #!/bin/bash
 SCRIPT_PATH=$(dirname $(readlink -f $0))
-$SCRIPT_PATH/bin/ld-*.so.2 --library-path $SCRIPT_PATH/bin $SCRIPT_PATH/bin/incavead $*
+$SCRIPT_PATH/bin/ld-*.so.2 --library-path $SCRIPT_PATH/bin $SCRIPT_PATH/bin/incavead $* &
+until grep -q '00000000:4E34' /proc/net/tcp; do true; done
 EOF
 
 cat << "EOF" > dist/incavead
 #!/bin/bash
 
 case $2 in 
-ascii) ./incavead_server --singleplayer & ;;
-unicode) ./incavead_server --unicode --singleplayer & ;;
+ascii) ./incavead_server --singleplayer ;;
+unicode) ./incavead_server --unicode --singleplayer ;;
 *) echo "Usage: ./incavead {putty|telnet} {unicode|ascii}. See README."; exit 1 ;;
 esac
 
 case $1 in
 putty) putty telnet://0.0.0.0:20020 ;;
-telnet) telnet 0.0.0.0 20020 ;;
+telnet) telnet 0.0.0.0 20020; echo -e '\033[0m' ;;
 *) echo "Usage: ./incavead {putty|telnet} {unicode|ascii}. See README."; exit 1 ;;
+esac
 EOF
 
 chmod +x dist/incavead_server
