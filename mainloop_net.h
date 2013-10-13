@@ -292,7 +292,7 @@ struct Main {
 
         screen_params_t sp;
 
-        game.make_screen(sp);
+        game.make_screen(sp, state);
 
         // //
         name.clear();

@@ -177,6 +177,9 @@ struct Grid {
 
     astar::Path path;
 
+
+    ui_symbols_t ui_symbols;
+
 private:
 
     color_t color_fade(color_t c, double v) {
@@ -275,7 +278,7 @@ private:
         
             for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin("*", fore, back);
+                _overlay_set(xy) = skin(ui_symbols.circle, fore, back);
             }
         }
 
@@ -853,31 +856,36 @@ public:
 
                             std::string c;
 
-                            if ((y <= 0 && x <= 0) ||
-                                (y <= 0 && x >= view_w-1) ||
-                                (y >= view_h-1 && x <= 0) ||
-                                (y >= view_h-1 && x >= view_w-1)) {
+                            if (y <= 0 && x <= 0) {
+                                c = ui_symbols.box_rd;
 
-                                c = "+";
+                            } else if (y <= 0 && x >= view_w-1) {
+                                c = ui_symbols.box_ld;
+
+                            } else if (y >= view_h-1 && x <= 0) {
+                                c = ui_symbols.box_ru;
+
+                            } else if (y >= view_h-1 && x >= view_w-1) {
+                                c = ui_symbols.box_lu;
 
                             } else if (y <= 0 || y >= view_h-1) {
 
                                 if (y >= view_h-1 && nl+4-iy > view_h) {
-                                    c = "v";
+                                    c = ui_symbols.arrow_d;
                                 } else if (y <= 0 && iy > 0) {
-                                    c = "^";
+                                    c = ui_symbols.arrow_u;
                                 } else {
-                                    c = "-";
+                                    c = ui_symbols.box_h;
                                 }
 
                             } else if (x <= 0 || x >= view_w-1) {
 
                                 if (x >= view_w-1 && max_nc+4-ix > view_w) {
-                                    c = ">";
+                                    c = ui_symbols.arrow_r;
                                 } else if (x <= 0 && ix > 0) {
-                                    c = "<";
+                                    c = ui_symbols.arrow_l;
                                 } else {
-                                    c = "|";
+                                    c = ui_symbols.box_v;
                                 }
 
                             } else {
@@ -1003,7 +1011,7 @@ public:
 
             for (const auto& xy : procd) {
 
-                _overlay_set(xy) = skin("*", fore, back);
+                _overlay_set(xy) = skin(ui_symbols.fill, fore, back);
             }
         }
     }
@@ -1033,7 +1041,7 @@ public:
         if (do_draw) {
             for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin("*", fore, back);
+                _overlay_set(xy) = skin(ui_symbols.line, fore, back);
             }
         }
     }
@@ -1106,18 +1114,6 @@ public:
         }
 
         return true;
-
-        /*
-        bool tmp = TCOD_path_compute(tcodpath, x0, y0, x1, y1, cutoff);
-
-        if (!tmp) return false;
-
-        for (unsigned int i = 0; i < n; ++i) {
-            if (!TCOD_path_walk(tcodpath, (int*)&xo, (int*)&yo, true, cutoff))
-                return false;
-        }
-        return true;
-        */
     }
 
 };

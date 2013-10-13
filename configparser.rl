@@ -75,6 +75,14 @@ inline double toreal(const std::string& s) {
     return ::atof(s.c_str());
 }
 
+
+//
+// Stupid macro to save some typing.
+#define SET_UI_SYM(A,W) (__constants__().ui_symbols_##A). W = state.match
+
+
+
+
 void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     /** File reading cruft. **/
@@ -187,7 +195,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                ws
                ('back' ws1 back_color)? 
                %{ skin_b = skin; }
-               ('|' ws1 string %{ skin_b.text = state.match; })?
+               ('|' ws string %{ skin_b.text = state.match; })?
                ;
 
         ####
@@ -726,12 +734,56 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
+        constant_ui_circle = 'ui' ws1 'circle' 
+            ws1 string %{ SET_UI_SYM(a, circle); } ws ('|' ws string %{ SET_UI_SYM(b, circle); })? ;
+
+        constant_ui_fill = 'ui' ws1 'fill' 
+            ws1 string %{ SET_UI_SYM(a, fill); } ws ('|' ws string %{ SET_UI_SYM(b, fill); })? ;
+
+        constant_ui_line = 'ui' ws1 'line' 
+            ws1 string %{ SET_UI_SYM(a, line); } ws ('|' ws string %{ SET_UI_SYM(b, line); })? ;
+
+        constant_ui_box_v = 'ui' ws1 'box_v' 
+            ws1 string %{ SET_UI_SYM(a, box_v); } ws ('|' ws string %{ SET_UI_SYM(b, box_v); })? ;
+
+        constant_ui_box_h = 'ui' ws1 'box_h' 
+            ws1 string %{ SET_UI_SYM(a, box_h); } ws ('|' ws string %{ SET_UI_SYM(b, box_h); })? ;
+
+        constant_ui_box_rd = 'ui' ws1 'box_rd' 
+            ws1 string %{ SET_UI_SYM(a, box_rd); } ws ('|' ws string %{ SET_UI_SYM(b, box_rd); })? ;
+
+        constant_ui_box_ru = 'ui' ws1 'box_ru' 
+            ws1 string %{ SET_UI_SYM(a, box_ru); } ws ('|' ws string %{ SET_UI_SYM(b, box_ru); })? ;
+
+        constant_ui_box_ld = 'ui' ws1 'box_ld' 
+            ws1 string %{ SET_UI_SYM(a, box_ld); } ws ('|' ws string %{ SET_UI_SYM(b, box_ld); })? ;
+
+        constant_ui_box_lu = 'ui' ws1 'box_lu' 
+            ws1 string %{ SET_UI_SYM(a, box_lu); } ws ('|' ws string %{ SET_UI_SYM(b, box_lu); })? ;
+
+        constant_ui_arrow_l = 'ui' ws1 'arrow_l' 
+            ws1 string %{ SET_UI_SYM(a, arrow_l); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_l); })? ;
+
+        constant_ui_arrow_r = 'ui' ws1 'arrow_r' 
+            ws1 string %{ SET_UI_SYM(a, arrow_r); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_r); })? ;
+
+        constant_ui_arrow_u = 'ui' ws1 'arrow_u' 
+            ws1 string %{ SET_UI_SYM(a, arrow_u); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_u); })? ;
+
+        constant_ui_arrow_d = 'ui' ws1 'arrow_d' 
+            ws1 string %{ SET_UI_SYM(a, arrow_d); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_d); })? ;
+
+
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action |
                        constant_unique_item | constant_uniques_timeout |
-                       constant_health_shield_max | constant_max_gold_per_grave
+                       constant_health_shield_max | constant_max_gold_per_grave |
+                       constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
+                       constant_ui_box_v   | constant_ui_box_h   |
+                       constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
+                       constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
@@ -786,5 +838,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 }
 
 }
+
+#undef SET_UI_SYM
 
 #endif

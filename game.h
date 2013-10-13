@@ -19,12 +19,14 @@ struct Game {
 
     Game(bool debug, size_t _n_skin) : debug_enabled(debug), n_skin(_n_skin) {}
 
-    void make_screen(mainloop::screen_params_t& sp) {
+    void make_screen(mainloop::screen_params_t& sp, GameState& state) {
 
         sp.w = GRID_W;
         sp.h = GRID_H;
         sp.w2 = sp.w;
         sp.h2 = sp.h;
+
+        state.render.ui_symbols = (n_skin ? constants().ui_symbols_b : constants().ui_symbols_a);
     }
 
     void init(unsigned int code) {
