@@ -21,6 +21,8 @@ struct CelAuto {
 
     std::vector< std::pair<int,int> > seed;
 
+    std::string debug_name;
+
     CelAuto() : age(0), is_walk(false), make_walk(false), karma_scale(1.0), karma_step(1.0) {}
 
 };

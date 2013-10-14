@@ -1456,6 +1456,7 @@ struct Game {
                 s.karma_bound = 0;
                 s.ca_tag = c.first;
                 s.timeout = 9999;
+                s.name = c.second.debug_name;
                 p.spells.push_back(s);
             }
             state.render.do_message("Granted spells.");

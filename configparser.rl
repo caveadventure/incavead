@@ -568,7 +568,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        celauto_s = 's' ws1 ( [0-9] ${ cel.survive.insert(fc - '0'); } )+;
+        celauto_s = 's' ws1 ( [0-9] ${ cel.survive.insert(fc - '0'); } )*;
 
         celauto_b = 'b' ws1 ( [0-9] ${ cel.born.insert(fc - '0'); } )+;
 
@@ -587,11 +587,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        ws1 snumber %{ cel.seed.back().second = toint(state.match); }
                        ; 
 
+        celauto_debug_name = 'debug_name' ws1 string %{ cel.debug_name = state.match; } ;
+
         celauto_one_data =
             (celauto_s | celauto_b | celauto_a | celauto_terrain |
             celauto_is_walk | celauto_make_walk | celauto_karma_scale | 
-            celauto_karma_step | celauto_seed | '}' 
-            ${ fret; })
+            celauto_karma_step | celauto_seed | celauto_debug_name |
+            '}' ${ fret; })
             ;
 
         one_celauto := (ws celauto_one_data ws ';')+
