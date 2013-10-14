@@ -183,7 +183,24 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
     if (!state.render.is_in_fov(x, y)) {
 
     } else if (state.monsters.get(x, y, mon)) {
-        msg = nlp::message(" %s", species().get(mon.tag));
+
+        std::string state;
+
+        if (mon.sleep > 0) {
+            state = "sleeping";
+
+        } else if (mon.fear > 0) {
+            state = "afraid";
+
+        } else if (mon.magic <= -3.0) {
+            state = "cancelled";
+        }
+
+        if (state.empty()) {
+            msg = nlp::message(" %s", species().get(mon.tag));
+        } else {
+            msg = nlp::message(" %s (%s)", species().get(mon.tag), state);
+        }
 
     } else if (n > 1) {
         msg = nlp::message(" %d items", n);
