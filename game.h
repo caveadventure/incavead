@@ -1400,6 +1400,10 @@ struct Game {
 
         switch (k.letter) {
 
+        case '@':
+            p.health.shield += 1000;
+            break;
+
         case 's':
             state.species_counts = species().counts;
             state.render.do_message("Wiped species counts.");
