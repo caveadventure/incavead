@@ -1114,7 +1114,8 @@ struct Game {
     }
 
     void rest(GameState& state, size_t& ticks) {
-
+        double x = state.grid.get_karma(p.px, p.py);
+        state.render.do_message(nlp::message(" [%d]", x));
         ++ticks;
     }
 
