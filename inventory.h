@@ -27,7 +27,11 @@ struct inventory_t {
 
     void make_slot(const slot_t& s) {
         slots[s.slot] = s;
-        slot_keys[s.letter] = s.slot;
+
+        // HACK
+        if (s.letter != ' ') {
+            slot_keys[s.letter] = s.slot;
+        }
     }
 
     bool get(const std::string& slot, items::Item& ret) const {
