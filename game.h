@@ -764,6 +764,10 @@ struct Game {
                 p.inv.get_defense(defenses);
 
                 defend(p, defenses, p.get_computed_level(state.rng), t, state);
+
+                if (t.uncharge.attack) {
+                    state.features.uncharge(p.px, p.py, state.render);
+                }
             }
         }
 
@@ -966,7 +970,10 @@ struct Game {
             if (t.sticky) {
                 state.render.do_message("You are stuck!");
 
-                state.features.uncharge(p.px, p.py, state.render);
+                if (t.uncharge.move) {
+                    state.features.uncharge(p.px, p.py, state.render);
+                }
+
                 return;
             }
         }
