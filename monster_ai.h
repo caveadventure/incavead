@@ -157,6 +157,8 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
                          const monsters::Monster& m, const Species& s,
                          monsters::pt& nxy, bool& do_die) {
 
+    bool do_stop = false;
+
     features::Feature feat;
     if (state.features.get(m.xy.first, m.xy.second, feat) && 
         !s.flags.terrain_immune) {
@@ -167,12 +169,21 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
             attack(t.attacks, t.attack_level, state, m, s);
         }
+
+        if (t.sticky) {
+            state.features.uncharge(m.xy.first, m.xy.second, state.render);
+            do_stop = true;
+        }
     }
 
 
     if (m.health < -3) {
         do_die = true;
         return true;
+    }
+
+    if (do_stop) {
+        return false;
     }
 
     if (m.sleep > 0) {
