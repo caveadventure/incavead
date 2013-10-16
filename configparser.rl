@@ -367,13 +367,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
         design_lightradius = 'lightradius' ws1 number   %{ des.lightradius = toint(state.match); };
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
-        design_descend    = 'descend' ws1 number        %{ des.descend = toint(state.match); };
+        design_descend    = 'descend' ws1 snumber       %{ des.descend = toint(state.match); };
 
         design_destructible = 'destructible' %{ des.destructible = true; };
 
         design_defense_only_one = 'defense_only_one' %{ des.defense_only_one = true; };
 
-        design_safe_descend = 'safe_descend' ws1 number %{ des.safe_descend = toint(state.match); };
+        design_safe_descend = 'safe_descend' ws1 snumber %{ des.safe_descend = toint(state.match); };
 
         design_blink      = 'blink' %{ des.flags.blink = true; };
 

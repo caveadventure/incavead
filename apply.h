@@ -84,13 +84,13 @@ inline bool apply_item(Player& p, const std::string& slot, GameState& state, boo
         ret = true;
     }
 
-    if (d.descend > 0) {
+    if (d.descend != 0) {
         p.worldz += d.descend;
         regen = true;
         ret = true;
     }
 
-    if (d.safe_descend > 0) {
+    if (d.safe_descend != 0) {
         
         const Levelskin& ls = levelskins().get(p.worldz);
 

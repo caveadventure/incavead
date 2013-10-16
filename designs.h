@@ -54,8 +54,8 @@ struct Design {
 
     double digging;
 
-    unsigned int descend;
-    unsigned int safe_descend;
+    int descend;
+    int safe_descend;
 
     struct useflags_t {
         bool blink;
