@@ -33,7 +33,8 @@ struct Vault {
         floor,
         water,
         corner,
-        shoreline
+        shoreline,
+        lowlands
     };
 
     placement_t placement;

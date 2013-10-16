@@ -46,6 +46,9 @@ inline void generate_vault(const Vault& vault, GameState& state,
         case Vault::placement_t::shoreline:
             if (!state.grid.one_of_shore(state.rng, xy)) return;
             break;
+        case Vault::placement_t::lowlands:
+            if (!state.grid.one_of_lowlands(state.rng, xy)) return;
+            break;
         }
 
         if ((int)xy.first  - (int)ax < 0 ||

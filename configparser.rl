@@ -527,7 +527,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'floor'     %{ vau.placement = Vault::placement_t::floor; }     | 
             'water'     %{ vau.placement = Vault::placement_t::water; }     | 
             'corner'    %{ vau.placement = Vault::placement_t::corner; }    |
-            'shoreline' %{ vau.placement = Vault::placement_t::shoreline; } ;
+            'shoreline' %{ vau.placement = Vault::placement_t::shoreline; } |
+            'lowlands'  %{ vau.placement = Vault::placement_t::lowlands; }  ;
 
         vault_count     = 'count'     ws1 number     %{ vau.count = toint(state.match); } ;
         vault_placement = 'placement' ws1 vplacement  ;
