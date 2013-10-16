@@ -1136,35 +1136,57 @@ struct Game {
         }
     }
 
-    std::string show_spells(std::vector<Terrain::spell_t>& spells) {
+    std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, const std::vector<Design::spell_t>& i_spells) {
 
         std::string m;
 
         m = "\2Your arcane powers:\n\n";
 
         char z = 'a';
-        for (const auto& sp : spells) {
+        for (const auto& sp : p_spells) {
 
             m += nlp::message("   \2%c\1) %S\n", z, sp);
             ++z;
         }
 
+        for (const auto& sp : i_spells) {
+
+            m += nlp::message("   \2%c\1) %S\n", z, sp);
+            ++z;
+        }
+        
         return m;
     }
 
     void handle_input_spells(GameState& state, size_t& ticks, maudit::keypress k) {
 
-        int z = k.letter - 'a';
+        int _z = k.letter - 'a';
 
-        if (z < 0 || z >= (int)p.spells.size()) {
+        if (_z < 0) {
             state.window_stack.pop_back();
             return;
         }
 
-        const auto& sp = p.spells[z];
+        size_t z = (size_t)_z;
 
-        seed_celauto(state, p.px, p.py, sp.ca_tag);        
-        ++ticks;
+        const auto& p_spells = p.spells;
+        const auto& i_spells = p.inv.spells();
+
+        if (z < p_spells.size()) {
+
+            const auto& sp = p_spells[z];
+
+            seed_celauto(state, p.px, p.py, sp.ca_tag);        
+            ++ticks;
+
+        } else if (z < p_spells.size() + i_spells.size()) {
+
+            const auto& sp = i_spells[z - p_spells.size()];
+
+            seed_celauto(state, p.px, p.py, sp.ca_tag);
+            ++ticks;
+        }
+
         state.window_stack.pop_back();
     }
 
@@ -1310,7 +1332,7 @@ struct Game {
             break;
 
         case 'z':
-            state.push_window(show_spells(p.spells), screens_t::spells);
+            state.push_window(show_spells(p.spells, p.inv.spells()), screens_t::spells);
             break;
 
         case 'P':

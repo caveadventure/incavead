@@ -149,6 +149,33 @@ struct inventory_t {
         return true;
     }
 
+
+    ///
+    ///
+    ///
+
+
+    std::vector<Design::spell_t> spells() {
+
+        std::vector<Design::spell_t> ret;
+        bool is_ok = false;
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+
+            ret.insert(ret.end(), dp.spells.begin(), dp.spells.end());
+
+            if (dp.flags.enable_spells)
+                is_ok = true;
+        }
+
+        if (!is_ok) {
+            ret.clear();
+        }
+
+        return ret;
+    }
+
     void get_attack(damage::attacks_t& out) {
 
         for (const auto& i : stuff) {

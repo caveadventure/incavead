@@ -59,8 +59,9 @@ struct Design {
 
     struct useflags_t {
         bool blink;
+        bool enable_spells;
 
-        useflags_t() : blink(false) {}
+        useflags_t() : blink(false), enable_spells(false) {}
     };
 
     useflags_t flags;
@@ -94,6 +95,14 @@ struct Design {
     double other_hunger_multiplier;
 
     double shield;
+
+    struct spell_t {
+        tag_t ca_tag;
+        std::string name;
+    };
+
+    std::vector<spell_t> spells;
+    
 
     Design() : level(0), count(0), defense_only_one(false), stackrange(0), heal(0), feed(0), karma(0), usable(false), 
                destructible(false), throwrange(0),
