@@ -731,6 +731,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_max_gold_per_grave = 'max_gold_per_grave'
             ws1 number %{ __constants__().max_gold_per_grave = toint(state.match); };
 
+        constant_max_celauto_cells = 'max_celauto_cells'
+            ws1 number %{ __constants__().max_celauto_cells = toint(state.match); };
+
         constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
             ws1 tag      %{ __constants__().slots.back().slot = state.match; }
             ws1 '\'' any ${ __constants__().slots.back().letter = fc; } '\''
@@ -796,7 +799,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action |
                        constant_unique_item | constant_uniques_timeout |
-                       constant_health_shield_max | constant_max_gold_per_grave |
+                       constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
                        constant_ui_box_v   | constant_ui_box_h   |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |

@@ -87,7 +87,8 @@ struct CaMap {
 
 
     template <typename FUNC1, typename FUNC2, typename FUNC3>
-    inline void step(neighbors::Neighbors& neigh_plain, FUNC1 cell_good, FUNC2 funcon, FUNC3 funcoff) {
+    inline void step(neighbors::Neighbors& neigh_plain, FUNC1 cell_good, FUNC2 funcon, FUNC3 funcoff,
+                     size_t MAX) {
 
         /// ///
 
@@ -141,6 +142,8 @@ struct CaMap {
             }
         }
 
+        size_t n_cells = camap.size() - for_remove.size();
+
         for (const auto& i : count_of_n) {
 
             const pt& xy = i.first;
@@ -162,7 +165,8 @@ struct CaMap {
                 const CelAuto& rul = celautos().get(j.first);
 
                 if (rul.born.count(n) != 0 &&
-                    cell_good(xy.first, xy.second, rul)) {
+                    cell_good(xy.first, xy.second, rul) &&
+                    n_cells + for_add.size() < MAX) {
 
                     for_add[xy] = rul.tag;
                     break;

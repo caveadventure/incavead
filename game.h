@@ -749,7 +749,10 @@ struct Game {
             [&state](unsigned int x, unsigned int y, const CelAuto& ca) {
 
                 state.features.x_unset(x, y, ca.terrain, state.render);
-            }
+            },
+
+            // Max number of cells
+            constants().max_celauto_cells
             );
 
 
