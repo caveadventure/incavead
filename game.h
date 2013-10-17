@@ -143,7 +143,7 @@ struct Game {
 
             std::set<grid::pt> affected;
 
-            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults);
+            std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults, true);
 
             for (unsigned int priority = 0; priority <= 1; ++priority) {
 
