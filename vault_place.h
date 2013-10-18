@@ -3,7 +3,8 @@
 
 
 inline void generate_vault(const Vault& vault, GameState& state, 
-                           std::vector<summons_t>& summons, std::set<grid::pt>& affected) {
+                           std::vector<summons_t>& summons, std::set<grid::pt>& affected,
+                           bool& did_place_player, unsigned int& px, unsigned int& py) {
 
     grid::pt xy;
 
@@ -15,6 +16,9 @@ inline void generate_vault(const Vault& vault, GameState& state,
 
     unsigned int ax = (vault.transpose ? vault.ay : vault.ax);
     unsigned int ay = (vault.transpose ? vault.ax : vault.ay);
+
+    int _px = (vault.transpose ? vault.py : vault.px);
+    int _py = (vault.transpose ? vault.px : vault.py);
 
     if (ax >= w || ay >= h) {
         std::cerr << "Sanity error in vault anchor! " << ax << "," << ay << " " 
@@ -70,6 +74,12 @@ inline void generate_vault(const Vault& vault, GameState& state,
     }
 
     //
+
+    if (_px >= 0 && _py >= 0) {
+        px = _px;
+        py = _py;
+        did_place_player;
+    }
 
     for (int i = -1; i <= (int)w; ++i) {
         affected.insert(grid::pt(xy.first + i, xy.second - 1));

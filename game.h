@@ -138,6 +138,8 @@ struct Game {
 
         std::vector<summons_t> summons;
 
+        bool did_place_player = false;
+
         {
             progressbar("Placing vaults...");
 
@@ -154,7 +156,7 @@ struct Game {
                         continue;
 
                     for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                        generate_vault(v, state, summons, affected);
+                        generate_vault(v, state, summons, affected, did_place_player, p.px, p.py);
                     }
                 }
 
@@ -284,11 +286,11 @@ struct Game {
         }
 
 
-        // Place some random items.
+        // Place player.
 
         state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
 
-        {
+        if (!did_place_player) {
             grid::pt xy;
             if (!maps.one_of_lowlands(state.rng, xy))
                 throw std::runtime_error("Failed to generate grid");
@@ -336,10 +338,12 @@ struct Game {
             }
         }
 
+        // Place some random items.
+
         {
             progressbar("Placing items...");
 
-            unsigned int itemgroups = ::fabs(state.rng.gauss(300.0, 50.0));
+            unsigned int itemgroups = ::fabs(state.rng.gauss(lev.number_items.mean, lev.number_items.deviation));
 
             for (unsigned int i = 0; i < itemgroups; ++i) {
 

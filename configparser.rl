@@ -538,6 +538,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ vau.ay = toint(state.match); }
             ;
 
+        vault_set_player = 'set_player'    
+            ws1 number %{ vau.px = toint(state.match); } 
+            ws1 number %{ vau.py = toint(state.match); }
+            ;      
+
         vault_brush = 'brush' %{ vbrush = Vault::brush(); }
             ws1 ('blank' ${ vbrush.is_blank = true; } |
                  'floor' ${ vbrush.is_walk = true; vbrush.is_water = false;  } |
@@ -560,7 +565,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
-            vault_inherit | vault_transpose | vault_priority |
+            vault_inherit | vault_transpose | vault_priority | vault_set_player |
             '}'
              ${ fret; })
             ;
@@ -655,6 +660,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ lev.number_monsters.deviation = toreal(state.match); }
             ;
 
+        levelskin_number_items = 'number_items' 
+            ws1 real %{ lev.number_items.mean = toreal(state.match); }
+            ws1 real %{ lev.number_items.deviation = toreal(state.match); }
+            ;
+
         levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
 
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
@@ -683,7 +693,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage |
             levelskin_exclusive | levelskin_noterrain |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
-            levelskin_number_vaults | levelskin_number_monsters |
+            levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |
             levelskin_name |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
