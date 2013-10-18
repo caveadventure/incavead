@@ -78,7 +78,7 @@ inline void generate_vault(const Vault& vault, GameState& state,
     if (_px >= 0 && _py >= 0) {
         px = _px;
         py = _py;
-        did_place_player;
+        did_place_player = true;
     }
 
     for (int i = -1; i <= (int)w; ++i) {
