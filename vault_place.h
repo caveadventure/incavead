@@ -76,8 +76,8 @@ inline void generate_vault(const Vault& vault, GameState& state,
     //
 
     if (_px >= 0 && _py >= 0) {
-        px = _px;
-        py = _py;
+        px = xy.first + _px;
+        py = xy.second +_py;
         did_place_player = true;
     }
 
