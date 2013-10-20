@@ -73,7 +73,8 @@ enum class screens_t : unsigned int {
     floor_item,
     spells,
     help,
-    tombstone
+    tombstone,
+    howto
 };
 
 #include "inv_screens2.h"
@@ -98,6 +99,8 @@ void init_statics() {
     configparser::parse_config("levelskins.cfg", tagmem);
 
     configparser::parse_config("constants.cfg", tagmem);
+
+    configparser::parse_config("howto.cfg", tagmem);
 
     ////
 }

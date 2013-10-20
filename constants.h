@@ -43,6 +43,8 @@ struct ConstantsBank {
 
     size_t max_celauto_cells;
 
+    std::string howto_text;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000) {}
 

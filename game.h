@@ -1214,6 +1214,7 @@ struct Game {
             "  \2tab\1 :        Look at monsters and items in view.\n"
             "  \2P\1 :          Show message history.\n"
             "  \2?\1 :          Show this help message.\n"
+            "  \2??\1 :         Show detailed instructions.\n"
             "\n\3Shortcut commands:\1\n"
             "  \2T\1 :          Take the first item laying on the floor.\n"
             "  \1a\1 :            (Same as 'T'.)\n"
@@ -1589,7 +1590,12 @@ struct Game {
         }
     }
 
-    void handle_input_messages(GameState& state, maudit::keypress k) {
+    void handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) {
+
+        if (do_howto && k.letter == '?') {
+            state.push_window(constants().howto_text, screens_t::howto);
+            return;
+        }
 
         state.window_stack.pop_back();
     }
@@ -1637,9 +1643,13 @@ struct Game {
         switch ((screens_t)state.window_stack.back().type) {
 
         case screens_t::messages:
-        case screens_t::help:
         case screens_t::tombstone:
-            handle_input_messages(state, k);
+        case screens_t::howto:
+            handle_input_messages(state, k, false);
+            break;
+
+        case screens_t::help:
+            handle_input_messages(state, k, true);
             break;
 
         case screens_t::inventory:

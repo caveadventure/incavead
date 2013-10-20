@@ -870,20 +870,25 @@ public:
 
                             } else if (y <= 0 || y >= view_h-1) {
 
-                                if (y >= view_h-1 && nl+4-iy > view_h) {
+                                if (y >= view_h-1 && x <= 10 && nl+4-iy > view_h) {
                                     c = ui_symbols.arrow_d;
-                                } else if (y <= 0 && iy > 0) {
+
+                                } else if (y <= 0 && x <= 10 && iy > 0) {
+
                                     c = ui_symbols.arrow_u;
+
                                 } else {
                                     c = ui_symbols.box_h;
                                 }
 
                             } else if (x <= 0 || x >= view_w-1) {
 
-                                if (x >= view_w-1 && max_nc+4-ix > view_w) {
+                                if (x >= view_w-1 && y <= 5 && max_nc+4-ix > view_w) {
                                     c = ui_symbols.arrow_r;
-                                } else if (x <= 0 && ix > 0) {
+
+                                } else if (x <= 0 && y <= 5 && ix > 0) {
                                     c = ui_symbols.arrow_l;
+
                                 } else {
                                     c = ui_symbols.box_v;
                                 }

@@ -330,6 +330,7 @@ struct Main {
 
         size_t oldticks = 0;
 
+        state.render.do_message("Press '?' twice for detailed instructions.");
         state.render.do_message("Press '?' for help on controls.");
 
         draw();

@@ -153,6 +153,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         strchar_escape := 
             ( ('"'   ${ state.match += '"';  fret; }) |
               ('n'   ${ state.match += '\n'; fret; }) |
+              ('1'   ${ state.match += '\1'; fret; }) |
+              ('2'   ${ state.match += '\2'; fret; }) |
+              ('3'   ${ state.match += '\3'; fret; }) |
               ('\\'  ${ state.match += '\\'; fret; }) )
             ;
 
@@ -803,6 +806,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_ui_arrow_d = 'ui' ws1 'arrow_d' 
             ws1 string %{ SET_UI_SYM(a, arrow_d); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_d); })? ;
 
+        constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
+
 
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
@@ -813,7 +818,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
                        constant_ui_box_v   | constant_ui_box_h   |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
-                       constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d
+                       constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
+                       constant_howto_text
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
