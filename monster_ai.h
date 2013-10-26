@@ -52,7 +52,7 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack(attacks, s.get_computed_level(), state, mon, species().get(mon.tag));
+            attack(attacks, s.get_computed_level(), p, state, mon, species().get(mon.tag));
         }
     }
 }
@@ -167,7 +167,7 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
         if (!t.attacks.empty()) {
 
-            attack(t.attacks, t.attack_level, state, m, s);
+            attack(t.attacks, t.attack_level, p, state, m, s);
 
             if (t.uncharge.attack) {
                 state.features.uncharge(m.xy.first, m.xy.second, state.render);

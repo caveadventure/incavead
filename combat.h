@@ -66,12 +66,13 @@ inline void monster_kill(GameState& state, const monsters::Monster& mon,
 
 
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
-                                  GameState& state,
+                                  Player& p, GameState& state,
                                   double& totdamage, double& totmagic, 
                                   double& totsleep, double& totfear, double& totvamp,
                                   bool& mortal) {
 
     double dmg = v.val;
+    double hurt = 0;
 
     if (v.type == damage::type_t::sleep) {
 
@@ -81,8 +82,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     } else if (v.type == damage::type_t::turn_undead) {
 
         if (s.flags.undead) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-            totdamage += dmg;
+            hurt = dmg;
         }
 
     } else if (v.type == damage::type_t::scare_animal) {
@@ -122,8 +122,11 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     } else if (v.type == damage::type_t::vampiric) {
 
         if (!s.flags.robot) {
-            totdamage += dmg;
+
+            p.health.inc(dmg);
             totvamp += dmg;
+
+            hurt = dmg;
         }
 
     } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
@@ -134,14 +137,14 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         if (karma > 0) {
             double factor = (karma)/2;
             factor = factor * factor;
-            totdamage += dmg * factor;
+
+            hurt = dmg * factor;
         }
 
     } else if (v.type == damage::type_t::sonic) {
 
         if (s.flags.robot) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-            totdamage += dmg;
+            hurt = dmg;
         }
 
     } else {
@@ -153,10 +156,14 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         // electric
         // magic
         
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
-        totdamage += dmg;
-        
-        if (dmg >= 2.8) {
+        hurt = dmg;
+    }
+
+    if (hurt > 0) {
+        state.monsters.change(mon, [hurt](monsters::Monster& m) { m.health -= hurt; });
+        totdamage += hurt;
+
+        if (hurt >= 2.8) {
             mortal = true;
         }
     }
@@ -164,7 +171,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
 
 inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
-                   GameState& state, const monsters::Monster& mon,
+                   Player& p, GameState& state, const monsters::Monster& mon,
                    const Species& s) {
 
     if (attacks.empty()) {
@@ -187,7 +194,7 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
+        attack_damage_monster(v, mon, s, p, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
 
     if (mon.health - totdamage < -3) {
@@ -230,14 +237,10 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
+        attack_damage_monster(v, mon, s, p, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
     }
 
     p.karma.inc(s.karma * totdamage);
-
-    if (totvamp > 0) {
-        p.health.inc(totvamp);
-    }
 
     if (totsleep > 0) {
 
