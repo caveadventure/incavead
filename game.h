@@ -1489,6 +1489,29 @@ struct Game {
             break;
         }
 
+        case 'Z':
+        {
+            uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
+            std::cout << "** " << rcode::encode(rnd) << std::endl;
+            tag_t catag = celautos().get_n(rnd >> 16);
+            int offx = -3 + (rnd & 0x3);
+            int offy = -3 + ((rnd >> 2) & 0x3);
+            std::cout << "    offs: " << offx << " " << offy << std::endl;
+            for (size_t z = 0; z < 16; ++z) {
+                if (rnd & (1 << (16+z))) {
+
+                    int _x = offx + p.px + (z % 4);
+                    int _y = offy + p.py + (z / 4);
+
+                    if (_x < 0 || _y < 0 || _x > (int)state.neigh.w || _y > (int)state.neigh.h)
+                        continue;
+
+                    state.camap.seed(state.neigh, celauto::pt(_x, _y), catag);
+                }
+            }
+            break;
+        }
+
         case 'z':
         {
             for (const auto& c : celautos().bank) {

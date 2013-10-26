@@ -49,6 +49,19 @@ struct CelAutoBank {
 
         return i->second;
     }
+
+    tag_t get_n(size_t n) const {
+        n = n % bank.size();
+
+        auto i = bank.begin();
+
+        while (n > 0) {
+            ++i;
+            --n;
+        }
+
+        return i->first;
+    }
 };
 
 
