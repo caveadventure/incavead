@@ -374,7 +374,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_destructible = 'destructible' %{ des.destructible = true; };
 
-        design_defense_only_one = 'defense_only_one' %{ des.defense_only_one = true; };
+        design_count_is_only_one = 'count_is_only_one' %{ des.count_is_only_one = true; };
 
         design_safe_descend = 'safe_descend' ws1 snumber %{ des.safe_descend = toint(state.match); };
 
@@ -416,22 +416,26 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_shield = 'shield' ws1 real %{ des.shield = toreal(state.match); };
 
         design_enable_spells = 'enable_spells' %{ des.flags.enable_spells = true; };
+        design_random_spell  = 'random_spell'  %{ des.flags.random_spell = true; };
 
         design_grant_spell = 'grant_spell' %{ des.spells.push_back(Design::spell_t()); }
             ws1 string %{ des.spells.back().ca_tag = tag_t(state.match, tagmem); } 
             ws1 string %{ des.spells.back().name = state.match; } 
             ;
 
-        design_count_is_rcode = 'count_is_rcode' %{ des.count_is_rcode = true; };
+        design_count_is_rcode = 'count_is_rcode' 
+            %{ des.count_is_rcode = true; des.count_is_only_one = true; }
+            ;
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
-            design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
+            design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
+            design_random_spell |
             '}'
             ${ fret; })
             ;

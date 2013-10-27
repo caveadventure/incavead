@@ -107,7 +107,14 @@ struct inventory_t {
                 }
 
             } else {
-                old = i;
+
+                if (d.stackrange == 0) {
+                    old = o;
+                    o = i;
+                } else {
+                    old = i;
+                }
+
                 return true;
             }
         }
@@ -176,6 +183,20 @@ struct inventory_t {
         return ret;
     }
 
+    std::vector<uint32_t> random_spells() {
+
+        std::vector<uint32_t> ret;
+
+        for (const auto& i : stuff) {
+            const Design& dp = designs().get(i.second.tag);
+
+            if (dp.flags.random_spell)
+                ret.push_back(i.second.count);
+        }
+
+        return ret;
+    }
+
     void get_attack(damage::attacks_t& out) {
 
         for (const auto& i : stuff) {
@@ -194,7 +215,7 @@ struct inventory_t {
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
 
-            unsigned int c = (dp.defense_only_one ? 1 : i.second.count);
+            unsigned int c = (dp.count_is_only_one ? 1 : i.second.count);
 
             for (unsigned int j = 0; j < c; ++j) {
                 out.add(dp.defenses);
@@ -207,7 +228,10 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
-            ret += (dp.lightradius * i.second.count);
+
+            unsigned int c = (dp.count_is_only_one ? 1 : i.second.count);
+
+            ret += (dp.lightradius * c);
         }
 
         return ret;
@@ -230,7 +254,10 @@ struct inventory_t {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
-            ret += (dp.worth * i.second.count);
+
+            unsigned int c = (dp.count_is_only_one ? 1 : i.second.count);
+
+            ret += (dp.worth * c);
         }
 
         return ret;
@@ -251,6 +278,7 @@ struct inventory_t {
                 inc_luck = std::max(inc_luck, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
             }
 
+            // Hack, 'count_is_only_one' does not apply.
             inc_hunger += (dp.hunger * i.second.count);
 
             hunger_coeff = std::max(hunger_coeff, dp.other_hunger_multiplier);

@@ -20,11 +20,20 @@ std::string magick_encode(uint32_t x) {
         "ru",    "ri"
     };
 
+    /*
     static const char* lochars[16] = {
         "a",   "ard", "als", "amz",  // anp
         "emp", "est", "elz", "erp",
         "orz", "ond", "olp", "osf",
         "urd", "und", "ump", "upl"
+    };
+    */
+
+    static const char* lochars[16] = {
+        "a",   "e",   "o",   "u",
+        "ash", "es",  "oh",  "uz",
+        "am",  "er",  "ol",  "um",
+        "amz", "erp", "olf", "ump"
     };
 
     uint16_t low = x & 0xFFFF;

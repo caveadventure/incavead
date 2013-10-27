@@ -1042,8 +1042,10 @@ struct Game {
 
             if (p.inv.take(d.slot, vi)) {
 
-                double shield_bonus = t.protection_racket.shield_bonus * vi.count;
-                double money_curse = t.protection_racket.money_curse * vi.count;
+                unsigned int c = (d.count_is_only_one ? 1 : vi.count);
+
+                double shield_bonus = t.protection_racket.shield_bonus * c;
+                double money_curse = t.protection_racket.money_curse * c;
 
                 if (shield_bonus > 0) {
                     p.health.shield += shield_bonus;
@@ -1141,7 +1143,32 @@ struct Game {
         }
     }
 
-    std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, const std::vector<Design::spell_t>& i_spells) {
+    void cast_random_spell(uint32_t rs, GameState& state) {
+
+        tag_t catag = celautos().get_n(rs >> 16);
+
+        int offx = -3 + (rs & 0x3);
+        int offy = -3 + ((rs >> 2) & 0x3);
+
+
+        for (size_t z = 0; z < 16; ++z) {
+
+            if (rs & (1 << (16+z))) {
+
+                int _x = offx + p.px + (z % 4);
+                int _y = offy + p.py + (z / 4);
+
+                if (_x < 0 || _y < 0 || _x > (int)state.neigh.w || _y > (int)state.neigh.h)
+                    continue;
+
+                state.camap.seed(state.neigh, celauto::pt(_x, _y), catag);
+            }
+        }
+    }
+
+    std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, 
+                            const std::vector<Design::spell_t>& i_spells,
+                            const std::vector<uint32_t>& r_spells) {
 
         std::string m;
 
@@ -1157,6 +1184,12 @@ struct Game {
         for (const auto& sp : i_spells) {
 
             m += nlp::message("   \2%c\1) %S\n", z, sp);
+            ++z;
+        }
+
+        for (const auto& rp : r_spells) {
+
+            m += nlp::message("   \2%c\1) Labeled '%s'\n", z, rcode::magick_encode(rp));
             ++z;
         }
         
@@ -1176,6 +1209,7 @@ struct Game {
 
         const auto& p_spells = p.spells;
         const auto& i_spells = p.inv.spells();
+        const auto& r_spells = p.inv.random_spells();
 
         if (z < p_spells.size()) {
 
@@ -1189,6 +1223,13 @@ struct Game {
             const auto& sp = i_spells[z - p_spells.size()];
 
             seed_celauto(state, p.px, p.py, sp.ca_tag);
+            ++ticks;
+
+        } else if (z < p_spells.size() + i_spells.size() + r_spells.size()) {
+
+            uint32_t rspell = r_spells[z - p_spells.size() - i_spells.size()];
+
+            cast_random_spell(rspell, state);
             ++ticks;
         }
 
@@ -1338,7 +1379,7 @@ struct Game {
             break;
 
         case 'z':
-            state.push_window(show_spells(p.spells, p.inv.spells()), screens_t::spells);
+            state.push_window(show_spells(p.spells, p.inv.spells(), p.inv.random_spells()), screens_t::spells);
             break;
 
         case 'P':
@@ -1493,23 +1534,7 @@ struct Game {
         {
             uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
             std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
-            tag_t catag = celautos().get_n(rnd >> 16);
-            int offx = -3 + (rnd & 0x3);
-            int offy = -3 + ((rnd >> 2) & 0x3);
-            std::cout << "    offs: " << offx << " " << offy << " " << celautos().get(catag).debug_name << std::endl;
-            for (size_t z = 0; z < 16; ++z) {
-                if (rnd & (1 << (16+z))) {
-
-                    int _x = offx + p.px + (z % 4);
-                    int _y = offy + p.py + (z / 4);
-
-                    if (_x < 0 || _y < 0 || _x > (int)state.neigh.w || _y > (int)state.neigh.h)
-                        continue;
-
-                    state.camap.seed(state.neigh, celauto::pt(_x, _y), catag);
-                }
-            }
-            break;
+            cast_random_spell(rnd, state);
         }
 
         case 'z':
