@@ -951,8 +951,7 @@ struct Game {
             return;
 
         if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
-            !state.grid.is_walk(nx, ny) ||
-            state.render.is_walkblock(nx, ny)) {
+            !state.grid.is_walk(nx, ny)) {
 
             return;
         }
@@ -967,6 +966,10 @@ struct Game {
                 ++ticks;
             }
 
+            return;
+        }
+
+        if (state.render.is_walkblock(nx, ny)) {
             return;
         }
 

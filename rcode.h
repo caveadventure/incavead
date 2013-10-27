@@ -22,21 +22,29 @@ std::string magick_encode(uint32_t x) {
 
     /*
     static const char* lochars[16] = {
-        "a",   "ard", "als", "amz",  // anp
+        "anp", "ard", "als", "amz",
         "emp", "est", "elz", "erp",
         "orz", "ond", "olp", "osf",
         "urd", "und", "ump", "upl"
     };
     */
 
-    static const char* lochars[16] = {
-        "a",   "e",   "o",   "u",
-        "ash", "es",  "oh",  "uz",
-        "am",  "er",  "ol",  "um",
-        "amz", "erp", "olf", "ump"
+    static const char* lochars1[16] = {
+        "an", "as", "al", "ad",
+        "es", "em", "et", "er",
+        "os", "of", "ow", "os",
+        "un", "um", "up", "uf"
     };
 
-    uint16_t low = x & 0xFFFF;
+    static const char* lochars2[16] = {
+        "arn", "ard", "atl", "alv",
+        "ern", "erd", "est", "etz",
+        "orn", "ord", "olv", "otl",
+        "urn", "urd", "ums", "utz"
+    };
+
+    uint16_t lo2 = x & 0xFF;
+    uint16_t lo1 = (x >> 8) & 0xFF;
     uint16_t hic = (x >> 16) & 0x1F;
     uint16_t hib = (x >> 21) & 0x1F;
     uint16_t hia = (x >> 26) & 0x1F;
@@ -61,10 +69,10 @@ std::string magick_encode(uint32_t x) {
     ret += hichars[hic];
     ret += "-";
     
-    ret += lochars[low >> 12];
-    ret += lochars[(low >> 8) & 0xF];
-    ret += lochars[(low >> 4) & 0xF];
-    ret += lochars[low & 0xF];
+    ret += lochars1[(lo1 >> 4) & 0xF];
+    ret += lochars1[lo1 & 0xF];
+    ret += lochars2[(lo2 >> 4) & 0xF];
+    ret += lochars2[lo2 & 0xF];
 
     return ret;
 }
