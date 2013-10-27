@@ -435,13 +435,13 @@ struct Game {
 
     void endgame(GameState& state, const std::string& name) {
 
+        bones::bones().add(name, p);
+
         const Design& d_victory = designs().get(constants().unique_item);
 
         p.inv.inv_to_floor(d_victory.slot, p.px, p.py, state.items, state.render);
 
         dispose(state);
-
-        bones::bones().add(name, p);
     }
 
     template <typename SINK>
