@@ -1125,6 +1125,38 @@ struct Game {
             return;
         }
 
+        if (t.crafting.size() > 0) {
+
+            for (const auto& c : t.crafting) {
+
+                const Design& cfrom = designs().get(c.from);
+                const Design& cto = designs().get(c.to);
+
+                items::Item vi;
+                items::Item tmp;
+
+                if (p.inv.take(cfrom.slot, vi)) {
+
+                    if (vi.tag != c.from) {
+                        p.inv.place(cfrom.slot, vi, tmp);
+                        continue;
+                    }
+
+                    vi = state.items.make_item(c.to, items::pt(p.px, p.py), state.rng);
+
+                    p.inv.place(cto.slot, vi, tmp);
+
+                    state.render.do_message(nlp::message("You now have %s!", nlp::count(), cto, vi.count));
+
+                    ++ticks;
+                    return;
+                }
+            }
+
+            state.render.do_message("You need a specific kind of item to use this.");
+            return;
+        }
+
         state.render.do_message("There is nothing here to use.");
     }
 

@@ -505,13 +505,18 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
+        terrain_crafting = 'crafting' %{ ter.crafting.push_back(Terrain::craft_t()); }
+            ws1 string %{ ter.crafting.back().from = tag_t(state.match, tagmem); }
+            ws1 string %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
+            ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_protection_racket |
-            terrain_uncharge |
+            terrain_uncharge | terrain_crafting |
             '}' 
             ${ fret; })
             ;
