@@ -1496,7 +1496,7 @@ struct Game {
             tag_t catag = celautos().get_n(rnd >> 16);
             int offx = -3 + (rnd & 0x3);
             int offy = -3 + ((rnd >> 2) & 0x3);
-            std::cout << "    offs: " << offx << " " << offy << std::endl;
+            std::cout << "    offs: " << offx << " " << offy << " " << celautos().get(catag).debug_name << std::endl;
             for (size_t z = 0; z < 16; ++z) {
                 if (rnd & (1 << (16+z))) {
 
