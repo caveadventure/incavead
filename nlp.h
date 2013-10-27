@@ -1,14 +1,23 @@
 #ifndef __NLP_H
 #define __NLP_H
 
+#include "rcode.h"
+
 namespace nlp {
 
 struct parsed_name {
 
-    std::string base;
-    std::vector< std::pair<size_t, std::string> > when_one;
-    std::vector< std::pair<size_t, std::string> > when_many;
+    enum cmd_t {
+        CHARS,
+        WHEN_ONE,
+        WHEN_MANY,
+        NUMBER,
+        NUMBER_WHEN_MANY,
+        RCODE
+    };
 
+    std::vector< std::pair<cmd_t, std::string> > pattern;
+        
     parsed_name(const std::string& name) {
 
         enum {
@@ -24,28 +33,42 @@ struct parsed_name {
 
             case TEXT:
                 if (c == '%') {
+
                     state = PCT;
+                
                 } else {
-                    base += c;
+
+                    if (pattern.empty() || pattern.back().first != CHARS) {
+                        pattern.push_back(std::make_pair(CHARS, ""));
+                    }
+
+                    pattern.back().second += c;
                 }
                 break;
 
             case PCT:
                 if (c == '{') {
                     state = ONE;
-                    when_one.push_back(std::make_pair(base.size(), ""));
 
                 } else if (c == '(') {
                     state = MANY;
-                    when_many.push_back(std::make_pair(base.size(), ""));
 
                 } else if (c == '#') {
                     state = TEXT;
-                    when_many.push_back(std::make_pair(base.size(), ""));
+                    pattern.push_back(std::make_pair(NUMBER, ""));
+
+                } else if (c == '*') {
+                    state = TEXT;
+                    pattern.push_back(std::make_pair(RCODE, ""));
 
                 } else {
                     state = TEXT;
-                    base += c;
+
+                    if (pattern.empty() || pattern.back().first != CHARS) {
+                        pattern.push_back(std::make_pair(CHARS, ""));
+                    }
+
+                    pattern.back().second += c;
                 }
                 break;
 
@@ -54,7 +77,12 @@ struct parsed_name {
                     state = TEXT;
 
                 } else {
-                    when_one.back().second += c;
+
+                    if (pattern.empty() || pattern.back().first != WHEN_ONE) {
+                        pattern.push_back(std::make_pair(WHEN_ONE, ""));
+                    }
+
+                    pattern.back().second += c;
                 }
                 break;
 
@@ -62,64 +90,66 @@ struct parsed_name {
                 if (c == ')') {
                     state = TEXT;
 
+                } else if (c == '#') {
+                    pattern.push_back(std::make_pair(NUMBER_WHEN_MANY, ""));
+
                 } else {
-                    when_many.back().second += c;
+
+                    if (pattern.empty() || pattern.back().first != WHEN_MANY) {
+                        pattern.push_back(std::make_pair(WHEN_MANY, ""));
+                    }
+
+                    pattern.back().second += c;
                 }
                 break;
             }
         }
     }
 
-    template <typename T>
-    std::string make_(const T& when_, const char* ntxt = "") {
-        std::string ret;
-
-        auto woi = when_.begin();
-
-        for (size_t i = 0; i <= base.size(); ++i) {
-
-            if (woi != when_.end() && i == woi->first) {
-
-                if (woi->second.empty()) {
-                    ret += ntxt;
-                } else {
-                    ret += woi->second;
-                }
-
-                ++woi;
-                --i;
-                continue;
-            }
-
-            if (i < base.size()) {
-                ret += base[i];
-            }
-        }
-
-        return ret;
-    }
-
-    std::string make_one() {
-        return make_(when_one);
-    }
-
-    std::string make_many(const char* n) {
-        return make_(when_many, n);
-    }
-
     std::string make(size_t n, bool capitals) {
 
         std::string ret;
 
-        if (n == 1) {
-            ret = make_one();
+        for (const auto& i : pattern) {
 
-        } else {
+            switch (i.first) {
 
-            char tmp[256];
-            ::snprintf(tmp, 255, "%zu", n);
+            case CHARS:
+                ret += i.second;
+                break;
 
-            ret = make_many(tmp);
+            case NUMBER:
+            {
+                char tmp[256];
+                ::snprintf(tmp, 255, "%zu", n);
+                ret += tmp;
+                break;
+            }
+
+            case NUMBER_WHEN_MANY:
+                if (n > 1) {
+                    char tmp[256];
+                    ::snprintf(tmp, 255, "%zu", n);
+                    ret += tmp;
+                }
+                break;
+
+            case WHEN_ONE:
+                if (n == 1) {
+                    ret += i.second;
+                }
+                break;
+
+            case WHEN_MANY:
+                if (n > 1) {
+                    ret += i.second;
+                }
+                break;
+
+            case RCODE:
+                ret += rcode::magick_encode(n);
+                break;
+            }
         }
 
         if (capitals && ret.size() > 0) {

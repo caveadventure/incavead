@@ -12,7 +12,7 @@ typedef std::pair<unsigned int, unsigned int> pt;
 struct Item {
     tag_t tag;
     pt xy;
-    unsigned int count;
+    uint32_t count;
 
     Item() : xy(0, 0), count(1) {}
 
@@ -66,9 +66,13 @@ struct Items {
 
         const Design& d = designs().get(tag);
 
-        int _c = 1;
+        uint32_t _c = 1;
 
-        {
+        if (d.count_is_rcode) {
+
+            _c = rng.range(0u, 0xFFFFFFFF);
+
+        } else {
             double mean = d.gencount.mean;
             double dev = d.gencount.deviation;
 
@@ -79,7 +83,7 @@ struct Items {
                 _c = rng.gauss(mean, dev);
             }
             
-            if (_c > (int)d.stackrange)
+            if (_c > d.stackrange)
                 _c = d.stackrange;
 
             if (_c <= 0)

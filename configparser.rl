@@ -422,6 +422,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 string %{ des.spells.back().name = state.match; } 
             ;
 
+        design_count_is_rcode = 'count_is_rcode' %{ des.count_is_rcode = true; };
 
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
@@ -430,7 +431,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_defense_only_one |
             design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
-            design_shield | design_enable_spells | design_grant_spell |
+            design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             '}'
             ${ fret; })
             ;

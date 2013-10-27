@@ -35,8 +35,6 @@ std::string magick_encode(uint32_t x) {
 
     std::string ret;
 
-    std::cout << x << std::endl;
-
     if (top) {
         ret += topchar;
         ret += "-";

@@ -60,8 +60,9 @@ struct Design {
     struct useflags_t {
         bool blink;
         bool enable_spells;
+        bool random_spell;
 
-        useflags_t() : blink(false), enable_spells(false) {}
+        useflags_t() : blink(false), enable_spells(false), random_spell(false) {}
     };
 
     useflags_t flags;
@@ -102,12 +103,13 @@ struct Design {
     };
 
     std::vector<spell_t> spells;
-    
+
+    bool count_is_rcode;
 
     Design() : level(0), count(0), defense_only_one(false), stackrange(0), heal(0), feed(0), karma(0), usable(false), 
                destructible(false), throwrange(0),
                gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0), safe_descend(0), worth(0),
-               is_lit(false), hunger(0), other_hunger_multiplier(0), shield(0) {}
+               is_lit(false), hunger(0), other_hunger_multiplier(0), shield(0), count_is_rcode(false) {}
     
 };
 
