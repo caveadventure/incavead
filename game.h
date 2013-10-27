@@ -722,6 +722,8 @@ struct Game {
         //
         //
 
+        std::cout << "   " << state.camap.camap.size() << std::endl;
+
         state.camap.step(
             state.neigh,
 
@@ -949,7 +951,8 @@ struct Game {
             return;
 
         if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
-            !state.grid.is_walk(nx, ny)) {
+            !state.grid.is_walk(nx, ny) ||
+            state.render.is_walkblock(nx, ny)) {
 
             return;
         }
@@ -1146,6 +1149,7 @@ struct Game {
     void cast_random_spell(uint32_t rs, GameState& state) {
 
         tag_t catag = celautos().get_n(rs >> 16);
+        std::cout << "    " << celautos().get(catag).debug_name << std::endl;
 
         int offx = -3 + (rs & 0x3);
         int offy = -3 + ((rs >> 2) & 0x3);
@@ -1535,6 +1539,7 @@ struct Game {
             uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
             std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
             cast_random_spell(rnd, state);
+            break;
         }
 
         case 'z':
