@@ -155,7 +155,7 @@ struct Main {
         ticks = 1;
 
         game.init(seed);
-        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
+        game.generate(state, ticks, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
 
         return true;
     }
@@ -172,7 +172,7 @@ struct Main {
         state.items.clear();
         state.monsters.clear();
 
-        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
+        game.generate(state, ticks, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
     }
 
     void draw() {

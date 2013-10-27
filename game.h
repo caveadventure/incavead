@@ -81,7 +81,7 @@ struct Game {
 
 
     template <typename FUNC>
-    void generate(GameState& state, FUNC progressbar) {
+    void generate(GameState& state, size_t ticks, FUNC progressbar) {
 
         // Read or generate cached map.
 
@@ -156,8 +156,11 @@ struct Game {
                         continue;
 
                     for (unsigned int ci = 0; ci < vi.second; ++ci) {
+
                         generate_vault(v, state, summons, affected, did_place_player, p.px, p.py);
                     }
+
+                    state.vaults_counts.replace(vaults_level, vi.first, vi.second);
                 }
 
                 vault_generation_cleanup(state, affected);
@@ -288,7 +291,7 @@ struct Game {
 
         // Place player.
 
-        state.rng.init((game_seed + gridseed) & 0xFFFFFFFF);
+        state.rng.init((game_seed + gridseed + ticks) & 0xFFFFFFFF);
 
         if (!did_place_player) {
             grid::pt xy;
