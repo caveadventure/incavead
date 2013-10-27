@@ -1492,7 +1492,7 @@ struct Game {
         case 'Z':
         {
             uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
-            std::cout << "** " << rcode::encode(rnd) << std::endl;
+            std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
             tag_t catag = celautos().get_n(rnd >> 16);
             int offx = -3 + (rnd & 0x3);
             int offy = -3 + ((rnd >> 2) & 0x3);

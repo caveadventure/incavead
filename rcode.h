@@ -2,8 +2,66 @@
 #define __RCODE_H
 
 #include <string>
+#include <cstdint>
 
 namespace rcode {
+
+std::string magick_encode(uint32_t x) {
+
+    static const char* topchar = "om";
+
+    static const char* hichars[32] = {
+        "e",     "ao",    "yi",    "wu",    "si",
+        "shi",   "ti",    "di",    "ni",    "tian",
+        "dian",  "nian",  "yin",   "da",    "ta",
+        "ting",  "niao",  "feng",  "ming",  "kong",
+        "long",  "hong",  "shu",   "sheng", "chi",
+        "chu",   "cheng", "lu",    "liao",  "hao",
+        "ru",    "ri"
+    };
+
+    static const char* lochars[16] = {
+        "a",   "ard", "als", "amz",  // anp
+        "emp", "est", "elz", "erp",
+        "orz", "ond", "olp", "osf",
+        "urd", "und", "ump", "upl"
+    };
+
+    uint16_t low = x & 0xFFFF;
+    uint16_t hic = (x >> 16) & 0x1F;
+    uint16_t hib = (x >> 21) & 0x1F;
+    uint16_t hia = (x >> 26) & 0x1F;
+    bool top = (x >> 31);
+
+    std::string ret;
+
+    std::cout << x << std::endl;
+
+    if (top) {
+        ret += topchar;
+        ret += "-";
+    }
+
+    if (hia) {
+        ret += hichars[hia];
+        ret += " ";
+    }
+
+    if (hib) {
+        ret += hichars[hib];
+    }
+
+    ret += hichars[hic];
+    ret += "-";
+    
+    ret += lochars[low >> 12];
+    ret += lochars[(low >> 8) & 0xF];
+    ret += lochars[(low >> 4) & 0xF];
+    ret += lochars[low & 0xF];
+
+    return ret;
+}
+
 
 template <typename T>
 std::string encode(T x) {
