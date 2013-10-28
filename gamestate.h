@@ -7,6 +7,8 @@
 #include "celauto.h"
 #include "grid.h"
 
+#include "worldkey.h"
+
 #include "render_maudit.h"
 
 #include "moon.h"
@@ -46,6 +48,8 @@ struct GameState {
 
     std::vector<window_t> window_stack;
 
+    std::unordered_map<worldkey::key_t, size_t> dungeon_visits_count;
+
     template <typename T>
     void push_window(const std::string& m, T t) {
         window_stack.push_back(window_t{m, (unsigned int)t});
@@ -81,6 +85,7 @@ struct reader<GameState> {
         serialize::read(s, state.monsters);
         serialize::read(s, state.items);
         serialize::read(s, state.features);
+        serialize::read(s, state.dungeon_visits_count);
 
         serialize::read(s, state.window_stack);
     }
@@ -111,6 +116,7 @@ struct writer<GameState> {
         serialize::write(s, state.monsters);
         serialize::write(s, state.items);
         serialize::write(s, state.features);
+        serialize::write(s, state.dungeon_visits_count);
 
         serialize::write(s, state.window_stack);
     }

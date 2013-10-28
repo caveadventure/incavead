@@ -81,7 +81,7 @@ struct Game {
 
 
     template <typename FUNC>
-    void generate(GameState& state, size_t ticks, FUNC progressbar) {
+    void generate(GameState& state, FUNC progressbar) {
 
         // Read or generate cached map.
 
@@ -289,9 +289,15 @@ struct Game {
         }
 
 
-        // Place player.
+        // Initialize a known random sequence.
+        
+        size_t& num_visits = state.dungeon_visits_count[worldkey::key_t(p.worldx, p.worldy, p.worldz)];
 
-        state.rng.init((game_seed + gridseed + ticks) & 0xFFFFFFFF);
+        state.rng.init((game_seed + gridseed + num_visits) & 0xFFFFFFFF);
+
+        num_visits++;
+
+        // Place player.
 
         if (!did_place_player) {
             grid::pt xy;
@@ -461,6 +467,10 @@ struct Game {
         p.current_wx = p.worldx;
         p.current_wy = p.worldy;
         p.current_wz = p.worldz;
+
+        // HACK. If a dead player managed to load, don't accept the savefile.
+
+        if (p.hea
     }
 
 

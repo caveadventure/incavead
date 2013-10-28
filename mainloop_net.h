@@ -155,7 +155,7 @@ struct Main {
         ticks = 1;
 
         game.init(seed);
-        game.generate(state, ticks, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
+        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
 
         return true;
     }
@@ -172,7 +172,7 @@ struct Main {
         state.items.clear();
         state.monsters.clear();
 
-        game.generate(state, ticks, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
+        game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
     }
 
     void draw() {
@@ -326,7 +326,7 @@ struct Main {
         return savefile;
     }
 
-    bool _mainloop_main(const std::string& name, const std::string& savefile) {
+    void _mainloop_main(const std::string& name, const std::string& savefile, bool& dead) {
 
         size_t oldticks = 0;
 
@@ -336,7 +336,7 @@ struct Main {
         draw();
 
         bool done = false;
-        bool dead = false;
+        dead = false;
         bool regen = false;
 
         while (1) {
@@ -357,7 +357,7 @@ struct Main {
                 if (check_done(done, dead, name, savefile)) {
                     draw();
                     goodbye_message();
-                    return dead;
+                    return;
                 }
 
                 if (do_draw) {
@@ -374,7 +374,7 @@ struct Main {
             if (check_done(done, dead, name, savefile)) {
                 draw();
                 goodbye_message();
-                return dead;
+                return;
             }
         }
     }
@@ -389,6 +389,8 @@ struct Main {
 
         std::string savefile = _mainloop_start(singleplayer, name, seed, new_game);
 
+        bool dead;
+
         try {
             
             {
@@ -401,7 +403,7 @@ struct Main {
                 }
             }
 
-            bool dead = _mainloop_main(name, savefile);
+            _mainloop_main(name, savefile, dead);
 
             {
                 logger::Sink gamelog("game.log");
@@ -417,7 +419,12 @@ struct Main {
 
         } catch (...) {
 
-            save(savefile);
+            if (dead) {
+                clobber_savefile(savefile);
+
+            } else {
+                save(savefile);
+            }
 
             {
                 logger::Sink gamelog("game.log");
