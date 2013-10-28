@@ -467,10 +467,6 @@ struct Game {
         p.current_wx = p.worldx;
         p.current_wy = p.worldy;
         p.current_wz = p.worldz;
-
-        // HACK. If a dead player managed to load, don't accept the savefile.
-
-        if (p.hea
     }
 
 
