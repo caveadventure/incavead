@@ -25,6 +25,10 @@ struct Generator {
 
     template <typename T>
     T gauss(T mean, T stddev) {
+
+        if (stddev == 0)
+            return mean;
+
         std::normal_distribution<T> dist(mean, stddev);
         return dist(gen);
     }

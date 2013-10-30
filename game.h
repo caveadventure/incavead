@@ -143,6 +143,8 @@ struct Game {
         {
             progressbar("Placing vaults...");
 
+            state.vaults_counts = vaults().counts;
+
             std::set<grid::pt> affected;
 
             std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults, true);
@@ -159,8 +161,6 @@ struct Game {
 
                         generate_vault(v, state, summons, affected, did_place_player, p.px, p.py);
                     }
-
-                    state.vaults_counts.replace(vaults_level, vi.first, vi.second);
                 }
 
                 vault_generation_cleanup(state, affected);
@@ -206,19 +206,18 @@ struct Game {
         grid::Map::genmaps_t maps(state.grid);
 
 
-        if (!lev.noterrain) {
-
+        {
             progressbar("Placing features...");
 
             // Place some dungeon features on the same spots every time.
 
             state.terrain_counts = terrain().counts;
 
-            unsigned int featscount = ::fabs(state.rng.gauss(35.0, 5.0));
+            unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
 
             for (unsigned int i = 0; i < featscount; ++i) {
 
-                unsigned int takecount = ::fabs(state.rng.gauss(5.0, 1.0));
+                unsigned int takecount = 1;
 
                 std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
 

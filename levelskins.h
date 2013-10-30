@@ -42,6 +42,7 @@ struct Levelskin {
 
     mean_deviation_t number_monsters;
     mean_deviation_t number_items;
+    mean_deviation_t number_features;
 
     std::string name;
 
@@ -90,7 +91,10 @@ struct Levelskin {
 
     Levelskin() : lightradius(8), lightradius_max(8), damage(0), level(0), exclusive(false), noterrain(false), 
                   species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
-                  number_monsters(250.0, 20.0), number_items(300.0, 50.0) {}
+                  number_monsters(250.0, 20.0), 
+                  number_items(300.0, 50.0),
+                  number_features(85.0, 10.0)
+        {}
 };
 
 struct Levelskins {
