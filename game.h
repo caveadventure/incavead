@@ -730,8 +730,6 @@ struct Game {
         //
         //
 
-        std::cout << "   " << state.camap.camap.size() << std::endl;
-
         state.camap.step(
             state.neigh,
 
@@ -1192,7 +1190,6 @@ struct Game {
     void cast_random_spell(uint32_t rs, GameState& state) {
 
         tag_t catag = celautos().get_n(rs >> 16);
-        std::cout << "    " << celautos().get(catag).debug_name << std::endl;
 
         int offx = -3 + (rs & 0x3);
         int offy = -3 + ((rs >> 2) & 0x3);
