@@ -297,7 +297,8 @@ struct Monsters {
         return ret;
     }
 
-    unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, grender::Grid& render, 
+    unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
+                        counters::Counts& counts, grender::Grid& render, 
                         unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
                         tag_t tag, unsigned int count) {
 
