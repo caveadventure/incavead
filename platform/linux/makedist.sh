@@ -77,3 +77,6 @@ For Arch:
 (Note: the game does not require Internet access. Everything is purely offline, telnet/Putty is used only as a convenient text-mode rendering client.)
 EOF
 
+mv dist incavead
+tar -cvzf incavead.tar.gz incavead
+

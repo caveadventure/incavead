@@ -45,4 +45,6 @@ Run 'incavead_unicode.bat' to launch the game with Unicode graphics.
 (Note: the game does not require Internet access. Everything is purely offline, Putty is used only as a convenient text-mode rendering client.)
 EOF
 
+mv dist incavead
+zip -r incavead incavead
 
