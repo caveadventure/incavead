@@ -823,6 +823,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
 
+        constant_tombstone_text = 'tombstone_text' ws1 string %{ __constants__().tombstone_text = state.match; };
 
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
@@ -834,7 +835,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_ui_box_v   | constant_ui_box_h   |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
                        constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
-                       constant_howto_text
+                       constant_howto_text | constant_tombstone_text 
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

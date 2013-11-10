@@ -1333,12 +1333,7 @@ struct Game {
         if (bone.cause.name.empty())
             bone.cause.name = "unnatural causes";
 
-        return nlp::message("\n\n"
-                            "    \2.--==~  Here lies \3%S\2  ~==--.\n\n"
-                            "    \1He was a valiant adventurer of level \2%d\1.\n"
-                            "    \1He was killed by \2%s\1.\n"
-                            "    \1His net worth was \2%d\1 zorkmids.\n\n"
-                            "    \1May ye rest in peace.",
+        return nlp::message(constants().tombstone_text,
                             bone.name,
                             bone.level+1, 
                             bone.cause, 
@@ -1759,6 +1754,11 @@ struct Game {
 
         case screens_t::spells:
             handle_input_spells(state, ticks, k);
+            break;
+
+        default:
+            // This is a sanity error check condition.
+            state.window_stack.pop_back();
             break;
         }
     }
