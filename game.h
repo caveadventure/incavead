@@ -283,6 +283,7 @@ struct Game {
             auto feats = permafeats::features().get(p);
 
             for (const auto& i : feats) {
+                //std::cout << " FEAT " << i.first.first << " " << i.first.second << terrain().get(i.second).name << std::endl;
                 state.features.set(i.first.first, i.first.second, i.second, state.render);
             }
         }
@@ -1009,6 +1010,68 @@ struct Game {
         move_player(state);
     }
 
+    void run_away(GameState& state, size_t& ticks) {
+
+        std::vector< std::pair<int, int> > ns;
+
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+
+                unsigned int nx = p.px + dx;
+                unsigned int ny = p.py + dy;
+
+                if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
+                    !state.grid.is_walk(nx, ny) ||
+                    state.render.is_walkblock(nx, ny)) {
+
+                    continue;
+                }
+
+                ns.push_back(std::make_pair(dx, dy));
+            }
+        }
+
+        if (ns.empty())
+            return;
+
+        double maxd = 0.0;
+        size_t maxi = 0;
+
+        for (size_t z = 0; z < ns.size(); ++z) {
+
+            double thisd = 0.0;
+            int nn = 0;
+
+            for (const auto& i : state.monsters.mons) {
+
+                if (!state.render.is_in_fov(i.first.first, i.first.second))
+                    continue;
+
+                double dist = distance(p.px + ns[z].first, p.py + ns[z].second,
+                                       i.first.first, i.first.second);
+
+                thisd += dist;
+                ++nn;
+            }
+
+            std::cout << "!! " << thisd << " " << nn << "; " 
+                      << ns[z].first << " " << ns[z].second << std::endl;
+
+            if (thisd > maxd) {
+                maxd = thisd;
+                maxi = z;
+            }
+        }
+
+        if (maxd == 0)
+            return;
+
+        int dx = ns[maxi].first;
+        int dy = ns[maxi].second;
+
+        move(state, dx, dy, ticks);
+    }
+
     void use_terrain(GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
 
         features::Feature feat;
@@ -1358,6 +1421,10 @@ struct Game {
             state.render.do_message("Your game has been saved. (Press space to exit.)", true);
             done = true;
             dead = false;
+            break;
+
+        case 'q':
+            run_away(state, ticks);
             break;
 
         case 'h':
