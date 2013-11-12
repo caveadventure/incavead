@@ -259,8 +259,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
-        species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(skin, skin_b); };
+        species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(skin, skin_b); } ;
         species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
+        species_genus       = 'genus'       ws1 string     %{ spe.genus = tag_t(state.match, tagmem); } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
         species_ai          = 'ai'          ws1 ai         ;
         species_idle_ai     = 'idle_ai'     ws1 idle_ai    ;
@@ -268,7 +269,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_range       = 'range'       ws1 number     %{ spe.range = toint(state.match); } ;
         species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
         species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
-        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); };
+        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); } ;
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -326,7 +327,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
-            species_idle_ai | species_move | species_range | species_clumpsize |
+            species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
@@ -782,6 +783,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
+        constant_achievement = 'achievement' %{ __constants__().achievements.push_back(ConstantsBank::achievement_t()); }
+            ws1 string %{ __constants__().achievements.back().genus = tag_t(state.match, tagmem); }
+            ws1 number %{ __constants__().achievements.back().kills = toint(state.match); }
+            ws1 number %{ __constants__().achievements.back().priority = toint(state.match); }
+            ws1 string %{ __constants__().achievements.back().label = state.match; }
+            ;
+
         constant_ui_circle = 'ui' ws1 'circle' 
             ws1 string %{ SET_UI_SYM(a, circle); } ws ('|' ws string %{ SET_UI_SYM(b, circle); })? ;
 
@@ -828,7 +836,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
-                       constant_shortcut_messages | constant_shortcut_action |
+                       constant_shortcut_messages | constant_shortcut_action | constant_achievement |
                        constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |

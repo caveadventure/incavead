@@ -51,7 +51,7 @@ inline void roll_attack(rnd::Generator& rng,
     }
 }
 
-inline void monster_kill(GameState& state, const monsters::Monster& mon, 
+inline void monster_kill(Player& p, GameState& state, const monsters::Monster& mon, 
                          const Species& s) {
 
     for (const auto& drop : s.drop) {
@@ -61,6 +61,10 @@ inline void monster_kill(GameState& state, const monsters::Monster& mon,
             continue;
 
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
+    }
+
+    if (!s.genus.null()) {
+        p.kills[s.genus]++;
     }
 }
 
@@ -199,7 +203,7 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
 
     if (mon.health - totdamage < -3) {
 
-        monster_kill(state, mon, s);
+        monster_kill(p, state, mon, s);
     }
 }
 
@@ -259,7 +263,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             state.render.do_message(nlp::message("You killed %s.", s));
         }
 
-        monster_kill(state, mon, s);
+        monster_kill(p, state, mon, s);
 
         if (!s.flags.plant && species_level > p.level) {
 

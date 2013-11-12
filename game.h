@@ -444,7 +444,7 @@ struct Game {
 
     void endgame(GameState& state, const std::string& name) {
 
-        bones::bones().add(name, p);
+        bones::bones().add(name, p, constants().achievements);
 
         const Design& d_victory = designs().get(constants().unique_item);
 

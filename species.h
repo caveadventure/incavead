@@ -43,6 +43,8 @@ struct Species {
 
     int true_level;
 
+    tag_t genus;
+
     habitat_t habitat;
     ai_t ai;
     idle_ai_t idle_ai;
@@ -120,7 +122,10 @@ struct Species {
         bool robot;
         bool terrain_immune;
 
-        flags_t() : undead(false), animal(false), magic(false), plant(false), robot(false), terrain_immune(false) {}
+        flags_t() : 
+            undead(false), animal(false), magic(false), plant(false), robot(false), 
+            terrain_immune(false)
+            {}
     };
 
     flags_t flags;

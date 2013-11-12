@@ -28,13 +28,41 @@ struct bone_t {
     bone_t() : level(0), worth(0)
         {}
 
-    template <typename PLAYER>
-    bone_t(const std::string& _name, const PLAYER& p) :
+    template <typename PLAYER, typename ACHI>
+    bone_t(const std::string& _name, const PLAYER& p, const ACHI& achievements) :
         name(_name), 
         level(p.level), 
         cause(p.attacker), 
         worth(p.inv.get_worth() + p.money_curse)
-        {}
+        {
+
+            std::string label;
+            unsigned int pri = 0;
+
+            for (const auto& a : achievements) {
+
+                auto kill = p.kills.find(a.genus);
+
+                if (kill == p.kills.end() || kill->second < a.kills || a.priority < pri)
+                    continue;
+
+                if (a.priority > pri) {
+                    pri = a.priority;
+                    label.clear();
+                }
+
+                if (!label.empty())
+                    label += ", ";
+
+                label += a.label;
+            }
+
+            if (!label.empty()) {
+                name.name += " (";
+                name.name += label;
+                name.name += ")";
+            }
+        }
 };
 
 }
@@ -76,12 +104,12 @@ struct Bones {
     
     std::mutex mutex;
 
-    template <typename PLAYER>
-    void add(const std::string& name, const PLAYER& p) {
+    template <typename PLAYER, typename ACHI>
+    void add(const std::string& name, const PLAYER& p, const ACHI& achievements) {
 
         key_t key(p);
         pt xy(p.px, p.py);
-        bone_t bone(name, p);
+        bone_t bone(name, p, achievements);
 
         std::unique_lock<std::mutex> l(mutex);
 

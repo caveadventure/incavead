@@ -62,6 +62,8 @@ struct Main {
 
     GAMESTATE state;
 
+    static const unsigned int SAVEFILE_VERSION = 5;
+
 
     Main(SCREEN& s, bool debug, size_t n_skin) : 
         game(debug, n_skin), 
@@ -77,6 +79,12 @@ struct Main {
         try {
 
             serialize::Source s(filename);
+
+            unsigned int ver;
+            serialize::read(s, ver);
+
+            if (ver != SAVEFILE_VERSION)
+                return false;
 
             serialize::read(s, state);
             serialize::read(s, ticks);
@@ -98,6 +106,7 @@ struct Main {
 
         serialize::Sink s(filename);
 
+        serialize::write(s, SAVEFILE_VERSION);
         serialize::write(s, state);
         serialize::write(s, ticks);
         serialize::write(s, view_w);

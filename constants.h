@@ -47,6 +47,17 @@ struct ConstantsBank {
 
     std::string tombstone_text;
 
+    struct achievement_t {
+        tag_t genus;
+        unsigned int kills;
+        unsigned int priority;
+        std::string label;
+
+        achievement_t() : kills(0), priority(0) {}
+    };
+
+    std::vector<achievement_t> achievements;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000) {}
 
