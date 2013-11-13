@@ -1361,12 +1361,14 @@ struct Game {
             "  \2/\1 :          Look around you using arrow keys.\n"
             "  \2tab\1 :        Look at monsters and items in view.\n"
             "  \2P\1 :          Show message history.\n"
+            "  \2K\1 :          Show kills and achievements.\n"
             "  \2?\1 :          Show this help message.\n"
             "  \2??\1 :         Show detailed instructions.\n"
             "\n\3Shortcut commands:\1\n"
             "  \2T\1 :          Take the first item laying on the floor.\n"
             "  \1a\1 :            (Same as 'T'.)\n"
             "  \1s\1 :            (Same as '>'.)\n"
+            "  \2q\1 :          Move away from the monsters in view. (Optimal direction is chosen automatically.)\n"
             "  \2,\1 :          Examine the first item laying on the floor.\n"
             ;
 
