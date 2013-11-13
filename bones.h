@@ -39,12 +39,9 @@ struct bone_t {
             std::string label;
             unsigned int pri = 0;
 
-            for (const auto& a : achievements) {
+            for (unsigned int i : p.achievements) {
 
-                auto kill = p.kills.find(a.genus);
-
-                if (kill == p.kills.end() || kill->second < a.kills || a.priority < pri)
-                    continue;
+                const auto& a = achievements[i];
 
                 if (a.priority > pri) {
                     pri = a.priority;

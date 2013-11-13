@@ -106,6 +106,8 @@ struct Player {
 
     std::map<tag_t, unsigned int> kills;
 
+    std::set<size_t> achievements;
+
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
@@ -116,6 +118,23 @@ struct Player {
             luck.val = 0;
         }
 
+    void track_kill(tag_t genus) {
+
+        const auto& _ach = constants().achievements;
+
+        unsigned int& k = kills[genus];
+        k++;
+
+        for (size_t i = 0; i < _ach.size(); ++i) {
+
+            const auto& a = _ach[i];
+
+            if (a.genus != genus || k < a.kills)
+                continue;
+
+            achievements.insert(i);
+        }
+    }
     
     unsigned int get_computed_level(rnd::Generator& rng) {
 

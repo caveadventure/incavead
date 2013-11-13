@@ -74,7 +74,8 @@ enum class screens_t : unsigned int {
     spells,
     help,
     tombstone,
-    howto
+    howto,
+    achievements
 };
 
 #include "inv_screens2.h"

@@ -64,7 +64,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
     }
 
     if (!s.genus.null()) {
-        p.kills[s.genus]++;
+        p.track_kill(s.genus);
     }
 }
 

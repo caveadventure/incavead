@@ -1343,6 +1343,9 @@ struct Game {
         state.window_stack.pop_back();
     }
 
+    std::string show_achievements() {
+        return "";
+    }
 
     std::string help_text() {
 
@@ -1492,6 +1495,10 @@ struct Game {
 
         case 'P':
             state.push_window(state.render.all_messages(), screens_t::messages);
+            break;
+
+        case 'K':
+            state.push_window(show_achievements(), screens_t::achievements);
             break;
 
         case '/':
@@ -1802,6 +1809,7 @@ struct Game {
         case screens_t::messages:
         case screens_t::tombstone:
         case screens_t::howto:
+        case screens_t::achievements:
             handle_input_messages(state, k, false);
             break;
 
