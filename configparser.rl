@@ -112,6 +112,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     Vault::brush vbrush;
 
     unsigned char shortcut_key;
+    tag_t genus_tag;
 
     %%{
 
@@ -784,10 +785,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         constant_achievement = 'achievement' %{ __constants__().achievements.push_back(ConstantsBank::achievement_t()); }
-            ws1 string %{ __constants__().achievements.back().genus = tag_t(state.match, tagmem); }
+            ws1 tag    %{ __constants__().achievements.back().genus = tag_t(state.match, tagmem); }
             ws1 number %{ __constants__().achievements.back().kills = toint(state.match); }
             ws1 number %{ __constants__().achievements.back().priority = toint(state.match); }
             ws1 string %{ __constants__().achievements.back().label = state.match; }
+            ;
+
+        constant_genus = 'genus' (
+            ws1 tag %{ genus_tag = tag_t(state.match, tagmem); }
+            ws1 string %{ __constants__().genus_names[genus_tag] = state.match; }
+            )+
             ;
 
         constant_ui_circle = 'ui' ws1 'circle' 
@@ -837,7 +844,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
                        constant_shortcut_messages | constant_shortcut_action | constant_achievement |
-                       constant_unique_item | constant_uniques_timeout |
+                       constant_genus | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
                        constant_ui_box_v   | constant_ui_box_h   |
