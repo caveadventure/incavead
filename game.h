@@ -1344,7 +1344,78 @@ struct Game {
     }
 
     std::string show_achievements() {
-        return "";
+
+        const auto& achievements = constants().achievements;
+
+        // achieved, next_target
+
+        std::map<tag_t, std::pair<bool, unsigned int> > resorted;
+
+        for (const auto& ach : achievements) {
+
+            auto j = p.kills.find(ach.genus);
+
+            if (j == p.kills.end())
+                continue;
+
+            unsigned int kills = j->second;
+
+            auto& ri = resorted[ach.genus];
+
+            if (kills >= ach.kills && !ri.first)
+                ri.first = true;
+
+            ri.second = std::max(ach.kills, ri.second);
+        }
+
+        std::string ret = "\nEnemies defeated:\n\n";
+
+        const auto& names = constants().genus_names;
+
+        for (const auto& i : p.kills) {
+
+            auto n = names.find(i.first);
+
+            if (n == names.end())
+                continue;
+            
+            std::string s = " ";
+
+            unsigned int kills = i.second;
+
+            if (kills < 1000) s += " ";
+            if (kills < 100)  s += " ";
+
+            s += "\2";
+            
+            nlp::parsed_name pn(n->second);
+            s += pn.make(kills, false);
+
+            s += "\1";
+
+            auto r = resorted.find(i.first);
+
+            if (r != resorted.end()) {
+
+                if (s.size() < 40) {
+                    s += std::string(40 - s.size(), ' ');
+                }
+
+                if (r->second.first) {
+                    s += " \3Achievement unlocked!\1";
+                }
+
+                if (kills < r->second.second) {
+                    s += nlp::message(" (%d needed to unlock)", r->second.second);
+                }
+            }
+
+            s += "\n";
+
+            ret += s;
+        }
+
+        return ret;
     }
 
     std::string help_text() {

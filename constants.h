@@ -58,7 +58,7 @@ struct ConstantsBank {
 
     std::vector<achievement_t> achievements;
 
-    std::map<tag_t, string> genus_names;
+    std::map<tag_t, std::string> genus_names;
 
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000) {}
