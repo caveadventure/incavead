@@ -1054,9 +1054,6 @@ struct Game {
                 ++nn;
             }
 
-            std::cout << "!! " << thisd << " " << nn << "; " 
-                      << ns[z].first << " " << ns[z].second << std::endl;
-
             if (thisd > maxd) {
                 maxd = thisd;
                 maxi = z;
