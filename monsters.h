@@ -194,8 +194,8 @@ struct Monsters {
     }
 
     template <typename T, typename FUNC>
-    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, const std::unordered_set<pt>& placed,
-                                 pt& out, FUNC f) {
+    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, 
+                                 const std::unordered_set<pt>& placed, pt& out, FUNC f) {
 
         for (const pt& v : clump) {
 
@@ -213,8 +213,8 @@ struct Monsters {
     }
 
     template <typename T>
-    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, const std::unordered_set<pt>& placed,
-                                 pt& out, Species::habitat_t h) {
+    bool filter_habitat_find_one(grid::Map& grid, T& ptsource, const std::unordered_set<pt>& clump, 
+                                 const std::unordered_set<pt>& placed, pt& out, Species::habitat_t h) {
 
         switch (h) {
         case Species::habitat_t::walk: 
@@ -297,17 +297,11 @@ struct Monsters {
         return ret;
     }
 
+
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
-                        unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
+                        const std::unordered_set<pt>& places, const unsigned int* px, const unsigned int* py,
                         tag_t tag, unsigned int count) {
-
-
-        std::unordered_set<pt> n;
-
-        for (const pt& xy : neigh(pt(x, y))) {
-            n.insert(xy);
-        }
 
         std::unordered_set<pt> placed;
 
@@ -319,7 +313,7 @@ struct Monsters {
         const Species& s = species().get(tag);
 
         pt start;
-        if (filter_habitat_find_one(grid, grid, n, placed, start, s.habitat)) {
+        if (filter_habitat_find_one(grid, grid, places, placed, start, s.habitat)) {
 
             if (count > 0) {
 
@@ -345,8 +339,24 @@ struct Monsters {
         return 0;
     }
 
+    unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
+                        counters::Counts& counts, grender::Grid& render, 
+                        unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
+                        tag_t tag, unsigned int count) {
 
-    unsigned int summon_any(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, grender::Grid& render, 
+
+        std::unordered_set<pt> n;
+
+        for (const pt& xy : neigh(pt(x, y))) {
+            n.insert(xy);
+        }
+
+        return summon(neigh, rng, grid, counts, render, n, px, py, tag, count);
+    }
+
+
+    unsigned int summon_any(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
+                            grender::Grid& render, 
                             unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
                             unsigned int level, unsigned int count) {
 

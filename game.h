@@ -923,6 +923,45 @@ struct Game {
         }
     }
 
+    
+    unsigned int summon_out_of_view(GameState& state, tag_t monster, unsigned int count) {
+
+        int radius = get_lightradius() + 1;
+
+        std::unordered_set<monsters::pt> range;
+
+        for (int dx = -radius; dx <= radius; ++dx) {
+            for (int dy = -radius; dy <= radius; ++dy) {
+
+                int x = p.px + dx;
+                int y = p.py + dy;
+
+                if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
+                    continue;
+
+                double dist = distance(x, y, p.px, p.py);
+
+                if (dist >= radius && dist <= radius + 1.5) {
+
+                    state.render._overlay_set(grender::pt(x, y)) = grender::Grid::skin("Ж", grender::Grid::yellow_color, 
+                                                                                       grender::Grid::black_color);
+
+                    bool r = reachable(state, x, y, p.px, p.py);
+
+                    if (r)
+                        range.insert(monsters::pt(x, y));
+                }
+            }
+        }
+
+        unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
+                                                 state.species_counts, state.render, 
+                                                 range, &p.px, &p.py, monster, count);
+
+        return res;
+    }
+
+
     void move_player(GameState& state) {
         
         size_t nstack = state.items.stack_size(p.px, p.py);
@@ -1718,6 +1757,15 @@ struct Game {
             uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
             std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
             cast_random_spell(rnd, state);
+            break;
+        }
+
+        case 'S':
+        {
+            tag_mem_t tagmem;
+
+            unsigned int n = summon_out_of_view(state, tag_t("soul", tagmem), 1);
+            state.render.do_message(nlp::message("Summoned %d", n));
             break;
         }
 
