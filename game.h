@@ -1387,7 +1387,9 @@ struct Game {
 
         std::map<tag_t, std::pair<bool, unsigned int> > resorted;
 
-        for (const auto& ach : achievements) {
+        for (const auto& z : achievements) {
+
+            const auto& ach = z.second;
 
             auto j = p.kills.find(ach.genus);
 

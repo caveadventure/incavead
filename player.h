@@ -106,7 +106,13 @@ struct Player {
 
     std::map<tag_t, unsigned int> kills;
 
-    std::set<size_t> achievements;
+    struct achievement_t {
+        bool triggered;
+
+        achievement_t() : triggered(false) {}
+    };
+
+    std::map<tag_t, achievement_t> achievements;
 
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
@@ -125,14 +131,14 @@ struct Player {
         unsigned int& k = kills[genus];
         k++;
 
-        for (size_t i = 0; i < _ach.size(); ++i) {
+        for (const auto& i : _ach) {
 
-            const auto& a = _ach[i];
+            const auto& a = i.second;
 
             if (a.genus != genus || k < a.kills)
                 continue;
 
-            achievements.insert(i);
+            achievements[i.first] = achievement_t();
         }
     }
     

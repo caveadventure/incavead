@@ -113,6 +113,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     unsigned char shortcut_key;
     tag_t genus_tag;
+    tag_t ach_tag;
 
     %%{
 
@@ -784,13 +785,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 
-        constant_achievement = 'achievement' %{ __constants__().achievements.push_back(ConstantsBank::achievement_t()); }
-            ws1 tag    %{ __constants__().achievements.back().genus = tag_t(state.match, tagmem); }
-            ws1 number %{ __constants__().achievements.back().kills = toint(state.match); }
-            ws1 number %{ __constants__().achievements.back().priority = toint(state.match); }
-            ws1 string %{ __constants__().achievements.back().label = state.match; }
-            ;
-
         constant_genus = 'genus' (
             ws1 tag %{ genus_tag = tag_t(state.match, tagmem); }
             ws1 string %{ __constants__().genus_names[genus_tag] = state.match; }
@@ -843,7 +837,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
-                       constant_shortcut_messages | constant_shortcut_action | constant_achievement |
+                       constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
@@ -857,7 +851,32 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        entry = species | design | terrain | vault | celauto | levelskin | constant;
+        achievement_genus = 'genus' ws1 tag 
+                            %{ __constants__().achievements[ach_tag].genus = tag_t(state.match, tagmem); } ;
+
+        achievement_kills = 'kills' ws1 number 
+                            %{ __constants__().achievements[ach_tag].kills = toint(state.match); } ;
+
+        achievement_priority = 'priority' ws1 number 
+                            %{ __constants__().achievements[ach_tag].priority = toint(state.match); } ;
+
+        achievement_label = 'label' ws1 string 
+                            %{ __constants__().achievements[ach_tag].label = state.match; } ;
+
+        achievement_line = 
+            achievement_genus | achievement_kills | achievement_priority | achievement_label
+            ;
+
+        achievement = 'achievement' 
+            ws1 tag    %{ ach_tag = tag_t(state.match, tagmem); }
+            ws '{'
+            ( ws achievement_line ws ';')+
+            ws '}'
+            ;
+
+        ####
+
+        entry = species | design | terrain | vault | celauto | levelskin | constant | achievement;
             
       main := (ws entry)+ ws ;
         

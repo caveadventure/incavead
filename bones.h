@@ -36,12 +36,21 @@ struct bone_t {
         worth(p.inv.get_worth() + p.money_curse)
         {
 
+            if (name.empty) {
+                name = 'anonymous';
+            }
+
             std::string label;
             unsigned int pri = 0;
 
-            for (unsigned int i : p.achievements) {
+            for (const auto& i : p.achievements) {
 
-                const auto& a = achievements[i];
+                auto j = achievements.find(i.first);
+
+                if (j == achievements.end())
+                    throw std::runtime_error("sanity error in achievements");
+
+                const auto& a = j->second;
 
                 if (a.priority > pri) {
                     pri = a.priority;

@@ -56,7 +56,7 @@ struct ConstantsBank {
         achievement_t() : kills(0), priority(0) {}
     };
 
-    std::vector<achievement_t> achievements;
+    std::map<tag_t, achievement_t> achievements;
 
     std::map<tag_t, std::string> genus_names;
 
