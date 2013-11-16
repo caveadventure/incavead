@@ -12,7 +12,7 @@ struct Design {
     unsigned int level;
     unsigned int count;
 
-    std::string slot;
+    tag_t slot;
     std::string descr;
 
     damage::attacks_t attacks;

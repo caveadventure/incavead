@@ -25,7 +25,7 @@ inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigne
 }
 
 
-inline bool apply_item(Player& p, const std::string& slot, GameState& state, bool& regen) {
+inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     items::Item tmp;
 
@@ -109,7 +109,7 @@ inline bool apply_item(Player& p, const std::string& slot, GameState& state, boo
 }
 
 
-inline bool destroy_item(Player& p, const std::string& slot) {
+inline bool destroy_item(Player& p, tag_t slot) {
 
     items::Item tmp;
 
@@ -147,7 +147,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
     }
 }
 
-inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly, 
+inline bool end_blast_item(Player& p, tag_t slot, unsigned int lx, unsigned int ly, 
                            GameState& state) {
 
     items::Item tmp;
@@ -177,7 +177,7 @@ inline bool end_blast_item(Player& p, const std::string& slot, unsigned int lx, 
     return true;
 }
 
-inline bool start_blast_item(Player& p, const std::string& slot, GameState& state, size_t& ticks) {
+inline bool start_blast_item(Player& p, tag_t slot, GameState& state, size_t& ticks) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -207,7 +207,7 @@ inline bool start_blast_item(Player& p, const std::string& slot, GameState& stat
 }
 
 
-inline bool start_cloud_item(Player& p, const std::string& slot, GameState& state, size_t& ticks) {
+inline bool start_cloud_item(Player& p, tag_t slot, GameState& state, size_t& ticks) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -231,7 +231,7 @@ inline bool start_cloud_item(Player& p, const std::string& slot, GameState& stat
 }
 
 
-inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, unsigned int ly,
+inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int ly,
                            GameState& state) {
 
     items::Item tmp;
@@ -262,7 +262,7 @@ inline bool end_throw_item(Player& p, const std::string& slot, unsigned int lx, 
     return true;
 }
 
-inline bool start_throw_item(Player& p, const std::string& slot, GameState& state) {
+inline bool start_throw_item(Player& p, tag_t slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp))
@@ -279,7 +279,7 @@ inline bool start_throw_item(Player& p, const std::string& slot, GameState& stat
     return true;
 }
 
-inline bool start_digging(Player& p, const std::string& slot, GameState& state) {
+inline bool start_digging(Player& p, tag_t slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp))

@@ -3,7 +3,7 @@
 
 
 
-inline std::string select_inv_item(inventory_t& inv, const std::string& slot) {
+inline std::string select_inv_item(inventory_t& inv, tag_t slot) {
     std::string window;
         
     items::Item tmp;
@@ -77,7 +77,8 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
 }
 
 
-inline std::string show_inventory(inventory_t& inv, unsigned int level, const std::string& level_name, const std::string& moon_phase,
+inline std::string show_inventory(inventory_t& inv, unsigned int level, const std::string& level_name, 
+                                  const std::string& moon_phase,
                                   items::Items& items, unsigned int px, unsigned int py) {
 
     std::string m;

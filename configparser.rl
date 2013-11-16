@@ -262,7 +262,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
         species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(skin, skin_b); } ;
         species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
-        species_genus       = 'genus'       ws1 string     %{ spe.genus = tag_t(state.match, tagmem); } ;
+        species_genus       = 'genus'       ws1 tag        %{ spe.genus = tag_t(state.match, tagmem); } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
         species_ai          = 'ai'          ws1 ai         ;
         species_idle_ai     = 'idle_ai'     ws1 idle_ai    ;
@@ -279,17 +279,17 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
             ws1 real   %{ spe.companion.back().chance = toreal(state.match); }
-            ws1 string %{ spe.companion.back().tag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ spe.companion.back().tag = tag_t(state.match, tagmem); }
             ;
 
         species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }
-            ws1 string %{ spe.drop.back().tag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ spe.drop.back().tag = tag_t(state.match, tagmem); }
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
         species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }
             ws1 real   %{ spe.cast_cloud.back().chance = toreal(state.match); }
-            ws1 string %{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.cast_cloud.back().radius = toint(state.match); }
             ws1 number %{ spe.cast_cloud.back().turns = toint(state.match); }
             ws1 string %{ spe.cast_cloud.back().name = state.match; }
@@ -297,7 +297,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_summon = 'summon' %{ spe.summon.push_back(Species::summon_t()); }
             ws1 real   %{ spe.summon.back().chance = toreal(state.match); }
-            ws1 string %{ spe.summon.back().speciestag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ spe.summon.back().speciestag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
             ;
 
@@ -359,7 +359,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_count      = 'count'      ws1 number     %{ des.count = toint(state.match); } ;
         design_name       = 'name'       ws1 string     %{ des.name = state.match; } ;
         design_skin       = 'skin'       ws1 skin       %{ des.skin.set(skin, skin_b); };
-        design_slot       = 'slot'       ws1 string     %{ des.slot = state.match; } ;
+        design_slot       = 'slot'       ws1 tag        %{ des.slot = tag_t(state.match, tagmem); } ;
         design_descr      = 'descr'      ws1 string     %{ des.descr = state.match; } ;
         design_attack     = 'attack'     ws1 damage_val %{ des.attacks.add(dmgval); } ;
         design_defense    = 'defense'    ws1 damage_val %{ des.defenses.add(dmgval); } ;
@@ -388,7 +388,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         design_cast_cloud = 'cast_cloud' 
-            ws1 string %{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ des.cast_cloud.radius = toint(state.match); }
             ;
 
@@ -402,7 +402,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_is_lit = 'is_lit' %{ des.is_lit = true; };
 
         design_place_permafeat = 'place_permafeat' 
-            ws1 string %{ des.place_permafeat = tag_t(state.match, tagmem); };
+            ws1 tag %{ des.place_permafeat = tag_t(state.match, tagmem); };
 
         design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
             ws1 real %{ des.luck.back().height = toreal(state.match); }
@@ -421,7 +421,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_random_spell  = 'random_spell'  %{ des.flags.random_spell = true; };
 
         design_grant_spell = 'grant_spell' %{ des.spells.push_back(Design::spell_t()); }
-            ws1 string %{ des.spells.back().ca_tag = tag_t(state.match, tagmem); } 
+            ws1 tag    %{ des.spells.back().ca_tag = tag_t(state.match, tagmem); } 
             ws1 string %{ des.spells.back().name = state.match; } 
             ;
 
@@ -490,10 +490,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_attack_level = 'attack_level' ws1 number %{ ter.attack_level = toint(state.match); } ;
 
-        terrain_victory_item = 'victory_item' ws1 string %{ ter.victory_item = tag_t(state.match, tagmem); } ;
+        terrain_victory_item = 'victory_item' ws1 tag %{ ter.victory_item = tag_t(state.match, tagmem); } ;
 
         terrain_grant_spell = 'grant_spell'
-            ws1 string %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
+            ws1 tag    %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
             ws1 real   %{ ter.grant_spell.karma_bound = toreal(state.match); }
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
@@ -508,8 +508,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
         terrain_crafting = 'crafting' %{ ter.crafting.push_back(Terrain::craft_t()); }
-            ws1 string %{ ter.crafting.back().from = tag_t(state.match, tagmem); }
-            ws1 string %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
+            ws1 tag %{ ter.crafting.back().from = tag_t(state.match, tagmem); }
+            ws1 tag %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
             ;
 
         terrain_one_data =
@@ -609,7 +609,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         celauto_a = 'a' ws1 number %{ cel.age = toint(state.match); } ;
 
-        celauto_terrain = 'terrain' ws1 string %{ cel.terrain = tag_t(state.match, tagmem); } ;
+        celauto_terrain = 'terrain' ws1 tag %{ cel.terrain = tag_t(state.match, tagmem); } ;
 
         celauto_is_walk   = 'is_walk'   %{ cel.is_walk = true; } ;
         celauto_make_walk = 'make_walk' %{ cel.make_walk = true; } ;
@@ -746,12 +746,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_starvation_damage = 'starvation_damage' 
             ws1 real %{ __constants__().starvation_damage = toreal(state.match); };
 
-        constant_grave    = 'grave'    ws1 string  %{ __constants__().grave = tag_t(state.match, tagmem); };
-        constant_meat     = 'meat'     ws1 string  %{ __constants__().meat = tag_t(state.match, tagmem); };
-        constant_bad_meat = 'bad_meat' ws1 string  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
-        constant_money    = 'money'    ws1 string  %{ __constants__().money = tag_t(state.match, tagmem); };
+        constant_grave    = 'grave'    ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
+        constant_meat     = 'meat'     ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
+        constant_bad_meat = 'bad_meat' ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
+        constant_money    = 'money'    ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
 
-        constant_unique_item = 'unique_item' ws1 string %{ __constants__().unique_item = tag_t(state.match, tagmem); };
+        constant_unique_item = 'unique_item' ws1 tag %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
 
@@ -765,7 +765,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ __constants__().max_celauto_cells = toint(state.match); };
 
         constant_slot = 'slot' %{ __constants__().slots.push_back(ConstantsBank::slot_t()); }
-            ws1 tag      %{ __constants__().slots.back().slot = state.match; }
+            ws1 tag      %{ __constants__().slots.back().slot = tag_t(state.match, tagmem); }
             ws1 '\'' any ${ __constants__().slots.back().letter = fc; } '\''
             ws1 string   %{ __constants__().slots.back().label = state.match; }
             ws1 string   %{ __constants__().slots.back().name = state.match; }
@@ -780,7 +780,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_shortcut_action = 'shortcut' ws1 'action'
             ws1 '\'' any ${ shortcut_key = fc; } '\''
             ws1 tag      ${ __constants__().shortcuts[shortcut_key].slot_keypress.
-                                            push_back(std::make_pair(state.match, 0)); } 
+                                            push_back(std::make_pair(tag_t(state.match, tagmem), 0)); } 
             ws1 '\'' any ${ __constants__().shortcuts[shortcut_key].slot_keypress.back().second = fc; } '\''
             ;
 

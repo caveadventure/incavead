@@ -14,18 +14,18 @@ struct ConstantsBank {
     tag_t unique_item;
 
     struct slot_t {
-        std::string slot;
+        tag_t slot;
         std::string label;
         std::string name;
         char letter;
 
-        slot_t() : letter(0) {}
+        slot_t() : letter(' ') {}
     };
 
     std::vector<slot_t> slots;
 
     struct shortcut_t {
-        std::vector< std::pair<std::string, unsigned char> > slot_keypress;
+        std::vector< std::pair<tag_t, unsigned char> > slot_keypress;
         std::string fail_message;
         std::string help_message;
     };

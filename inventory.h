@@ -3,20 +3,20 @@
 
 struct inventory_t {
 
-    std::unordered_map<std::string, items::Item> stuff;
+    std::unordered_map<tag_t, items::Item> stuff;
 
-    std::string selected_slot;
+    tag_t selected_slot;
     unsigned int selected_floor_item;
 
     struct slot_t {
-        std::string slot;
+        tag_t slot;
         std::string label;
         std::string name;
         char letter;
     };
 
-    std::map<std::string, slot_t> slots;
-    std::map<char, std::string> slot_keys;
+    std::map<tag_t, slot_t> slots;
+    std::map<char, tag_t> slot_keys;
 
     inventory_t() {
 
@@ -34,7 +34,7 @@ struct inventory_t {
         }
     }
 
-    bool get(const std::string& slot, items::Item& ret) const {
+    bool get(tag_t slot, items::Item& ret) const {
         auto i = stuff.find(slot);
 
         if (i == stuff.end())
@@ -44,7 +44,7 @@ struct inventory_t {
         return true;
     }
 
-    bool valid(const std::string& slot) const {
+    bool valid(tag_t slot) const {
 
         if (stuff.count(slot) == 0) 
             return false;
@@ -52,7 +52,7 @@ struct inventory_t {
         return true;
     }
 
-    bool take(const std::string& slot, items::Item& ret, unsigned int count = 0) {
+    bool take(tag_t slot, items::Item& ret, unsigned int count = 0) {
         auto i = stuff.find(slot);
 
         if (i == stuff.end())
@@ -76,7 +76,7 @@ struct inventory_t {
         return true;
     }
 
-    bool place(const std::string& slot, const items::Item& i, items::Item& old) {
+    bool place(tag_t slot, const items::Item& i, items::Item& old) {
 
         auto j = stuff.find(slot);
 
@@ -124,7 +124,7 @@ struct inventory_t {
         return true;
     }
 
-    bool inv_to_floor(const std::string& slot, unsigned int x, unsigned int y, items::Items& items, 
+    bool inv_to_floor(tag_t slot, unsigned int x, unsigned int y, items::Items& items, 
                       grender::Grid& grid) {
 
         items::Item tmp;
@@ -144,7 +144,7 @@ struct inventory_t {
         if (!items.take(x, y, z, ftmp, render))
             return false;
 
-        const std::string& slot = designs().get(ftmp.tag).slot;
+        tag_t slot = designs().get(ftmp.tag).slot;
 
         if (slots.count(slot) == 0)
             return false;
