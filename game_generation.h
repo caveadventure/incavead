@@ -1,7 +1,7 @@
 #ifndef __GAME_GENERATION_H
 #define __GAME_GENERATION_H
 
-void Game::make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
+void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
 
     std::ostringstream cached_grid;
 
@@ -15,9 +15,9 @@ void Game::make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, 
 }
 
 template <typename FUNC>
-void Game::make_map(int worldx, int worldy, int worldz, GameState& state,
-                    uint64_t gridseed, const std::string& cached_grid,
-                    FUNC progressbar) {
+void make_map(int worldx, int worldy, int worldz, GameState& state,
+              uint64_t gridseed, const std::string& cached_grid,
+              FUNC progressbar) {
 
     state.rng.init(gridseed);
 

@@ -2,29 +2,6 @@
 #define __APPLY_H
 
 
-inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
-                       tag_t terraintag) {
-
-    state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
-                             [&](unsigned int _x, unsigned int _y) {
-
-                                 features::Feature tmp;
-                                 if (state.features.get(_x, _y, tmp) && tmp.tag != terraintag) {
-
-                                     const Terrain& t = terrain().get(tmp.tag);
-
-                                     if (!t.air) 
-                                         return;
-                                 }
-
-
-                                 if (!state.grid.is_walk(_x, _y)) return;
-
-                                 state.features.set(_x, _y, terraintag, state.render);
-                             });
-}
-
-
 inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     items::Item tmp;
@@ -290,7 +267,7 @@ inline bool start_digging(Player& p, tag_t slot, GameState& state) {
     if (d.digging <= 0)
         return false;
     
-    p.state |= (Player::DIGGING | Player::PICK_DIRECTION);
+    p.state |= Player::DIGGING;
 
     return true;
 }

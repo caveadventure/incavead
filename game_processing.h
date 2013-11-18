@@ -65,7 +65,7 @@ void Game::endgame(GameState& state, const std::string& name) {
     dispose(state);
 }
 
-bool Game::process_feature(GameState& state, features::Feature& f, const Terrain& t) {
+bool process_feature(GameState& state, features::Feature& f, const Terrain& t) {
 
     if (f.decay > 0) {
         --(f.decay);
@@ -75,6 +75,42 @@ bool Game::process_feature(GameState& state, features::Feature& f, const Terrain
     }
 
     return true;
+}
+
+unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster, unsigned int count) {
+
+    int radius = get_lightradius(p) + 1;
+
+    std::unordered_set<monsters::pt> range;
+
+    for (int dx = -radius; dx <= radius; ++dx) {
+        for (int dy = -radius; dy <= radius; ++dy) {
+
+            int x = p.px + dx;
+            int y = p.py + dy;
+
+            if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
+                continue;
+
+            double dist = distance(x, y, p.px, p.py);
+
+            if (dist >= radius && dist <= radius + 1.5) {
+
+                bool r = reachable(state, x, y, p.px, p.py);
+
+                if (r)
+                    range.insert(monsters::pt(x, y));
+            }
+        }
+    }
+
+    unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
+                                             state.species_counts, state.render, 
+                                             range, &p.px, &p.py, monster, count);
+
+    std::cout << "Summoned out of view: " << res << std::endl;
+        
+    return res;
 }
 
 void Game::process_world(GameState& state, size_t& ticks, 
@@ -172,7 +208,7 @@ void Game::process_world(GameState& state, size_t& ticks,
                 
             if (!(i->second.summon.null())) {
 
-                summon_out_of_view(state, i->second.summon, 0);
+                summon_out_of_view(p, state, i->second.summon, 0);
             }
 
             a.second.triggered = true;
@@ -187,7 +223,7 @@ void Game::process_world(GameState& state, size_t& ticks,
                                      std::placeholders::_3, std::placeholders::_4));
 
     state.features.process(state.render, 
-                           std::bind(&Game::process_feature, this, std::ref(state),
+                           std::bind(process_feature, std::ref(state),
                                      std::placeholders::_1, std::placeholders::_2));
 
     for (const auto& i : summons) {
@@ -313,42 +349,6 @@ void Game::process_world(GameState& state, size_t& ticks,
             state.render.do_message("Digging done.");
         }
     }
-}
-
-unsigned int Game::summon_out_of_view(GameState& state, tag_t monster, unsigned int count) {
-
-    int radius = get_lightradius() + 1;
-
-    std::unordered_set<monsters::pt> range;
-
-    for (int dx = -radius; dx <= radius; ++dx) {
-        for (int dy = -radius; dy <= radius; ++dy) {
-
-            int x = p.px + dx;
-            int y = p.py + dy;
-
-            if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
-                continue;
-
-            double dist = distance(x, y, p.px, p.py);
-
-            if (dist >= radius && dist <= radius + 1.5) {
-
-                bool r = reachable(state, x, y, p.px, p.py);
-
-                if (r)
-                    range.insert(monsters::pt(x, y));
-            }
-        }
-    }
-
-    unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
-                                             state.species_counts, state.render, 
-                                             range, &p.px, &p.py, monster, count);
-
-    std::cout << "Summoned out of view: " << res << std::endl;
-        
-    return res;
 }
 
 

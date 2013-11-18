@@ -55,13 +55,9 @@ extern void parse_config(const std::string& filename, tag_mem_t& tagmem);
 
 #include "utilstuff.h"
 #include "inventory.h"
-#include "inv_screens.h"
 #include "player.h"
-#include "look_screens.h"
 #include "combat.h"
-#include "apply.h"
 #include "monster_ai.h"
-
 
 #include "vault_place.h"
 
@@ -78,7 +74,6 @@ enum class screens_t : unsigned int {
     achievements
 };
 
-#include "inv_screens2.h"
 
 #include "game.h"
 
@@ -144,11 +139,11 @@ void do_genmaps() {
                 uint64_t gridseed;
                 std::string filename;
 
-                Game::make_mapname(worldx, worldy, worldz, gridseed, filename);
+                make_mapname(worldx, worldy, worldz, gridseed, filename);
 
                 std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
-                Game::make_map(worldx, worldy, worldz, state, gridseed, filename,
-                               [](const std::string& msg) { std::cout << msg << std::endl; });
+                make_map(worldx, worldy, worldz, state, gridseed, filename,
+                         [](const std::string& msg) { std::cout << msg << std::endl; });
             }
         }
     }

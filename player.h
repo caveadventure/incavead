@@ -76,8 +76,8 @@ struct Player {
     static const unsigned int THROWING       = 0x10;
     static const unsigned int BLASTING       = 0x20;
     static const unsigned int DIGGING        = 0x40;
-    static const unsigned int PICK_DIRECTION = 0x80;
-    static const unsigned int DEBUG          = 0x100;
+    static const unsigned int DEBUG          = 0x80;
+    static const unsigned int TOMBSTONE      = 0x100;
 
     unsigned int state;
 

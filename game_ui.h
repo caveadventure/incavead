@@ -1,9 +1,9 @@
 #ifndef __GAME_UI_H
 #define __GAME_UI_H
 
-std::string Game::show_spells(const std::vector<Terrain::spell_t>& p_spells, 
-                              const std::vector<Design::spell_t>& i_spells,
-                              const std::vector<uint32_t>& r_spells) {
+std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, 
+                        const std::vector<Design::spell_t>& i_spells,
+                        const std::vector<uint32_t>& r_spells) {
 
     std::string m;
 
@@ -31,7 +31,7 @@ std::string Game::show_spells(const std::vector<Terrain::spell_t>& p_spells,
     return m;
 }
 
-void Game::handle_input_spells(GameState& state, size_t& ticks, maudit::keypress k) {
+void handle_input_spells(const Player& p, GameState& state, size_t& ticks, maudit::keypress k) {
 
     int _z = k.letter - 'a';
 
@@ -64,14 +64,14 @@ void Game::handle_input_spells(GameState& state, size_t& ticks, maudit::keypress
 
         uint32_t rspell = r_spells[z - p_spells.size() - i_spells.size()];
 
-        cast_random_spell(rspell, state);
+        cast_random_spell(p, rspell, state);
         ++ticks;
     }
 
     state.window_stack.pop_back();
 }
 
-std::string Game::show_achievements() {
+std::string show_achievements(const Player& p) {
 
     const auto& achievements = constants().achievements;
 
@@ -148,7 +148,7 @@ std::string Game::show_achievements() {
     return ret;
 }
 
-std::string Game::help_text() {
+std::string help_text() {
 
     std::string ret = 
         "\3Essential commands:\1\n"
@@ -187,7 +187,7 @@ std::string Game::help_text() {
     return ret;
 }
 
-std::string Game::tombstone_text() {
+std::string tombstone_text(const Player& p) {
 
     bones::bone_t bone;
 
@@ -209,9 +209,9 @@ std::string Game::tombstone_text() {
                         std::max(bone.worth, 0.0));
 }
 
-void Game::handle_input_main(GameState& state,
-                             size_t& ticks, bool& done, bool& dead, bool& regen, 
-                             maudit::keypress k) {
+void handle_input_main(Player& p, GameState& state,
+                       size_t& ticks, bool& done, bool& dead, bool& regen, 
+                       maudit::keypress k, bool debug_enabled) {
 
     bool redraw = false;
 
@@ -230,38 +230,38 @@ void Game::handle_input_main(GameState& state,
         break;
 
     case 'q':
-        run_away(state, ticks);
+        run_away(p, state, ticks);
         break;
 
     case 'h':
-        move(state, -1, 0, ticks);
+        move(p, state, -1, 0, ticks);
         break;
     case 'j':
-        move(state, 0, 1, ticks);
+        move(p, state, 0, 1, ticks);
         break;
     case 'k':
-        move(state, 0, -1, ticks);
+        move(p, state, 0, -1, ticks);
         break;
     case 'l':
-        move(state, 1, 0, ticks);
+        move(p, state, 1, 0, ticks);
         break;
     case 'y':
-        move(state, -1, -1, ticks);
+        move(p, state, -1, -1, ticks);
         break;
     case 'u':
-        move(state, 1, -1, ticks);
+        move(p, state, 1, -1, ticks);
         break;
     case 'b':
-        move(state, -1, 1, ticks);
+        move(p, state, -1, 1, ticks);
         break;
     case 'n':
-        move(state, 1, 1, ticks);
+        move(p, state, 1, 1, ticks);
         break;
 
     case '>':
     case '<':
     case 's':
-        use_terrain(state, ticks, regen, done, dead);
+        use_terrain(p, state, ticks, regen, done, dead);
         break;
 
     case '.':
@@ -299,7 +299,7 @@ void Game::handle_input_main(GameState& state,
         break;
 
     case 'K':
-        state.push_window(show_achievements(), screens_t::achievements);
+        state.push_window(show_achievements(p), screens_t::achievements);
         break;
 
     case '/':
@@ -327,28 +327,28 @@ void Game::handle_input_main(GameState& state,
 
     switch (k.key) {
     case maudit::keycode::up:
-        move(state, 0, -1, ticks);
+        move(p, state, 0, -1, ticks);
         break;
     case maudit::keycode::left:
-        move(state, -1, 0, ticks);
+        move(p, state, -1, 0, ticks);
         break;
     case maudit::keycode::right:
-        move(state, 1, 0, ticks);
+        move(p, state, 1, 0, ticks);
         break;
     case maudit::keycode::down:
-        move(state, 0, 1, ticks);
+        move(p, state, 0, 1, ticks);
         break;
     case maudit::keycode::kp_7:
-        move(state, -1, -1, ticks);
+        move(p, state, -1, -1, ticks);
         break;
     case maudit::keycode::kp_9:
-        move(state, 1, -1, ticks);
+        move(p, state, 1, -1, ticks);
         break;
     case maudit::keycode::kp_1:
-        move(state, -1, 1, ticks);
+        move(p, state, -1, 1, ticks);
         break;
     case maudit::keycode::kp_3:
-        move(state, 1, 1, ticks);
+        move(p, state, 1, 1, ticks);
         break;
     default:
         break;
@@ -382,7 +382,7 @@ void Game::handle_input_main(GameState& state,
 }
 
 
-void Game::handle_input_debug(GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
+void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
 
     switch (k.letter) {
 
@@ -450,7 +450,7 @@ void Game::handle_input_debug(GameState& state, size_t& ticks, bool& regen, maud
     {
         uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
         std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
-        cast_random_spell(rnd, state);
+        cast_random_spell(p, rnd, state);
         break;
     }
 
@@ -458,7 +458,7 @@ void Game::handle_input_debug(GameState& state, size_t& ticks, bool& regen, maud
     {
         tag_mem_t tagmem;
 
-        unsigned int n = summon_out_of_view(state, tag_t("soul", tagmem), 1);
+        unsigned int n = summon_out_of_view(p, state, tag_t("soul", tagmem), 1);
         state.render.do_message(nlp::message("Summoned %d", n));
         break;
     }
@@ -483,11 +483,11 @@ void Game::handle_input_debug(GameState& state, size_t& ticks, bool& regen, maud
 }
 
 
-void Game::handle_input_pick_direction(unsigned int& pstate, unsigned int px, unsigned int py, size_t& ticks,
-                                       GameState& state, maudit::keypress k) {
+bool handle_input_pick_direction(unsigned int px, unsigned int py, GameState& state, maudit::keypress k, 
+                                 unsigned int& nx, unsigned int& ny) {
 
-    unsigned int nx = px;
-    unsigned int ny = py;
+    nx = px;
+    ny = py;
 
     switch (k.letter) {
     case 'h':
@@ -542,29 +542,13 @@ void Game::handle_input_pick_direction(unsigned int& pstate, unsigned int px, un
     }            
 
     if (!state.neigh.linked(neighbors::pt(px, py), neighbors::pt(nx, ny))) {
-
-        pstate = Player::MAIN;
-        return;
+        return false;
     }
 
-    if (pstate & Player::DIGGING) {
-
-        if (state.grid.is_walk(nx, ny)) {
-            state.render.do_message("There is nothing to dig there.");
-
-        } else {
-            state.render.do_message("You start digging.");
-            p.digging = true;
-            p.dig_x = nx;
-            p.dig_y = ny;
-            ++ticks;
-        }
-
-        pstate = Player::MAIN;
-    }
+    return true;
 }
 
-void Game::handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) {
+void handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) {
 
     if (do_howto && k.letter == '?') {
         state.push_window(constants().howto_text, screens_t::howto);
@@ -579,7 +563,7 @@ void Game::handle_input(GameState& state,
                         maudit::keypress k) {
 
     if (p.state == Player::DEBUG) {
-        handle_input_debug(state, ticks, regen, k);
+        handle_input_debug(p, state, ticks, regen, k);
         return;
     }
 
@@ -603,14 +587,36 @@ void Game::handle_input(GameState& state,
         return;
     }
 
-    if (p.state & Player::PICK_DIRECTION) {
+    if (p.state & Player::DIGGING) {
 
-        handle_input_pick_direction(p.state, p.px, p.py, ticks, state, k);
+        unsigned int nx;
+        unsigned int ny;
+
+        bool ok = handle_input_pick_direction(p.px, p.py, state, k, nx, ny);
+
+        if (!ok || state.grid.is_walk(nx, ny)) {
+            state.render.do_message("There is nothing to dig there.");
+
+        } else {
+            state.render.do_message("You start digging.");
+            p.digging = true;
+            p.dig_x = nx;
+            p.dig_y = ny;
+            ++ticks;
+        }
+
+        p.state = Player::MAIN;
         return;
     }
 
+    if (p.state & Player::TOMBSTONE) {
+
+        state.push_window(tombstone_text(p), screens_t::tombstone);
+        p.state &= ~(Player::TOMBSTONE);
+    }
+
     if (state.window_stack.empty()) {
-        handle_input_main(state, ticks, done, dead, regen, k);
+        handle_input_main(p, state, ticks, done, dead, regen, k, debug_enabled);
         return;
     }
 
@@ -640,7 +646,7 @@ void Game::handle_input(GameState& state,
         break;
 
     case screens_t::spells:
-        handle_input_spells(state, ticks, k);
+        handle_input_spells(p, state, ticks, k);
         break;
 
     default:

@@ -162,7 +162,7 @@ struct inventory_t {
     ///
 
 
-    std::vector<Design::spell_t> spells() {
+    std::vector<Design::spell_t> spells() const {
 
         std::vector<Design::spell_t> ret;
         bool is_ok = false;
@@ -183,7 +183,7 @@ struct inventory_t {
         return ret;
     }
 
-    std::vector<uint32_t> random_spells() {
+    std::vector<uint32_t> random_spells() const {
 
         std::vector<uint32_t> ret;
 
@@ -197,7 +197,7 @@ struct inventory_t {
         return ret;
     }
 
-    void get_attack(damage::attacks_t& out) {
+    void get_attack(damage::attacks_t& out) const {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
@@ -210,7 +210,7 @@ struct inventory_t {
         }
     }
 
-    void get_defense(damage::defenses_t& out) {
+    void get_defense(damage::defenses_t& out) const {
 
         for (const auto& i : stuff) {
             const Design& dp = designs().get(i.second.tag);
@@ -223,7 +223,7 @@ struct inventory_t {
         }
     }
 
-    unsigned int get_lightradius() {
+    unsigned int get_lightradius() const {
         unsigned int ret = 0;
 
         for (const auto& i : stuff) {
@@ -238,7 +238,7 @@ struct inventory_t {
     }
 
 
-    double get_digging() {
+    double get_digging() const {
         double ret = 0;
 
         for (const auto& i : stuff) {
@@ -263,7 +263,7 @@ struct inventory_t {
         return ret;
     }
 
-    void get_turn_coeffs(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) {
+    void get_turn_coeffs(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) const {
 
         inc_luck = 0;
         inc_hunger = 0;

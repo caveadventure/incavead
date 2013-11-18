@@ -122,7 +122,7 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 }
 
 
-void Game::drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
+void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x, unsigned int y) {
         
     unsigned int grid_x = ctx.view_w / 4;
     unsigned int grid_y = ctx.view_h / 4;
@@ -143,7 +143,7 @@ void Game::drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned 
     ctx.centery = y;
 }
 
-unsigned int Game::get_lightradius() {
+unsigned int get_lightradius(const Player& p) {
 
     const Levelskin& ls = levelskins().get(p.worldz);
 
@@ -154,7 +154,7 @@ void Game::drawing_context(mainloop::drawing_context_t& ctx) {
 
     ctx.px = p.px;
     ctx.py = p.py;
-    ctx.lightradius = get_lightradius();
+    ctx.lightradius = get_lightradius(p);
 
     if (p.state & Player::LOOKING) {
 
@@ -176,7 +176,7 @@ void Game::drawing_context(mainloop::drawing_context_t& ctx) {
     }
 }
 
-void Game::draw_one_stat(GameState& state, const stat_t& s, const std::string& name) {
+void draw_one_stat(GameState& state, const stat_t& s, const std::string& name) {
 
     double v = s.val;
     int vp = 0;

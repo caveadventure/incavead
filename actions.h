@@ -1,7 +1,7 @@
 #ifndef __GAME_ACTIONS_H
 #define __GAME_ACTIONS_H
 
-void Game::move_player(GameState& state) {
+void move_player(const Player& p, GameState& state) {
         
     size_t nstack = state.items.stack_size(p.px, p.py);
 
@@ -28,7 +28,7 @@ void Game::move_player(GameState& state) {
     }
 }
 
-void Game::move(GameState& state, int dx, int dy, size_t& ticks) {
+void move(Player& p, GameState& state, int dx, int dy, size_t& ticks) {
     int nx = p.px + dx;
     int ny = p.py + dy;
 
@@ -85,10 +85,10 @@ void Game::move(GameState& state, int dx, int dy, size_t& ticks) {
                           grender::Grid::skin("@", maudit::color::bright_white, 
                                               maudit::color::bright_black));
 
-    move_player(state);
+    move_player(p, state);
 }
 
-void Game::run_away(GameState& state, size_t& ticks) {
+void run_away(Player& p, GameState& state, size_t& ticks) {
 
     std::vector< std::pair<int, int> > ns;
 
@@ -144,10 +144,10 @@ void Game::run_away(GameState& state, size_t& ticks) {
     int dx = ns[maxi].first;
     int dy = ns[maxi].second;
 
-    move(state, dx, dy, ticks);
+    move(p, state, dx, dy, ticks);
 }
 
-void Game::use_terrain(GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
+void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
 
     features::Feature feat;
     if (!state.features.get(p.px, p.py, feat)) {
@@ -179,7 +179,7 @@ void Game::use_terrain(GameState& state, size_t& ticks, bool& regen, bool& done,
 
     if (feat.tag == constants().grave) {
 
-        state.push_window(tombstone_text(), screens_t::tombstone);
+        p.state |= Player::TOMBSTONE;
         return;
     }
 
@@ -303,12 +303,12 @@ void Game::use_terrain(GameState& state, size_t& ticks, bool& regen, bool& done,
     state.render.do_message("There is nothing here to use.");
 }
 
-void Game::rest(GameState& state, size_t& ticks) {
+void rest(GameState& state, size_t& ticks) {
     ++ticks;
 }
 
-void Game::seed_celauto(GameState& state, 
-                        unsigned int _x, unsigned int _y, tag_t tag) {
+void seed_celauto(GameState& state, 
+                  unsigned int _x, unsigned int _y, tag_t tag) {
 
     const CelAuto& ca = celautos().get(tag);
 
@@ -324,7 +324,7 @@ void Game::seed_celauto(GameState& state,
     }
 }
 
-void Game::cast_random_spell(uint32_t rs, GameState& state) {
+void cast_random_spell(const Player& p, uint32_t rs, GameState& state) {
 
     tag_t catag = celautos().get_n(rs >> 16);
 
