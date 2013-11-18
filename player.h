@@ -77,7 +77,6 @@ struct Player {
     static const unsigned int BLASTING       = 0x20;
     static const unsigned int DIGGING        = 0x40;
     static const unsigned int DEBUG          = 0x80;
-    static const unsigned int TOMBSTONE      = 0x100;
 
     unsigned int state;
 
@@ -136,6 +135,9 @@ struct Player {
             const auto& a = i.second;
 
             if (a.genus != genus || k < a.kills)
+                continue;
+
+            if (achievements.count(i.first) != 0)
                 continue;
 
             achievements[i.first] = achievement_t();

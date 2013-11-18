@@ -147,6 +147,28 @@ void run_away(Player& p, GameState& state, size_t& ticks) {
     move(p, state, dx, dy, ticks);
 }
 
+std::string tombstone_text(const Player& p) {
+
+    bones::bone_t bone;
+
+    if (!bones::bones().get(p, bone)) {
+
+        return "\n\nHm, this tombstone is blank...";
+    }
+
+    if (bone.name.name.empty())
+        bone.name.name = "anonymous";
+
+    if (bone.cause.name.empty())
+        bone.cause.name = "unnatural causes";
+
+    return nlp::message(constants().tombstone_text,
+                        bone.name,
+                        bone.level+1, 
+                        bone.cause, 
+                        std::max(bone.worth, 0.0));
+}
+
 void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
 
     features::Feature feat;
@@ -179,7 +201,7 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
 
     if (feat.tag == constants().grave) {
 
-        p.state |= Player::TOMBSTONE;
+        state.push_window(tombstone_text(p), screens_t::tombstone);
         return;
     }
 

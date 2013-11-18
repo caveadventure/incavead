@@ -187,27 +187,6 @@ std::string help_text() {
     return ret;
 }
 
-std::string tombstone_text(const Player& p) {
-
-    bones::bone_t bone;
-
-    if (!bones::bones().get(p, bone)) {
-
-        return "\n\nHm, this tombstone is blank...";
-    }
-
-    if (bone.name.name.empty())
-        bone.name.name = "anonymous";
-
-    if (bone.cause.name.empty())
-        bone.cause.name = "unnatural causes";
-
-    return nlp::message(constants().tombstone_text,
-                        bone.name,
-                        bone.level+1, 
-                        bone.cause, 
-                        std::max(bone.worth, 0.0));
-}
 
 void handle_input_main(Player& p, GameState& state,
                        size_t& ticks, bool& done, bool& dead, bool& regen, 
@@ -605,13 +584,6 @@ void Game::handle_input(GameState& state,
             ++ticks;
         }
 
-        p.state = Player::MAIN;
-        return;
-    }
-
-    if (p.state & Player::TOMBSTONE) {
-
-        state.push_window(tombstone_text(p), screens_t::tombstone);
         p.state = Player::MAIN;
         return;
     }
