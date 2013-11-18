@@ -206,6 +206,8 @@ struct Main {
 
     bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
 
+        bm _bm("process");
+
         if (ticks == oldticks) {
             need_input = true;
             return false;
@@ -227,6 +229,9 @@ struct Main {
         if (need_input) {
 
             grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
+
+            bm _bm("handle_input");
+
             game.handle_input(state, ticks, done, dead, regen, k);
 
             while (state.window_stack.size() > 0) {

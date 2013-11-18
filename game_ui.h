@@ -612,7 +612,8 @@ void Game::handle_input(GameState& state,
     if (p.state & Player::TOMBSTONE) {
 
         state.push_window(tombstone_text(p), screens_t::tombstone);
-        p.state &= ~(Player::TOMBSTONE);
+        p.state = Player::MAIN;
+        return;
     }
 
     if (state.window_stack.empty()) {
