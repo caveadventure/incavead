@@ -834,6 +834,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_tombstone_text = 'tombstone_text' ws1 string %{ __constants__().tombstone_text = state.match; };
 
+        constant_achievement_trigger_rate = 'achievement_trigger_rate' 
+            ws1 number %{ __constants__().achievement_trigger_rate = toint(state.match); } ;
+
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | 
@@ -844,7 +847,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_ui_box_v   | constant_ui_box_h   |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
                        constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
-                       constant_howto_text | constant_tombstone_text 
+                       constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
@@ -863,8 +866,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         achievement_label = 'label' ws1 string 
                             %{ __constants__().achievements[ach_tag].label = state.match; } ;
 
+        achievement_summon = 'summon' ws1 tag 
+                            %{ __constants__().achievements[ach_tag].summon = tag_t(state.match, tagmem); } ;
+
         achievement_line = 
-            achievement_genus | achievement_kills | achievement_priority | achievement_label
+            achievement_genus | achievement_kills | achievement_priority | achievement_label |
+            achievement_summon
             ;
 
         achievement = 'achievement' 

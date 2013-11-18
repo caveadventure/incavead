@@ -198,6 +198,20 @@ struct writer<Terrain::spell_t> {
 };
 
 template <>
+struct reader<Player::achievement_t> {
+    void read(Source& s, Player::achievement_t& a) {
+        serialize::read(s, a.triggered);
+    }
+};
+
+template <>
+struct writer<Player::achievement_t> {
+    void write(Sink& s, const Player::achievement_t& a) {
+        serialize::write(s, a.triggered);
+    }
+};
+
+template <>
 struct reader<Player> {
     void read(Source& s, Player& p) {
         serialize::read(s, p.px);
@@ -225,6 +239,7 @@ struct reader<Player> {
         serialize::read(s, p.dungeon_unique_series);
         serialize::read(s, p.money_curse);
         serialize::read(s, p.kills);
+        serialize::read(s, p.achievements);
     }
 };
 
@@ -256,6 +271,7 @@ struct writer<Player> {
         serialize::write(s, p.dungeon_unique_series);
         serialize::write(s, p.money_curse);
         serialize::write(s, p.kills);
+        serialize::write(s, p.achievements);
     }
 };
 

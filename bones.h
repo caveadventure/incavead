@@ -36,8 +36,8 @@ struct bone_t {
         worth(p.inv.get_worth() + p.money_curse)
         {
 
-            if (name.empty) {
-                name = 'anonymous';
+            if (name.name.empty()) {
+                name.name = "anonymous";
             }
 
             std::string label;

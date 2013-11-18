@@ -787,6 +787,29 @@ struct Game {
             }
         }
 
+        if ((ticks % constants().achievement_trigger_rate) == 0) {
+
+            for (auto& a : p.achievements) {
+
+                if (a.second.triggered)
+                    continue;
+
+                const auto& ach = constants().achievements;
+                auto i = ach.find(a.first);
+
+                if (i == ach.end())
+                    throw std::runtime_error("Sanity error in achievement trigger");
+                
+
+                if (!(i->second.summon.null())) {
+
+                    summon_out_of_view(state, i->second.summon, 0);
+                }
+
+                a.second.triggered = true;
+            }
+        }
+
         std::vector<summons_t> summons;
 
         state.monsters.process(state.render, 
@@ -943,9 +966,6 @@ struct Game {
 
                 if (dist >= radius && dist <= radius + 1.5) {
 
-                    state.render._overlay_set(grender::pt(x, y)) = grender::Grid::skin("Ж", grender::Grid::yellow_color, 
-                                                                                       grender::Grid::black_color);
-
                     bool r = reachable(state, x, y, p.px, p.py);
 
                     if (r)
@@ -958,6 +978,8 @@ struct Game {
                                                  state.species_counts, state.render, 
                                                  range, &p.px, &p.py, monster, count);
 
+        std::cout << "Summoned out of view: " << res << std::endl;
+        
         return res;
     }
 

@@ -52,6 +52,7 @@ struct ConstantsBank {
         unsigned int kills;
         unsigned int priority;
         std::string label;
+        tag_t summon;
 
         achievement_t() : kills(0), priority(0) {}
     };
@@ -60,8 +61,11 @@ struct ConstantsBank {
 
     std::map<tag_t, std::string> genus_names;
 
+    size_t achievement_trigger_rate;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
-                      health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000) {}
+                      health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
+                      achievement_trigger_rate(15) {}
 
 };
 
