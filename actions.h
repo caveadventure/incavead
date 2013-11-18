@@ -1,5 +1,5 @@
-#ifndef __GAME_ACTIONS_H
-#define __GAME_ACTIONS_H
+#ifndef __ACTIONS_H
+#define __ACTIONS_H
 
 void move_player(const Player& p, GameState& state) {
         
