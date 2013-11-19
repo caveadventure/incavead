@@ -52,10 +52,12 @@ inline void roll_attack(rnd::Generator& rng,
 }
 
 inline void monster_kill(Player& p, GameState& state, const monsters::Monster& mon, 
-                         const Species& s) {
+                         const Species& s, bool do_track) {
 
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
+
+        std::cout << " DROP : " << v << " " << drop.chance << std::endl;
 
         if (v <= drop.chance)
             continue;
@@ -63,7 +65,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
-    if (!s.genus.null()) {
+    if (do_track && !s.genus.null()) {
         p.track_kill(s.genus);
     }
 }
@@ -174,13 +176,15 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 }
 
 
-inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
-                   Player& p, GameState& state, const monsters::Monster& mon,
-                   const Species& s) {
+inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
+                            GameState& state, const monsters::Monster& mon,
+                            bool track_kills) {
 
     if (attacks.empty()) {
         return;
     }
+
+    const Species& s = species().get(mon.tag);
 
     damage::attacks_t attack_res;
     roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
@@ -203,14 +207,14 @@ inline void attack(const damage::attacks_t& attacks, unsigned int plevel,
 
     if (mon.health - totdamage < -3) {
 
-        monster_kill(p, state, mon, s);
+        monster_kill(p, state, mon, s, track_kills);
     }
 }
 
 
-inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                   GameState& state, const monsters::Monster& mon, 
-                   bool quiet = false) {
+inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
+                               GameState& state, const monsters::Monster& mon, 
+                               bool quiet) {
 
     const Species& s = species().get(mon.tag);
 
@@ -263,7 +267,7 @@ inline bool attack(Player& p, const damage::attacks_t& attacks, unsigned int ple
             state.render.do_message(nlp::message("You killed %s.", s));
         }
 
-        monster_kill(p, state, mon, s);
+        monster_kill(p, state, mon, s, true);
 
         if (!s.flags.plant && species_level > p.level) {
 

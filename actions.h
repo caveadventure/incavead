@@ -47,7 +47,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t& ticks) {
         damage::attacks_t attacks;
         p.inv.get_attack(attacks);
 
-        if (attack(p, attacks, p.get_computed_level(state.rng), state, mon)) {
+        if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, mon, false)) {
             ++ticks;
         }
 

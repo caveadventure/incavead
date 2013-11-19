@@ -74,7 +74,7 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack(attacks, s.get_computed_level(), p, state, mon, species().get(mon.tag));
+            attack_from_env(p, attacks, s.get_computed_level(), state, mon, false);
         }
     }
 }
@@ -189,7 +189,7 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
         if (!t.attacks.empty()) {
 
-            attack(t.attacks, t.attack_level, p, state, m, s);
+            attack_from_env(p, t.attacks, t.attack_level, state, m, false);
 
             if (t.uncharge.attack) {
                 state.features.uncharge(m.xy.first, m.xy.second, state.render);
@@ -291,6 +291,9 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
     if (nxy.first == p.px && nxy.second == p.py) {
 
         if (s.ai == Species::ai_t::suicide) {
+
+            monster_kill(p, state, m, s, false);
+
             do_die = true;
             return true;
         }

@@ -119,7 +119,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack(p, d.attacks, d.level, state, mon, true);
+            attack_from_player(p, d.attacks, d.level, state, mon, true);
         }
     }
 }
@@ -231,7 +231,7 @@ inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
 
         unsigned int lev = (1 - v2) * p.get_computed_level(state.rng);
 
-        attack(p, d.attacks, lev, state, mon);
+        attack_from_player(p, d.attacks, lev, state, mon, false);
     }
 
     state.items.place(lx, ly, tmp, state.render);
