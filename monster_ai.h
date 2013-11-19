@@ -238,6 +238,7 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
     bool do_seek = false;
 
     if (s.ai == Species::ai_t::seek_player ||
+        s.ai == Species::ai_t::suicide ||
         (s.ai == Species::ai_t::seek_nosleep && p.sleep == 0)) {
 
         if (dist <= s.range + 5) {
@@ -288,6 +289,11 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
         return false;
 
     if (nxy.first == p.px && nxy.second == p.py) {
+
+        if (s.ai == Species::ai_t::suicide) {
+            do_die = true;
+            return true;
+        }
 
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);

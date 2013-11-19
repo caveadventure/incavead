@@ -246,7 +246,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'random'         %{ spe.ai = Species::ai_t::random; }         |
             'inrange_random' %{ spe.ai = Species::ai_t::inrange_random; } |
             'seek_nosleep'   %{ spe.ai = Species::ai_t::seek_nosleep; }   |
-            'none_nosleep'   %{ spe.ai = Species::ai_t::none_nosleep; }   ;
+            'none_nosleep'   %{ spe.ai = Species::ai_t::none_nosleep; }   |
+            'suicide'        %{ spe.ai = Species::ai_t::suicide; }        ;
 
         idle_ai = 
             'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |

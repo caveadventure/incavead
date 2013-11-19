@@ -52,6 +52,9 @@ struct bone_t {
 
                 const auto& a = j->second;
 
+                if (a.label.empty())
+                    continue;
+
                 if (a.priority > pri) {
                     pri = a.priority;
                     label.clear();
