@@ -437,7 +437,7 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
     {
         tag_mem_t tagmem;
 
-        unsigned int n = summon_out_of_view(p, state, tag_t("soul", tagmem), 1);
+        unsigned int n = summon_out_of_view(p, state, tag_t("angelgift", tagmem), 0);
         state.render.do_message(nlp::message("Summoned %d", n));
         break;
     }

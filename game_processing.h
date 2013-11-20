@@ -108,7 +108,7 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
                                              state.species_counts, state.render, 
                                              range, &p.px, &p.py, monster, count);
 
-    std::cout << "Summoned out of view: " << res << std::endl;
+    std::cout << "Summoned out of view: " << res << " " << range.size() << std::endl;
         
     return res;
 }

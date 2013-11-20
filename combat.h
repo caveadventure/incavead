@@ -62,6 +62,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
         if (v <= drop.chance)
             continue;
 
+        std::cout << "PLACING" << std::endl;
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
