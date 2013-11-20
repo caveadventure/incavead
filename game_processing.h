@@ -195,11 +195,7 @@ void Game::process_world(GameState& state, size_t& ticks,
 
     if ((ticks % constants().achievement_trigger_rate) == 0) {
 
-        std::cout << "Achievement trigger." << std::endl;
-
         for (auto& a : p.achievements) {
-
-            std::cout << "/ " << a.second.triggered << std::endl;
 
             if (a.second.triggered)
                 continue;

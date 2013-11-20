@@ -57,12 +57,9 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
 
-        std::cout << " DROP : " << v << " " << drop.chance << std::endl;
-
         if (v <= drop.chance)
             continue;
 
-        std::cout << "PLACING" << std::endl;
         state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
     }
 
@@ -284,6 +281,9 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
         if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You smash %s.", s));
+
+        } else if (totdamage < 0.1) {
+            state.render.do_message(nlp::message("You almost miss %s.", s));
 
         } else if (totdamage < 0.5) {
             state.render.do_message(nlp::message("You hit %s.", s));
