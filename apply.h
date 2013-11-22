@@ -82,6 +82,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         }
     }
 
+    if (!d.genocide.null()) {
+
+        state.render.do_message("You sense a great disturbance in the force.");
+
+        genocide(state, d.genocide);
+        ret = true;
+    }
+
     return ret;
 }
 

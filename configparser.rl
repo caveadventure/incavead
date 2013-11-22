@@ -431,6 +431,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             %{ des.count_is_rcode = true; des.count_is_only_one = true; }
             ;
 
+        design_genocide = 'genocide' ws1 tag %{ des.genocide = tag_t(state.match, tagmem); };
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -439,7 +441,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
-            design_random_spell |
+            design_random_spell | design_genocide |
             '}'
             ${ fret; })
             ;

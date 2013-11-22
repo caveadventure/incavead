@@ -368,5 +368,10 @@ void cast_random_spell(const Player& p, uint32_t rs, GameState& state) {
     }
 }
 
+void genocide(GameState& state, tag_t genus) {
+
+    state.species_counts.wipe([genus](tag_t sp) { return (species().get(sp).genus == genus); });
+
+}
 
 #endif

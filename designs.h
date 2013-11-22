@@ -106,6 +106,8 @@ struct Design {
 
     bool count_is_rcode;
 
+    tag_t genocide;
+
     Design() : level(0), count(0), count_is_only_one(false), stackrange(0), heal(0), feed(0), karma(0), usable(false), 
                destructible(false), throwrange(0),
                gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0), safe_descend(0), worth(0),

@@ -19,7 +19,8 @@ struct Counts {
         }
     }
 
-    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n = 1, bool exclusive = false) {
+    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, 
+                                       unsigned int n = 1, bool exclusive = false) {
 
         std::map<tag_t, unsigned int> ret;
 
@@ -140,6 +141,28 @@ struct Counts {
         if (j->second < 1) return false;
 
         return true;
+    }
+
+    template <typename FUNC>
+    void wipe(FUNC f) {
+
+        for (auto i = data.begin(); i != data.end(); ) {
+
+            for (auto j = i->second.begin(); j != i->second.end(); ) {
+
+                if (f(j->first)) {
+                    j = i->second.erase(j);
+                } else {
+                    ++j;
+                }
+            }
+
+            if (i->second.empty()) {
+                i = data.erase(i);
+            } else {
+                ++i;
+            }
+        }
     }
 
 };
