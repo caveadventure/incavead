@@ -13,6 +13,8 @@
         color: #222262;
         font-size: 75%;
         font-weight: bold;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
       }
       p {
         margin-left: 1em;
@@ -41,12 +43,12 @@
 
   <body>
 
-    <!-- Header and Nav -->
+    <!-- Header -->
 
     <div class="row">
-      <div class="small-3 columns">
+      <div class="small-0 medium-3 large-3 columns">
       </div>
-      <div class="small-9 columns">
+      <div class="small-12 medium-9 large-9 columns">
         <ul class="inline-list right">
           <li><a href="#intro">Intro</a></li>
           <li><a href="#play">Play online</a></li>
@@ -59,11 +61,13 @@
       </div>
     </div>
     
-    <!-- End Header and Nav -->
+    <!-- Main page -->
     
     <div class="row">    
 
-      <div class="small-3 columns">
+      <!-- Left block -->
+
+      <div class="small-0 medium-3 large-3 show-for-medium-up columns">
 
         <img style="display: block; margin-left: auto; margin-right: auto" 
              src="logo.png" width="158" height="248" alt="Ye Olde Cthulhu" />
@@ -87,14 +91,16 @@
         <p><hr/></p>
         
       </div>
+
+      <!-- Useful content -->
     
-      <div class="small-9 columns">
+      <div class="small-12 medium-9 large-9 columns">
 
         <div id="intro">
 
           <h3>Intro</h3>
           <p><em>Infinite Cave Adventure</em> is a <a href="http://roguebasin.roguelikedevelopment.org/index.php?title=What_a_roguelike_is">roguelike</a> game which combines 
-            an old-school look&amp;feel with original and interesting gameplay choices.</p>
+            an old-school look-and-feel with original and interesting gameplay choices.</p>
           <p>It is a sequel to <a href="http://code.google.com/p/diggr-roguelike/">"Diggr"</a>.</p>
           <p>Click <a href="screenshots.html">here</a> to see some <a href="screenshots.html">screenshots</a> of the game.
         </div>
@@ -168,7 +174,6 @@
               </p>
             </div>
           </div>
-
           <p>
             (From a total of <span id="num_games"></span> games logged so far.)
           </p>
@@ -268,19 +273,17 @@
       </div>
     </div>
 
-    
-  
     <!-- Footer -->
-  
+     
     <footer class="row">
-      <div class="large-12 columns">
+      <div class="small-12 columns">
         <p></p>
         <hr />
         <div class="row">
-          <div class="large-3 columns">
+          <div class="small-0 medium-3 large-3 columns">
             <p></p>
           </div>
-          <div class="large-9 columns">
+          <div class="small-12 medium-9 large-9 columns">
             <ul class="inline-list right">
               <li><a href="#intro">Intro</a></li>
               <li><a href="#play">Play online</a></li>
@@ -294,7 +297,7 @@
       </div> 
     </footer>
 
-    <script src="/js/vendor/jquery.js"></script>
+    <script src="/js/jquery.js"></script>
     <script src="/js/foundation.min.js"></script>
     <script>
       $(document).foundation();
@@ -308,12 +311,12 @@
           if (item["victory"]) {
               return '<span class="success label">' + item["name"] +
                      "</span>, a glorious victor of level " + item["plev"] +
-                     ".<br/><small>Last seen on level <b>" + item["dlev"] +
+                     ". <small>Last seen on level <b>" + item["dlev"] +
                      "</b>. Net worth: <b>" + item["worth"] + "</b> $ZM.</small>";
           } else {
               return '<span class="success label">' + item["name"] +
                      "</span>, level " + item["plev"] + 
-                     ".<br/><small>Killed on dungeon level <b>" + item["dlev"] + 
+                     ". <small>Killed on dungeon level <b>" + item["dlev"] + 
                      "</b> by " + item["cause"] + 
                      ". Net worth: <b>" + item["worth"] + 
                      "</b> $ZM.</small>";
