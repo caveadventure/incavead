@@ -164,6 +164,8 @@ struct Main {
         ticks = 1;
 
         game.init(seed);
+
+        screen.clear();
         game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
 
         return true;
@@ -181,6 +183,7 @@ struct Main {
         state.items.clear();
         state.monsters.clear();
 
+        screen.clear();
         game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
     }
 
@@ -263,13 +266,20 @@ struct Main {
         return false;
     }
 
-    void goodbye_message() {
+    void goodbye_message(bool dead) {
 
         while (1) {
             grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
 
             if (k.letter == ' ')
                 break;
+        }
+
+        if (dead) {
+
+            screen.reset_color();
+
+            game.goodbye_message(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
         }
     }
 
@@ -370,7 +380,7 @@ struct Main {
 
                 if (check_done(done, dead, name, savefile)) {
                     draw();
-                    goodbye_message();
+                    goodbye_message(dead);
                     return;
                 }
 
@@ -387,7 +397,7 @@ struct Main {
 
             if (check_done(done, dead, name, savefile)) {
                 draw();
-                goodbye_message();
+                goodbye_message(dead);
                 return;
             }
         }

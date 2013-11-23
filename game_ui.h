@@ -696,5 +696,43 @@ void Game::handle_input(GameState& state,
     }
 }
 
+template <typename FUNC>
+void Game::goodbye_message(GameState& state, FUNC println) {
+
+    highscore::Scores scores;
+
+    println("");
+    println("");
+    println("Highscore table:");
+    println("");
+
+    scores.by_plev([println](size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t::fakeobj& cause,
+                             unsigned int plev, int dlev, double worth, bool victory) {
+
+                       std::string line1;
+                       std::string line2;
+                       std::string pad;
+
+                       ++n;
+
+                       if (n < 10)
+                           pad = " ";
+
+                       if (victory) {
+                           line1 = nlp::message("%s%d) %S, a glorious victor of level %d.", pad, n, name, plev+1);
+                           line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.");
+
+                       } else {
+                           line1 = nlp::message("%s%d) %S, level %d.", pad, n, name, plev+1);
+                           line2 = nlp::message("    Killed on level %d by %s. Net worth: %d $ZM.",  
+                                                dlev+1, cause, worth);
+                       }
+
+                       println(line1);
+                       println(line2);
+                       println("");
+                   });
+
+}
 
 #endif

@@ -25,6 +25,13 @@ struct screen {
         io.write("\xFF\xFB\x03");
     }
 
+    void reset_color() {
+        io.write(CSI "0m");
+    }
+
+    void clear() {
+        io.write(CSI "H" CSI "J");
+    }
 
     template <typename FUNC>
     bool refresh(unsigned int _w, unsigned int _h, const FUNC& f) {

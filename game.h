@@ -70,6 +70,9 @@ struct Game {
                       size_t& ticks, bool& done, bool& dead, bool& regen, 
                       maudit::keypress k);
 
+    template <typename FUNC>
+    void goodbye_message(GameState& state, FUNC println);
+
 };
 
 #include "game_generation.h"
@@ -80,6 +83,7 @@ struct Game {
 #include "look_screens.h"
 #include "apply.h"
 #include "inv_screens2.h"
+#include "highscore.h"
 #include "game_ui.h"
 
 
