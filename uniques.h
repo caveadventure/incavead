@@ -26,7 +26,7 @@ struct Uniques {
 
     Uniques(const std::string& fn) : filename(fn) {}
     
-    size_t series;;
+    size_t series;
     time_t placetime;
 
     std::mutex mutex;
@@ -112,6 +112,17 @@ public:
         }
 
         return false;
+    }
+
+    void locate(time_t& time, std::vector<key_t>& levels) {
+
+        std::unique_lock<std::mutex> l(mutex);
+
+        time = placetime;
+
+        for (const auto& i : data) {
+            levels.push_back(i.first);
+        }
     }
 };
 

@@ -1,6 +1,68 @@
 #ifndef __GAME_UI_H
 #define __GAME_UI_H
 
+std::string show_victory() {
+
+    std::string ret = "\n\2Status of the \3One Ring:\1\n\n";
+
+    std::vector<uniques::key_t> levels;
+    time_t placetime;
+
+    uniques::uniques().locate(placetime, levels);
+
+    time_t now = ::time(NULL);
+    time_t tdiff = now - placetime;
+    unsigned int timeout = constants().uniques_timeout;
+
+    if (levels.empty()) {
+    
+        if (placetime == 0 || tdiff >= timeout) {
+            ret += "Ready to regenerate on dungeon level \21\1.";
+
+        } else {
+            ret += "Destroyed or in possession.\n";
+            ret += nlp::message("\2%d\1 minutes left until regeneration.", (timeout - tdiff) / 60);
+        }
+
+    } else {
+
+        const auto& wk = levels.back();
+
+        static const std::string tunnels[3][3] = {
+            { "follow a tunnel due north-west",
+              "follow a tunnel due west", 
+              "follow a tunnel due south-west" },
+            { "follow a tunnel due north",
+              "main branch", 
+              "follow a tunnel due south" },
+            { "follow a tunnel due north-east",
+              "follow a tunnel due east", 
+              "follow a tunnel due south-east" } };
+
+        if (wk.worldy < -1 || wk.worldy > 1 || wk.worldx < -1 || wk.worldy > 1)
+            throw std::runtime_error("Sanity error in worldkey");
+
+        tdiff /= 60;
+        std::string units = "minutes";
+
+        if (tdiff > 1440) {
+            tdiff /= 1440;
+            units = "days";
+
+        } else if (tdiff > 60) {
+            tdiff /= 60;
+            units = "hours";
+        }
+
+        ret += nlp::message("Found somewhere on dungeon level \2%d\1 (\2%s\1).\n", 
+                            wk.worldz+1, tunnels[wk.worldx+1][wk.worldy+1]);
+
+        ret += nlp::message("It has been there for \2%d %s\1.\n", tdiff, units);
+    }
+
+    return ret;
+}
+
 std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, 
                         const std::vector<Design::spell_t>& i_spells,
                         const std::vector<uint32_t>& r_spells) {
@@ -166,6 +228,7 @@ std::string help_text() {
         "  \2tab\1 :        Look at monsters and items in view.\n"
         "  \2P\1 :          Show message history.\n"
         "  \2K\1 :          Show kills and achievements.\n"
+        "  \2*\1 :          Show the Ring of Power's current status.\n"
         "  \2?\1 :          Show this help message.\n"
         "  \2??\1 :         Show detailed instructions.\n"
         "\n\3Shortcut commands:\1\n"
@@ -279,6 +342,10 @@ void handle_input_main(Player& p, GameState& state,
 
     case 'K':
         state.push_window(show_achievements(p), screens_t::achievements);
+        break;
+
+    case '*':
+        state.push_window(show_victory(), screens_t::victory_status);
         break;
 
     case '/':

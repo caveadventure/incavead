@@ -71,7 +71,8 @@ enum class screens_t : unsigned int {
     help,
     tombstone,
     howto,
-    achievements
+    achievements,
+    victory_status
 };
 
 
