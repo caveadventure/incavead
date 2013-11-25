@@ -168,6 +168,20 @@ struct Grid {
     size_t current_draw_n;
     std::vector< std::pair<size_t, skin> > overlay;
 
+    struct textlabel_t {
+        std::string label;
+        unsigned int x;
+        unsigned int y;
+        color_t fg;
+        color_t bg;
+
+        textlabel_t(const std::string& l = "", unsigned int _x = 0, unsigned int _y = 0, 
+                    color_t _fg = white_color, color_t _bg = black_color) :
+            label(l), x(_x), y(_y), fg(_fg), bg(_bg) {}
+    };
+
+    std::map< size_t, std::vector<textlabel_t> > textlabels;
+
     // transient, not saved in dump.
     std::vector<hud_line> hud_pips;
 
@@ -410,6 +424,42 @@ private:
         }
     }
 
+    void _draw_textlabels(std::vector<skin>& ret_glyphs, int voff_x, int voff_y, unsigned int view_w) {
+
+        auto i = textlabels.begin();
+        while (i != textlabels.end()) {
+
+            if (i->first != current_draw_n) {
+                i = textlabels.erase(i);
+                continue;
+            }
+
+            for (const textlabel_t& tl : i->second) {
+
+                for (unsigned int x = 0; x < tl.label.size(); ++x) {
+
+                    unsigned int xx = tl.x + x;
+                    unsigned int yy = tl.y;
+
+                    pt xy;
+                    bool is_ok = _translate_v2g(voff_x, voff_y, pt(xx, yy), xy);
+
+                    if (!is_ok) 
+                        continue;
+
+                    std::cout << "//" << std::endl;
+
+                    maudit::glyph& ret = ret_glyphs[yy*view_w+xx];
+                    ret = skin(std::string(1, tl.label[x]), tl.fg, tl.bg);
+
+                    std::cout << "\\\\" << std::endl;
+                }
+            }
+
+            ++i;
+        }
+    }
+
 
 public:
 
@@ -555,13 +605,13 @@ public:
                 ret_view_w = view_w;
                 ret_view_h = view_h;
 
-                voff_x = cx - (view_w / 2) + params.voff_off_x;
+                voff_x = cx - (view_w / 4) + params.voff_off_x;
                 voff_y = cy - (view_h / 2) + params.voff_off_y;
 
                 //
 
                 for (size_t vy = 0; vy < view_h; ++vy) {
-                    for (size_t vx = 0; vx < view_w; ++vx) {
+                    for (size_t vx = 0; vx < view_w/2; ++vx) {
 
                         pt xy;
                         bool is_ok = _translate_v2g(voff_x, voff_y, pt(vx, vy), xy);
@@ -581,6 +631,8 @@ public:
                 }
 
                 fov::fov_shadowcasting(w, h, grid, px, py, params.lightradius);
+
+                // HUD
 
                 bool do_hud = params.do_hud;
 
@@ -609,17 +661,28 @@ public:
                                        t);
                     }
                 }
-            
+
+                // LABELS
+
+                _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w);
+
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
-                    for (size_t _vx = 0; _vx < view_w; ++_vx) {
+                    for (size_t _vx_ = 0; _vx_ < view_w; ++_vx_) {
 
-                        maudit::glyph& ret = ret_glyphs[_vy*view_w+_vx];
+                        maudit::glyph& ret = ret_glyphs[_vy*view_w+_vx_];
 
                         if (ret.fore != no_color)
                             continue;
 
                         // OVERLAY
+
+                        if ((_vx_ % 2) == 1) {
+                            ret = skin(" ", black_color, black_color);
+                            continue;
+                        }
+
+                        size_t _vx = _vx_ / 2;
 
                         pt xy;
                         bool is_ok = _translate_v2g(voff_x, voff_y, pt(_vx, _vy), xy);
@@ -1054,10 +1117,7 @@ public:
     void draw_text(unsigned int x0, unsigned int y0, const std::string& text,
                    color_t fore, color_t back) {
 
-        for (size_t i = 0; i < text.size(); ++i) {
-
-            _overlay_set(pt(x0+i, y0)) = skin(std::string(1, text[i]), fore, back);
-        }
+        textlabels[current_draw_n].emplace_back(text, x0, y0, fore, back);
     }
 
 
