@@ -106,7 +106,7 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
     if (x == p.px && y == p.py) {
 
-        s = grender::Grid::skin("@", maudit::color::bright_white, maudit::color::bright_black);
+        s = constants().player_skin[n_skin];
         state.render.set_skin(x, y, 5, s);
 
     } else if (state.monsters.get(x, y, mon)) {

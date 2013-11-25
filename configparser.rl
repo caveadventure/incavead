@@ -759,6 +759,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
 
+        constant_player_skin = 'player_skin' ws1 skin %{ __constants__().player_skin.set(skin, skin_b); } ;
+
         constant_health_shield_max = 'health_shield_max' 
             ws1 real %{ __constants__().health_shield_max = toreal(state.match); };
 
@@ -842,7 +844,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
-                       constant_slot | 
+                       constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |

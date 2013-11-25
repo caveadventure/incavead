@@ -63,6 +63,8 @@ struct ConstantsBank {
 
     size_t achievement_trigger_rate;
 
+    skins player_skin;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
                       achievement_trigger_rate(15) {}
