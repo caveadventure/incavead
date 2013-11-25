@@ -242,6 +242,19 @@ private:
         return true;
     }
 
+    bool _translate_g2v(int voff_x, int voff_y, unsigned int view_w, unsigned int view_h, const pt& gxy, pt& vxy) {
+
+        int rx = (int)gxy.first - voff_x;
+        int ry = (int)gxy.second - voff_y;
+
+        if (rx < 0 || (unsigned int)rx >= view_w || ry < 0 || (unsigned int)ry >= view_h)
+            return false;
+
+        vxy.first = (unsigned int)rx;
+        vxy.second = (unsigned int)ry;
+        return true;
+    }
+
 
 public:
     skin& _overlay_set(const pt& xy) {
@@ -424,7 +437,10 @@ private:
         }
     }
 
-    void _draw_textlabels(std::vector<skin>& ret_glyphs, int voff_x, int voff_y, unsigned int view_w) {
+    void _draw_textlabels(std::vector<skin>& ret_glyphs, int voff_x, int voff_y, 
+                          unsigned int view_w, unsigned int view_h, bool fullwidth) {
+
+        unsigned int scale = (fullwidth ? 2 : 1);
 
         auto i = textlabels.begin();
         while (i != textlabels.end()) {
@@ -436,20 +452,26 @@ private:
 
             for (const textlabel_t& tl : i->second) {
 
+                unsigned int xx = tl.x;
+                unsigned int yy = tl.y;
+
+                pt xy;
+                bool is_ok = _translate_g2v(voff_x, voff_y, view_w / scale, view_h, pt(xx, yy), xy);
+
+                xy.first *= scale;
+
+                if (!is_ok) 
+                    continue;
+
                 for (unsigned int x = 0; x < tl.label.size(); ++x) {
 
-                    unsigned int xx = tl.x + x;
-                    unsigned int yy = tl.y;
+                    std::cout << "// " << tl.label << " " << xy.first + x << " " << xy.second << std::endl;
 
-                    pt xy;
-                    bool is_ok = _translate_v2g(voff_x, voff_y, pt(xx, yy), xy);
+                    if (xy.first + x >= view_w)
+                        break;
 
-                    if (!is_ok) 
-                        continue;
-
-                    std::cout << "//" << std::endl;
-
-                    maudit::glyph& ret = ret_glyphs[yy*view_w+xx];
+                    maudit::glyph& ret = ret_glyphs[xy.second * view_w + xy.first + x];
+                    std::cout << " | " << std::string(1, tl.label[x]) << std::endl;
                     ret = skin(std::string(1, tl.label[x]), tl.fg, tl.bg);
 
                     std::cout << "\\\\" << std::endl;
@@ -585,6 +607,7 @@ public:
     void draw(SCREEN& screen,
               unsigned int t,
               const PARAMS& params,
+              bool fullwidth,
               unsigned int& ret_view_w, 
               unsigned int& ret_view_h,
               FUNC make_valid) {
@@ -605,13 +628,15 @@ public:
                 ret_view_w = view_w;
                 ret_view_h = view_h;
 
-                voff_x = cx - (view_w / 4) + params.voff_off_x;
+                unsigned int sc_view_w = (fullwidth ? view_w / 2 : view_w);
+
+                voff_x = cx - (sc_view_w / 2) + params.voff_off_x;
                 voff_y = cy - (view_h / 2) + params.voff_off_y;
 
                 //
 
                 for (size_t vy = 0; vy < view_h; ++vy) {
-                    for (size_t vx = 0; vx < view_w/2; ++vx) {
+                    for (size_t vx = 0; vx < sc_view_w; ++vx) {
 
                         pt xy;
                         bool is_ok = _translate_v2g(voff_x, voff_y, pt(vx, vy), xy);
@@ -664,7 +689,7 @@ public:
 
                 // LABELS
 
-                _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w);
+                _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w, view_h, fullwidth);
 
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
@@ -677,12 +702,12 @@ public:
 
                         // OVERLAY
 
-                        if ((_vx_ % 2) == 1) {
+                        if (fullwidth && (_vx_ % 2) == 1) {
                             ret = skin(" ", black_color, black_color);
                             continue;
                         }
 
-                        size_t _vx = _vx_ / 2;
+                        size_t _vx = (fullwidth ? _vx_ / 2 : _vx_);
 
                         pt xy;
                         bool is_ok = _translate_v2g(voff_x, voff_y, pt(_vx, _vy), xy);

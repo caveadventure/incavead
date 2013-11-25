@@ -2,10 +2,13 @@
 #define __LOOK_SCREENS_H
 
 
-inline void center_draw_text(grender::Grid& render, unsigned int x, unsigned int y, const std::string& t) {
+inline void center_draw_text(grender::Grid& render, unsigned int x, unsigned int y, bool fullwidth, 
+                             const std::string& t) {
+
+    int halfstr = (int)t.size() / (fullwidth ? 4 : 2);
 
     int _x = x;
-    unsigned int x1 = std::max(0, _x-(int)t.size()/2);
+    unsigned int x1 = std::max(0, _x - halfstr);
     render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
 }
 
@@ -241,7 +244,7 @@ inline void start_look_target(unsigned int& pstate, Player::look_t& look, unsign
     look.rangemin = rangemin;
     look.rangemax = rangemax;
 
-    center_draw_text(state.render, px, py, 
+    center_draw_text(state.render, px, py, state.fullwidth,
                      "Use <TAB> or arrow keys to select target, '.' to fire");
 }
 
@@ -251,7 +254,7 @@ inline void start_look_plain(unsigned int& pstate, Player::look_t& look, unsigne
     pstate = Player::LOOKING;
     look = Player::look_t(px, py);
 
-    center_draw_text(state.render, px, py, 
+    center_draw_text(state.render, px, py, state.fullwidth,
                      "Use arrow keys to look around; <TAB> to cycle targets");
 }
 

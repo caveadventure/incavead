@@ -103,7 +103,7 @@ void init_statics() {
 }
 
 
-void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin) {
+void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin, bool fullwidth) {
 
     try {
 
@@ -113,7 +113,7 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin
 
         screen_t screen(client);
 
-        mainloop::Main<Game, GameState, screen_t> main(screen, debug, n_skin);
+        mainloop::Main<Game, GameState, screen_t> main(screen, debug, n_skin, fullwidth);
 
         main.mainloop(singleplayer);
 
@@ -121,6 +121,18 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin
         std::cerr << "Caught error: " << e.what() << std::endl;
 
     } catch (...) {
+    }
+}
+
+template <typename SOCKET>
+void serverloop(SOCKET& sock, bool debug, size_t nskin, bool fullwidth) {
+
+    while (1) {
+
+        int client = sock.accept();
+
+        std::thread thr(client_mainloop, client, false, debug, nskin, fullwidth);
+        thr.detach();
     }
 }
 
@@ -197,7 +209,7 @@ int main(int argc, char** argv) {
 
     if (singleplayer) {
         int client = server.accept();
-        client_mainloop(client, true, false, (utf ? 1 : 0));
+        client_mainloop(client, true, false, (utf ? 1 : 0), false);
 
     } else {
 
@@ -205,25 +217,18 @@ int main(int argc, char** argv) {
         std::thread thru([&]() {
 
                 maudit::server_socket serveru(20022);
-
-                while (1) {
-
-                    int client = serveru.accept();
-                
-                    std::thread thr(client_mainloop, client, false, debug, 1);
-                    thr.detach();
-                }
+                serverloop(serveru, debug, 1, false);
             });
-
         thru.detach();
 
-        while (1) {
+        std::thread thrf([&]() {
 
-            int client = server.accept();
+                maudit::server_socket serverf(20028);
+                serverloop(serverf, debug, 1, true);
+            });
+        thrf.detach();
 
-            std::thread thr(client_mainloop, client, false, debug, 0);
-            thr.detach();
-        }
+        serverloop(server, debug, 0, false);
     }
 
     return 0;

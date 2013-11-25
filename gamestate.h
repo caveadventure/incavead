@@ -54,6 +54,11 @@ struct GameState {
     void push_window(const std::string& m, T t) {
         window_stack.push_back(window_t{m, (unsigned int)t});
     }
+
+    // HACK
+    bool fullwidth;
+
+    GameState() : fullwidth(false) {}
 };
 
 

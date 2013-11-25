@@ -65,14 +65,18 @@ struct Main {
     static const unsigned int SAVEFILE_VERSION = 5;
 
 
-    Main(SCREEN& s, bool debug, size_t n_skin) : 
+    Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
         game(debug, n_skin), 
         screen(s), 
         view_w(0), 
         view_h(0), 
         is_cr(false), 
         ticks(1) 
-        {}
+        {
+
+            // HACK!
+            state.fullwidth = fullwidth;
+        }
 
 
     bool load(const std::string& filename) {
@@ -201,6 +205,7 @@ struct Main {
         state.render.draw(screen, 
                           ticks, 
                           ctx,
+                          state.fullwidth,
                           view_w, view_h,
                           std::bind(&GAME::set_skin, &game, std::ref(state),
                                     std::placeholders::_1, std::placeholders::_2));
