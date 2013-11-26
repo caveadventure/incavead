@@ -196,10 +196,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                          skin.fore = maudit::color::bright_white; } 
                (ws1 color)?
                ws
-               ('back' ws1 back_color)? 
+               ('back' ws1 back_color ws)? 
                %{ skin_b = skin; skin_c = skin; }
-               ('|' ws string %{ skin_b.text = state.match; }
-                ('|' ws string %{ skin_c.text = state.match; })?)?
+               ('|' ws string %{ skin_b.text = state.match; })?
+               ws
+               ('|' ws string %{ skin_c.text = state.match; })?
                ;
 
         ####

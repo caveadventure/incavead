@@ -71,20 +71,26 @@ struct screen {
 
         f(tmp, w, h);
 
+        bool first = true;
+
         for (size_t y = 0; y < h; ++y) {
             for (size_t x = 0; x < w; ++x) {
 
                 const glyph& g = tmp[y*w+x];
 
+                if (g.text.empty())
+                    continue;
+
                 bool do_fore = false;
                 bool do_back = false;
 
-                if (x == 0 && y == 0) {
+                if (first) {
 
                     data += CSI;
                     data += "0m";
                     do_fore = true;
                     do_back = true;
+                    first = false;
 
                 } else {
 

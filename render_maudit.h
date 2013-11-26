@@ -703,7 +703,7 @@ public:
                         // OVERLAY
 
                         if (fullwidth && (_vx_ % 2) == 1) {
-                            //ret = skin(" ", black_color, black_color);
+                            ret = skin("", no_color, no_color);
                             continue;
                         }
 
