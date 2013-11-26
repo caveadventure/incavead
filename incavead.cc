@@ -224,7 +224,7 @@ int main(int argc, char** argv) {
         std::thread thrf([&]() {
 
                 maudit::server_socket serverf(20028);
-                serverloop(serverf, debug, 1, true);
+                serverloop(serverf, debug, 2, true);
             });
         thrf.detach();
 

@@ -9,7 +9,7 @@ void Game::make_screen(mainloop::screen_params_t& sp, GameState& state) {
     sp.w2 = sp.w;
     sp.h2 = sp.h;
 
-    state.render.ui_symbols = (n_skin ? constants().ui_symbols_b : constants().ui_symbols_a);
+    state.render.ui_symbol = constants().ui_symbols[n_skin];
 }
 
 void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {

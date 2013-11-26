@@ -192,7 +192,7 @@ struct Grid {
     astar::Path path;
 
 
-    ui_symbols_t ui_symbols;
+    ui_symbol_t ui_symbol;
 
 private:
 
@@ -305,7 +305,7 @@ private:
         
             for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin(ui_symbols.circle, fore, back);
+                _overlay_set(xy) = skin(ui_symbol.circle.text, fore, back);
             }
         }
 
@@ -464,8 +464,6 @@ private:
                     continue;
 
                 for (unsigned int x = 0; x < tl.label.size(); ++x) {
-
-                    std::cout << "// " << tl.label << " " << xy.first + x << " " << xy.second << std::endl;
 
                     if (xy.first + x >= view_w)
                         break;
@@ -691,6 +689,8 @@ public:
 
                 _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w, view_h, fullwidth);
 
+                std::string one_space = (fullwidth ? "  " : " ");
+
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
                     for (size_t _vx_ = 0; _vx_ < view_w; ++_vx_) {
@@ -703,7 +703,7 @@ public:
                         // OVERLAY
 
                         if (fullwidth && (_vx_ % 2) == 1) {
-                            ret = skin(" ", black_color, black_color);
+                            //ret = skin(" ", black_color, black_color);
                             continue;
                         }
 
@@ -713,7 +713,7 @@ public:
                         bool is_ok = _translate_v2g(voff_x, voff_y, pt(_vx, _vy), xy);
 
                         if (!is_ok) {
-                            ret = skin(" ", black_color, black_color);
+                            ret = skin(one_space, black_color, black_color);
                             continue;
                         }
 
@@ -765,7 +765,7 @@ public:
 
 
                         if (!found_s) {
-                            ret = skin(" ", black_color, black_color);
+                            ret = skin(one_space, black_color, black_color);
                             continue;
                         }
 
@@ -779,7 +779,7 @@ public:
                             if (!in_fov) {
                                 back = black_color;
                                 fore = black_color;
-                                text = " ";
+                                text = one_space;
                                 
                             } else {
 
@@ -890,6 +890,8 @@ public:
     keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr,
                          const std::string& msg, unsigned int ix, unsigned int iy) {
 
+        const skin& wspace = ui_symbol.wspace;
+
         std::vector< std::vector<skin> > glyphs;
 
         glyphs.push_back(std::vector<skin>());
@@ -924,7 +926,7 @@ public:
             } else {
 
                 if (nc >= ix && nl >= iy) {
-                    glyphs.back().push_back(skin(std::string(1, c), fore, blue_color));
+                    glyphs.back().push_back(skin(std::string(1, c), fore, wspace.back));
                 }
 
                 nc++;
@@ -942,62 +944,59 @@ public:
                         if (y <= 1 || y >= view_h-2 ||
                             x <= 1 || x >= view_w-2) {
 
-                            std::string c;
-
                             if (y <= 0 && x <= 0) {
-                                c = ui_symbols.box_rd;
+                                ret = ui_symbol.box_rd;
 
                             } else if (y <= 0 && x >= view_w-1) {
-                                c = ui_symbols.box_ld;
+                                ret = ui_symbol.box_ld;
 
                             } else if (y >= view_h-1 && x <= 0) {
-                                c = ui_symbols.box_ru;
+                                ret = ui_symbol.box_ru;
 
                             } else if (y >= view_h-1 && x >= view_w-1) {
-                                c = ui_symbols.box_lu;
+                                ret = ui_symbol.box_lu;
 
                             } else if (y <= 0 || y >= view_h-1) {
 
                                 if (y >= view_h-1 && x <= 10 && nl+4-iy > view_h) {
-                                    c = ui_symbols.arrow_d;
+                                    ret = ui_symbol.arrow_d;
 
                                 } else if (y <= 0 && x <= 10 && iy > 0) {
 
-                                    c = ui_symbols.arrow_u;
+                                    ret = ui_symbol.arrow_u;
 
                                 } else {
-                                    c = ui_symbols.box_h;
+                                    ret = ui_symbol.box_h;
                                 }
 
                             } else if (x <= 0 || x >= view_w-1) {
 
                                 if (x >= view_w-1 && y <= 5 && max_nc+4-ix > view_w) {
-                                    c = ui_symbols.arrow_r;
+                                    ret = ui_symbol.arrow_r;
 
                                 } else if (x <= 0 && y <= 5 && ix > 0) {
-                                    c = ui_symbols.arrow_l;
+                                    ret = ui_symbol.arrow_l;
 
                                 } else {
-                                    c = ui_symbols.box_v;
+                                    ret = ui_symbol.box_v;
                                 }
 
                             } else {
-                                c = " ";
+                                ret = wspace;
                             }
 
-                            ret = skin(c, gray_color, blue_color);
                             continue;
                         }
 
                         if (y-2 >= glyphs.size()) {
-                            ret = skin(" ", black_color, blue_color);
+                            ret = wspace;
                             continue;
                         }
 
                         const auto& line = glyphs[y-2];
 
                         if (x-2 >= line.size()) {
-                            ret = skin(" ", black_color, blue_color);
+                            ret = wspace;
                             continue;
                         }
 
@@ -1104,7 +1103,7 @@ public:
 
             for (const auto& xy : procd) {
 
-                _overlay_set(xy) = skin(ui_symbols.fill, fore, back);
+                _overlay_set(xy) = skin(ui_symbol.fill.text, fore, back);
             }
         }
     }
@@ -1134,7 +1133,7 @@ public:
         if (do_draw) {
             for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin(ui_symbols.line, fore, back);
+                _overlay_set(xy) = skin(ui_symbol.line.text, fore, back);
             }
         }
     }

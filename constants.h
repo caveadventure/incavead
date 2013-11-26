@@ -38,8 +38,7 @@ struct ConstantsBank {
 
     size_t max_gold_per_grave;
 
-    ui_symbols_t ui_symbols_a;
-    ui_symbols_t ui_symbols_b;
+    ui_symbols_t ui_symbols;
 
     size_t max_celauto_cells;
 

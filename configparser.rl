@@ -76,13 +76,6 @@ inline double toreal(const std::string& s) {
 }
 
 
-//
-// Stupid macro to save some typing.
-#define SET_UI_SYM(A,W) (__constants__().ui_symbols_##A). W = state.match
-
-
-
-
 void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     /** File reading cruft. **/
@@ -108,7 +101,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     maudit::glyph skin;
     maudit::glyph skin_b;
+    maudit::glyph skin_c;
 
+#define SKINS skin, skin_c, skin_c
+    
     Vault::brush vbrush;
 
     unsigned char shortcut_key;
@@ -195,12 +191,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'cyan'    %{ skin.back = maudit::color::bright_cyan; }    | 
             'white'   %{ skin.back = maudit::color::bright_white; }   ;
 
-        skin = string %{ skin.text = state.match; skin.back = maudit::color::bright_black; } 
-               ws1 color 
+        skin = string %{ skin.text = state.match; 
+                         skin.back = maudit::color::bright_black; 
+                         skin.fore = maudit::color::bright_white; } 
+               (ws1 color)?
                ws
                ('back' ws1 back_color)? 
-               %{ skin_b = skin; }
-               ('|' ws string %{ skin_b.text = state.match; })?
+               %{ skin_b = skin; skin_c = skin; }
+               ('|' ws string %{ skin_b.text = state.match; }
+                ('|' ws string %{ skin_c.text = state.match; })?)?
                ;
 
         ####
@@ -262,7 +261,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
-        species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(skin, skin_b); } ;
+        species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(SKINS); } ;
         species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
         species_genus       = 'genus'       ws1 tag        %{ spe.genus = tag_t(state.match, tagmem); } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
@@ -360,7 +359,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_count      = 'count'      ws1 number     %{ des.count = toint(state.match); } ;
         design_name       = 'name'       ws1 string     %{ des.name = state.match; } ;
-        design_skin       = 'skin'       ws1 skin       %{ des.skin.set(skin, skin_b); };
+        design_skin       = 'skin'       ws1 skin       %{ des.skin.set(SKINS); };
         design_slot       = 'slot'       ws1 tag        %{ des.slot = tag_t(state.match, tagmem); } ;
         design_descr      = 'descr'      ws1 string     %{ des.descr = state.match; } ;
         design_attack     = 'attack'     ws1 damage_val %{ des.attacks.add(dmgval); } ;
@@ -477,7 +476,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_count     = 'count'     ws1 number     %{ ter.count = toint(state.match); } ;
         terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
-        terrain_skin      = 'skin'      ws1 skin       %{ ter.skin.set(skin, skin_b); };
+        terrain_skin      = 'skin'      ws1 skin       %{ ter.skin.set(SKINS); };
         terrain_placement = 'placement' ws1 tplacement  ;
         terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
@@ -650,18 +649,18 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water.set(skin, skin_b); };
-        levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water.set(skin, skin_b); };
-        levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall.set(skin, skin_b); };
-        levelskin_water_wall    = 'water_wall'    ws1 skin   %{ lev.water_wall.set(skin, skin_b); };
-        levelskin_floor1        = 'floor1'        ws1 skin   %{ lev.floor1.set(skin, skin_b); };
-        levelskin_floor2        = 'floor2'        ws1 skin   %{ lev.floor2.set(skin, skin_b); };
-        levelskin_floor3        = 'floor3'        ws1 skin   %{ lev.floor3.set(skin, skin_b); };
-        levelskin_floor4        = 'floor4'        ws1 skin   %{ lev.floor4.set(skin, skin_b); };
-        levelskin_floor5        = 'floor5'        ws1 skin   %{ lev.floor5.set(skin, skin_b); };
-        levelskin_floor6        = 'floor6'        ws1 skin   %{ lev.floor6.set(skin, skin_b); };
-        levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7.set(skin, skin_b); };
-        levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8.set(skin, skin_b); };
+        levelskin_deep_water    = 'deep_water'    ws1 skin   %{ lev.deep_water.set(SKINS); };
+        levelskin_shallow_water = 'shallow_water' ws1 skin   %{ lev.shallow_water.set(SKINS); };
+        levelskin_wall          = 'wall'          ws1 skin   %{ lev.wall.set(SKINS); };
+        levelskin_water_wall    = 'water_wall'    ws1 skin   %{ lev.water_wall.set(SKINS); };
+        levelskin_floor1        = 'floor1'        ws1 skin   %{ lev.floor1.set(SKINS); };
+        levelskin_floor2        = 'floor2'        ws1 skin   %{ lev.floor2.set(SKINS); };
+        levelskin_floor3        = 'floor3'        ws1 skin   %{ lev.floor3.set(SKINS); };
+        levelskin_floor4        = 'floor4'        ws1 skin   %{ lev.floor4.set(SKINS); };
+        levelskin_floor5        = 'floor5'        ws1 skin   %{ lev.floor5.set(SKINS); };
+        levelskin_floor6        = 'floor6'        ws1 skin   %{ lev.floor6.set(SKINS); };
+        levelskin_floor7        = 'floor7'        ws1 skin   %{ lev.floor7.set(SKINS); };
+        levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8.set(SKINS); };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_damage        = 'damage'        ws1 real   %{ lev.damage = toreal(state.match); };
@@ -759,7 +758,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
 
-        constant_player_skin = 'player_skin' ws1 skin %{ __constants__().player_skin.set(skin, skin_b); } ;
+        constant_player_skin = 'player_skin' ws1 skin %{ __constants__().player_skin.set(SKINS); } ;
 
         constant_health_shield_max = 'health_shield_max' 
             ws1 real %{ __constants__().health_shield_max = toreal(state.match); };
@@ -796,44 +795,20 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             )+
             ;
 
-        constant_ui_circle = 'ui' ws1 'circle' 
-            ws1 string %{ SET_UI_SYM(a, circle); } ws ('|' ws string %{ SET_UI_SYM(b, circle); })? ;
-
-        constant_ui_fill = 'ui' ws1 'fill' 
-            ws1 string %{ SET_UI_SYM(a, fill); } ws ('|' ws string %{ SET_UI_SYM(b, fill); })? ;
-
-        constant_ui_line = 'ui' ws1 'line' 
-            ws1 string %{ SET_UI_SYM(a, line); } ws ('|' ws string %{ SET_UI_SYM(b, line); })? ;
-
-        constant_ui_box_v = 'ui' ws1 'box_v' 
-            ws1 string %{ SET_UI_SYM(a, box_v); } ws ('|' ws string %{ SET_UI_SYM(b, box_v); })? ;
-
-        constant_ui_box_h = 'ui' ws1 'box_h' 
-            ws1 string %{ SET_UI_SYM(a, box_h); } ws ('|' ws string %{ SET_UI_SYM(b, box_h); })? ;
-
-        constant_ui_box_rd = 'ui' ws1 'box_rd' 
-            ws1 string %{ SET_UI_SYM(a, box_rd); } ws ('|' ws string %{ SET_UI_SYM(b, box_rd); })? ;
-
-        constant_ui_box_ru = 'ui' ws1 'box_ru' 
-            ws1 string %{ SET_UI_SYM(a, box_ru); } ws ('|' ws string %{ SET_UI_SYM(b, box_ru); })? ;
-
-        constant_ui_box_ld = 'ui' ws1 'box_ld' 
-            ws1 string %{ SET_UI_SYM(a, box_ld); } ws ('|' ws string %{ SET_UI_SYM(b, box_ld); })? ;
-
-        constant_ui_box_lu = 'ui' ws1 'box_lu' 
-            ws1 string %{ SET_UI_SYM(a, box_lu); } ws ('|' ws string %{ SET_UI_SYM(b, box_lu); })? ;
-
-        constant_ui_arrow_l = 'ui' ws1 'arrow_l' 
-            ws1 string %{ SET_UI_SYM(a, arrow_l); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_l); })? ;
-
-        constant_ui_arrow_r = 'ui' ws1 'arrow_r' 
-            ws1 string %{ SET_UI_SYM(a, arrow_r); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_r); })? ;
-
-        constant_ui_arrow_u = 'ui' ws1 'arrow_u' 
-            ws1 string %{ SET_UI_SYM(a, arrow_u); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_u); })? ;
-
-        constant_ui_arrow_d = 'ui' ws1 'arrow_d' 
-            ws1 string %{ SET_UI_SYM(a, arrow_d); } ws ('|' ws string %{ SET_UI_SYM(b, arrow_d); })? ;
+        constant_ui_circle  = 'ui' ws1 'circle'  ws1 skin %{ __constants__().ui_symbols.circle.set(SKINS); };
+        constant_ui_fill    = 'ui' ws1 'fill'    ws1 skin %{ __constants__().ui_symbols.fill.set(SKINS); };
+        constant_ui_line    = 'ui' ws1 'line'    ws1 skin %{ __constants__().ui_symbols.line.set(SKINS); };
+        constant_ui_box_v   = 'ui' ws1 'box_v'   ws1 skin %{ __constants__().ui_symbols.box_v.set(SKINS); };
+        constant_ui_box_h   = 'ui' ws1 'box_h'   ws1 skin %{ __constants__().ui_symbols.box_h.set(SKINS); };
+        constant_ui_box_rd  = 'ui' ws1 'box_rd'  ws1 skin %{ __constants__().ui_symbols.box_rd.set(SKINS); };
+        constant_ui_box_ru  = 'ui' ws1 'box_ru'  ws1 skin %{ __constants__().ui_symbols.box_ru.set(SKINS); };
+        constant_ui_box_ld  = 'ui' ws1 'box_ld'  ws1 skin %{ __constants__().ui_symbols.box_ld.set(SKINS); };
+        constant_ui_box_lu  = 'ui' ws1 'box_lu'  ws1 skin %{ __constants__().ui_symbols.box_lu.set(SKINS); };
+        constant_ui_arrow_l = 'ui' ws1 'arrow_l' ws1 skin %{ __constants__().ui_symbols.arrow_l.set(SKINS); };
+        constant_ui_arrow_r = 'ui' ws1 'arrow_r' ws1 skin %{ __constants__().ui_symbols.arrow_r.set(SKINS); };
+        constant_ui_arrow_u = 'ui' ws1 'arrow_u' ws1 skin %{ __constants__().ui_symbols.arrow_u.set(SKINS); };
+        constant_ui_arrow_d = 'ui' ws1 'arrow_d' ws1 skin %{ __constants__().ui_symbols.arrow_d.set(SKINS); };
+        constant_ui_wspace  = 'ui' ws1 'wspace'  ws1 skin %{ __constants__().ui_symbols.wspace.set(SKINS); };
 
         constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
 
@@ -849,7 +824,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_genus | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
-                       constant_ui_box_v   | constant_ui_box_h   |
+                       constant_ui_box_v   | constant_ui_box_h   | constant_ui_wspace |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
                        constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate
@@ -937,6 +912,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
 }
 
-#undef SET_UI_SYM
+#undef SKINS
 
 #endif
