@@ -668,54 +668,73 @@ public:
 
                 if (do_hud) {
                     unsigned int hl = 0;
-                    unsigned int hpx = (cx > view_w / 2 ? 0 : view_w - 14);
+                    unsigned int hpx = 0; //(cx > view_w / 2 ? 0 : view_w - 14);
 
                     for (const auto& hudline : hud_pips) {
                         _draw_pipline(ret_glyphs, hpx, hl, view_w, hudline);
                         ++hl;
                     }
 
+                    _draw_messages(ret_glyphs, 16, 0, 
+                                   view_w,
+                                   view_w - 30, 3,
+                                   t);
+
+                    /*
                     if (cy > h / 2) {
-                        _draw_messages(ret_glyphs, 15, 0, 
+                        _draw_messages(ret_glyphs, 16, 0, 
                                        view_w,
                                        view_w - 30, 3,
                                        t);
                     } else {
-                        _draw_messages(ret_glyphs, 15, view_h - 3, 
+                        _draw_messages(ret_glyphs, 16, view_h - 3, 
                                        view_w,
                                        view_w - 30, 3,
                                        t);
                     }
+                    */
                 }
 
                 // LABELS
 
                 _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w, view_h, fullwidth);
 
-                std::string one_space = (fullwidth ? "  " : " ");
+                std::string one_space = (fullwidth ? "+-" : " ");
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
+
+                    bool did_widechar = false;
+
                     for (size_t _vx_ = 0; _vx_ < view_w; ++_vx_) {
 
                         maudit::glyph& ret = ret_glyphs[_vy*view_w+_vx_];
 
+                        // This cell is already taken by a double-width character.
+                        if (did_widechar) {
+                            ret = skin("", no_color, no_color);
+                            did_widechar = false;
+                            continue;
+                        }
+
                         if (ret.fore != no_color)
                             continue;
-
-                        // Skip odd columns when drawing double-sized characters,
-                        // handle padding for odd-width screens.
 
                         if (fullwidth) {
 
                             if (_vx_ & 1) {
-                                ret = skin("", no_color, no_color);
+                                // Right half of a two-cell tile where the left part is already filled in.
+                                ret = skin("?", black_color, black_color);
                                 continue;
 
                             } else if (_vx_ == view_w - 1) {
-                                ret = skin(" ", black_color, black_color);
+                                // If the screen has an odd-sized width, ignore the extra half-tile
+                                ret = skin("/", black_color, black_color);
                                 continue;
                             }
                         }
+
+                        // Everything below this line is a full tile.
+                        did_widechar = fullwidth;
 
                         // OVERLAY
 
