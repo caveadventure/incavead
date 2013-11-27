@@ -668,31 +668,29 @@ public:
 
                 if (do_hud) {
                     unsigned int hl = 0;
-                    unsigned int hpx = 0; //(cx > view_w / 2 ? 0 : view_w - 14);
+                    unsigned int hpx = (cx > view_w / 2 ? 0 : view_w - 14);
+
+                    if (fullwidth && hpx & 1)
+                        --hpx;
 
                     for (const auto& hudline : hud_pips) {
                         _draw_pipline(ret_glyphs, hpx, hl, view_w, hudline);
                         ++hl;
                     }
 
-                    _draw_messages(ret_glyphs, 16, 0, 
-                                   view_w,
-                                   view_w - 30, 3,
-                                   t);
+                    unsigned int mx = 15 + (fullwidth ? 1 : 0);
 
-                    /*
                     if (cy > h / 2) {
-                        _draw_messages(ret_glyphs, 16, 0, 
+                        _draw_messages(ret_glyphs, mx, 0, 
                                        view_w,
                                        view_w - 30, 3,
                                        t);
                     } else {
-                        _draw_messages(ret_glyphs, 16, view_h - 3, 
+                        _draw_messages(ret_glyphs, mx, view_h - 3, 
                                        view_w,
                                        view_w - 30, 3,
                                        t);
                     }
-                    */
                 }
 
                 // LABELS
