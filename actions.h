@@ -28,7 +28,7 @@ void move_player(const Player& p, GameState& state) {
     }
 }
 
-void move(Player& p, GameState& state, int dx, int dy, size_t& ticks) {
+void move(Player& p, GameState& state, int dx, int dy, size_t& ticks, size_t n_skin) {
     int nx = p.px + dx;
     int ny = p.py + dy;
 
@@ -81,14 +81,12 @@ void move(Player& p, GameState& state, int dx, int dy, size_t& ticks) {
     p.px = nx;
     p.py = ny;
 
-    state.render.set_skin(p.px, p.py, 5, 
-                          grender::Grid::skin("@", maudit::color::bright_white, 
-                                              maudit::color::bright_black));
+    state.render.set_skin(p.px, p.py, 5, constants().player_skin[n_skin]);
 
     move_player(p, state);
 }
 
-void run_away(Player& p, GameState& state, size_t& ticks) {
+void run_away(Player& p, GameState& state, size_t& ticks, size_t n_skin) {
 
     std::vector< std::pair<int, int> > ns;
 
@@ -144,7 +142,7 @@ void run_away(Player& p, GameState& state, size_t& ticks) {
     int dx = ns[maxi].first;
     int dy = ns[maxi].second;
 
-    move(p, state, dx, dy, ticks);
+    move(p, state, dx, dy, ticks, n_skin);
 }
 
 std::string tombstone_text(const Player& p) {

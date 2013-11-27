@@ -253,7 +253,7 @@ std::string help_text() {
 
 void handle_input_main(Player& p, GameState& state,
                        size_t& ticks, bool& done, bool& dead, bool& regen, 
-                       maudit::keypress k, bool debug_enabled) {
+                       maudit::keypress k, bool debug_enabled, size_t n_skin) {
 
     bool redraw = false;
 
@@ -272,32 +272,32 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case 'q':
-        run_away(p, state, ticks);
+        run_away(p, state, ticks, n_skin);
         break;
 
     case 'h':
-        move(p, state, -1, 0, ticks);
+        move(p, state, -1, 0, ticks, n_skin);
         break;
     case 'j':
-        move(p, state, 0, 1, ticks);
+        move(p, state, 0, 1, ticks, n_skin);
         break;
     case 'k':
-        move(p, state, 0, -1, ticks);
+        move(p, state, 0, -1, ticks, n_skin);
         break;
     case 'l':
-        move(p, state, 1, 0, ticks);
+        move(p, state, 1, 0, ticks, n_skin);
         break;
     case 'y':
-        move(p, state, -1, -1, ticks);
+        move(p, state, -1, -1, ticks, n_skin);
         break;
     case 'u':
-        move(p, state, 1, -1, ticks);
+        move(p, state, 1, -1, ticks, n_skin);
         break;
     case 'b':
-        move(p, state, -1, 1, ticks);
+        move(p, state, -1, 1, ticks, n_skin);
         break;
     case 'n':
-        move(p, state, 1, 1, ticks);
+        move(p, state, 1, 1, ticks, n_skin);
         break;
 
     case '>':
@@ -373,28 +373,28 @@ void handle_input_main(Player& p, GameState& state,
 
     switch (k.key) {
     case maudit::keycode::up:
-        move(p, state, 0, -1, ticks);
+        move(p, state, 0, -1, ticks, n_skin);
         break;
     case maudit::keycode::left:
-        move(p, state, -1, 0, ticks);
+        move(p, state, -1, 0, ticks, n_skin);
         break;
     case maudit::keycode::right:
-        move(p, state, 1, 0, ticks);
+        move(p, state, 1, 0, ticks, n_skin);
         break;
     case maudit::keycode::down:
-        move(p, state, 0, 1, ticks);
+        move(p, state, 0, 1, ticks, n_skin);
         break;
     case maudit::keycode::kp_7:
-        move(p, state, -1, -1, ticks);
+        move(p, state, -1, -1, ticks, n_skin);
         break;
     case maudit::keycode::kp_9:
-        move(p, state, 1, -1, ticks);
+        move(p, state, 1, -1, ticks, n_skin);
         break;
     case maudit::keycode::kp_1:
-        move(p, state, -1, 1, ticks);
+        move(p, state, -1, 1, ticks, n_skin);
         break;
     case maudit::keycode::kp_3:
-        move(p, state, 1, 1, ticks);
+        move(p, state, 1, 1, ticks, n_skin);
         break;
     default:
         break;
@@ -656,7 +656,7 @@ void Game::handle_input(GameState& state,
     }
 
     if (state.window_stack.empty()) {
-        handle_input_main(p, state, ticks, done, dead, regen, k, debug_enabled);
+        handle_input_main(p, state, ticks, done, dead, regen, k, debug_enabled, n_skin);
         return;
     }
 

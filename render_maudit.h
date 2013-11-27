@@ -450,7 +450,7 @@ private:
                 continue;
             }
 
-            for (const textlabel_t& tl : i->second) {
+            for (textlabel_t& tl : i->second) {
 
                 unsigned int xx = tl.x;
                 unsigned int yy = tl.y;
@@ -463,16 +463,19 @@ private:
                 if (!is_ok) 
                     continue;
 
+                // Render text in half-width, but keep the label itself even-sized.
+
+                if (fullwidth && tl.label.size() & 1) {
+                    tl.label += " ";
+                }
+                
                 for (unsigned int x = 0; x < tl.label.size(); ++x) {
 
                     if (xy.first + x >= view_w)
                         break;
 
                     maudit::glyph& ret = ret_glyphs[xy.second * view_w + xy.first + x];
-                    std::cout << " | " << std::string(1, tl.label[x]) << std::endl;
                     ret = skin(std::string(1, tl.label[x]), tl.fg, tl.bg);
-
-                    std::cout << "\\\\" << std::endl;
                 }
             }
 
@@ -691,7 +694,6 @@ public:
 
                 std::string one_space = (fullwidth ? "  " : " ");
 
-
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
                     for (size_t _vx_ = 0; _vx_ < view_w; ++_vx_) {
 
@@ -700,12 +702,22 @@ public:
                         if (ret.fore != no_color)
                             continue;
 
-                        // OVERLAY
+                        // Skip odd columns when drawing double-sized characters,
+                        // handle padding for odd-width screens.
 
-                        if (fullwidth && (_vx_ % 2) == 1) {
-                            ret = skin("", no_color, no_color);
-                            continue;
+                        if (fullwidth) {
+
+                            if (_vx_ & 1) {
+                                ret = skin("", no_color, no_color);
+                                continue;
+
+                            } else if (_vx_ == view_w - 1) {
+                                ret = skin(" ", black_color, black_color);
+                                continue;
+                            }
                         }
+
+                        // OVERLAY
 
                         size_t _vx = (fullwidth ? _vx_ / 2 : _vx_);
 
