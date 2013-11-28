@@ -686,12 +686,12 @@ public:
                     if (ontop) {
                         _draw_messages(ret_glyphs, mx, 0, 
                                        view_w,
-                                       view_w - 15, 3,
+                                       view_w - 17, 3,
                                        t);
                     } else {
                         _draw_messages(ret_glyphs, 2, view_h - 3, 
                                        view_w,
-                                       view_w - 15, 3,
+                                       view_w - 17, 3,
                                        t);
                     }
                 }

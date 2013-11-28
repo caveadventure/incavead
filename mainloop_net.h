@@ -285,7 +285,9 @@ struct Main {
             screen.reset_color();
 
             game.goodbye_message(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
-        }
+ 
+            state.render.wait_for_key(screen, view_w, view_h, is_cr);
+       }
     }
 
     void enter_text(std::string& prompt, std::string& out, bool secret) {

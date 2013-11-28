@@ -739,6 +739,8 @@ void Game::goodbye_message(GameState& state, FUNC println) {
                        println("");
                    });
 
+    println("(Press any key)");
+
 }
 
 #endif
