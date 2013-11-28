@@ -667,8 +667,11 @@ public:
                 }
 
                 if (do_hud) {
+                    bool ontop = (cy > h / 2);
+                    bool atleft = (ontop || cx > view_w / 2);
+
                     unsigned int hl = 0;
-                    unsigned int hpx = (cx > view_w / 2 ? 0 : view_w - 14);
+                    unsigned int hpx = (atleft ? 0 : view_w - 14);
 
                     if (fullwidth && hpx & 1)
                         --hpx;
@@ -678,17 +681,17 @@ public:
                         ++hl;
                     }
 
-                    unsigned int mx = 15 + (fullwidth ? 1 : 0);
+                    unsigned int mx = (atleft ? 16 : 2);
 
-                    if (cy > h / 2) {
+                    if (ontop) {
                         _draw_messages(ret_glyphs, mx, 0, 
                                        view_w,
-                                       view_w - 30, 3,
+                                       view_w - 15, 3,
                                        t);
                     } else {
-                        _draw_messages(ret_glyphs, mx, view_h - 3, 
+                        _draw_messages(ret_glyphs, 2, view_h - 3, 
                                        view_w,
-                                       view_w - 30, 3,
+                                       view_w - 15, 3,
                                        t);
                     }
                 }
@@ -697,7 +700,7 @@ public:
 
                 _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w, view_h, fullwidth);
 
-                std::string one_space = (fullwidth ? "+-" : " ");
+                std::string one_space = (fullwidth ? "  " : " ");
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
 
@@ -721,12 +724,12 @@ public:
 
                             if (_vx_ & 1) {
                                 // Right half of a two-cell tile where the left part is already filled in.
-                                ret = skin("?", black_color, black_color);
+                                ret = skin(" ", black_color, black_color);
                                 continue;
 
                             } else if (_vx_ == view_w - 1) {
                                 // If the screen has an odd-sized width, ignore the extra half-tile
-                                ret = skin("/", black_color, black_color);
+                                ret = skin(" ", black_color, black_color);
                                 continue;
                             }
                         }

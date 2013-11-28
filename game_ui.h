@@ -523,6 +523,12 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
         break;
     }
 
+    case 'M':
+        state.render.do_message("Long message message lorem ispum alpha beta gamma one "
+                                "two three four lorem ipsum long message spanning many lines "
+                                "qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, "
+                                "sed quia non numquam eius modi tempora incidunt.");
+        break;
     }
 
     p.state &= ~(Player::DEBUG);
