@@ -280,9 +280,9 @@ struct Main {
                 break;
         }
 
-        if (dead) {
+        screen.reset_color();
 
-            screen.reset_color();
+        if (dead) {
 
             game.goodbye_message(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
  
