@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Square tiles mode for roguelikes</title>
+</head>
+
+<body>
+
+<h4><p>Square tiles for roguelikes? Huh?</p></h4>
+
+<p>It's something that looks like this:</p>
+<p><img src="img/2013-12-05-215856_962x482_scrot.png"/></p>
+
+<h4><p>Wait, what?</p></h4>
+
+<p>It's a way of rendering square tiles in a plain-text terminal, while keeping all in-game text normal-sized and readable.</p>
+<p>This is a compromise between ASCII graphics and graphical tiles. ASCII graphics have the advantage of portability, network transparency and being both nice-looking and customizable. The downside to ASCII graphics is that letters have a 2:1 proportion. (Each letter of the alphabet is roughly half as wide as it is high.) This makes in-game squares look 'thin' and results level maps that are severely out of proportion.</p>
+<p>The good news: Unicode supports something called 'fullwidth characters'. This is a feature of East Asian typography; East Asian (Chinese) characters have a 1:1 square proportion, and to make Latin letters look nice when mixed with East Asian characters, Unicode includes a duplicate 1:1 square proportion variant of <em>all 95</em> printable ASCII symbols.</p> 
+<p>So: all that's left to do is to output in-game squares (monsters, items, floors and walls) with 'fullwidth' symbols, and in-game text (overlays, labels, menus) with regular 2:1 letters.</p>
+<p>Thus you end up with ASCII graphics that are both properly proportioned and readable.</p>
+
+<h4><p>What do I need to get this to work?</p></h4>
+
+<p>Theoretically, nothing. All modern terminals and telnet clients support Unicode and fullwidth characters. At worst you might need to install an East Asian (Chinese or Japanese) font, but most modern systems should probably be capable of displaying East Asian characters out of the box.</p>
+
+<h4><p>What next?</p></h4>
+
+<p>Next project: rendering graphical tiles <em>right in your telnet client</em>. Stay tuned.</p>
+
+</body>
+</html>
