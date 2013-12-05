@@ -55,6 +55,9 @@ struct bone_t {
                 if (a.label.empty())
                     continue;
 
+                if (a.priority < pri) 
+                    continue;
+
                 if (a.priority > pri) {
                     pri = a.priority;
                     label.clear();

@@ -154,10 +154,12 @@ std::string show_achievements(const Player& p) {
 
         auto& ri = resorted[ach.genus];
 
-        if (kills >= ach.kills && !ri.first)
+        if (kills >= ach.kills) {
             ri.first = true;
 
-        ri.second = std::max(ach.kills, ri.second);
+        } else if (ach.kills < ri.second || ri.second == 0) {
+            ri.second = ach.kills;
+        }
     }
 
     std::string ret = "\nEnemies defeated:\n\n";
@@ -197,7 +199,7 @@ std::string show_achievements(const Player& p) {
                 s += " \3Achievement unlocked!\1";
             }
 
-            if (kills < r->second.second) {
+            if (r->second.second != 0) {
                 s += nlp::message(" (%d needed to unlock)", r->second.second);
             }
         }
