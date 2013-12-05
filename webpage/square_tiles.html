@@ -24,6 +24,12 @@
 
 <p>Theoretically, nothing. All modern terminals and telnet clients support Unicode and fullwidth characters. At worst you might need to install an East Asian (Chinese or Japanese) font, but most modern systems should probably be capable of displaying East Asian characters out of the box.</p>
 
+<h4><p>Will this work in other roguelike games?</p></h4>
+
+With a simple coding effort, yes. Since fullwidth symbols are <em>exactly</em> two regular symbols wide, all you'd need to do is change the map display in your game to be half as wide and replace all ASCII symbols with their fullwidth equivalents.
+
+(It gets harder if you need to overlay text displays right on the map, but even here the logic is very straightforward.)
+
 <h4><p>What next?</p></h4>
 
 <p>Next project: rendering graphical tiles <em>right in your telnet client</em>. Stay tuned.</p>
