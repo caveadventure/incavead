@@ -291,7 +291,10 @@ struct Main {
         while (1) {
             maudit::keypress k = state.render.draw_window(screen, view_w, view_h, is_cr, prompt);
 
-            if (k.letter >= ' ' && k.letter <= '~') {
+            // HACK
+            // Disable parens to prevent cheating achievements in the highscore table.
+
+            if (k.letter >= ' ' && k.letter <= '~' && k.letter != '(' && k.letter != ')') {
                 out += k.letter;
                 prompt += (secret ? '*' : k.letter);
                 continue;

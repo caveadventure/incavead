@@ -44,7 +44,7 @@ endif(NOT RAGEL)
 
 if(WIN32)
 
-  target_link_libraries(incavead m ws2_32)
+  target_link_libraries(incavead -mwindows m ws2_32)
 
 else(WIN32)
 
