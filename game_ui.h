@@ -17,7 +17,7 @@ std::string show_victory() {
     if (levels.empty()) {
     
         if (placetime == 0 || tdiff >= (time_t)timeout) {
-            ret += "Ready to regenerate on dungeon level \21\1.";
+            ret += "Ready to regenerate on dungeon level\2 1\1.";
 
         } else {
             ret += "Somewhere on this level or destroyed.\n";
