@@ -178,7 +178,8 @@ int main(int argc, char** argv) {
     bool singleplayer = false;
     bool genmaps = false;
     bool debug = false;
-    bool utf = false;
+    int graphics = 0;
+    bool fullwidth = false;
 
     for (int argi = 1; argi < argc; ++argi) {
 
@@ -198,7 +199,12 @@ int main(int argc, char** argv) {
 
         } else if (arg == "-u" || arg == "--unicode") {
 
-            utf = true;
+            graphics = 1;
+
+        } else if (arg == "-t" || arg == "--tiles") {
+
+            graphics = 2;
+            fullwidth = true;
         }
     }
 
@@ -209,7 +215,7 @@ int main(int argc, char** argv) {
 
     if (singleplayer) {
         int client = server.accept();
-        client_mainloop(client, true, false, (utf ? 1 : 0), false);
+        client_mainloop(client, true, false, graphics, fullwidth);
 
     } else {
 

@@ -20,8 +20,7 @@ std::string show_victory() {
             ret += "Ready to regenerate on dungeon level \21\1.";
 
         } else {
-            ret += "Destroyed or in possession.\n";
-            ret += nlp::message("\2%d\1 minutes left until regeneration.", (timeout - tdiff) / 60);
+            ret += "Somewhere on this level or destroyed.\n";
         }
 
     } else {

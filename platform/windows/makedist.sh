@@ -25,6 +25,12 @@ start "" /b bin\incavead.exe --unicode --singleplayer
 start putty -load game telnet://127.0.0.1:20020
 EOF
 
+cat << "EOF" > dist/incavead_tiles.bat
+@ECHO OFF
+start "" /b bin\incavead.exe --tiles --singleplayer
+start putty -load game telnet://127.0.0.1:20020
+EOF
+
 cp dist/incavead_unicode.bat dist/incavead.bat
 
 #wget -Pdist 'http://the.earth.li/~sgtatham/putty/latest/x86/puttytel.exe'
@@ -39,6 +45,7 @@ cat << "EOF" > dist/README.txt
 
 Run 'incavead_ascii.bat' to launch the game with ASCII graphics.
 Run 'incavead_unicode.bat' to launch the game with Unicode graphics.
+Run 'incavead_tiles.bat' to launch the game with 'square tiles' graphics.
 
   P.S. 'incavead.bat' is the same thing as 'incavead_unicode.bat'.
 

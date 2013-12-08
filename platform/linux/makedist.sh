@@ -20,16 +20,26 @@ EOF
 cat << "EOF" > dist/incavead
 #!/bin/bash
 
-case $2 in 
+MODE=$2
+CLIENT=$1
+
+if [[ -z $@ ]]
+then
+  MODE="unicode"
+  CLIENT="telnet"
+fi
+
+case $MODE in 
 ascii) ./.incavead_server --singleplayer ;;
 unicode) ./.incavead_server --unicode --singleplayer ;;
-*) echo "Usage: ./incavead {putty|telnet} {unicode|ascii}. See README."; exit 1 ;;
+tiles) ./.incavead_server --tiles --singleplayer ;;
+*) echo "Usage: ./incavead {putty|telnet} {tiles|unicode|ascii}. See README."; exit 1 ;;
 esac
 
-case $1 in
+case $CLIENT in
 putty) putty telnet://0.0.0.0:20020 ;;
 telnet) telnet 0.0.0.0 20020; echo -e '\033[0m' ;;
-*) echo "Usage: ./incavead {putty|telnet} {unicode|ascii}. See README."; exit 1 ;;
+*) echo "Usage: ./incavead {putty|telnet} {tiles|unicode|ascii}. See README."; exit 1 ;;
 esac
 EOF
 
@@ -38,26 +48,26 @@ chmod +x dist/incavead
 
 cat << "EOF" > dist/README
 
-There are four ways to play the game:
+There are six ways to play the game:
 
- 1. With Putty client and ASCII graphics:
-    
-    $ ./incavead putty ascii
+1) ./incavead putty ascii
+2) ./incavead putty unicode
+3) ./incavead putty tiles
+4) ./incavead telnet ascii
+5) ./incavead telnet unicode
+6) ./incavead telnet tiles
 
- 2. With Putty client and Unicode graphics:
+Ask for 'putty' if you want the Putty client, 
+'telnet' for the regular console telnet client.
 
-    $ ./incavead putty unicode
+'ascii' is the simplest pure-ASCII graphics mode, 
+'unicode' enables Unicode graphics, and 
+'tiles' is the special 'square tiles' Unicode graphics mode.
 
- 3. With the console telnet client and ASCII graphics:
-
-    $ ./incavead telnet ascii
-
- 4. With the console telnet client and Unicode graphics:
-
-    $ ./incavead telnet unicode
+By default the game will launch the console telnet client and Unicode graphics.
 
 
-(Putty is usually faster and more configurable as a telnet client, but may require some fiddling with settings.)
+(Putty is sometimes faster and more configurable as a telnet client, but may require some fiddling with settings.)
 
 Warning: if you want to use Putty, please install it first if you haven't yet. 
 
