@@ -26,26 +26,26 @@ enum class type_t : unsigned int {
     magic
 };
 
-std::string name(type_t d) {
+inline std::string name(type_t d) {
     switch (d) {
-    case physical:       return "physical";
-    case sleep:          return "sleep";
-    case poison:         return "poison";
-    case turn_undead:    return "undead cancellation";
-    case cancellation:   return "magic cancellation";
-    case scare_animal:   return "scare animal";
-    case psi:            return "psionic";
-    case eat_brain:      return "brain eating";
-    case drain:          return "lifeforce drain";
-    case make_meat:      return "fog of man-to-meat";
-    case scare:          return "fear";
-    case vampiric:       return "vampiric";
-    case heavenly_fire:  return "heavenly fire";
-    case hellish_fire:   return "hellfire";
-    case electric:       return "electric";
-    case sonic:          return "sonic";
-    case magic:          return "aetherial";
-    default:             return "oops";
+    case type_t::physical:       return "physical";
+    case type_t::sleep:          return "sleep";
+    case type_t::poison:         return "poison";
+    case type_t::turn_undead:    return "undead cancellation";
+    case type_t::cancellation:   return "magic cancellation";
+    case type_t::scare_animal:   return "scare animal";
+    case type_t::psi:            return "psionic";
+    case type_t::eat_brain:      return "brain eating";
+    case type_t::drain:          return "lifeforce drain";
+    case type_t::make_meat:      return "fog of man-to-meat";
+    case type_t::scare:          return "fear";
+    case type_t::vampiric:       return "vampiric";
+    case type_t::heavenly_fire:  return "heavenly fire";
+    case type_t::hellish_fire:   return "hellfire";
+    case type_t::electric:       return "electric";
+    case type_t::sonic:          return "sonic";
+    case type_t::magic:          return "aetherial";
+    default:                     return "oops";
     }
 }        
 

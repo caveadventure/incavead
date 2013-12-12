@@ -71,7 +71,7 @@ std::string show_stats(const Player& p) {
 
     for (const auto& i : att.attacks) {
         const std::string& s = damage::name(i.type);
-        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()), std::string()), i.val);
+        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()) : std::string()), i.val);
     }
 
     ret += "\n\2Your defense capabilities:\1\n\n";
@@ -81,7 +81,7 @@ std::string show_stats(const Player& p) {
 
     for (const auto& i : def.defenses) {
         const std::string& s = damage::name(i.first);
-        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()), std::string()), i.second);
+        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()) : std::string()), i.second);
     }
 
     return ret;
@@ -377,7 +377,7 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case '@':
-        state.push_window(show_stats(), screens_t::stats);
+        state.push_window(show_stats(p), screens_t::stats);
         break;
 
     case '/':
