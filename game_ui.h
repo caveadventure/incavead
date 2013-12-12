@@ -62,6 +62,31 @@ std::string show_victory() {
     return ret;
 }
 
+std::string show_stats(const Player& p) {
+
+    std::string ret = "\n\2Your attack capabilities:\1\n\n";
+
+    damage::attacks_t att;
+    p.inv.get_attack(att);
+
+    for (const auto& i : att.attacks) {
+        const std::string& s = damage::name(i.type);
+        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()), std::string()), i.val);
+    }
+
+    ret += "\n\2Your defense capabilities:\1\n\n";
+
+    damage::defenses_t def;
+    p.inv.get_defense(def);
+
+    for (const auto& i : def.defenses) {
+        const std::string& s = damage::name(i.first);
+        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()), std::string()), i.second);
+    }
+
+    return ret;
+}
+
 std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, 
                         const std::vector<Design::spell_t>& i_spells,
                         const std::vector<uint32_t>& r_spells) {
@@ -225,9 +250,11 @@ std::string help_text() {
         "  \2>\1 :          Use terrain. (Enter holes and tunnels, use statues.)\n"
         "  \2i\1 :          Interact with inventory, use items and show character info.\n"
         "  \2z\1 :          Cast spells if you know them.\n"
+        "\3Information commands:\1\n"
         "  \2/\1 :          Look around you using arrow keys.\n"
         "  \2tab\1 :        Look at monsters and items in view.\n"
         "  \2P\1 :          Show message history.\n"
+        "  \2@\1 :          Show your attack and defense stats.\n"
         "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
         "  \2?\1 :          Show this help message.\n"
@@ -347,6 +374,10 @@ void handle_input_main(Player& p, GameState& state,
 
     case '*':
         state.push_window(show_victory(), screens_t::victory_status);
+        break;
+
+    case '@':
+        state.push_window(show_stats(), screens_t::stats);
         break;
 
     case '/':
@@ -673,6 +704,8 @@ void Game::handle_input(GameState& state,
     case screens_t::tombstone:
     case screens_t::howto:
     case screens_t::achievements:
+    case screens_t::victory_status:
+    case screens_t::stats:
         handle_input_messages(state, k, false);
         break;
 
