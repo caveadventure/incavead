@@ -70,8 +70,10 @@ std::string show_stats(const Player& p) {
     p.inv.get_attack(att);
 
     for (const auto& i : att.attacks) {
-        const std::string& s = damage::name(i.type);
-        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()) : std::string()), i.val);
+        std::string s = damage::name(i.type);
+        if (s.size() < 25) 
+            s += std::string(25 - s.size(), ' ');
+        ret += nlp::message("  \1%S\2: %d\n", s, i.val);
     }
 
     ret += "\n\2Your defense capabilities:\1\n\n";
@@ -80,8 +82,10 @@ std::string show_stats(const Player& p) {
     p.inv.get_defense(def);
 
     for (const auto& i : def.defenses) {
-        const std::string& s = damage::name(i.first);
-        ret += nlp::message("  %S %s [%g]\n", s, (s.size() < 25 ? std::string(' ', 25 - s.size()) : std::string()), i.second);
+        std::string s = damage::name(i.first);
+        if (s.size() < 25) 
+            s += std::string(25 - s.size(), ' ');
+        ret += nlp::message("  \1%S\2: %d\n", s, i.second);
     }
 
     return ret;

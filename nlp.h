@@ -244,6 +244,10 @@ void message(_buffer& b, const std::string& s, const TAIL&... args) {
 
     if (c == 's') {
         b.out += s;
+
+    } else if (c == 'S' && s.size() > 0) {
+        b.out += ::toupper(s[0]);
+        b.out += s.substr(1);
     }
 
     message(b, args...);
