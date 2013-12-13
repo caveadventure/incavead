@@ -343,6 +343,8 @@ void Game::process_world(GameState& state, size_t& ticks,
             state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, state.grid.is_water(p.dig_x, p.dig_y));
             state.render.invalidate(p.dig_x, p.dig_y);
 
+            permafeats::features().add(p, p.dig_x, p.dig_y, tag_t());
+
             p.digging = false;
             state.render.do_message("Digging done.");
         }

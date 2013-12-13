@@ -248,8 +248,14 @@ void Game::generate(GameState& state, FUNC progressbar) {
         auto feats = permafeats::features().get(p);
 
         for (const auto& i : feats) {
-            //std::cout << " FEAT " << i.first.first << " " << i.first.second << terrain().get(i.second).name << std::endl;
-            state.features.set(i.first.first, i.first.second, i.second, state.render);
+            unsigned int x = i.first.first;
+            unsigned int y = i.first.second;
+            tag_t tag = i.second;
+
+            state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
+
+            if (!tag.null())
+                state.features.set(x, y, tag, state.render);
         }
     }
 

@@ -32,10 +32,10 @@ struct Features {
     std::mutex mutex;
 
     template <typename PLAYER>
-    void add(const PLAYER& p, tag_t feat) {
+    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat) {
 
         key_t key(p);
-        pt xy(p.px, p.py);
+        pt xy(x, y);
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -52,6 +52,11 @@ struct Features {
         serialize::write(sink, key);
         serialize::write(sink, xy);
         serialize::write(sink, feat);
+    }
+
+    template <typename PLAYER>
+    void add(const PLAYER& p, tag_t feat) {
+        add(p, p.px, p.py, feat);
     }
 
     void load() {
