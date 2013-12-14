@@ -386,8 +386,6 @@ struct Map {
             wmax = std::max(wmax, w);
         }
 
-        std::cout << "HMIN " << hmin << " WMAX " << wmax << std::endl;
-
         double walk_threshold = std::max(genparams.walk_threshold, hmin);
         unsigned int lowlands_threshold = std::min(genparams.lowlands_threshold, wmax);
 
