@@ -318,7 +318,7 @@ struct Map {
                   const PARAMS& genparams,
                   std::discrete_distribution<size_t>& ddist,
                   std::unordered_set<pt>& gout, 
-                  std::unordered_map<pt, int>& watr,
+                  std::unordered_map<pt, unsigned int>& watr,
                   double n, double q) {
 
         size_t index = ddist(rng.gen);
@@ -347,7 +347,7 @@ struct Map {
     void makerivers(neighbors::Neighbors& neigh, rnd::Generator& rng, const PARAMS& genparams) {
 
         std::unordered_set<pt> gout;
-        std::unordered_map<pt, int> watr;
+        std::unordered_map<pt, unsigned int> watr;
 
         unsigned int N1 = grid.size() / genparams.flow_n_freq; //100;
         double N2 = genparams.flow_volume;
@@ -372,31 +372,46 @@ struct Map {
             }
         }
 
-        std::map< int, std::vector<pt> > walk_r;
+
+        double hmin = 10;
+        unsigned int wmax = 0;
 
         for (const pt& xy : gout) {
 
             double h = _get(xy);
             auto tmp = watr.find(xy);
-            int w = (tmp == watr.end() ? 0 : tmp->second);
+            unsigned int w = (tmp == watr.end() ? 0 : tmp->second);
 
-            if (h <= genparams.walk_threshold) {
+            hmin = std::min(hmin, h);
+            wmax = std::max(wmax, w);
+        }
+
+        std::cout << "HMIN " << hmin << " WMAX " << wmax << std::endl;
+
+        double walk_threshold = std::max(genparams.walk_threshold, hmin);
+        unsigned int lowlands_threshold = std::min(genparams.lowlands_threshold, wmax);
+
+        for (const pt& xy : gout) {
+
+            double h = _get(xy);
+            auto tmp = watr.find(xy);
+            unsigned int w = (tmp == watr.end() ? 0 : tmp->second);
+
+            if (h <= walk_threshold) {
                 walkmap.insert(xy);
 
-                walk_r[w].push_back(xy);
-
-                if (h <= -10 && w >= genparams.lowlands_threshold) {
+                if (h <= hmin && w >= lowlands_threshold) {
                     lowlands.insert(xy);
                 }
             }
         }
 
-        if (walk_r.empty() || lowlands.empty())
+        if (walkmap.empty() || lowlands.empty())
             throw std::runtime_error("Failed to generate map");
 
         ///
         
-        std::vector< std::pair<int,pt> > watr_r;
+        std::vector< std::pair<unsigned int,pt> > watr_r;
 
         for (const auto& v : watr) {
             watr_r.push_back(std::make_pair(v.second, v.first));
