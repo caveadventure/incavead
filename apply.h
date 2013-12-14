@@ -71,7 +71,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        if (ls.noterrain) {
+        if (ls.no_phase_level) {
             state.render.do_message("Nothing happened. Strange.", true);
             ret = false;
 

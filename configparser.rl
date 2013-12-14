@@ -666,7 +666,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_damage        = 'damage'        ws1 real   %{ lev.damage = toreal(state.match); };
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
-        levelskin_noterrain     = 'noterrain'     %{ lev.noterrain = true; };
+
+        levelskin_no_phase_level = 'no_phase_level' %{ lev.no_phase_level = true; };
 
         levelskin_species_level = 'species_level' ws1 number %{ lev.species_level = toint(state.match); };
         levelskin_designs_level = 'designs_level' ws1 number %{ lev.designs_level = toint(state.match); };
@@ -715,7 +716,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage |
-            levelskin_exclusive | levelskin_noterrain |
+            levelskin_exclusive | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |
             levelskin_number_features | levelskin_name |
