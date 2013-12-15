@@ -151,12 +151,17 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
             hurt = dmg;
         }
 
+    } else if (v.type == damage::type_t::poison ||
+               v.type == damage::type_t::psi ||
+               v.type == damage::type_t::eat_brain ||
+               v.type == damage::type_t::drain) {
+
+        if (!s.flags.robot && !s.flags.plant) {
+            hurt = dmg;
+        }
+
     } else {
         // physical
-        // poison
-        // psi
-        // eat_brain
-        // drain
         // electric
         // magic
         
