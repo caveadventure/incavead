@@ -711,8 +711,12 @@ void Game::handle_input(GameState& state,
             if (p.state & Player::WISHING) {
 
                 if (!wish(state, p, p.input_string)) {
+
                     do_player_wish(state, p);
                     return;
+
+                } else {
+                    ++ticks;
                 }
             }
 
