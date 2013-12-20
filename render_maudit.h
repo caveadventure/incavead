@@ -1176,6 +1176,13 @@ public:
         textlabels[current_draw_n].emplace_back(text, x0, y0, fore, back);
     }
 
+    template <typename FUNC>
+    void replace_message(FUNC f) {
+        if (!messages.empty()) {
+            message& m = messages.front();
+            f(m.text);
+        }
+    }
 
     void do_message(const std::string& msg, bool important = false) {
         if (!messages.empty()) {

@@ -303,4 +303,14 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
     return false;
 }
 
+inline bool wish(GameState& state, Player& p, const std::string& wish) {
+    if (wish.size() > 9) {
+        state.render.do_message("You wished for a " + wish);
+        return true;
+    } else {
+        state.render.do_message("Wish too short. Try again.");
+        return false;
+    }
+}
+
 #endif

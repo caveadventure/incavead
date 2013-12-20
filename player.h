@@ -77,8 +77,12 @@ struct Player {
     static const unsigned int BLASTING       = 0x20;
     static const unsigned int DIGGING        = 0x40;
     static const unsigned int DEBUG          = 0x80;
+    static const unsigned int INPUTTING      = 0x100;
+    static const unsigned int WISHING        = 0x200;
 
     unsigned int state;
+
+    std::string input_string;
 
 
     struct look_t {
@@ -242,6 +246,7 @@ struct reader<Player> {
         serialize::read(s, p.money_curse);
         serialize::read(s, p.kills);
         serialize::read(s, p.achievements);
+        serialize::read(s, p.input_string);
     }
 };
 
@@ -274,6 +279,7 @@ struct writer<Player> {
         serialize::write(s, p.money_curse);
         serialize::write(s, p.kills);
         serialize::write(s, p.achievements);
+        serialize::write(s, p.input_string);
     }
 };
 

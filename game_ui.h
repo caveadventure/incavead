@@ -1,6 +1,19 @@
 #ifndef __GAME_UI_H
 #define __GAME_UI_H
 
+void do_player_input(GameState& state, Player& p, const std::string& prompt) {
+
+    p.input_string.clear();
+    state.render.do_message(prompt, true);
+    p.state = Player::INPUTTING;
+}
+
+void do_player_wish(GameState& state, Player& p) {
+
+    do_player_input(state, p, "Wish for what: >>> ");
+    p.state |= Player::WISHING;
+}
+
 std::string show_victory() {
 
     std::string ret = "\n\2Status of the \3One Ring:\1\n\n";
@@ -565,6 +578,10 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
                                 "qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, "
                                 "sed quia non numquam eius modi tempora incidunt.");
         break;
+
+    case 'I':
+        do_player_wish(state, p);
+        break;
     }
 
     p.state &= ~(Player::DEBUG);
@@ -646,12 +663,62 @@ void handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) 
     state.window_stack.pop_back();
 }
 
+bool handle_input_input(GameState& state, std::string& input_string, maudit::keypress k) {
+
+    if (k.letter == '\n') {
+        return false;
+
+    } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
+
+        if (!input_string.empty()) {
+
+            state.render.replace_message([](std::string& msg) {
+                    msg.pop_back();
+                });
+
+            input_string.pop_back();
+        }
+
+    } else if (k.letter >= ' ' && k.letter <= '~') {
+
+        unsigned char letter = k.letter;
+
+        state.render.replace_message([letter](std::string& msg) {
+                msg += letter;
+            });
+
+        input_string += k.letter;
+    }
+
+    return true;
+}
+
+
+
 void Game::handle_input(GameState& state,
                         size_t& ticks, bool& done, bool& dead, bool& regen, 
                         maudit::keypress k) {
 
     if (p.state == Player::DEBUG) {
         handle_input_debug(p, state, ticks, regen, k);
+        return;
+    }
+
+    if (p.state & Player::INPUTTING) {
+
+        if (!handle_input_input(state, p.input_string, k)) {
+
+            if (p.state & Player::WISHING) {
+
+                if (!wish(state, p, p.input_string)) {
+                    do_player_wish(state, p);
+                    return;
+                }
+            }
+
+            p.state = Player::MAIN;
+        }
+
         return;
     }
 
