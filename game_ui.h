@@ -8,10 +8,14 @@ void do_player_input(GameState& state, Player& p, const std::string& prompt) {
     p.state = Player::INPUTTING;
 }
 
-void do_player_wish(GameState& state, Player& p) {
+void do_player_wish(GameState& state, Player& p, bool special) {
 
     do_player_input(state, p, "Wish for what: >>> ");
     p.state |= Player::WISHING;
+
+    if (special) {
+        p.state |= Player::SPECIAL_WISH;
+    }
 }
 
 std::string show_victory() {
@@ -580,7 +584,11 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
         break;
 
     case 'I':
-        do_player_wish(state, p);
+        do_player_wish(state, p, false);
+        break;
+
+    case 'O':
+        do_player_wish(state, p, true);
         break;
     }
 
@@ -710,9 +718,14 @@ void Game::handle_input(GameState& state,
 
             if (p.state & Player::WISHING) {
 
-                if (!simple_wish(state, p, p.input_string)) {
+                bool special = (p.state & Player::SPECIAL_WISH);
+                bool ok = (special ? 
+                           special_wish(state, p, p.input_string) :
+                           simple_wish(state, p, p.input_string));
 
-                    do_player_wish(state, p);
+                if (!ok) {
+
+                    do_player_wish(state, p, special);
                     return;
 
                 } else {

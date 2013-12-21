@@ -381,25 +381,41 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
 }
 
 
-inline void find_any_item(const std::string& name) {
+inline bool find_any_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
 
     const auto& d = designs();
 
-    std::map< size_t, std::vector<tag_t> > mind;
+    size_t maxlcs = 0;    
+    std::vector<tag_t> desgns;
 
     for (const auto& i : d.bank) {
 
-        size_t ld = longest_common_subsequence(i.second.name, name);
-        std::cout << " >> " << ld << " " << i.second.name << " " << name << std::endl;
+        size_t lcs = longest_common_subsequence(i.second.name, name);
 
-        mind[ld].push_back(i.first);
+        if (lcs < maxlcs)
+            continue;
+
+        if (lcs > maxlcs) {
+            maxlcs = lcs;
+            desgns.clear();
+        }
+
+        desgns.push_back(i.first);
     }
 
-    const auto& found = mind.rbegin()->second;
-
-    for (tag_t ftag : found) {
-        std::cout << "Found: " << designs().get(ftag).name << std::endl;
+    if (desgns.empty()) {
+        state.render.do_message("Strange. Nothing happened.");
+        return false;
     }
+
+    tag_t design = desgns[state.rng.n(desgns.size())];
+    const Design& _design = designs().get(design);
+
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+    state.items.place(px, py, made, state.render);
+
+    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+    return true;
 }
 
 
@@ -415,6 +431,11 @@ inline bool simple_wish(GameState& state, Player& p, const std::string& wish) {
     }
 
     return ok;
+}
+
+inline bool special_wish(GameState& state, Player& p, const std::string& wish) {
+
+    return find_any_item(state, p.px, p.py, wish);
 }
 
 #endif
