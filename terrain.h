@@ -63,8 +63,9 @@ struct Terrain {
     struct uncharge_t {
         bool attack;
         bool move;
+        bool use;
 
-        uncharge_t() : attack(false), move(false) {}
+        uncharge_t() : attack(false), move(false), use(false) {}
     };
 
     uncharge_t uncharge;

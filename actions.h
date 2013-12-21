@@ -177,6 +177,10 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
 
     const Terrain& t = terrain().get(feat.tag);
 
+    if (t.uncharge.use) {
+        state.features.uncharge(p.px, p.py, state.render);
+    }
+
     if (!t.victory_item.null()) {
 
         const Design& d_victory = designs().get(t.victory_item);

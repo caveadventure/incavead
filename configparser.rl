@@ -507,6 +507,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ ter.protection_racket.money_curse = toreal(state.match); } ;
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
+                                ('use'    %{ ter.uncharge.use = true; }    ) |
                                 ('move'   %{ ter.uncharge.move = true; }   ) ;
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
