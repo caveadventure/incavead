@@ -211,7 +211,9 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
 
         if (p.inv.take(d.slot, vi)) {
 
-            unsigned int c = (d.count_is_only_one ? 1 : vi.count) * d.worth;
+            const Design& d2 = designs().get(vi.tag);
+
+            unsigned int c = (d2.count_is_only_one ? 1 : vi.count) * d2.worth;
 
             double shield_bonus = t.protection_racket.shield_bonus * c;
             double money_curse = t.protection_racket.money_curse * c;
