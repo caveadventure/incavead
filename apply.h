@@ -1,6 +1,7 @@
 #ifndef __APPLY_H
 #define __APPLY_H
 
+#include <valarray>
 
 inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
@@ -303,14 +304,101 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
     return false;
 }
 
-inline bool wish(GameState& state, Player& p, const std::string& wish) {
-    if (wish.size() > 9) {
-        state.render.do_message("You wished for a " + wish);
-        return true;
-    } else {
-        state.render.do_message("Wish too short. Try again.");
+
+inline size_t longest_common_subsequence(const std::string& a, const std::string& b) {
+    
+    size_t w = b.size() + 1;
+    size_t h = a.size() + 1;
+
+    std::valarray<size_t> c(w * h);
+
+    for (size_t i = 0; i < a.size(); ++i) {
+        for (size_t j = 0; j < b.size(); ++j) {
+
+            size_t ix = w * (i + 1) + (j + 1);
+
+            if (a[i] == b[j]) {
+                c[ix] = c[w * i + j] + 1;
+            } else {
+                c[ix] = std::max(c[w * (i + 1) + j], c[w * i + (j + 1)]);
+            }
+        }
+    }
+
+    return c[w * h - 1];
+}
+
+
+inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
+
+    const auto& data = state.designs_counts.data;
+
+    size_t maxlcs = 0;
+    std::vector<double> counts;
+    std::vector<tag_t> desgns;
+
+    for (const auto& i : data) {
+        for (const auto& j : i.second) {
+
+            size_t lcs = longest_common_subsequence(designs().get(j.first).name, name);
+
+            if (lcs < maxlcs)
+                continue;
+
+            if (lcs > maxlcs) {
+                maxlcs = lcs;
+                counts.clear();
+                desgns.clear();
+            }
+
+            counts.push_back(j.second);
+            desgns.push_back(j.first);
+        }
+    }
+
+    if (counts.empty()) {
+        state.render.do_message("Strange. Nothing happened.");
         return false;
     }
+
+    std::discrete_distribution<unsigned int> d(counts.begin(), counts.end());
+    unsigned int ntag = d(state.rng.gen);
+
+    tag_t design = desgns[ntag];
+
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+    state.items.place(px, py, made, state.render);
+
+    state.render.do_message(nlp::message("You see %s.", nlp::count(), designs().get(design), made.count));
+    return true;
+}
+
+
+inline void find_any_item(const std::string& name) {
+
+    const auto& d = designs();
+
+    std::map< size_t, std::vector<tag_t> > mind;
+
+    for (const auto& i : d.bank) {
+
+        size_t ld = longest_common_subsequence(i.second.name, name);
+        std::cout << " >> " << ld << " " << i.second.name << " " << name << std::endl;
+
+        mind[ld].push_back(i.first);
+    }
+
+    const auto& found = mind.rbegin()->second;
+
+    for (tag_t ftag : found) {
+        std::cout << "Found: " << designs().get(ftag).name << std::endl;
+    }
+}
+
+
+inline bool wish(GameState& state, Player& p, const std::string& wish) {
+
+    return find_existing_item(state, p.px, p.py, wish);
 }
 
 #endif
