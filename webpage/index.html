@@ -42,10 +42,14 @@
       }
       .tabs-content {
         margin-bottom: 0px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: rgb(0, 121, 161);
       }
       .tabs-content > .content {
         padding: 1em 0px 0px 0px;
       }
+
       .tabs dd > a {
         border-style: solid;
         border-left-color: rgb(239, 239, 239);
@@ -154,7 +158,9 @@
 
         <div id="highscore">
           <h3>Highscore table</h3>
-          <p>Here's a list of top-10 best players from the public server:</p>
+          <p>Here's a list of top-10 best players from the public server, 
+             from a total of <b><span id="num_games"></span></b> games logged so far.
+          </p>
 
           <dl class="tabs" data-tab>
             <dd class="active"><a href="#panel_plev">By player level</a></dd>
@@ -165,6 +171,7 @@
           </dl>
 
           <div class="tabs-content">
+
             <div class="content active" id="panel_plev">
               <ol id="highscore_plev"></ol>
             </div>
@@ -184,10 +191,8 @@
             <div class="content" id="panel_ts">
               <ol id="highscore_ts"></ol>
             </div>
+
           </div>
-          <p>
-            (From a total of <span id="num_games"></span> games logged so far.)
-          </p>
         </div>
 
         <div id="winning">
