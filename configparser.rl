@@ -433,6 +433,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_genocide = 'genocide' ws1 tag %{ des.genocide = tag_t(state.match, tagmem); };
 
+        design_wish = 'wish' ws1 ('simple'  %{ des.wishing = Design::SIMPLE_WISH;  } |
+                                  'special' %{ des.wishing = Design::SPECIAL_WISH; })
+                       ;
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -441,7 +445,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
-            design_random_spell | design_genocide |
+            design_random_spell | design_genocide | design_wish |
             '}'
             ${ fret; })
             ;
@@ -517,13 +521,17 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
             ;
 
+        terrain_wish = 'wish' ws1 ('simple'  %{ ter.wishing = Terrain::SIMPLE_WISH;  } |
+                                   'special' %{ ter.wishing = Terrain::SPECIAL_WISH; })
+                       ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_protection_racket |
-            terrain_uncharge | terrain_crafting |
+            terrain_uncharge | terrain_crafting | terrain_wish |
             '}' 
             ${ fret; })
             ;
