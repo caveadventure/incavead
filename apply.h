@@ -391,7 +391,7 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
 }
 
 
-inline bool find_any_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
+inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned int py, const std::string& name) {
 
     const auto& d = designs();
 
@@ -426,6 +426,11 @@ inline bool find_any_item(GameState& state, unsigned int px, unsigned int py, co
     tag_t design = desgns[state.rng.n(desgns.size())];
     const Design& _design = designs().get(design);
 
+    // HACK
+    if (design == constants().unique_item) {
+        p.uniques_disabled = true;
+    }
+
     items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
     state.items.place(px, py, made, state.render);
 
@@ -450,7 +455,7 @@ inline bool simple_wish(GameState& state, Player& p, const std::string& wish) {
 
 inline bool special_wish(GameState& state, Player& p, const std::string& wish) {
 
-    return find_any_item(state, p.px, p.py, wish);
+    return find_any_item(state, p, p.px, p.py, wish);
 }
 
 #endif

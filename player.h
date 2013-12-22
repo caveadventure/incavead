@@ -104,6 +104,7 @@ struct Player {
 
     std::string attacker;
 
+    bool uniques_disabled;
     size_t dungeon_unique_series;
 
     double money_curse;
@@ -122,7 +123,7 @@ struct Player {
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
                sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN),
-               dungeon_unique_series(0), money_curse(0)
+               uniques_disabled(false), dungeon_unique_series(0), money_curse(0)
         {
             karma.val = 0;
             luck.val = 0;
@@ -243,6 +244,7 @@ struct reader<Player> {
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
         serialize::read(s, p.spells);
+        serialize::read(s, p.uniques_disabled);
         serialize::read(s, p.dungeon_unique_series);
         serialize::read(s, p.money_curse);
         serialize::read(s, p.kills);
@@ -276,6 +278,7 @@ struct writer<Player> {
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
         serialize::write(s, p.spells);
+        serialize::write(s, p.uniques_disabled);
         serialize::write(s, p.dungeon_unique_series);
         serialize::write(s, p.money_curse);
         serialize::write(s, p.kills);

@@ -2,9 +2,14 @@
 #define __GAME_UI_H
 
 
-std::string show_victory() {
+std::string show_victory(const Player& p, const GameState& state) {
 
-    std::string ret = "\n\2Status of the \3One Ring:\1\n\n";
+    std::string ret = "\n\2Status of the \3Ring of Power:\1\n\n";
+
+    if (p.uniques_disabled) {
+        ret += "Indeterminate status due to wishing.\n";
+        return ret;
+    }
 
     std::vector<uniques::key_t> levels;
     time_t placetime;
@@ -21,7 +26,35 @@ std::string show_victory() {
             ret += "Ready to regenerate on dungeon level\2 1\1.";
 
         } else {
-            ret += "Somewhere on this level or destroyed.\n";
+
+            bool found = false;
+
+            for (const auto& is : state.items.stuff) {
+                for (const auto& i : is.second) {
+                    if (i.tag == constants().unique_item) {
+                        found = true;
+                    }
+                }
+            }
+
+            if (found) {
+                ret += "Found somewhere on this level.\n";
+            } else {
+
+                bool inv = false;
+
+                for (const auto& i : p.inv.stuff) {
+                    if (i.second.tag == constants().unique_item) {
+                        inv = true;
+                    }
+                }
+
+                if (inv) {
+                    ret += "In your inventory.\n";
+                } else {
+                    ret += "Destroyed and not yet ready to regenerate.\n";
+                }
+            }
         }
 
     } else {
@@ -378,7 +411,7 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case '*':
-        state.push_window(show_victory(), screens_t::victory_status);
+        state.push_window(show_victory(p, state), screens_t::victory_status);
         break;
 
     case '@':

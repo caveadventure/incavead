@@ -38,7 +38,7 @@ void Game::dispose(GameState& state) {
 
     state.monsters.dispose(state.species_counts);
 
-    if (vic.size() > 0) {
+    if (vic.size() > 0 && !p.uniques_disabled) {
         
         uniques::uniques().put(p.current_wx, p.current_wy, p.current_wz, vic, p.dungeon_unique_series);
     }

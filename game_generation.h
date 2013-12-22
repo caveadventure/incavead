@@ -283,7 +283,8 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
 
     // Place the victory item
-    {
+    if (!p.uniques_disabled) {
+
         size_t unique_series = p.dungeon_unique_series;
 
         if (p.worldx == 0 && p.worldy == 0 && p.worldz == 0 &&
