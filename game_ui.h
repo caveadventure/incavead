@@ -832,7 +832,8 @@ void Game::goodbye_message(GameState& state, FUNC println) {
 
                        if (victory) {
                            line1 = nlp::message("%s%d) %S, a glorious victor of level %d.", pad, n, name, plev+1);
-                           line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.");
+                           line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.",
+                                                dlev+1, worth);
 
                        } else {
                            line1 = nlp::message("%s%d) %S, level %d.", pad, n, name, plev+1);
