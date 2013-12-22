@@ -60,7 +60,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
         if (v <= drop.chance)
             continue;
 
-        state.items.place(mon.xy.first, mon.xy.second, items::Item(drop.tag, mon.xy), state.render);
+        items::Item idrop = state.items.make_item(drop.tag, mon.xy, state.rng);
+        state.items.place(mon.xy.first, mon.xy.second, idrop, state.render);
     }
 
     if (do_track && !s.genus.null()) {
