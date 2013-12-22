@@ -91,6 +91,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (d.wishing) {
+        if (d.wishing == Design::SPECIAL_WISH) {
+            do_player_wish(state, p, true);
+        } else {
+            do_player_wish(state, p, false);
+        }
+    }
+
     return ret;
 }
 

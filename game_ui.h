@@ -1,22 +1,6 @@
 #ifndef __GAME_UI_H
 #define __GAME_UI_H
 
-void do_player_input(GameState& state, Player& p, const std::string& prompt) {
-
-    p.input_string.clear();
-    state.render.do_message(prompt, true);
-    p.state = Player::INPUTTING;
-}
-
-void do_player_wish(GameState& state, Player& p, bool special) {
-
-    do_player_input(state, p, "Wish for what: >>> ");
-    p.state |= Player::WISHING;
-
-    if (special) {
-        p.state |= Player::SPECIAL_WISH;
-    }
-}
 
 std::string show_victory() {
 

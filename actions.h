@@ -1,6 +1,24 @@
 #ifndef __ACTIONS_H
 #define __ACTIONS_H
 
+
+void do_player_input(GameState& state, Player& p, const std::string& prompt) {
+
+    p.input_string.clear();
+    state.render.do_message(prompt, true);
+    p.state = Player::INPUTTING;
+}
+
+void do_player_wish(GameState& state, Player& p, bool special) {
+
+    do_player_input(state, p, "Wish for what: >>> ");
+    p.state |= Player::WISHING;
+
+    if (special) {
+        p.state |= Player::SPECIAL_WISH;
+    }
+}
+
 void move_player(const Player& p, GameState& state) {
         
     size_t nstack = state.items.stack_size(p.px, p.py);
@@ -325,6 +343,18 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
         state.render.do_message("You need a specific kind of item to use this.");
         return;
     }
+
+
+    if (t.wishing) {
+        if (t.wishing == Terrain::SPECIAL_WISH) {
+            do_player_wish(state, p, true);
+        } else {
+            do_player_wish(state, p, false);
+        }
+
+        return;
+    }
+
 
     state.render.do_message("There is nothing here to use.");
 }

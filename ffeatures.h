@@ -121,6 +121,10 @@ struct Features {
         case Terrain::placement_t::lowlands:
             if (!ptsource.one_of_lowlands(rng, ret)) return false;
             break;
+
+        case Terrain::placement_t::shoreline:
+            if (!ptsource.one_of_shore(rng, ret)) return false;
+            break;
         }
 
         ptsource.add_nogen(ret.first, ret.second);

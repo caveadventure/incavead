@@ -8,7 +8,8 @@ struct Terrain {
         floor,
         water,
         corner,
-        lowlands
+        lowlands,
+        shoreline
     };
 
     tag_t tag;
