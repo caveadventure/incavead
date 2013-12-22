@@ -97,6 +97,8 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         } else {
             do_player_wish(state, p, false);
         }
+
+        state.window_stack.clear();
     }
 
     return ret;
@@ -398,7 +400,12 @@ inline bool find_any_item(GameState& state, unsigned int px, unsigned int py, co
 
     for (const auto& i : d.bank) {
 
-        size_t lcs = longest_common_subsequence(i.second.name, name);
+        const Design& _design = designs().get(i.first);
+
+        if (_design.wishing)
+            continue;
+
+        size_t lcs = longest_common_subsequence(_design.name, name);
 
         if (lcs < maxlcs)
             continue;
