@@ -404,7 +404,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_is_lit = 'is_lit' %{ des.is_lit = true; };
 
         design_place_permafeat = 'place_permafeat' 
-            ws1 tag %{ des.place_permafeat = tag_t(state.match, tagmem); };
+            ws1 tag %{ des.place_permafeat.feat = tag_t(state.match, tagmem); };
+
+        design_place_permafloor_flag = 
+            ('+walk' %{ des.place_permafeat.walk = 1; } ) |
+            ('-walk' %{ des.place_permafeat.walk = 0; } ) |
+            ('+water' %{ des.place_permafeat.walk = 1; } ) |
+            ('-water' %{ des.place_permafeat.walk = 0; } );
+
+        design_place_permafloor = 'place_permafloor'
+            ws1 (ws design_place_permafloor_flag)*;
 
         design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
             ws1 real %{ des.luck.back().height = toreal(state.match); }
@@ -443,7 +452,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
-            design_place_permafeat | design_luck | design_hunger | design_other_hunger_multiplier |
+            design_place_permafeat | design_place_permafloor | design_luck | design_hunger | 
+            design_other_hunger_multiplier |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish |
             '}'
@@ -487,6 +497,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
         terrain_walkblock = 'walkblock'                %{ ter.walkblock = true; } ;
+        terrain_water     = 'water'                    %{ ter.water = true; } ;
         terrain_decay     = 'decay'     ws1 number     %{ ter.decay = toint(state.match); } ;
         terrain_attack    = 'attack'    ws1 damage_val %{ ter.attacks.add(dmgval); } ;
         terrain_sticky    = 'sticky'                   %{ ter.sticky = true; } ;
@@ -532,7 +543,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_protection_racket |
-            terrain_uncharge | terrain_crafting | terrain_wish |
+            terrain_uncharge | terrain_crafting | terrain_wish | terrain_water |
             '}' 
             ${ fret; })
             ;

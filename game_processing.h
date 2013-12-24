@@ -340,10 +340,13 @@ void Game::process_world(GameState& state, size_t& ticks,
 
         if (height < -10) {
             height = -10;
-            state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, state.grid.is_water(p.dig_x, p.dig_y));
+            
+            bool water = state.grid.is_water(p.dig_x, p.dig_y);
+
+            state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
             state.render.invalidate(p.dig_x, p.dig_y);
 
-            permafeats::features().add(p, p.dig_x, p.dig_y, tag_t());
+            permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
 
             p.digging = false;
             state.render.do_message("Digging done.");

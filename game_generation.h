@@ -250,12 +250,17 @@ void Game::generate(GameState& state, FUNC progressbar) {
         for (const auto& i : feats) {
             unsigned int x = i.first.first;
             unsigned int y = i.first.second;
-            tag_t tag = i.second;
+            tag_t tag = i.second.feat;
+            bool walk = i.second.walk;
+            bool water = i.second.water;
 
-            state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
+            if (tag.null()) {
+                state.grid.set_walk_water(state.neigh, x, y, walk, water);
 
-            if (!tag.null())
+            } else {
+                state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
                 state.features.set(x, y, tag, state.render);
+            }
         }
     }
 

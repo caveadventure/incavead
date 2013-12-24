@@ -55,11 +55,19 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     }
 
     // WARNING, don't change the order of blocks, as worldz can be modified.
-    if (!d.place_permafeat.null()) {
+    if (!d.place_permafeat.feat.null()) {
 
-        state.features.set(p.px, p.py, d.place_permafeat, state.render);        
-        permafeats::features().add(p, d.place_permafeat);
+        state.features.set(p.px, p.py, d.place_permafeat.feat, state.render);        
+        permafeats::features().add(p, d.place_permafeat.feat);
         ret = true;
+
+    } else if (d.place_permafeat.walk != -1 || d.place_permafeat.water != -1) {
+
+        bool walk = (d.place_permafeat.walk == -1 ? state.grid.is_walk(p.px, p.py) : d.place_permafeat.walk);
+        bool water = (d.place_permafeat.water == -1 ? state.grid.is_water(p.px, p.py) : d.place_permafeat.water);
+        
+        state.grid.set_walk_water(state.neigh, p.px, p.py, walk, water);
+        permafeats::features().add(p, walk, water);
     }
 
     if (d.descend != 0) {

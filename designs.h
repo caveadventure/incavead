@@ -80,7 +80,15 @@ struct Design {
 
     bool is_lit;
 
-    tag_t place_permafeat;
+    struct permafeat_t {
+        tag_t feat;
+        int walk;
+        int water;
+
+        permafeat_t() : feat(), walk(-1), water(-1) {}
+    };
+
+    permafeat_t place_permafeat;
 
     struct luck_t {
         double height;
