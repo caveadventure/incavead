@@ -409,8 +409,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_place_permafloor_flag = 
             ('+walk' %{ des.place_permafeat.walk = 1; } ) |
             ('-walk' %{ des.place_permafeat.walk = 0; } ) |
-            ('+water' %{ des.place_permafeat.walk = 1; } ) |
-            ('-water' %{ des.place_permafeat.walk = 0; } );
+            ('+water' %{ des.place_permafeat.water = 1; } ) |
+            ('-water' %{ des.place_permafeat.water = 0; } );
 
         design_place_permafloor = 'place_permafloor'
             ws1 (ws design_place_permafloor_flag)*;

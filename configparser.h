@@ -12282,11 +12282,11 @@ _match:
 	break;
 	case 150:
 #line 412 "configparser.rl"
-	{ des.place_permafeat.walk = 1; }
+	{ des.place_permafeat.water = 1; }
 	break;
 	case 151:
 #line 413 "configparser.rl"
-	{ des.place_permafeat.walk = 0; }
+	{ des.place_permafeat.water = 0; }
 	break;
 	case 152:
 #line 418 "configparser.rl"

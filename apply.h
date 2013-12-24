@@ -65,9 +65,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         bool walk = (d.place_permafeat.walk == -1 ? state.grid.is_walk(p.px, p.py) : d.place_permafeat.walk);
         bool water = (d.place_permafeat.water == -1 ? state.grid.is_water(p.px, p.py) : d.place_permafeat.water);
+
+        std::cout << "!!! " << walk << " " << water << " : " << d.place_permafeat.walk << " " 
+                  << d.place_permafeat.water << std::endl;
         
         state.grid.set_walk_water(state.neigh, p.px, p.py, walk, water);
+        state.render.invalidate(p.px, p.py);
         permafeats::features().add(p, walk, water);
+        ret = true;
     }
 
     if (d.descend != 0) {
