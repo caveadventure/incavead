@@ -122,11 +122,13 @@ struct Design {
         SPECIAL_WISH = 2
     } wishing;
 
+    bool magic_mapping;
+
     Design() : level(0), count(0), count_is_only_one(false), stackrange(0), heal(0), feed(0), karma(0), usable(false), 
                destructible(false), throwrange(0),
                gencount(1, 0), melee(false), lightradius(0), digging(0), descend(0), safe_descend(0), worth(0),
                is_lit(false), hunger(0), other_hunger_multiplier(0), shield(0), count_is_rcode(false),
-               wishing(NO_WISH) {}
+               wishing(NO_WISH), magic_mapping(false) {}
     
 };
 

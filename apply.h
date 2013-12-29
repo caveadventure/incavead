@@ -111,6 +111,17 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         state.window_stack.clear();
     }
 
+    if (d.magic_mapping) {
+
+        for (const auto& f : state.features.feats) {
+            const grender::pt& xy = f.first;
+            state.render.set_is_lit(xy.first, xy.second, 3, true);
+            state.render.invalidate(xy.first, xy.second);
+        }
+
+        ret = true;
+    }
+
     return ret;
 }
 
