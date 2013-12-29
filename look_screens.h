@@ -214,7 +214,13 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
 
     } else if (state.features.get(x, y, feat)) {
 
-        msg = nlp::message(" %s", terrain().get(feat.tag));
+        const Terrain& ter = terrain().get(feat.tag);
+
+        if (ter.descr.empty()) {
+            msg = nlp::message(" %s", ter);
+        } else {
+            msg = nlp::message(" %s (%s)", ter, ter.descr);
+        }            
 
     } else if (x == px && y == py) {
         msg = " This is you";

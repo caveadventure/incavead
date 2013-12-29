@@ -14,6 +14,7 @@ struct Terrain {
 
     tag_t tag;
     std::string name;
+    std::string descr;
     skins skin;
 
     unsigned int count;

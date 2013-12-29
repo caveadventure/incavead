@@ -494,6 +494,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_count     = 'count'     ws1 number     %{ ter.count = toint(state.match); } ;
         terrain_name      = 'name'      ws1 string     %{ ter.name = state.match; } ;
+        terrain_descr     = 'descr'     ws1 string     %{ ter.descr = state.match; } ;
         terrain_skin      = 'skin'      ws1 skin       %{ ter.skin.set(SKINS); };
         terrain_placement = 'placement' ws1 tplacement  ;
         terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
@@ -540,7 +541,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        ;
 
         terrain_one_data =
-            (terrain_count | terrain_name | terrain_skin | terrain_placement |
+            (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
