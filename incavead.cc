@@ -73,7 +73,8 @@ enum class screens_t : unsigned int {
     howto,
     achievements,
     victory_status,
-    stats
+    stats,
+    overmap
 };
 
 

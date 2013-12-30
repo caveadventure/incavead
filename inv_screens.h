@@ -92,18 +92,20 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, const st
                      level_name,
                      moon_phase);
 
-    for (const auto& slot : inv.slots) {
+    for (const auto& slotk : inv.slot_keys) {
 
         items::Item tmp;
 
-        if (!inv.get(slot.first, tmp)) 
+        if (!inv.get(slotk.second, tmp)) 
             continue;
+
+        const auto& slot = inv.slots[slotk.second];
 
         const Design& d = designs().get(tmp.tag);
 
         m += nlp::message("   %s: \2%c\1) %S\n", 
-                          slot.second.label,
-                          slot.second.letter,
+                          slot.label,
+                          slot.letter,
                           nlp::count(), d, tmp.count);
     }
 

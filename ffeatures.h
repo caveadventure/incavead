@@ -170,7 +170,7 @@ struct Features {
         return true;
     }
 
-    bool get(unsigned int x, unsigned int y, Feature& ret) {
+    bool get(unsigned int x, unsigned int y, Feature& ret) const {
         auto i = feats.find(pt(x, y));
 
         if (i == feats.end()) {

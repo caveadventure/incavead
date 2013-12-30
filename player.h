@@ -84,6 +84,7 @@ struct Player {
     unsigned int state;
 
     std::string input_string;
+    size_t overmap_scale;
 
 
     struct look_t {
@@ -122,7 +123,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN),
+               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN), overmap_scale(0),
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0)
         {
             karma.val = 0;
@@ -250,6 +251,7 @@ struct reader<Player> {
         serialize::read(s, p.kills);
         serialize::read(s, p.achievements);
         serialize::read(s, p.input_string);
+        serialize::read(s, p.overmap_scale);
     }
 };
 
@@ -284,6 +286,7 @@ struct writer<Player> {
         serialize::write(s, p.kills);
         serialize::write(s, p.achievements);
         serialize::write(s, p.input_string);
+        serialize::write(s, p.overmap_scale);
     }
 };
 

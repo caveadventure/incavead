@@ -1,6 +1,73 @@
 #ifndef __GAME_UI_H
 #define __GAME_UI_H
 
+std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
+
+    p.overmap_scale = scale;
+
+    std::string ret = "The overview map. Use '+' and '-' to zoom in and out.\n\n\3";
+
+    for (unsigned int y = 0; y < state.render.h; y += scale) {
+        for (unsigned int x = 0; x < state.render.w; x += scale) {
+
+            std::string charz = " ";
+            unsigned int intensity = 0;
+
+            if (x == 0 || y == 0 || 
+                x >= state.render.w - scale ||
+                y >= state.render.h - scale) {
+
+                charz = ".";
+            }
+
+            for (unsigned int yi = 0; yi < scale; ++yi) {
+                for (unsigned int xi = 0; xi < scale; ++xi) {
+
+                    unsigned int xx = x + xi;
+                    unsigned int yy = y + yi;
+
+                    if (xx >= state.render.w || yy >= state.render.h)
+                        continue;
+                    
+                    const auto& gp = state.render._get(xx, yy);
+
+                    if (xx == p.px && yy == p.py) {
+                        charz = constants().player_skin[0].text;
+                        intensity = 3;
+                    }
+
+                    items::Item item;
+                    if (state.items.get(xx, yy, 0, item) && intensity <= 2) {
+                        const Design& d = designs().get(item.tag);
+
+                        if (d.is_lit || gp.is_lit) {
+                            charz = d.skin[0].text;
+                            intensity = 2;
+                        }
+                    }
+
+                    features::Feature feat;
+                    if (state.features.get(xx, yy, feat) && intensity <= 1) {
+                        const Terrain& t = terrain().get(feat.tag);
+
+                        if (t.is_lit || gp.is_lit) {
+                            charz = t.skin[0].text;
+                            intensity = 1;
+                        }
+                    }
+
+                }
+            }
+
+            ret += charz;
+        }
+
+        ret += "\n\3";
+    }
+
+    return ret;
+}
+
 
 std::string show_victory(const Player& p, const GameState& state) {
 
@@ -22,38 +89,41 @@ std::string show_victory(const Player& p, const GameState& state) {
 
     if (levels.empty()) {
     
-        if (placetime == 0 || tdiff >= (time_t)timeout) {
-            ret += "Ready to regenerate on dungeon level\2 1\1.";
+        bool found = false;
+
+        for (const auto& is : state.items.stuff) {
+            for (const auto& i : is.second) {
+                if (i.tag == constants().unique_item) {
+                    found = true;
+                }
+            }
+        }
+
+        if (found) {
+            ret += "Found somewhere on this level.\n";
 
         } else {
 
-            bool found = false;
+            bool inv = false;
 
-            for (const auto& is : state.items.stuff) {
-                for (const auto& i : is.second) {
-                    if (i.tag == constants().unique_item) {
-                        found = true;
-                    }
+            for (const auto& i : p.inv.stuff) {
+                if (i.second.tag == constants().unique_item) {
+                    inv = true;
                 }
             }
 
-            if (found) {
-                ret += "Found somewhere on this level.\n";
+            if (inv) {
+                ret += "In your inventory.\n";
+                found = true;
+            }
+        }
+
+        if (!found) {
+            if (placetime == 0 || tdiff >= (time_t)timeout) {
+                ret += "Ready to regenerate on dungeon level\2 1\1.";
+
             } else {
-
-                bool inv = false;
-
-                for (const auto& i : p.inv.stuff) {
-                    if (i.second.tag == constants().unique_item) {
-                        inv = true;
-                    }
-                }
-
-                if (inv) {
-                    ret += "In your inventory.\n";
-                } else {
-                    ret += "Destroyed and not yet ready to regenerate.\n";
-                }
+                ret += "Destroyed and not yet ready to regenerate.\n";
             }
         }
 
@@ -293,6 +363,7 @@ std::string help_text() {
         "  \2tab\1 :        Look at monsters and items in view.\n"
         "  \2P\1 :          Show message history.\n"
         "  \2@\1 :          Show your attack and defense stats.\n"
+        "  \2#\1 :          Show the current map's overview.\n"
         "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
         "  \2?\1 :          Show this help message.\n"
@@ -416,6 +487,10 @@ void handle_input_main(Player& p, GameState& state,
 
     case '@':
         state.push_window(show_stats(p), screens_t::stats);
+        break;
+
+    case '#':
+        state.push_window(show_overmap(p, state), screens_t::overmap);
         break;
 
     case '/':
@@ -688,6 +763,24 @@ void handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) 
     state.window_stack.pop_back();
 }
 
+void handle_input_overmap(Player& p, GameState& state, maudit::keypress k) {
+
+    if (k.letter == '-') {
+        state.window_stack.pop_back();
+        state.push_window(show_overmap(p, state, p.overmap_scale * 2), screens_t::overmap);
+
+    } else if (k.letter == '+') {
+
+        if (p.overmap_scale > 2) {
+            state.window_stack.pop_back();
+            state.push_window(show_overmap(p, state, p.overmap_scale / 2), screens_t::overmap);
+        }
+
+    } else {
+        state.window_stack.pop_back();
+    }
+}
+
 bool handle_input_input(GameState& state, std::string& input_string, maudit::keypress k) {
 
     if (k.letter == '\n') {
@@ -816,6 +909,10 @@ void Game::handle_input(GameState& state,
 
     case screens_t::help:
         handle_input_messages(state, k, true);
+        break;
+
+    case screens_t::overmap:
+        handle_input_overmap(p, state, k);
         break;
 
     case screens_t::inventory:
