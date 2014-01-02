@@ -125,7 +125,6 @@ void Game::generate(GameState& state, FUNC progressbar) {
                     continue;
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
-
                     generate_vault(v, state, summons, affected, did_place_player, p.px, p.py);
                 }
             }

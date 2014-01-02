@@ -114,6 +114,11 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (d.magic_mapping) {
 
         for (const auto& f : state.features.feats) {
+            const Terrain& t = terrain().get(f.second.tag);
+
+            if (t.air)
+                continue;
+
             const grender::pt& xy = f.first;
             state.render.set_is_lit(xy.first, xy.second, 3, true);
             state.render.invalidate(xy.first, xy.second);
