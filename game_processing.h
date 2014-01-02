@@ -56,7 +56,12 @@ void Game::dispose(GameState& state) {
 
 void Game::endgame(GameState& state, const std::string& name) {
 
-    bones::bones().add(name, p, constants().achievements);
+    // HACK. 
+    // The special player name of '_' will not leave highscores or bones.
+
+    if (name != "_") {
+        bones::bones().add(name, p, constants().achievements);
+    }
 
     const Design& d_victory = designs().get(constants().unique_item);
 

@@ -500,7 +500,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_stairs    = 'stairs'    ws1 snumber    %{ ter.stairs = toint(state.match); } ;
         terrain_viewblock = 'viewblock'                %{ ter.viewblock = true; } ;
         terrain_walkblock = 'walkblock'                %{ ter.walkblock = true; } ;
-        terrain_water     = 'water'                    %{ ter.water = true; } ;
         terrain_decay     = 'decay'     ws1 number     %{ ter.decay = toint(state.match); } ;
         terrain_attack    = 'attack'    ws1 damage_val %{ ter.attacks.add(dmgval); } ;
         terrain_sticky    = 'sticky'                   %{ ter.sticky = true; } ;
@@ -540,13 +539,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                                    'special' %{ ter.wishing = Terrain::SPECIAL_WISH; })
                        ;
 
+        terrain_important = 'important' %{ ter.important = true; } ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_protection_racket |
-            terrain_uncharge | terrain_crafting | terrain_wish | terrain_water |
+            terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
             '}' 
             ${ fret; })
             ;

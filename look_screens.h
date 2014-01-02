@@ -62,6 +62,24 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
         ++n;
     }
 
+    for (const auto& i : state.features.feats) {
+        if (!state.render.is_in_fov(i.first.first, i.first.second))
+            continue;
+
+        const Terrain& t = terrain().get(i.second.tag);
+
+        if (!t.important)
+            continue;
+
+        if (n == look.target) {
+            look.x = i.first.first;
+            look.y = i.first.second;
+            return;
+        }
+
+        ++n;
+    }
+
     look.target = -1;
     look.x = px;
     look.y = py;
