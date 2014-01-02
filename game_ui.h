@@ -396,8 +396,7 @@ void handle_input_main(Player& p, GameState& state,
 
     switch (k.letter) {
     case 'Q':
-        state.render.do_message("(Press 'Y' if you are.)", true);
-        state.render.do_message("Are you sure you want to commit suicide?", true);
+        state.render.do_message("Are you sure you want to commit suicide? (Press 'Y' if you are.)", true);
         p.state |= Player::QUITTING;
         break;
 
@@ -823,6 +822,8 @@ void Game::handle_input(GameState& state,
 
     if (p.state & Player::QUITTING) {
         if (k.letter == 'y' || k.letter == 'Y') {
+
+            state.render.do_message("See you later. (Press space to exit.)");
 
             p.attacker = "suicide";
             done = true;
