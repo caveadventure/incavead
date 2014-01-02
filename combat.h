@@ -484,7 +484,7 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::make_meat) {
 
             if (v.val > 0.5)
-                state.render.do_message("You turn into a slab of brainless meat.", true);
+                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
 
         } else if (v.type == damage::type_t::heavenly_fire) {
 
@@ -559,7 +559,7 @@ inline void defend(Player& p,
         } else if (v.type == damage::type_t::make_meat) {
 
             if (v.val > 0.5)
-                state.render.do_message("You turn into a slab of brainless meat.", true);
+                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
 
         } else if (v.type == damage::type_t::heavenly_fire) {
 
