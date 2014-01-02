@@ -80,6 +80,7 @@ struct Player {
     static const unsigned int INPUTTING      = 0x100;
     static const unsigned int WISHING        = 0x200;
     static const unsigned int SPECIAL_WISH   = 0x400;
+    static const unsigned int QUITTING       = 0x800;
 
     unsigned int state;
 

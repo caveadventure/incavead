@@ -396,10 +396,9 @@ void handle_input_main(Player& p, GameState& state,
 
     switch (k.letter) {
     case 'Q':
-        state.render.do_message("You quit the game. (Press space to exit.)", true);
-        p.attacker = "suicide";
-        done = true;
-        dead = true;
+        state.render.do_message("(Press 'Y' if you are.)", true);
+        state.render.do_message("Are you sure you want to commit suicide?", true);
+        p.state |= Player::QUITTING;
         break;
 
     case 'S':
@@ -820,6 +819,18 @@ void Game::handle_input(GameState& state,
     if (p.state == Player::DEBUG) {
         handle_input_debug(p, state, ticks, regen, k);
         return;
+    }
+
+    if (p.state & Player::QUITTING) {
+        if (k.letter == 'y' || k.letter == 'Y') {
+
+            p.attacker = "suicide";
+            done = true;
+            dead = true;
+            return;
+        }
+
+        p.state &= ~(Player::QUITTING);
     }
 
     if (p.state & Player::INPUTTING) {
