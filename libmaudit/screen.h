@@ -15,10 +15,11 @@ struct screen {
 
     unsigned int w;
     unsigned int h;
+    bool is_cr;
 
     unsigned int address;
 
-    screen(IO& _io) : io(_io), w(80), h(25), address(io.peer_ip()) {
+    screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
 
         // Turn off echo in the client.
         io.write("\xFF\xFB\x01"); 
@@ -36,10 +37,7 @@ struct screen {
     }
 
     template <typename FUNC>
-    bool refresh(unsigned int _w, unsigned int _h, const FUNC& f) {
-
-        w = _w;
-        h = _h;
+    bool refresh(const FUNC& f) {
 
         if (w == 0 || h == 0) {
             keypress tmp;
@@ -49,9 +47,7 @@ struct screen {
             //io.write(CSI "18t");
             io.write("\xFF\xFD\x1F");
 
-            bool is_cr = false;
-
-            if (!wait_key(tmp, is_cr)) {
+            if (!wait_key(tmp)) {
                 throw std::runtime_error("Could not detect terminal size.");
             }
 
@@ -178,7 +174,7 @@ struct screen {
     }
 
 
-    bool wait_key(keypress& out, bool& is_cr) {
+    bool wait_key(keypress& out) {
 
         out.w = w;
         out.h = h;
@@ -247,6 +243,9 @@ struct screen {
                 out.h |= (size_t)c;
                 
                 out.key = keycode::resize;
+
+                w = out.w;
+                h = out.h;
                 return true;
 
                 goto again;

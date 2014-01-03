@@ -613,8 +613,6 @@ public:
               unsigned int t,
               const PARAMS& params,
               bool fullwidth,
-              unsigned int& ret_view_w, 
-              unsigned int& ret_view_h,
               FUNC make_valid) {
 
         int voff_x;
@@ -625,13 +623,10 @@ public:
         unsigned int cx = params.centerx;
         unsigned int cy = params.centery;
 
-        bool ok = screen.refresh(ret_view_w, ret_view_h,
+        bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
 
                 // Do some initialization.
-
-                ret_view_w = view_w;
-                ret_view_h = view_h;
 
                 unsigned int sc_view_w = (fullwidth ? view_w / 2 : view_w);
 
@@ -875,31 +870,25 @@ public:
 
 
     template <typename SCREEN>
-    void wait_for_anykey(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr) {
+    void wait_for_anykey(SCREEN& screen) {
 
         keypress tmp;
 
-        if (!screen.wait_key(tmp, is_cr)) {
+        if (!screen.wait_key(tmp)) {
 
             throw std::runtime_error("end of input");
         }
-
-        view_w = tmp.w;
-        view_h = tmp.h;
     }
 
     template <typename SCREEN>
-    keypress wait_for_key(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr) {
+    keypress wait_for_key(SCREEN& screen) {
 
         keypress ret;
         
-        if (!screen.wait_key(ret, is_cr)) {
+        if (!screen.wait_key(ret)) {
 
             throw std::runtime_error("end of input");
         }
-
-        view_w = ret.w;
-        view_h = ret.h;
 
         return ret;
     }
@@ -923,8 +912,7 @@ public:
     /////
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr,
-                         const std::string& msg, unsigned int ix, unsigned int iy) {
+    keypress draw_window(SCREEN& screen, const std::string& msg, unsigned int ix, unsigned int iy) {
 
         const skin& wspace = ui_symbol.wspace;
 
@@ -969,7 +957,7 @@ public:
             }
         }
 
-        bool ok = screen.refresh(view_w, view_h, 
+        bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
 
                 for (unsigned int y = 0; y < view_h; ++y) {
@@ -1044,18 +1032,17 @@ public:
         if (!ok)
             throw std::runtime_error("broken pipe");
 
-        return wait_for_key(screen, view_w, view_h, is_cr);
+        return wait_for_key(screen);
     }
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, unsigned int& view_w, unsigned int& view_h, bool& is_cr,
-                         const std::string& msg) {
+    keypress draw_window(SCREEN& screen, const std::string& msg) {
 
         unsigned int ix = 0;
         unsigned int iy = 0;
         
         while (1) {
-            keypress k = draw_window(screen, view_w, view_h, is_cr, msg, ix, iy);
+            keypress k = draw_window(screen, msg, ix, iy);
 
             switch (k.key) {
             case maudit::keycode::up:

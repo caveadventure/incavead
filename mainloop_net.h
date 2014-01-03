@@ -55,22 +55,16 @@ struct Main {
     GAME game;
     SCREEN& screen;
 
-    unsigned int view_w;
-    unsigned int view_h;
-    bool is_cr;
     size_t ticks;
 
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 7;
+    static const unsigned int SAVEFILE_VERSION = 8;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
         game(debug, n_skin), 
         screen(s), 
-        view_w(0), 
-        view_h(0), 
-        is_cr(false), 
         ticks(1) 
         {
 
@@ -113,8 +107,6 @@ struct Main {
         serialize::write(s, SAVEFILE_VERSION);
         serialize::write(s, state);
         serialize::write(s, ticks);
-        serialize::write(s, view_w);
-        serialize::write(s, view_h);
 
         game.save(s);
     }
@@ -135,7 +127,7 @@ struct Main {
 
         {
             window += "\n\3Do you want to enter a replay code? (Y/N)\2";
-            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, is_cr, window);
+            maudit::keypress k = state.render.draw_window(screen, window);
 
             if (k.letter == 'Y' || k.letter == 'y') {
                 window += "\n\3Enter a replay code (case insensitive):\2 ";
@@ -194,8 +186,8 @@ struct Main {
     void draw() {
 
         drawing_context_t ctx;
-        ctx.view_w = view_w;
-        ctx.view_h = view_h;
+        ctx.view_w = screen.w;
+        ctx.view_h = screen.h;
         game.drawing_context(ctx);
 
         if (ctx.do_hud) {
@@ -206,7 +198,6 @@ struct Main {
                           ticks, 
                           ctx,
                           state.fullwidth,
-                          view_w, view_h,
                           std::bind(&GAME::set_skin, &game, std::ref(state),
                                     std::placeholders::_1, std::placeholders::_2));
 
@@ -234,13 +225,13 @@ struct Main {
 
         if (need_input) {
 
-            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
+            grender::Grid::keypress k = state.render.wait_for_key(screen);
 
             game.handle_input(state, ticks, done, dead, regen, k);
 
             while (state.window_stack.size() > 0) {
 
-                k = state.render.draw_window(screen, view_w, view_h, is_cr, state.window_stack.back().message);
+                k = state.render.draw_window(screen, state.window_stack.back().message);
 
                 game.handle_input(state, ticks, done, dead, regen, k);
             }
@@ -270,7 +261,7 @@ struct Main {
     void goodbye_message(bool dead) {
 
         while (1) {
-            grender::Grid::keypress k = state.render.wait_for_key(screen, view_w, view_h, is_cr);
+            grender::Grid::keypress k = state.render.wait_for_key(screen);
 
             if (k.letter == ' ')
                 break;
@@ -282,14 +273,14 @@ struct Main {
 
             game.goodbye_message(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
  
-            state.render.wait_for_key(screen, view_w, view_h, is_cr);
+            state.render.wait_for_key(screen);
        }
     }
 
     void enter_text(std::string& prompt, std::string& out, bool secret) {
 
         while (1) {
-            maudit::keypress k = state.render.draw_window(screen, view_w, view_h, is_cr, prompt);
+            maudit::keypress k = state.render.draw_window(screen, prompt);
 
             // HACK
             // Disable parens to prevent cheating achievements in the highscore table.
