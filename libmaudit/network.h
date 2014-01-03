@@ -14,6 +14,8 @@
 #define RECV_TYPE_CAST (char*)
 #define SETSOCKOPT_TYPE_CAST (const char*)
 
+#define SOCKLEN_T int
+
 void NETWORK_INIT() {
     WSAData wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) 
@@ -36,6 +38,8 @@ void NETWORK_STOP() {
 
 #define RECV_TYPE_CAST 
 #define SETSOCKOPT_TYPE_CAST
+
+#define SOCKLEN_T socklen_t
 
 void NETWORK_INIT() {}
 void NETWORK_STOP() {}

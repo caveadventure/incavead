@@ -111,6 +111,8 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin
 
         maudit::client_socket client(client_fd);
 
+        std::cout << "CONNECTED! " << client.peer_ip() << std::endl;
+
         typedef maudit::screen<maudit::client_socket> screen_t;
 
         screen_t screen(client);

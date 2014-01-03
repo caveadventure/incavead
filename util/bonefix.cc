@@ -9,16 +9,6 @@
 #include "../nlp.h"
 
 
-void fix(bones::bone_t& bone) {
-
-    size_t x = bone.cause.name.find("%#");
-
-    if (x != std::string::npos) {
-        bone.cause.name.replace(x, 2, "%(#)");
-    }
-}
-
-
 
 int main(int argc, char** argv) {
 
@@ -33,16 +23,16 @@ int main(int argc, char** argv) {
                     bones::key_t key;
                     bones::pt xy;
                     bones::bone_t bone;
+                    bones::session_t sess;
 
                     serialize::read(source, key);
                     serialize::read(source, xy);
                     serialize::read(source, bone);
 
-                    fix(bone);
-
                     serialize::write(sink, key);
                     serialize::write(sink, xy);
                     serialize::write(sink, bone);
+                    serialize::write(sink, sess);
 
                 } catch (...) {
                     break;

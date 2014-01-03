@@ -7,6 +7,19 @@
 #include "bones.h"
 #include "nlp.h"
 
+
+namespace std {
+
+template <>
+struct hash<bones::session_t> {
+    size_t operator()(const bones::session_t& k) const {
+        return hash<unsigned int>()(k.address) + hash<unsigned int>()(k.seed);
+    }
+};
+
+}
+
+
 namespace highscore {
 
 struct Scores {
@@ -17,17 +30,19 @@ struct Scores {
         double worth;
         bones::bone_t bone;
 
+        size_t scum_streak;
         bool victory;
 
         // HACK!
 
-        order_t() : dlev(0), plev(0), worth(0), victory(false) {}
+        order_t() : dlev(0), plev(0), worth(0), scum_streak(0), victory(false) {}
 
-        order_t(int l, const bones::bone_t& b) : 
+        order_t(int l, const bones::bone_t& b, size_t ss) : 
             dlev(l), 
             plev(b.level), 
             worth(std::max(b.worth, 0.0)), 
             bone(b), 
+            scum_streak(ss),
             victory(b.cause.name == "VICTORY") 
             {}
     };
@@ -38,18 +53,26 @@ struct Scores {
 
         try {
             serialize::Source source("bones.dat");
-            
+
+            std::unordered_map<bones::session_t, size_t> scum_streaks;
+
             while (1) {
                 try {
                     bones::key_t key;
                     bones::pt xy;
                     bones::bone_t bone;
+                    bones::session_t sess;
 
                     serialize::read(source, key);
                     serialize::read(source, xy);
                     serialize::read(source, bone);
+                    serialize::read(source, sess);
 
-                    scores.push_back(order_t(key.worldz, bone));
+                    size_t& ss = scum_streaks[sess];
+
+                    scores.push_back(order_t(key.worldz, bone, ss));
+
+                    ++ss;
 
                 } catch (...) {
                     break;
@@ -65,6 +88,8 @@ struct Scores {
         if (a.victory == b.victory && a.plev > b.plev) return true;
         if (a.victory == b.victory && a.plev == b.plev && a.dlev > b.dlev) return true;
         if (a.victory == b.victory && a.plev == b.plev && a.dlev == b.dlev && a.worth > b.worth) return true;
+        if (a.victory == b.victory && a.plev == b.plev && a.dlev == b.dlev && a.worth == b.worth &&
+            a.scum_streak < b.scum_streak) return true;
         return false;
     }
 
@@ -73,6 +98,8 @@ struct Scores {
         if (a.victory == b.victory && a.dlev > b.dlev) return true;
         if (a.victory == b.victory && a.dlev == b.dlev && a.plev > b.plev) return true;
         if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth) return true;
+        if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth &&
+            a.scum_streak < b.scum_streak) return true;
         return false;
     }
 
@@ -81,6 +108,8 @@ struct Scores {
         if (a.victory == b.victory && a.dlev < b.dlev) return true;
         if (a.victory == b.victory && a.dlev == b.dlev && a.plev > b.plev) return true;
         if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth) return true;
+        if (a.victory == b.victory && a.dlev == b.dlev && a.plev == b.plev && a.worth > b.worth &&
+            a.scum_streak < b.scum_streak) return true;
         return false;
     }
 
@@ -89,6 +118,8 @@ struct Scores {
         if (a.victory == b.victory && a.worth > b.worth) return true;
         if (a.victory == b.victory && a.worth == b.worth && a.plev > b.plev) return true;
         if (a.victory == b.victory && a.worth == b.worth && a.plev == b.plev && a.dlev > b.dlev) return true;
+        if (a.victory == b.victory && a.worth == b.worth && a.plev == b.plev && a.dlev > b.dlev &&
+            a.scum_streak < b.scum_streak) return true;
         return false;
     }
 

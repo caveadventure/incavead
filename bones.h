@@ -77,6 +77,13 @@ struct bone_t {
         }
 };
 
+struct session_t {
+    unsigned int address;
+    unsigned int seed;
+
+    session_t(unsigned int a = 0, unsigned int s = 0) : address(a), seed(s) {}
+};
+
 }
 
 namespace serialize {
@@ -101,6 +108,22 @@ struct writer<bones::bone_t> {
     }
 };
 
+template <>
+struct reader<bones::session_t> {
+    void read(Source& s, bones::session_t& t) {
+        serialize::read(s, t.address);
+        serialize::read(s, t.seed);
+    }
+};
+
+template <>
+struct writer<bones::session_t> {
+    void write(Sink& s, const bones::session_t& t) {
+        serialize::write(s, t.address);
+        serialize::write(s, t.seed);
+    }
+};
+
 }
 
 
@@ -112,21 +135,29 @@ struct Bones {
     // Magic number
     static const size_t NUMBER = 1000;
 
-    std::map< key_t, std::unordered_map<pt, bone_t> > data;
+    struct data_t {
+        bone_t bone;
+        session_t session;
+    };
+
+    std::map< key_t, std::unordered_map<pt, data_t> > data;
     
     std::mutex mutex;
 
     template <typename PLAYER, typename ACHI>
-    void add(const std::string& name, const PLAYER& p, const ACHI& achievements) {
+    void add(const std::string& name, const PLAYER& p, const ACHI& achievements, 
+             unsigned int addr, unsigned int seed) {
 
         key_t key(p);
         pt xy(p.px, p.py);
         bone_t bone(name, p, achievements);
+        session_t sess(addr, seed);
 
         std::unique_lock<std::mutex> l(mutex);
 
         auto& m = data[key];
-        m[xy] = bone;
+        m[xy].bone = bone;
+        m[xy].session = sess;
 
         while (m.size() > NUMBER) {
             m.erase(m.begin());
@@ -136,6 +167,7 @@ struct Bones {
         serialize::write(sink, key);
         serialize::write(sink, xy);
         serialize::write(sink, bone);
+        serialize::write(sink, sess);
     }
 
     void load() {
@@ -148,12 +180,16 @@ struct Bones {
                     key_t key;
                     pt xy;
                     bone_t bone;
+                    session_t sess;
 
                     serialize::read(source, key);
                     serialize::read(source, xy);
                     serialize::read(source, bone);
+                    serialize::read(source, sess);
 
-                    data[key][xy] = bone;
+                    auto& m = data[key][xy];
+                    m.bone = bone;
+                    m.session = sess;
 
                 } catch (...) {
                     break;
@@ -185,7 +221,7 @@ struct Bones {
         if (j == i->second.end())
             return false;
 
-        ret = j->second;
+        ret = j->second.bone;
         return true;
     }
 
@@ -199,7 +235,7 @@ struct Bones {
             return;
 
         for (const auto& j : i->second) {
-            out.push_back(std::make_pair(j.first, j.second.worth));
+            out.push_back(std::make_pair(j.first, j.second.bone.worth));
         }
     }
 };

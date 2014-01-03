@@ -79,6 +79,19 @@ public:
 
         return true;
     }
+
+    unsigned int peer_ip() {
+
+        struct sockaddr_in address;
+        SOCKLEN_T address_len = sizeof(address);
+        int r = ::getpeername(fd, (struct sockaddr*)&address, &address_len);
+
+        if (r == 0) {
+            return address.sin_addr.s_addr;
+        }
+
+        return 0;
+    }
 };
 
 
