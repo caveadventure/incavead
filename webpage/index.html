@@ -354,8 +354,12 @@
                   "</b> $ZM.</small>";
           }
 
-          if (item["rcodes"] > 0) {
-             l = l + " (Replay codes were used " + item["rcodes"] + " times.)";
+          var rcodes = item["rcodes"];
+          if (rcodes == 1) {
+             l = l + " <small>(Replay codes were used <b>once</b>.)</small>";
+
+          } else if (rcodes > 1) {
+             l = l + " <small>(Replay codes were used <b>" + rcodes + "</b> times.)</small>";
           }
 
           return l;

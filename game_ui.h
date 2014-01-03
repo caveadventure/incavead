@@ -977,16 +977,17 @@ void Game::goodbye_message(GameState& state, FUNC println) {
                            line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.",
                                                 dlev+1, worth);
 
-                           if (rcodes > 0) 
-                               line1 += nlp::message(" (Used replay codes %d times.)", rcodes);
-
                        } else {
                            line1 = nlp::message("%s%d) %S, level %d.", pad, n, name, plev+1);
                            line2 = nlp::message("    Killed on level %d by %s. Net worth: %d $ZM.",  
                                                 dlev+1, cause, worth);
+                       }
 
-                           if (rcodes > 0) 
-                               line1 += nlp::message(" (Used replay codes %d times.)", rcodes);
+                       if (rcodes == 1) {
+                           line1 += nlp::message(" (Replay codes were used once.)");
+
+                       } else if (rcodes > 1) {
+                           line1 += nlp::message(" (Replay codes were used %d times.)", rcodes);
                        }
 
                        println(line1);
