@@ -139,7 +139,7 @@ struct Scores {
             if (bone.name.name.empty())
                 bone.name.name = "anonymous";
 
-            f(n, bone.name, bone.cause, i->plev, i->dlev, i->worth, i->victory);
+            f(n, bone.name, bone.cause, i->plev, i->dlev, i->worth, i->victory, i->scum_streak);
         }
     }
 

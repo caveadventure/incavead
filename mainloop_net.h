@@ -253,7 +253,7 @@ struct Main {
 
             if (dead) {
 
-                game.endgame(state, name);
+                game.endgame(state, name, screen.address, game.game_seed);
 
                 clobber_savefile(savefile);
 

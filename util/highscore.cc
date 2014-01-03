@@ -22,7 +22,7 @@ std::string quote(const std::string& s) {
 
 
 void _process(size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t::fakeobj& cause,
-              unsigned int plev, int dlev, double worth, bool victory) {
+              unsigned int plev, int dlev, double worth, bool victory, size_t rcodes) {
 
     if (n != 0)
         std::cout << ",";
@@ -33,9 +33,10 @@ void _process(size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t:
     auto _name = name;
     _name.name = quote(_name.name);
 
-    std::cout << nlp::message("\n{\"dlev\": %d, \"plev\": %d, \"name\": \"%S\", \"cause\": \"%s\", \"worth\": %d, \"victory\": %s}",
+    std::cout << nlp::message("\n{\"dlev\": %d, \"plev\": %d, \"name\": \"%S\", \"cause\": \"%s\","
+                              " \"worth\": %d, \"victory\": %s, \"rcodes\": %d}",
                               dlev+1, plev+1, _name, _cause, worth,
-                              std::string(victory ? "true" : "false"));
+                              std::string(victory ? "true" : "false"), rcodes);
 }
 
 

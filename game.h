@@ -55,7 +55,7 @@ struct Game {
 
     void dispose(GameState& state);
 
-    void endgame(GameState& state, const std::string& name);
+    void endgame(GameState& state, const std::string& name, unsigned int address, unsigned int seed);
 
     void process_world(GameState& state, size_t& ticks, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw);

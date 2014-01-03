@@ -16,7 +16,9 @@ struct screen {
     unsigned int w;
     unsigned int h;
 
-    screen(IO& _io) : io(_io), w(80), h(25) {
+    unsigned int address;
+
+    screen(IO& _io) : io(_io), w(80), h(25), address(io.peer_ip()) {
 
         // Turn off echo in the client.
         io.write("\xFF\xFB\x01"); 

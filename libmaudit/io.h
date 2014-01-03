@@ -30,6 +30,10 @@ struct stdin_stdout {
 
         return true;
     }
+
+    unsigned int peer_ip() const {
+        return 0;
+    }
 };
 
 }

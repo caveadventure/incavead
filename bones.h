@@ -82,6 +82,10 @@ struct session_t {
     unsigned int seed;
 
     session_t(unsigned int a = 0, unsigned int s = 0) : address(a), seed(s) {}
+    
+    bool operator==(const session_t& s) const {
+        return address == s.address && seed == s.seed;
+    }
 };
 
 }

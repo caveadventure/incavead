@@ -961,7 +961,7 @@ void Game::goodbye_message(GameState& state, FUNC println) {
     println("");
 
     scores.by_plev([println](size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t::fakeobj& cause,
-                             unsigned int plev, int dlev, double worth, bool victory) {
+                             unsigned int plev, int dlev, double worth, bool victory, size_t rcodes) {
 
                        std::string line1;
                        std::string line2;
@@ -977,10 +977,16 @@ void Game::goodbye_message(GameState& state, FUNC println) {
                            line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.",
                                                 dlev+1, worth);
 
+                           if (rcodes > 0) 
+                               line1 += nlp::message(" (Used replay codes %d times.)", rcodes);
+
                        } else {
                            line1 = nlp::message("%s%d) %S, level %d.", pad, n, name, plev+1);
                            line2 = nlp::message("    Killed on level %d by %s. Net worth: %d $ZM.",  
                                                 dlev+1, cause, worth);
+
+                           if (rcodes > 0) 
+                               line1 += nlp::message(" (Used replay codes %d times.)", rcodes);
                        }
 
                        println(line1);

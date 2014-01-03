@@ -339,19 +339,26 @@
 
       function format_scoreline(item) {
 
+          var l;
           if (item["victory"]) {
-              return '<span class="success label">' + item["name"] +
-                     "</span>, a glorious victor of level " + item["plev"] +
-                     ". <small>Last seen on level <b>" + item["dlev"] +
-                     "</b>. Net worth: <b>" + item["worth"] + "</b> $ZM.</small>";
+              l = '<span class="success label">' + item["name"] +
+                  "</span>, a glorious victor of level " + item["plev"] +
+                  ". <small>Last seen on level <b>" + item["dlev"] +
+                  "</b>. Net worth: <b>" + item["worth"] + "</b> $ZM.</small>";
           } else {
-              return '<span class="success label">' + item["name"] +
-                     "</span>, level " + item["plev"] + 
-                     ". <small>Killed on dungeon level <b>" + item["dlev"] + 
-                     "</b> by " + item["cause"] + 
-                     ". Net worth: <b>" + item["worth"] + 
-                     "</b> $ZM.</small>";
+              l = '<span class="success label">' + item["name"] +
+                  "</span>, level " + item["plev"] + 
+                  ". <small>Killed on dungeon level <b>" + item["dlev"] + 
+                  "</b> by " + item["cause"] + 
+                  ". Net worth: <b>" + item["worth"] + 
+                  "</b> $ZM.</small>";
           }
+
+          if (item["rcodes"] > 0) {
+             l = l + " (Replay codes were used " + item["rcodes"] + " times.)";
+          }
+
+          return l;
       }
 
 
