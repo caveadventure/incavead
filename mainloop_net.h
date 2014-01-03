@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "logging.h"
+#include "spectator.h"
 
 #include "serialize.h"
 
@@ -86,11 +87,6 @@ struct Main {
 
             serialize::read(s, state);
             serialize::read(s, ticks);
-
-            unsigned int tmp_w;
-            unsigned int tmp_h;
-            serialize::read(s, tmp_w);
-            serialize::read(s, tmp_h);
 
             game.load(s);
 
@@ -201,6 +197,23 @@ struct Main {
                           std::bind(&GAME::set_skin, &game, std::ref(state),
                                     std::placeholders::_1, std::placeholders::_2));
 
+
+        auto li = screen.links.begin();
+        while (li != screen.links.end()) {
+
+            try {
+
+                if (ctx.do_hud) {
+                    game.draw_hud(state, ticks);
+                }
+
+                state.render.draw(**li, ticks, ctx, state.fullwidth, [](unsigned int x, unsigned int y) {});
+                ++li;
+
+            } catch (...) {
+                li = screen.links.erase(li);
+            }
+        }
     }
 
     bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
@@ -424,7 +437,11 @@ struct Main {
                 }
             }
 
+            spectator::screens<SCREEN>().add(screen, name);
+
             _mainloop_main(name, savefile, dead);
+
+            spectator::screens<SCREEN>().remove(screen);
 
             {
                 logger::Sink gamelog("game.log");
@@ -439,6 +456,8 @@ struct Main {
             return dead;
 
         } catch (...) {
+
+            spectator::screens<SCREEN>().remove(screen);
 
             if (dead) {
                 clobber_savefile(savefile);

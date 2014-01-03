@@ -126,6 +126,25 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin
     }
 }
 
+void spectator_mainloop(int client_fd) {
+
+    try {
+
+        maudit::client_socket client(client_fd);
+
+        typedef maudit::screen<maudit::client_socket> screen_t;
+
+        screen_t screen(client);
+
+        spectator::choose_and_watch(screen);
+
+    } catch (std::exception& e) {
+        std::cerr << "Caught error: " << e.what() << std::endl;
+
+    } catch (...) {
+    }
+}
+
 template <typename SOCKET>
 void serverloop(SOCKET& sock, bool debug, size_t nskin, bool fullwidth) {
 
@@ -138,6 +157,17 @@ void serverloop(SOCKET& sock, bool debug, size_t nskin, bool fullwidth) {
     }
 }
 
+template <typename SOCKET>
+void spectatorloop(SOCKET& sock) {
+
+    while (1) {
+        
+        int client = sock.accept();
+
+        std::thread thr(spectator_mainloop, client);
+        thr.detach();
+    }
+}
 
 void do_genmaps() {
 
@@ -221,6 +251,13 @@ int main(int argc, char** argv) {
 
     } else {
 
+        std::thread specl([&]() {
+                
+                maudit::server_socket specs(22222);
+                spectatorloop(specs);
+            });
+        specl.detach();
+
 
         std::thread thru([&]() {
 
@@ -237,6 +274,7 @@ int main(int argc, char** argv) {
         thrf.detach();
 
         serverloop(server, debug, 0, false);
+
     }
 
     return 0;

@@ -19,6 +19,9 @@ struct screen {
 
     unsigned int address;
 
+    std::vector< screen<IO>* > links;
+
+
     screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
 
         // Turn off echo in the client.
