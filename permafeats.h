@@ -2,6 +2,7 @@
 #define __PERMAFEATS_H
 
 #include <list>
+#include <mutex>
 
 #include "common.h"
 
