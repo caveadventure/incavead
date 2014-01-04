@@ -1,8 +1,10 @@
-#ifndef __MAUDIT_BUFFER_H
-#define __MAUDIT_BUFFER_H
+#ifndef __MAUDIT_SCREEN_H
+#define __MAUDIT_SCREEN_H
 
 #include <ctype.h>
 #include <stdlib.h>
+
+#include <functional>
 
 namespace maudit {
 
@@ -19,7 +21,7 @@ struct screen {
 
     unsigned int address;
 
-    std::vector< screen<IO>* > links;
+    std::function<void (screen<IO>*, const std::vector<glyph>&)> callback;
 
 
     screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
@@ -54,10 +56,28 @@ struct screen {
                 throw std::runtime_error("Could not detect terminal size.");
             }
 
-            w = tmp.w;
-            h = tmp.h;
+            //w = tmp.w;
+            //h = tmp.h;
         }
 
+        std::vector<glyph> screen;
+        screen.resize(w*h);
+
+        f(screen, w, h);
+
+        bool ok = send_screen(screen);
+
+        if (!ok)
+            return false;
+
+        if (callback) {
+            callback(this, screen);
+        }
+
+        return true;
+    }
+
+    bool send_screen(const std::vector<glyph>& glyphs) {
 
         std::string data;
 
@@ -67,17 +87,12 @@ struct screen {
         color fore_prev = color::none;
         color back_prev = color::none;
 
-        std::vector<glyph> tmp;
-        tmp.resize(w*h);
-
-        f(tmp, w, h);
-
         bool first = true;
 
         for (size_t y = 0; y < h; ++y) {
             for (size_t x = 0; x < w; ++x) {
 
-                const glyph& g = tmp[y*w+x];
+                const glyph& g = glyphs[y*w+x];
 
                 if (g.text.empty())
                     continue;

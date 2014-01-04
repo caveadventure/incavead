@@ -4,8 +4,42 @@
 #include <map>
 #include <vector>
 #include <mutex>
+#include <functional>
 
 namespace spectator {
+
+template <typename SCREEN>
+bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsigned int oh, SCREEN& target) {
+
+    if (target.w == ow && target.h == oh) {
+        return target.send_screen(data);
+    }
+
+    std::vector<maudit::glyph> temp;
+    temp.resize(target.w * target.h);
+
+    unsigned int truw = std::min(target.w, ow);
+    unsigned int truh = std::min(target.h, oh);
+
+    // Clip to an even-sized width.
+    if (target.w < ow && (truw & 1)) {
+        truw--;
+    }
+
+    for (unsigned int y = 0; y < truh; ++y) {
+        auto i = temp.begin() + (y * target.w);
+        auto j = data.begin() + (y * ow);
+
+        for (unsigned int x = 0; x < truw; ++x) {
+            *i = *j;
+            ++i;
+            ++j;
+        }
+    }
+
+    return target.send_screen(temp);
+}
+
 
 template <typename SCREEN>
 struct Screens {
@@ -13,6 +47,8 @@ struct Screens {
     struct info_t {
         std::string name;
         time_t ts;
+
+        std::vector<SCREEN*> links;
 
         info_t() : ts(0) {}
     };
@@ -64,7 +100,11 @@ struct Screens {
         if (i == screens.end())
             return false;
 
-        i->first->links.push_back(&another);
+        i->second.links.push_back(&another);
+
+        i->first->callback = std::bind(&Screens<SCREEN>::watching_callback, 
+                                       this, std::placeholders::_1, std::placeholders::_2);
+
         return true;
     }
 
@@ -77,7 +117,7 @@ struct Screens {
         if (i == screens.end())
             return;
 
-        auto& links = i->first->links;
+        auto& links = i->second.links;
 
         auto j = links.begin();
         while (j != links.end()) {
@@ -86,6 +126,36 @@ struct Screens {
                 j = links.erase(j);
             } else {
                 ++j;
+            }
+        }
+
+        if (links.empty()) {
+            i->first->callback = nullptr;
+        }
+    }
+
+
+    void watching_callback(SCREEN* parent, const std::vector<maudit::glyph>& data) {
+
+        // TODO: This really needs read-write locks.
+
+        std::unique_lock<std::mutex> l(mutex);
+
+        auto i = screens.find(parent);
+
+        if (i == screens.end())
+            return;
+
+        auto& links = i->second.links;
+
+        auto li = links.begin();
+        while (li != links.end()) {
+            auto& l = **li;
+
+            if (!copy_screen(data, parent->w, parent->h, l)) {
+                li = links.erase(li);
+            } else {
+                ++li;
             }
         }
     }
@@ -97,7 +167,6 @@ Screens<SCREEN>& screens() {
     static Screens<SCREEN> ret;
     return ret;
 }
-
 
 
 template <typename SCREEN>

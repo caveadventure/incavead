@@ -197,23 +197,6 @@ struct Main {
                           std::bind(&GAME::set_skin, &game, std::ref(state),
                                     std::placeholders::_1, std::placeholders::_2));
 
-
-        auto li = screen.links.begin();
-        while (li != screen.links.end()) {
-
-            try {
-
-                if (ctx.do_hud) {
-                    game.draw_hud(state, ticks);
-                }
-
-                state.render.draw(**li, ticks, ctx, state.fullwidth, [](unsigned int x, unsigned int y) {});
-                ++li;
-
-            } catch (...) {
-                li = screen.links.erase(li);
-            }
-        }
     }
 
     bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
