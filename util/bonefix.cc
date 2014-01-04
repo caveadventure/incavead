@@ -18,6 +18,8 @@ int main(int argc, char** argv) {
             serialize::Source source("bones.dat");
             serialize::Sink sink("bones.dat.new");
 
+            unsigned int q = 0;
+
             while (1) {
                 try {
                     bones::key_t key;
@@ -28,6 +30,8 @@ int main(int argc, char** argv) {
                     serialize::read(source, key);
                     serialize::read(source, xy);
                     serialize::read(source, bone);
+
+                    sess.address = ++q;
 
                     serialize::write(sink, key);
                     serialize::write(sink, xy);
