@@ -21,7 +21,7 @@ struct screen {
 
     unsigned int address;
 
-    std::function<void (screen<IO>*, const std::vector<glyph>&)> callback;
+    std::function<void (screen<IO>*, std::vector<glyph>&)> callback;
 
 
     screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
