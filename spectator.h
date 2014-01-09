@@ -4,84 +4,51 @@
 #include <map>
 #include <vector>
 #include <mutex>
+#include <condition_variable>
 #include <functional>
+#include <atomic>
+
 
 namespace spectator {
 
 
-struct lo_fi_rw_mutex {
-
-    std::mutex mutex;
-    size_t reading;
-
-    lo_fi_rw_mutex() : reading(0) {}
-
-    struct r_lock {
-        lo_fi_rw_mutex& self;
-
-        r_lock(lo_fi_rw_mutex& s) : self(s) {
-            self.mutex.lock();
-            self.reading++;
-            self.mutex.unlock();
-        }
-
-        ~r_lock() {
-            self.mutex.lock();
-            self.reading--;
-            self.mutex.unlock();
-        }
-    };
-
-    struct w_lock {
-        lo_fi_rw_mutex& self;
-
-        w_lock(lo_fi_rw_mutex& s) : self(s) {
-
-            while (1) {
-                self.mutex.lock();
-
-                if (self.reading > 0) {
-                    self.mutex.unlock();
-                    continue;
-                }
-                
-                break;
-            }
-        }
-
-        ~w_lock() {
-            self.mutex.unlock();
-        }
-    };
-};
-
-
-template <typename SCREEN>
-bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsigned int oh, SCREEN& target);
-
 template <typename SCREEN>
 struct Screens {
 
-    struct info_t {
+    struct viewer_t {
+        viewer_t() {}
+    };
+
+    struct data_t {
+        std::vector<maudit::glyph> data;
+        unsigned int w;
+        unsigned int h;
+    };
+
+    struct sender_t {
         std::string name;
         time_t ts;
 
-        std::vector<SCREEN*> links;
+        size_t max_frame;
+        size_t min_frame;
+        std::map<size_t, data_t> datastream;
 
-        info_t() : ts(0) {}
+        size_t num_viewers;
+
+        sender_t() : ts(0), max_frame(0), min_frame(0), num_viewers(0) {}
     };
 
-    std::map<SCREEN*, info_t> screens;
+    std::map<SCREEN*, sender_t> players;
+    std::map<SCREEN*, viewer_t> viewers;
 
-    //std::mutex mutex;
-    lo_fi_rw_mutex mutex;
+    std::mutex player_mutex;
+    std::mutex viewer_mutex;
 
-    void add(SCREEN& s, const std::string& name) {
+    void add_player(SCREEN& s, const std::string& name) {
 
-        //std::unique_lock<std::mutex> l(mutex);
-        lo_fi_rw_mutex::w_lock l(mutex);
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        auto& tmp = screens[&s];
+        auto& tmp = players[&s];
         tmp.name = name;
         tmp.ts = ::time(NULL);
     }
@@ -91,63 +58,118 @@ struct Screens {
         std::string name;
     };
 
-    std::map< time_t, std::vector<list_entry_t> > list() {
+    std::map< time_t, std::vector<list_entry_t> > list_players() {
 
         std::map< time_t, std::vector<list_entry_t> > ret;
 
-        //std::unique_lock<std::mutex> l(mutex);
-        lo_fi_rw_mutex::w_lock l(mutex);
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        for (const auto& i : screens) {
+        for (const auto& i : players) {
             ret[i.second.ts].push_back(list_entry_t{(void*)i.first, i.second.name});
         }
 
         return ret;
     }
 
-    void remove(SCREEN& s) {
+    void remove_player(SCREEN& s) {
 
-        //std::unique_lock<std::mutex> l(mutex);
-        lo_fi_rw_mutex::w_lock l(mutex);
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        screens.erase(&s);
+        auto i = players.find((SCREEN*)tag);
+
+        if (i == players.end())
+            return;
+
+        players.erase(i);
+    }
+
+    void add_viewer(SCREEN& s) {
+
+        std::unique_lock<std::mutex> l(viewer_mutex);
+
+        auto& tmp = viewers[&s];
+        tmp.parent = nullptr;
+        tmp.last_frame_no = 0;
+    }
+
+    void remove_viewer(SCREEN& s) {
+
+        std::unique_lock<std::mutex> l(viewer_mutex);
+
+        auto i = viewers.find((SCREEN*)tag);
+
+        if (i == viewers.end())
+            return;
+
+        viewers.erase(i);
     }
 
     bool link(void* tag, SCREEN& another) {
 
-        //std::unique_lock<std::mutex> l(mutex)
-        lo_fi_rw_mutex::w_lock l(mutex);
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        auto i = screens.find((SCREEN*)tag);
+        std::unique_lock<std::mutex> l2(viewer_mutex);
 
-        if (i == screens.end())
+        auto i = players.find((SCREEN*)tag);
+
+        if (i == players.end())
             return false;
 
-        i->second.links.push_back(&another);
+        auto j = viewers.find(&another);
 
-        i->first->callback = std::bind(&Screens<SCREEN>::watching_callback, 
-                                       this, std::placeholders::_1, std::placeholders::_2);
+        if (j == viewers.end()) 
+            return false;
+
+        sender_t& sender = i->second;
+        viewer_t& viewer = j->second;
+
+        auto& links = sender.links;
+
+        links.push_back(&another);
+
+        viewer.parent = (SCREEN*)tag;
+        viewer.last_frame_no = sender.min_frame;
+
+        // HACK
+        // Connect parent screen's guts to this machinery.
+        if (links.size() == 1) {
+            i->first->callback = std::bind(&Screens<SCREEN>::watching_callback, this, std::placeholders::_1, std::placeholders::_2);
+        }
 
         return true;
     }
 
     void unlink(void* tag, SCREEN& another) {
 
-        //std::unique_lock<std::mutex> l(mutex);
-        lo_fi_rw_mutex::w_lock l(mutex);
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        auto i = screens.find((SCREEN*)tag);
+        std::unique_lock<std::mutex> l2(viewer_mutex);
 
-        if (i == screens.end())
+        auto i = players.find((SCREEN*)tag);
+
+        if (i == players.end())
             return;
 
-        auto& links = i->second.links;
+        auto j = viewers.find(&another);
+
+        if (j == viewers.end())
+            return false;
+
+        sender_t& sender = i->second;
+        viewer_t& viewer = j->second;
+
+        viewer.parent = nullptr;
+        viewer.last_frame_no = 0;
+
+        auto& links = sender.links;
 
         auto j = links.begin();
         while (j != links.end()) {
 
             if (*j == &another) {
+
                 j = links.erase(j);
+
             } else {
                 ++j;
             }
@@ -159,30 +181,36 @@ struct Screens {
     }
 
 
-    void watching_callback(SCREEN* parent, const std::vector<maudit::glyph>& data) {
+    void watching_callback(SCREEN* parent, sender_t& sender, std::vector<maudit::glyph>& data) {
 
-        // TODO: This really needs read-write locks.
+        std::unique_lock<std::mutex> l(player_mutex);
 
-        //std::unique_lock<std::mutex> l(mutex);
-        lo_fi_rw_mutex::r_lock l(mutex);
+        auto i = players.find(parent);
 
-        auto i = screens.find(parent);
-
-        if (i == screens.end())
+        if (i == players.end())
             return;
 
-        auto& links = i->second.links;
+        sender_t& sender = i->second;
 
-        auto li = links.begin();
-        while (li != links.end()) {
-            auto& l = **li;
+        ++(sender.max_frame);
 
-            if (!copy_screen(data, parent->w, parent->h, l)) {
-                li = links.erase(li);
-            } else {
-                ++li;
-            }
-        }
+        auto ds& = sender.datastream[sender.max_frame];
+        ds.data.swap(data);
+        ds.w = parent->w;
+        ds.h = parent->h;
+    }
+
+
+    bool get_next_data(void* tag, data_t& out, size_t last_frame_no) {
+
+        SCREEN* parent = (SCREEN*)tag;
+
+        std::unique_lock<std::mutex> l(players_mutex);
+
+        auto i = players.find(parent);
+
+        if (i == players.end()) 
+            return false;
     }
 
 };
@@ -226,6 +254,14 @@ bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsign
     return target.send_screen(temp);
 }
 
+template <typename SCREEN>
+void watcher_input_thread(SCREEN& screen) {
+
+    while (1) {
+
+    }
+}
+
 
 template <typename SCREEN>
 void choose_and_watch(SCREEN& screen) {
@@ -233,10 +269,15 @@ void choose_and_watch(SCREEN& screen) {
     grender::Grid render;
     render.init(0, 0);
 
-    while (1) {
+    screens<SCREEN>().add_watcher(screen);
+    std::thread thread(watcher_input_thread<SCREEN>, &screen);
+
+    bool done = false;
+
+    while (!done) {
 
         time_t now = ::time(NULL);
-        auto games = screens<SCREEN>().list();
+        auto games = screens<SCREEN>().list_players();
 
         std::string window = 
             "Active games:\n"
@@ -263,29 +304,39 @@ void choose_and_watch(SCREEN& screen) {
             }
         }
 
-        maudit::keypress k = render.draw_window(screen, window);
+        try {
 
-        auto i = games_c.find(k.letter);
+            maudit::keypress k = render.draw_window(screen, window);
 
-        if (i != games_c.end() && 
-            screens<SCREEN>().link(i->second, screen)) {
+            auto i = games_c.find(k.letter);
 
-            while (1) {
+            if (i != games_c.end()) {
 
-                maudit::keypress k;
+                while (1) {
 
-                if (!screen.wait_key(k)) {
+                    Screens<SCREEN>::data_t data;
 
-                    screens<SCREEN>().unlink(i->second, screen);
-                    return;
+                    if (!screens<SCREEN>().get_next_data(i->second, data)) {
+                        // Spin about doing nothing, keeping the last screen in view.
+                        ::sleep(1);
+                        continue;
+                    }
 
-                } else if (k.letter == 'q') {
-                    screens<SCREEN>().unlink(i->second, screen);
-                    break;
+                    if (!copy_screen(data.data, data.w, data.h, screen)) {
+                        done = true;
+                        break;
+                    }
                 }
             }
+
+        } catch (...) {
+            done = true;
         }
     }
+
+    screens<SCREEN>().remove_watcher(screen);
+    thread.join();
+
 }
 
 }
