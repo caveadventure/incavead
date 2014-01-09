@@ -6,61 +6,81 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Infinite Cave Adventure</title>
-    <link rel="stylesheet" href="css/foundation.css" />
-    <script src="js/vendor/custom.modernizr.js"></script>
     <style>
       h3 {
         color: #222262;
         font-size: 75%;
         font-weight: bold;
-        margin-top: 1em;
-        margin-bottom: 0.3em;
+        margin-top: 1rem;
+        margin-bottom: 0.3rem;
       }
       p {
-        margin-left: 1em;
+        margin-left: 1rem;
         font-size: 75%;
-        margin-bottom: 0.5em;
+        margin-bottom: 0.5rem;
       }
       ol {
-        margin-bottom: 0.5em;
+        margin-bottom: 0.5rem;
+        font-size: 75%;
       }
       ul {
-        margin-left: 2em;
         font-size: 75%;
       }
-      li {
-        margin-left: 2em;
+      .line-list > li {
+        display: inline;
+        list-style-type: none;
+        margin-left: 1rem;
       }
-      .tabs dd > a {
-        font-size: 75%;
-        padding: 0.5em 0.5em 0.5em 0.5em;
-        color: rgb(0, 121, 161);
+      .column-list > li {
+        list-style-type: none;
+        margin-left: 0px;
+      }
+      hr {
+        border: solid #dddddd;
+        border-width: 1px 0 0;
+        clear: both;
+        margin: 1.25rem 0 1.1875rem;
+        height: 0; 
       }
       .label {
-        padding: 0.25em 0.25em 0.25em 0.25em;
+        padding: 0.15rem 0.15rem 0.15rem 0.15rem;
         font-weight: bold;
+        background-color: rgb(220, 220, 255);
+        color: rgb(0, 0, 80);
       }
-      .tabs-content {
-        margin-bottom: 0px;
-        border-style: solid;
-        border-width: 1px;
-        border-color: rgb(0, 121, 161);
+      .expander {
+        color: rgb(128, 0, 128);
+        cursor: pointer;
       }
-      .tabs-content > .content {
-        padding: 1em 0px 0px 0px;
+      .highscores {
+        padding: 0.2rem 0.2rem 0.2rem 0.2rem;
+        background-color: rgb(240, 240, 250);
       }
-
-      .tabs dd > a {
-        border-style: solid;
-        border-left-color: rgb(239, 239, 239);
-        border-bottom-color: white;
-        border-width: 1px;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
+      body {
+        margin: 0px;
+        padding: 0px;
       }
-      .tabs dd.active > a {
-        border-right-color: rgb(0, 121, 161);
-        border-left-color: rgb(0, 121, 161);
+      .row {
+        clear: both;
+        float: right;
+      }
+      .required-right {
+        float: left;
+        width: 740px;
+        padding: 5px;
+      }
+      .optional-left {
+        float: left;
+        width: 230px;
+        min-height: 1px;
+      }
+      @media (max-width: 980px) {
+        .optional-left {
+          display: none;
+        }
+        .required-right {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -70,10 +90,10 @@
     <!-- Header -->
 
     <div class="row">
-      <div class="small-0 medium-3 large-3 columns">
+      <div class="optional-left">
       </div>
-      <div class="small-12 medium-9 large-9 columns">
-        <ul class="inline-list right">
+      <div class="required-right">
+        <ul class="line-list">
           <li><a href="#intro">Intro</a></li>
           <li><a href="#play">Play online</a></li>
           <li><a href="#download">Download</a></li>
@@ -91,15 +111,14 @@
 
       <!-- Left block -->
 
-      <div class="small-0 medium-3 large-3 show-for-medium-up columns">
+      <div class="optional-left">
 
         <img style="display: block; margin-left: auto; margin-right: auto" 
              src="logo.png" width="158" height="248" alt="Ye Olde Cthulhu" />
         <div style="font-size: 8pt"></div>
-
         <p><hr/></p>
         
-        <ul class="side-nav">
+        <ul class="column-list">
           <li><a href="#intro">Intro</a></li>
           <li><a href="#play">Play online</a></li>
           <li><a href="#download">Download</a></li>
@@ -118,7 +137,7 @@
 
       <!-- Useful content -->
     
-      <div class="small-12 medium-9 large-9 columns">
+      <div class="required-right">
 
         <div id="intro">
 
@@ -131,7 +150,7 @@
 
         <div id="play">
           <h3>Play online</h3>
-          <p>Play the game online with other participants. Connect with any <a href="http://www.google.com/search?q=puttytel">telnet client</a> to:
+          <p>Play the game online with other participants. Connect with a <a href="tiletel.zip">telnet client</a> to:
           <p>Host <span class="label">dungeon.name</span>, port <span class="label">20020</span> for ASCII graphics.</p>
           <p>Host <span class="label">dungeon.name</span>, port <span class="label">20022</span> for Unicode graphics.</p>
           <p>Host <span class="label">dungeon.name</span>, port <span class="label">20028</span> for <a href="square_tiles.html">square tile</a> graphics.</p>
@@ -163,37 +182,31 @@
              from a total of <b><span id="num_games"></span></b> games logged so far.
           </p>
 
-          <dl class="tabs" data-tab>
-            <dd class="active"><a href="#panel_plev">By player level</a></dd>
-            <dd><a href="#panel_dlev_d">By lowest dungeon level</a></dd>
-            <dd><a href="#panel_dlev_a">By highest dungeon level</a></dd>
-            <dd><a href="#panel_worth">By net worth</a></dd>
-            <dd><a href="#panel_ts">Last 10 games</a></dd>
-          </dl>
-
-          <div class="tabs-content">
-
-            <div class="content active" id="panel_plev">
-              <ol id="highscore_plev"></ol>
-            </div>
-
-            <div class="content" id="panel_dlev_d">
-              <ol id="highscore_dlev_d"></ol>
-            </div>
-
-            <div class="content" id="panel_dlev_a">
-              <ol id="highscore_dlev_a"></ol>
-            </div>
-
-            <div class="content" id="panel_worth">
-              <ol id="highscore_worth"></ol>
-            </div>
-
-            <div class="content" id="panel_ts">
-              <ol id="highscore_ts"></ol>
-            </div>
-
+          <div class="expander" onclick="$('#panel_plev').toggle();">▶ ... by player level</div>
+          <div class="highscores" id="panel_plev">
+            <ol id="highscore_plev"></ol>
           </div>
+
+          <div class="expander" onclick="$('#panel_dlev_d').toggle();">▶ ... by lowest dungeon level</div>
+          <div class="highscores" id="panel_dlev_d">
+            <ol id="highscore_dlev_d"></ol>
+          </div>
+
+          <div class="expander" onclick="$('#panel_dlev_a').toggle();">▶ ... by highest dungeon level</div>
+          <div class="highscores" id="panel_dlev_a">
+            <ol id="highscore_dlev_a"></ol>
+          </div>
+
+          <div class="expander" onclick="$('#panel_worth').toggle();">▶ ... by net worth</div>
+          <div class="highscores" id="panel_worth">
+            <ol id="highscore_worth"></ol>
+          </div>
+
+          <div class="expander" onclick="$('#panel_ts').toggle();">▶ last 10 games</div>
+          <div class="highscores" id="panel_ts">
+            <ol id="highscore_ts"></ol>
+          </div>
+
         </div>
 
         <div id="winning">
@@ -201,7 +214,7 @@
           <p>Winning the game is deceptively simple: all you need to do is find the Ring of Power and return it to the Astral Throne. However, there are caveats:</p>
           <ul>
             <li>There is one and only one Ring of Power in the game, regardless of the number of concurrent players.</li>
-            <li>The Ring of Power will stay where you left it, regardless of when or who is playing.</li>
+1            <li>The Ring of Power will stay where you left it, regardless of when or who is playing.</li>
             <li>When the Ring of Power is in possession of a player, it grows in malignancy. The more malignant is the Ring, the more is affects your player's hunger stat.</li>
             <li>The only way to "reset" the Ring's malignancy is by destroying it; you can destroy it at any time, but destroying the ring will make it impossible to win the game for the next two hours.</li>
             <li>If the ring is destroyed it will regenerate on dungeon level 1 after two hours. The Ring will alse regenerate if it is in possession by a player for more than two hours.</li>
@@ -312,35 +325,7 @@
       </div>
     </div>
 
-    <!-- Footer -->
-     
-    <footer class="row">
-      <div class="small-12 columns">
-        <p></p>
-        <hr />
-        <div class="row">
-          <div class="small-0 medium-3 large-3 columns">
-            <p></p>
-          </div>
-          <div class="small-12 medium-9 large-9 columns">
-            <ul class="inline-list right">
-              <li><a href="#intro">Intro</a></li>
-              <li><a href="#play">Play online</a></li>
-              <li><a href="#download">Download</a></li>
-              <li><a href="#highscore">Highscore table</a></li>
-              <li><a href="#winning">Winning the game</a></li>
-              <li><a href="#news">News</a></li>
-            </ul>
-          </div>
-        </div>
-      </div> 
-    </footer>
-
     <script src="/js/jquery.js"></script>
-    <script src="/js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
 
     <script>
 
@@ -438,6 +423,9 @@
                    $("<span/>").html(format_ringstatus(data)).appendTo("#ringstatus");
                 }
       );
+
+      $(".highscores").toggle();
+      $("#panel_plev").toggle();
 
     </script>
 
