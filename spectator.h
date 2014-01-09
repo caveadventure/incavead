@@ -141,6 +141,18 @@ struct Screens {
         sender.cv.notify_all();
     }
 
+    bool notify(void* tag) {
+        std::unique_lock<std::mutex> l(player_mutex);
+
+        auto i = players.find(parent);
+
+        if (i == players.end())
+            return false;
+
+        sender_t& sender = i->second;
+
+        sender.cv.notify_all();
+    }
 
     bool get_next_data(void* tag, data_t& out, size_t& last_frame_no) {
 
@@ -226,7 +238,7 @@ bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsign
 }
 
 template <typename SCREEN>
-void watcher_input_thread(SCREEN& screen, std::mutex& mutex, bool& done) {
+void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& done) {
 
     while (1) {
 
@@ -234,6 +246,9 @@ void watcher_input_thread(SCREEN& screen, std::mutex& mutex, bool& done) {
 
         std::cout << "+  waiting for key" << std::endl;
         if (!screen.wait_key(k) || k.letter == 'q') {
+
+            screens<SCREEN>().notify(tag);
+
             std::cout << "Got 'q'!" << std::endl;
             std::unique_lock<std::mutex> l(mutex);
             done = true;
@@ -308,7 +323,9 @@ void choose_and_watch(SCREEN& screen) {
             std::mutex mutex;
             bool done = false;
             screens<SCREEN>().link(parent, screen);
-            std::thread thread(watcher_input_thread<SCREEN>, std::ref(screen), std::ref(mutex), std::ref(done));
+
+            std::thread thread(watcher_input_thread<SCREEN>, 
+                               std::ref(screen), parent, std::ref(mutex), std::ref(done));
 
             size_t last_frame_no = 0;
 
