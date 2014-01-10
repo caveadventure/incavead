@@ -98,13 +98,13 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 }
 
 
-inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double dist, 
+inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double dist, unsigned int range,
                              std::vector<summons_t>& summons, 
                              const monsters::Monster& m, const Species& s) {
 
     bool reachd = false;
 
-    if (dist < s.range && 
+    if (dist < range && 
         (s.blast.size() > 0 || s.cast_cloud.size() > 0)) {
 
         reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
@@ -140,7 +140,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
         }
     }
 
-    if (s.summon.size() > 0 && dist < s.range) {
+    if (s.summon.size() > 0 && dist < range) {
 
         for (const auto& c : s.summon) {
 
@@ -157,7 +157,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
         }
     }
 
-    if (s.spawns.size() > 0 && dist < s.range) {
+    if (s.spawns.size() > 0 && dist < range) {
 
         for (const auto& c : s.spawns) {
 
@@ -227,13 +227,20 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
     double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
 
+    unsigned int range = s.range;
+
+    if (m.blind > 0) {
+        range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) + 1);
+    }
+
     if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
 
-        if (do_monster_magic(p, state, ticks, dist, summons, m, s)) 
+        if (do_monster_magic(p, state, ticks, dist, range, summons, m, s)) 
             return false;
     }
 
     // HACK!
+    // Performance tweak.
     bool do_random = false;
     bool do_seek = false;
 
@@ -246,16 +253,15 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
         }
     }
 
-
     if (m.fear > 0 || s.ai == Species::ai_t::random) {
         do_random = true;
 
-    } else if (s.ai == Species::ai_t::inrange_random && dist <= s.range) {
+    } else if (s.ai == Species::ai_t::inrange_random && dist <= range) {
         do_random = true;
 
     } else if (do_seek && !do_random &&
                state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, 
-                                      s.range, nxy.first, nxy.second)) {
+                                      range, nxy.first, nxy.second)) {
 
         // Nothing, nxy is good.
 
@@ -265,7 +271,7 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
         case Species::idle_ai_t::random:
 
-            if (dist > s.range + 10)
+            if (dist > range + 10)
                 return false;
 
             do_random = true;

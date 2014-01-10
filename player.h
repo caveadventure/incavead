@@ -62,6 +62,7 @@ struct Player {
     stat_t luck;
 
     unsigned int sleep;
+    unsigned int blind;
 
     unsigned int dig_x;
     unsigned int dig_y;
@@ -126,7 +127,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), dig_x(0), dig_y(0), digging(false), state(MAIN), overmap_scale(0),
+               sleep(0), blind(0), dig_x(0), dig_y(0), digging(false), state(MAIN), overmap_scale(0),
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -238,6 +239,7 @@ struct reader<Player> {
         serialize::read(s, p.karma.val);
         serialize::read(s, p.luck.val);
         serialize::read(s, p.sleep);
+        serialize::read(s, p.blind);
         serialize::read(s, p.dig_x);
         serialize::read(s, p.dig_y);
         serialize::read(s, p.inv);
@@ -274,6 +276,7 @@ struct writer<Player> {
         serialize::write(s, p.karma.val);
         serialize::write(s, p.luck.val);
         serialize::write(s, p.sleep);
+        serialize::write(s, p.blind);
         serialize::write(s, p.dig_x);
         serialize::write(s, p.dig_y);
         serialize::write(s, p.inv);

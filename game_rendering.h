@@ -147,7 +147,13 @@ unsigned int get_lightradius(const Player& p) {
 
     const Levelskin& ls = levelskins().get(p.worldz);
 
-    return std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
+    unsigned int r = std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
+
+    if (p.blind > 0) {
+        r = std::max(0, (int)r - static_cast<int>(p.blind / constants().blindturns_to_radius) + 1);
+    }
+
+    return r;
 }
 
 void Game::drawing_context(mainloop::drawing_context_t& ctx) {
@@ -215,6 +221,13 @@ void Game::draw_hud(GameState& state, size_t ticks) {
     if (p.sleep > 0) {
         state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                    std::min(p.sleep / 15 + 1, (unsigned int)6), 
+                                   '+', 
+                                   (ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+    }
+
+    if (p.blind > 0) {
+        state.render.push_hud_line("Blind", maudit::color::bright_red,
+                                   std::min(p.blind / constants().blindturns_to_radius + 1, (unsigned int)6), 
                                    '+', 
                                    (ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
     }

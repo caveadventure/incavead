@@ -303,6 +303,10 @@ void Game::process_world(GameState& state, size_t& ticks,
         }
     }
 
+    if (p.blind > 0) {
+        --(p.blind);
+    }
+
     if (p.food.val <= -3.0 && p.health.val > -3.0) {
         state.render.do_message("You desperately need something to eat!", true);
         p.attacker = "starvation";

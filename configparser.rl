@@ -224,7 +224,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'sonic'         %{ dmgval.type = damage::type_t::sonic; }         |
             'magic'         %{ dmgval.type = damage::type_t::magic; }         |
             'hunger'        %{ dmgval.type = damage::type_t::hunger; }        |
-            'unluck'        %{ dmgval.type = damage::type_t::unluck; }        ;
+            'unluck'        %{ dmgval.type = damage::type_t::unluck; }        |
+            'blindness'     %{ dmgval.type = damage::type_t::blindness; }     ;
 
 
         damage_val = 
@@ -330,13 +331,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_terrain_immune = 'terrain_immune' %{ spe.flags.terrain_immune = true; } ;
 
+        species_eyeless = 'eyeless' %{ spe.flags.eyeless = true; } ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop |
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
-            species_robot | species_terrain_immune |
+            species_robot | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level |
             '}'
             ${ fret; })
@@ -846,6 +849,20 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_achievement_trigger_rate = 'achievement_trigger_rate' 
             ws1 number %{ __constants__().achievement_trigger_rate = toint(state.match); } ;
 
+        constant_damage_to_sleepturns = 'damage_to_sleepturns' 
+            ws1 snumber %{ __constants__().damage_to_sleepturns.scale = toint(state.match); }
+            ws1 snumber %{ __constants__().damage_to_sleepturns.offset = toint(state.match); } ;
+
+        constant_damage_to_scareturns = 'damage_to_scareturns' 
+            ws1 snumber %{ __constants__().damage_to_scareturns.scale = toint(state.match); }
+            ws1 snumber %{ __constants__().damage_to_scareturns.offset = toint(state.match); } ;
+
+        constant_damage_to_blindturns = 'damage_to_blindturns' 
+            ws1 snumber %{ __constants__().damage_to_blindturns.scale = toint(state.match); }
+            ws1 snumber %{ __constants__().damage_to_blindturns.offset = toint(state.match); } ;
+
+        constant_blindturns_to_radius = 'blindturns_to_radius' ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
+
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | constant_player_skin |
@@ -856,7 +873,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_ui_box_v   | constant_ui_box_h   | constant_ui_wspace |
                        constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
                        constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
-                       constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate
+                       constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
+                       constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
+                       constant_blindturns_to_radius
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

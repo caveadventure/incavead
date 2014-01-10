@@ -18,13 +18,9 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
-inline unsigned int damage_to_sleepturns(double v) {
-    int n = (v * 20) - 15;
-    return std::max(0, n);
-}
-
-inline unsigned int damage_to_scareturns(double v) {
-    int n = (v * 30) - 20;
+template <typename PARAM>
+inline unsigned int damage_to_turns(double v, const PARAM& p) {
+    int n = (v * p.scale) - p.offset;
     return std::max(0, n);
 }
 
@@ -38,11 +34,14 @@ inline void roll_attack(rnd::Generator& rng,
         double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
 
         if (v.type == damage::type_t::sleep) {
-            dmg = damage_to_sleepturns(dmg);
+            dmg = damage_to_turns(dmg, constants().damage_to_sleepturns);
 
         } else if (v.type == damage::type_t::scare_animal ||
                    v.type == damage::type_t::scare) {
-            dmg = damage_to_scareturns(dmg);
+            dmg = damage_to_turns(dmg, constants().damage_to_scareturns);
+
+        } else if (v.type == damage::type_t::blindness) {
+            dmg = damage_to_turns(dmg, constants().damage_to_blindturns);
         }
 
         if (dmg > 0) {
@@ -73,7 +72,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   double& totdamage, double& totmagic, 
-                                  double& totsleep, double& totfear, double& totvamp,
+                                  double& totsleep, double& totfear, double& totvamp, 
                                   bool& mortal) {
 
     double dmg = v.val;
@@ -83,6 +82,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += dmg; });
         totsleep += dmg;
+
+    } else if (v.type == damage::type_t::blindness) {
+
+        if (!s.flags.eyeless) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.blind += dmg; });
+        }
 
     } else if (v.type == damage::type_t::turn_undead) {
 
@@ -355,6 +360,9 @@ inline void defend(Player& p,
         if (v.type == damage::type_t::sleep) {
             p.sleep += v.val;
 
+        } else if (v.type == damage::type_t::blindness) {
+            p.blind += v.val;
+
         } else if (v.type == damage::type_t::make_meat) {
 
             if (v.val > 0.5) {
@@ -416,6 +424,9 @@ inline void defend(Player& p,
 
             if (v.type == damage::type_t::sleep) {
                 state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
+
+            } else if (v.type == damage::type_t::blindness) {
+                state.render.do_message(nlp::message("%s blinds you!", s));
 
             } else if (v.type == damage::type_t::psi) {
                 state.render.do_message(nlp::message("%s is destroying your mind!", s));
@@ -492,6 +503,10 @@ inline void defend_env_message(Player& p, GameState& state, const damage::attack
 
         case damage::type_t::sleep:
             state.render.do_message("You fall asleep.");
+            break;
+
+        case damage::type_t::blindness:
+            state.render.do_message("You feel your eyesight fail you!");
             break;
 
         case damage::type_t::poison:
