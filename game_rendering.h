@@ -150,7 +150,7 @@ unsigned int get_lightradius(const Player& p) {
     unsigned int r = std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
 
     if (p.blind > 0) {
-        r = std::max(0, (int)r - static_cast<int>(p.blind / constants().blindturns_to_radius) + 1);
+        r = std::max(1, (int)r - static_cast<int>(p.blind / constants().blindturns_to_radius) - 1);
     }
 
     return r;

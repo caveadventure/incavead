@@ -52,6 +52,10 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
                         if (t.is_lit || gp.is_lit) {
                             charz = t.skin[0].text;
+
+                            if (charz == " ")
+                                charz = ".";
+
                             intensity = 1;
                         }
                     }

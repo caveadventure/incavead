@@ -3,7 +3,7 @@
 
 #include <valarray>
 
-inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
+inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, size_t& ticks) {
 
     items::Item tmp;
 
@@ -57,9 +57,19 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     // WARNING, don't change the order of blocks, as worldz can be modified.
     if (!d.place_permafeat.feat.null()) {
 
-        state.features.set(p.px, p.py, d.place_permafeat.feat, state.render);        
-        permafeats::features().add(p, d.place_permafeat.feat);
-        ret = true;
+        // HACK!
+        const Levelskin& ls = levelskins().get(p.worldz);
+        const Terrain& t = terrain().get(d.place_permafeat.feat);
+
+        if (ls.no_phase_level && t.stairs > 0) {
+            state.render.do_message("Nothing happened. Strange.", true);
+            ret = false;
+
+        } else {
+            state.features.set(p.px, p.py, d.place_permafeat.feat, state.render);        
+            permafeats::features().add(p, d.place_permafeat.feat);
+            ret = true;
+        }
 
     } else if (d.place_permafeat.walk != -1 || d.place_permafeat.water != -1) {
 
@@ -108,7 +118,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
             do_player_wish(state, p, false);
         }
 
-        state.window_stack.clear();
+        ret = true;
     }
 
     if (d.magic_mapping) {
@@ -127,7 +137,15 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
-    return ret;
+    if (!ret) {
+        items::Item tmp2;
+        p.inv.place(slot, tmp, tmp2);
+
+        return true;
+    }
+
+    ++ticks;
+    return true;
 }
 
 

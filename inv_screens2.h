@@ -39,9 +39,8 @@ inline bool handle_input_inv_item(Player& p, GameState& state,
         state.window_stack.clear();
         return true;
 
-    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state, regen)) {
+    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state, regen, ticks)) {
 
-        ticks++;
         state.window_stack.clear();
         return true;
 
