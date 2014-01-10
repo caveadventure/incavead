@@ -60,7 +60,7 @@ struct Main {
 
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 8;
+    static const unsigned int SAVEFILE_VERSION = 9;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
@@ -155,7 +155,7 @@ struct Main {
 
         ticks = 1;
 
-        game.init(seed);
+        game.init(screen.address, seed);
 
         screen.clear();
         game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });

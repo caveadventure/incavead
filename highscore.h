@@ -8,18 +8,6 @@
 #include "nlp.h"
 
 
-namespace std {
-
-template <>
-struct hash<bones::session_t> {
-    size_t operator()(const bones::session_t& k) const {
-        return hash<unsigned int>()(k.address) + hash<unsigned int>()(k.seed);
-    }
-};
-
-}
-
-
 namespace highscore {
 
 struct Scores {

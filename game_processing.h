@@ -1,9 +1,11 @@
 #ifndef __GAME_PROCESSING_H
 #define __GAME_PROCESSING_H
 
-void Game::init(unsigned int code) {
+void Game::init(unsigned int address, unsigned int seed) {
 
-    game_seed = code;
+    game_seed = seed;
+
+    p.num_replay_codes = bones::bones().get_replay_code_count(address, seed);
 }
 
 void Game::dispose(GameState& state) {

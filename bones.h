@@ -130,6 +130,17 @@ struct writer<bones::session_t> {
 
 }
 
+namespace std {
+
+template <>
+struct hash<bones::session_t> {
+    size_t operator()(const bones::session_t& k) const {
+        return hash<unsigned int>()(k.address) + hash<unsigned int>()(k.seed);
+    }
+};
+
+}
+
 
 namespace bones {
 
@@ -145,6 +156,8 @@ struct Bones {
     };
 
     std::map< key_t, std::unordered_map<pt, data_t> > data;
+
+    std::unordered_map<session_t, size_t> replay_codes;
     
     std::mutex mutex;
 
@@ -162,6 +175,8 @@ struct Bones {
         auto& m = data[key];
         m[xy].bone = bone;
         m[xy].session = sess;
+
+        replay_codes[sess]++;
 
         while (m.size() > NUMBER) {
             m.erase(m.begin());
@@ -194,6 +209,8 @@ struct Bones {
                     auto& m = data[key][xy];
                     m.bone = bone;
                     m.session = sess;
+
+                    replay_codes[sess]++;
 
                 } catch (...) {
                     break;
@@ -241,6 +258,14 @@ struct Bones {
         for (const auto& j : i->second) {
             out.push_back(std::make_pair(j.first, j.second.bone.worth));
         }
+    }
+
+    size_t get_replay_code_count(unsigned int addr, unsigned int seed) {
+
+        session_t sess(addr, seed);
+
+        std::unique_lock<std::mutex> l(mutex);
+        return replay_codes[sess];
     }
 };
 
