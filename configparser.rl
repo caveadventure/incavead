@@ -222,7 +222,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'hellish_fire'  %{ dmgval.type = damage::type_t::hellish_fire; }  |
             'electric'      %{ dmgval.type = damage::type_t::electric; }      |
             'sonic'         %{ dmgval.type = damage::type_t::sonic; }         |
-            'magic'         %{ dmgval.type = damage::type_t::magic; }         ;
+            'magic'         %{ dmgval.type = damage::type_t::magic; }         |
+            'hunger'        %{ dmgval.type = damage::type_t::hunger; }        |
+            'unluck'        %{ dmgval.type = damage::type_t::unluck; }        ;
 
 
         damage_val = 

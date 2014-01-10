@@ -161,6 +161,9 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
             hurt = dmg;
         }
 
+    } else if (v.type == damage::type_t::hunger || v.type == damage::type_t::unluck) {
+        // Monsters don't feel hunger and don't have luck.
+
     } else {
         // physical
         // electric
@@ -370,6 +373,12 @@ inline void defend(Player& p,
                 p.health.dec(v.val * factor);
             }
 
+        } else if (v.type == damage::type_t::hunger) {
+            p.food.dec(v.val);
+
+        } else if (v.type == damage::type_t::unluck) {
+            p.luck.dec(v.val);
+
         } else if (v.type == damage::type_t::physical || 
                    v.type == damage::type_t::poison ||
                    v.type == damage::type_t::psi ||
@@ -435,6 +444,12 @@ inline void defend(Player& p,
                 if (p.karma.val > 0)
                     state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
 
+            } else if (v.type == damage::type_t::hunger) {
+                state.render.do_message(nlp::message("%s casts a hunger charm.", s));
+
+            } else if (v.type == damage::type_t::unluck) {
+                state.render.do_message(nlp::message("%s casts the evil eye.", s));
+
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison ||
                        v.type == damage::type_t::magic) {
@@ -455,6 +470,73 @@ inline void defend(Player& p,
     defend(p, defenses, plevel, s, s.attacks, state);
 }
 
+
+inline void defend_env_message(Player& p, GameState& state, const damage::attacks_t& attack_res) {
+
+    std::set<damage::type_t> damages;
+
+    for (const auto& v : attack_res) {
+
+        if ((v.type == damage::type_t::make_meat && v.val <= 0.5) ||
+            (v.type == damage::type_t::heavenly_fire && p.karma.val >= 0) ||
+            (v.type == damage::type_t::hellish_fire && p.karma.val <= 0)) {
+
+            continue;
+        }
+
+        damages.insert(v.type);
+    }
+
+    for (const auto& v : damages) {
+        switch (v) {
+
+        case damage::type_t::sleep:
+            state.render.do_message("You fall asleep.");
+            break;
+
+        case damage::type_t::poison:
+            state.render.do_message("You feel sick.");
+            break;
+
+        case damage::type_t::psi:
+            state.render.do_message("You feel a cosmic existential madness.");
+            break;
+
+        case damage::type_t::make_meat:
+            state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
+            break;
+
+        case damage::type_t::heavenly_fire:
+            state.render.do_message("You are blasted with heavenly fire.");
+            break;
+
+        case damage::type_t::hellish_fire:
+            state.render.do_message("You are blasted with hellfire.");
+            break;
+
+        case damage::type_t::hunger:
+            state.render.do_message("You feel an unnatural hunger.");
+            break;
+
+        case damage::type_t::unluck:
+            state.render.do_message("You feel unlucky.");
+            break;
+
+        case damage::type_t::physical:
+        case damage::type_t::eat_brain:
+        case damage::type_t::drain:
+        case damage::type_t::vampiric:
+        case damage::type_t::electric:
+        case damage::type_t::magic:
+            state.render.do_message("Ouch, that hurts.");
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Terrain& t, 
@@ -463,72 +545,14 @@ inline void defend(Player& p,
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, t.attacks, t.attack_level, state, attack_res);
 
-    bool do_sleep = false;
-    bool do_hurt = false;
-    bool do_pois = false;
-    bool do_psi = false;
-
     p.attacker = t.name;
 
-    for (const auto& v : attack_res) {
-
-        if (v.type == damage::type_t::sleep) {
-            do_sleep = true;
-
-        } else if (v.type == damage::type_t::poison) {
-            do_pois = true;
-
-        } else if (v.type == damage::type_t::psi) {
-            do_psi = true;
-
-        } else if (v.type == damage::type_t::make_meat) {
-
-            if (v.val > 0.5)
-                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
-
-        } else if (v.type == damage::type_t::heavenly_fire) {
-
-            if (p.karma.val < 0)
-                state.render.do_message("You are blasted with heavenly fire.");
-
-        } else if (v.type == damage::type_t::hellish_fire) {
-
-            if (p.karma.val > 0)
-                state.render.do_message("You are blasted with hellfire.");
-
-        } else if (v.type == damage::type_t::physical ||
-                   v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric ||
-                   v.type == damage::type_t::magic) {
-
-            do_hurt = true;
-        }
-    }
-
-    if (do_hurt) {
-        state.render.do_message("Ouch, that hurts.");
-    }
-
-    if (do_psi) {
-        state.render.do_message("You feel a cosmic existential madness.");
-    }
-
-    if (do_pois) {
-        state.render.do_message("You feel sick.");
-    }
-
-    if (do_sleep) {
-        state.render.do_message("You fall asleep.");
-    }
+    defend_env_message(p, state, attack_res);
 
     if (!attack_res.empty()) {
         handle_post_defend(p, state);
     }
 }
-
-
 
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
@@ -538,65 +562,9 @@ inline void defend(Player& p,
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, d.attacks, d.level, state, attack_res);
 
-    bool do_sleep = false;
-    bool do_hurt = false;
-    bool do_pois = false;
-    bool do_psi = false;
-
     p.attacker = d.name;
 
-    for (const auto& v : attack_res) {
-
-        if (v.type == damage::type_t::sleep) {
-            do_sleep = true;
-
-        } else if (v.type == damage::type_t::poison) {
-            do_pois = true;
-
-        } else if (v.type == damage::type_t::psi) {
-            do_psi = true;
-
-        } else if (v.type == damage::type_t::make_meat) {
-
-            if (v.val > 0.5)
-                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
-
-        } else if (v.type == damage::type_t::heavenly_fire) {
-
-            if (p.karma.val < 0)
-                state.render.do_message("You are blasted with heavenly fire.");
-
-        } else if (v.type == damage::type_t::hellish_fire) {
-
-            if (p.karma.val > 0)
-                state.render.do_message("You are blasted with hellfire.");
-
-        } else if (v.type == damage::type_t::physical ||
-                   v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric ||
-                   v.type == damage::type_t::magic) {
-
-            do_hurt = true;
-        }
-    }
-
-    if (do_hurt) {
-        state.render.do_message("Ouch, that hurts.");
-    }
-
-    if (do_psi) {
-        state.render.do_message("You feel a cosmic existential madness.");
-    }
-
-    if (do_pois) {
-        state.render.do_message("You feel sick.");
-    }
-
-    if (do_sleep) {
-        state.render.do_message("You fall asleep.");
-    }
+    defend_env_message(p, state, attack_res);
 
     if (!attack_res.empty()) {
         handle_post_defend(p, state);

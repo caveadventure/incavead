@@ -23,7 +23,9 @@ enum class type_t : unsigned int {
     hellish_fire,
     electric,
     sonic,
-    magic
+    magic,
+    hunger,
+    unluck
 };
 
 inline std::string name(type_t d) {
@@ -45,6 +47,8 @@ inline std::string name(type_t d) {
     case type_t::electric:       return "electric";
     case type_t::sonic:          return "sonic";
     case type_t::magic:          return "aetherial";
+    case type_t::hunger:         return "hunger";
+    case type_t::unluck:         return "unluck";
     default:                     return "oops";
     }
 }        
