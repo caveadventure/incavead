@@ -43,6 +43,11 @@ struct Screens {
         auto& tmp = players[&s];
         tmp.name = name;
         tmp.ts = ::time(NULL);
+
+        // HACK
+        // Connect parent screen's guts to this machinery.
+        s.callback = std::bind(&Screens<SCREEN>::watching_callback, this, 
+                               std::placeholders::_1, std::placeholders::_2);
     }
 
     struct list_entry_t {
@@ -91,13 +96,6 @@ struct Screens {
 
         sender.refcount++;
 
-        // HACK
-        // Connect parent screen's guts to this machinery.
-        if (sender.refcount == 1) {
-            i->first->callback = std::bind(&Screens<SCREEN>::watching_callback, this, 
-                                           std::placeholders::_1, std::placeholders::_2);
-        }
-
         return true;
     }
 
@@ -113,12 +111,25 @@ struct Screens {
         sender_t& sender = i->second;
 
         sender.refcount--;
-
-        if (sender.refcount == 0) {
-            i->first->callback = nullptr;
-        }
     }
 
+    bool notify(void* tag) {
+        std::unique_lock<std::mutex> l(player_mutex);
+
+        auto i = players.find((SCREEN*)tag);
+
+        if (i == players.end())
+            return false;
+
+        sender_t& sender = i->second;
+
+        sender.cv.notify_all();
+
+        return true;
+    }
+
+    // HARCODED VALUES
+    static const size_t MAX_FRAMES = 5;
 
     void watching_callback(SCREEN* parent, std::vector<maudit::glyph>& data) {
 
@@ -138,25 +149,14 @@ struct Screens {
         ds.w = parent->w;
         ds.h = parent->h;
 
-        sender.cv.notify_all();
-    }
-
-    bool notify(void* tag) {
-        std::unique_lock<std::mutex> l(player_mutex);
-
-        auto i = players.find(parent);
-
-        if (i == players.end())
-            return false;
-
-        sender_t& sender = i->second;
+        while (sender.datastream.size() > MAX_FRAMES) {
+            sender.datastream.erase(sender.datastream.begin());
+        }
 
         sender.cv.notify_all();
     }
 
     bool get_next_data(void* tag, data_t& out, size_t& last_frame_no) {
-
-        try {
 
         SCREEN* parent = (SCREEN*)tag;
 
@@ -190,11 +190,6 @@ struct Screens {
 
             return true;
         }
-
-    } catch (std::exception& e) {
-        std::cout << "Exception: " << e.what() << std::endl;
-        throw;
-    }
     }
 };
 

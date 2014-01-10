@@ -420,11 +420,13 @@ struct Main {
                 }
             }
 
-            spectator::screens<SCREEN>().add(screen, name);
+            if (!singleplayer)
+                spectator::screens<SCREEN>().add(screen, name);
 
             _mainloop_main(name, savefile, dead);
 
-            spectator::screens<SCREEN>().remove(screen);
+            if (!singleplayer)
+                spectator::screens<SCREEN>().remove(screen);
 
             {
                 logger::Sink gamelog("game.log");
@@ -440,7 +442,8 @@ struct Main {
 
         } catch (...) {
 
-            spectator::screens<SCREEN>().remove(screen);
+            if (!singleplayer)
+                spectator::screens<SCREEN>().remove(screen);
 
             if (dead) {
                 clobber_savefile(savefile);
