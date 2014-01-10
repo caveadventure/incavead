@@ -210,6 +210,9 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
         if (mon.sleep > 0) {
             state = "sleeping";
 
+        } else if (mon.blind > 0) {
+            state = "blinded";
+
         } else if (mon.fear > 0) {
             state = "afraid";
 
