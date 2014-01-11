@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Infinite Cave Adventure (highscores)</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body>
+    
+    <!-- Main page -->
+    
+    <div class="row">    
+
+      <div id="highscore">
+        <h3>Highscore table</h3>
+        <p>From a total of <b><span id="num_games"></span></b> games logged so far.
+        </p>
+
+        <div class="expander" onclick="$('#panel_plev').toggle();">▶ ... by player level</div>
+        <div class="highscores" id="panel_plev">
+          <ol id="highscore_plev"></ol>
+        </div>
+
+        <div class="expander" onclick="$('#panel_dlev_d').toggle();">▶ ... by lowest dungeon level</div>
+        <div class="highscores" id="panel_dlev_d">
+          <ol id="highscore_dlev_d"></ol>
+        </div>
+
+        <div class="expander" onclick="$('#panel_dlev_a').toggle();">▶ ... by highest dungeon level</div>
+        <div class="highscores" id="panel_dlev_a">
+          <ol id="highscore_dlev_a"></ol>
+        </div>
+
+        <div class="expander" onclick="$('#panel_worth').toggle();">▶ ... by net worth</div>
+        <div class="highscores" id="panel_worth">
+          <ol id="highscore_worth"></ol>
+        </div>
+
+        <div class="expander" onclick="$('#panel_ts').toggle();">▶ last 10 games</div>
+        <div class="highscores" id="panel_ts">
+          <ol id="highscore_ts"></ol>
+        </div>
+      </div>
+      <p/>
+    </div>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/highscore.js"></script>
+
+    <script>
+      do_highscore();
+    </script>
+
+
+  </body>
+</html>
