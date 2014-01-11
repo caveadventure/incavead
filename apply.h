@@ -61,7 +61,25 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, siz
         const Levelskin& ls = levelskins().get(p.worldz);
         const Terrain& t = terrain().get(d.place_permafeat.feat);
 
+        bool bad = false;
+
         if (ls.no_phase_level && t.stairs > 0) {
+            bad = true;
+
+        } else {
+
+            features::Feature feat;
+            if (state.features.get(p.px, p.py, feat)) {
+
+                const Terrain& to = terrain().get(feat.tag);
+
+                if (!to.victory_item.null()) {
+                    bad = true;
+                }
+            }
+        }
+
+        if (bad) {
             state.render.do_message("Nothing happened. Strange.", true);
             ret = false;
 

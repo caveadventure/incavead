@@ -51,7 +51,7 @@ struct Game {
 
     // processing
 
-    void init(unsigned int address, unsigned int seed);
+    void init(GameState& state, unsigned int address, unsigned int seed);
 
     void dispose(GameState& state);
 

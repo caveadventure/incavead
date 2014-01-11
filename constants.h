@@ -77,6 +77,17 @@ struct ConstantsBank {
 
     unsigned int blindturns_to_radius;
 
+    struct ailment_t {
+        damage::attacks_t attacks;
+        unsigned int level;
+        std::string name;
+        unsigned int triggers;
+
+        ailment_t() : level(0), triggers(1) {}
+    };
+
+    std::map<tag_t, ailment_t> ailments;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
                       achievement_trigger_rate(15),

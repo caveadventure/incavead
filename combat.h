@@ -586,5 +586,22 @@ inline void defend(Player& p,
     }
 }
 
+inline void defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
+
+    damage::defenses_t defenses;
+    p.inv.get_defense(defenses);
+
+    damage::attacks_t attack_res;
+    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, attack_res);
+
+    p.attacker = ailment.name;
+
+    defend_env_message(p, state, attack_res);
+
+    if (!attack_res.empty()) {
+        handle_post_defend(p, state);
+    }
+}
+
 
 #endif

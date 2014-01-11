@@ -124,6 +124,8 @@ struct Player {
 
     size_t num_replay_codes;
 
+    std::map<unsigned int, tag_t> ailments;
+
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
@@ -258,6 +260,7 @@ struct reader<Player> {
         serialize::read(s, p.input_string);
         serialize::read(s, p.overmap_scale);
         serialize::read(s, p.num_replay_codes);
+        serialize::read(s, p.ailments);
     }
 };
 
@@ -295,6 +298,7 @@ struct writer<Player> {
         serialize::write(s, p.input_string);
         serialize::write(s, p.overmap_scale);
         serialize::write(s, p.num_replay_codes);
+        serialize::write(s, p.ailments);
     }
 };
 

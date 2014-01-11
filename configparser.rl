@@ -110,6 +110,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     unsigned char shortcut_key;
     tag_t genus_tag;
     tag_t ach_tag;
+    tag_t ail_tag;
 
     %%{
 
@@ -911,7 +912,31 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        entry = species | design | terrain | vault | celauto | levelskin | constant | achievement;
+        ailment_attack = 'attack' ws1 damage_val %{ __constants__().ailments[ail_tag].attacks.add(dmgval); } ;
+
+        ailment_attack_level = 'attack_level' ws1 number 
+                               %{ __constants__().ailments[ail_tag].level = toint(state.match); } ;
+
+        ailment_name = 'name' ws1 string 
+                       %{ __constants__().ailments[ail_tag].name = state.match; } ;
+
+        ailment_triggers = 'triggers' ws1 number 
+                           %{ __constants__().ailments[ail_tag].triggers = toint(state.match); } ;
+
+        ailment_line = 
+            ailment_attack | ailment_attack_level | ailment_name | ailment_triggers 
+            ;
+
+        ailment = 'ailment' 
+            ws1 tag    %{ ail_tag = tag_t(state.match, tagmem); }
+            ws '{'
+            ( ws ailment_line ws ';')+
+            ws '}'
+            ;
+
+        ####
+
+        entry = species | design | terrain | vault | celauto | levelskin | constant | achievement | ailment;
             
       main := (ws entry)+ ws ;
         

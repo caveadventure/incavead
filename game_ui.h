@@ -196,6 +196,28 @@ std::string show_stats(const Player& p) {
         ret += nlp::message("  \1%S\2: %d\n", s, i.second);
     }
 
+    if (p.ailments.size() > 0) {
+        ret += "\n\nYour degenerative ailments:\n\n";
+
+        std::map<std::string, size_t> ails;
+
+        for (const auto& a : p.ailments) {
+            const auto i = constants().ailments.find(a.second);
+
+            if (i != constants().ailments.end()) {
+                ails[i->second.name]++;
+            }
+        }
+
+        for (const auto& a : ails) {
+            if (a.second == 1) {
+                ret += nlp::message("  \1%S\2", a.first);
+            } else {
+                ret += nlp::message("  \1%S\2 (x%d)", a.first, a.second);
+            }
+        }
+    }
+
     return ret;
 }
 

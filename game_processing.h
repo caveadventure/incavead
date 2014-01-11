@@ -1,11 +1,42 @@
 #ifndef __GAME_PROCESSING_H
 #define __GAME_PROCESSING_H
 
-void Game::init(unsigned int address, unsigned int seed) {
+void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     game_seed = seed;
 
     p.num_replay_codes = bones::bones().get_replay_code_count(address, seed);
+
+    const auto& ailments = constants().ailments;
+
+    if (ailments.empty())
+        return;
+
+    unsigned int num_ails = p.num_replay_codes / 2;
+
+    for (unsigned int i = 0; i < num_ails; ++i) {
+
+        size_t na = state.rng.n(ailments.size());
+
+        auto a = ailments.begin();
+        while (na > 0) {
+            ++a;
+            --na;
+        }
+
+        const auto& ailment = a->second;
+
+        for (size_t z = 0; z < ailment.triggers; ++z) {
+            for (size_t j = 0; j < 3; ++j) {
+                unsigned int t = state.rng.range(0u, 99u);
+
+                if (p.ailments.count(t) == 0) {
+                    p.ailments[t] = a->first;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void Game::dispose(GameState& state) {
@@ -121,7 +152,6 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
 void Game::process_world(GameState& state, size_t& ticks, 
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
-
     // Handle victory items.
     {
         tag_t unique_item = constants().unique_item;
@@ -138,6 +168,44 @@ void Game::process_world(GameState& state, size_t& ticks,
             p.inv.place(d_victory.slot, vi, tmp);
         }
     }
+
+    // Ailments.
+
+    if (p.ailments.size() > 0) {
+
+        if (ticks == 1) {
+
+            switch (p.ailments.size()) {
+            case 1:
+                state.render.do_message("This reincarnation of your body seems frail. (Press '@')", true);
+                break;
+            case 2:
+                state.render.do_message("This reincarnation of your body is very frail.", true);
+                break;
+            case 3:
+                state.render.do_message("This reincarnation of your body is extremely fragile.", true);
+                break;
+            default:
+                state.render.do_message("This reincarnation of your body is no good at all.", true);
+                break;
+            }
+        }
+
+        unsigned int t = state.rng.range(0u, 99u);
+
+        auto a = p.ailments.find(t);
+
+        if (a != p.ailments.end()) {
+
+            auto b = constants().ailments.find(a->second);
+
+            if (b != constants().ailments.end()) {
+
+                defend(p, b->second, state);
+            }
+        }
+    }
+
 
     //
     //
