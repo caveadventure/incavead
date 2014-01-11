@@ -482,7 +482,9 @@ inline void defend(Player& p,
 }
 
 
-inline void defend_env_message(Player& p, GameState& state, const damage::attacks_t& attack_res) {
+inline bool defend_env_message(Player& p, GameState& state, const damage::attacks_t& attack_res) {
+
+    bool ret = true;
 
     std::set<damage::type_t> damages;
 
@@ -507,6 +509,7 @@ inline void defend_env_message(Player& p, GameState& state, const damage::attack
 
         case damage::type_t::blindness:
             state.render.do_message("You feel your eyesight fail you!");
+            ret = false;
             break;
 
         case damage::type_t::poison:
@@ -531,10 +534,12 @@ inline void defend_env_message(Player& p, GameState& state, const damage::attack
 
         case damage::type_t::hunger:
             state.render.do_message("You feel an unnatural hunger.");
+            ret = false;
             break;
 
         case damage::type_t::unluck:
             state.render.do_message("You feel unlucky.");
+            ret = false;
             break;
 
         case damage::type_t::physical:
@@ -550,6 +555,8 @@ inline void defend_env_message(Player& p, GameState& state, const damage::attack
             break;
         }
     }
+
+    return ret;
 }
 
 inline void defend(Player& p, 
@@ -596,9 +603,9 @@ inline void defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState
 
     p.attacker = ailment.name;
 
-    defend_env_message(p, state, attack_res);
+    bool stop = defend_env_message(p, state, attack_res);
 
-    if (!attack_res.empty()) {
+    if (!attack_res.empty() && stop) {
         handle_post_defend(p, state);
     }
 }

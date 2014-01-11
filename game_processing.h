@@ -14,6 +14,8 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     unsigned int num_ails = p.num_replay_codes / 2;
 
+    num_ails = std::min(num_ails, 6u);
+
     for (unsigned int i = 0; i < num_ails; ++i) {
 
         size_t na = state.rng.n(ailments.size());

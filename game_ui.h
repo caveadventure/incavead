@@ -199,21 +199,25 @@ std::string show_stats(const Player& p) {
     if (p.ailments.size() > 0) {
         ret += "\n\nYour degenerative ailments:\n\n";
 
-        std::map<std::string, size_t> ails;
+        std::map<std::string, std::pair<size_t,size_t> > ails;
 
         for (const auto& a : p.ailments) {
             const auto i = constants().ailments.find(a.second);
 
             if (i != constants().ailments.end()) {
-                ails[i->second.name]++;
+                auto& zz = ails[i->second.name];
+                zz.first++;
+                zz.second = i->second.triggers;
             }
         }
 
         for (const auto& a : ails) {
-            if (a.second == 1) {
-                ret += nlp::message("  \1%S\2", a.first);
+            std::cout << a.first << " " << a.second.first << " " << a.second.second << std::endl;
+            size_t n = a.second.first / a.second.second;
+            if (n <= 1) {
+                ret += nlp::message("  \2%S\1\n", a.first);
             } else {
-                ret += nlp::message("  \1%S\2 (x%d)", a.first, a.second);
+                ret += nlp::message("  \2%S\1 (x\2%d\1)\n", a.first, n);
             }
         }
     }
