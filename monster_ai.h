@@ -230,7 +230,9 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
     unsigned int range = s.range;
 
     if (m.blind > 0) {
-        range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) + 1);
+        range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) - 1);
+
+        state.monsters.change(m, [](monsters::Monster& m) { --(m.blind); });
     }
 
     if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
