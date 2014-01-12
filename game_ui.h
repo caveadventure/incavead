@@ -710,6 +710,15 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
     case 'O':
         do_player_wish(state, p, true);
         break;
+
+    case 'L':
+        for (unsigned int y = 0; y < state.render.h; ++y) {
+            for (unsigned int x = 0; x < state.render.w; ++x) {
+                state.render.set_is_lit(x, y, 5,  true);
+                state.render.invalidate(x, y);
+            }
+        }
+        break;
     }
 
     p.state &= ~(Player::DEBUG);

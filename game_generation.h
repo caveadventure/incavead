@@ -106,6 +106,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     std::vector<summons_t> summons;
 
     std::vector<grid::pt> player_positions;
+    std::vector<vault_packing_t> vault_packing;
 
     {
         progressbar("Placing vaults...");
@@ -125,7 +126,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                     continue;
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                    generate_vault(v, state, summons, affected, player_positions);
+                    generate_vault(v, state, summons, affected, vault_packing, player_positions);
                 }
             }
 

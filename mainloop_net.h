@@ -281,7 +281,7 @@ struct Main {
             // HACK
             // Disable parens to prevent cheating achievements in the highscore table.
 
-            if (k.letter >= ' ' && k.letter <= '~' && k.letter != '(' && k.letter != ')') {
+            if (k.letter >= ' ' && k.letter <= '~' && k.letter != '(' && k.letter != ')' && out.size() < 75) {
                 out += k.letter;
                 prompt += (secret ? '*' : k.letter);
                 continue;
