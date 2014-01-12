@@ -34,6 +34,16 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, siz
         ret = true;
     } 
 
+    if (d.heal_blind > 0) {
+
+        if (p.blind > 0) {
+            p.blind = 0;
+            state.render.do_message("You can see again!", true);
+        }
+
+        ret = true;
+    }
+
     if (d.karma != 0) {
         p.karma.inc(d.karma);
         ret = true;

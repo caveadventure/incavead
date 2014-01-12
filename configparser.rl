@@ -454,6 +454,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_magic_mapping = 'magic_mapping' %{ des.magic_mapping = true; };
 
+        design_heal_blind = 'heal_blind' %{ des.heal_blind = true; };
+
         design_one_data = 
             (design_count | design_name | design_skin | design_slot | design_descr |
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -464,6 +466,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_other_hunger_multiplier |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
+            design_heal_blind |
             '}'
             ${ fret; })
             ;
