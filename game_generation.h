@@ -105,7 +105,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     std::vector<summons_t> summons;
 
-    bool did_place_player = false;
+    std::vector<grid::pt> player_positions;
 
     {
         progressbar("Placing vaults...");
@@ -125,7 +125,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                     continue;
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                    generate_vault(v, state, summons, affected, did_place_player, p.px, p.py);
+                    generate_vault(v, state, summons, affected, player_positions);
                 }
             }
 
@@ -274,7 +274,8 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place player.
 
-    if (!did_place_player) {
+    if (player_positions.empty()) {
+
         grid::pt xy;
         if (!maps.one_of_lowlands(state.rng, xy))
             throw std::runtime_error("Failed to generate grid");
@@ -283,6 +284,13 @@ void Game::generate(GameState& state, FUNC progressbar) {
         p.py = xy.second;
 
         maps.add_nogen_expand(state.neigh, p.px, p.py, 3);
+
+    } else {
+
+        const grid::pt& xy = player_positions[state.rng.n(player_positions.size())];
+
+        p.px = xy.first;
+        p.py = xy.second;
     }
 
 

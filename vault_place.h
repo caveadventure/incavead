@@ -4,7 +4,7 @@
 
 inline void generate_vault(const Vault& vault, GameState& state, 
                            std::vector<summons_t>& summons, std::set<grid::pt>& affected,
-                           bool& did_place_player, unsigned int& px, unsigned int& py) {
+                           std::vector<grid::pt>& player_positions) {
 
     grid::pt xy;
 
@@ -76,9 +76,7 @@ inline void generate_vault(const Vault& vault, GameState& state,
     //
 
     if (_px >= 0 && _py >= 0) {
-        px = xy.first + _px;
-        py = xy.second +_py;
-        did_place_player = true;
+        player_positions.push_back(grid::pt(xy.first + _px, xy.second +_py));
     }
 
     for (int i = -1; i <= (int)w; ++i) {
