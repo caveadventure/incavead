@@ -56,6 +56,8 @@ struct Main {
     GAME game;
     SCREEN& screen;
 
+    std::vector<std::string> messages;
+
     size_t ticks;
 
     GAMESTATE state;
@@ -180,6 +182,15 @@ struct Main {
     }
 
     void draw() {
+
+        if (spectator::screens<SCREEN>().get_messages(screen, messages)) {
+
+            for (const std::string& msg : messages) {
+                state.render.do_message("Chat message: " + msg, true);
+            }
+
+            messages.clear();
+        }
 
         drawing_context_t ctx;
         ctx.view_w = screen.w;

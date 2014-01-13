@@ -36,6 +36,10 @@ struct Screens {
 
     std::mutex player_mutex;
 
+    std::map< SCREEN*, std::vector<std::string> > messages;
+
+    std::mutex message_mutex;
+
     void add(SCREEN& s, const std::string& name) {
 
         std::unique_lock<std::mutex> l(player_mutex);
@@ -128,6 +132,25 @@ struct Screens {
         return true;
     }
 
+    void send_message(void* tag, const std::string& message) {
+        std::unique_lock<std::mutex> l(message_mutex);
+
+        messages[(SCREEN*)tag].push_back(message);
+    }
+
+    bool get_messages(SCREEN& tag, std::vector<std::string>& out) {
+        std::unique_lock<std::mutex> l(message_mutex);
+
+        auto i = messages.find(&tag);
+
+        if (i != messages.end()) {
+            messages[&tag].swap(out);
+            return true;
+        }
+
+        return false;
+    }
+
     // HARCODED VALUES
     static const size_t MAX_FRAMES = 5;
 
@@ -199,6 +222,46 @@ Screens<SCREEN>& screens() {
     return ret;
 }
 
+template <typename DATA>
+void add_message_line(DATA& data, const std::string& message) {
+
+    if (message.empty())
+        return;
+
+    if (data.w < 5)
+        return;
+
+    size_t x = 0;
+    size_t i = (data.h - 1) * data.w;
+
+    std::string gt(">");
+
+    while (i < 3) {
+        data.data[i].text = gt;
+        data.data[i].fore = maudit::color::bright_yellow;
+        data.data[i].back = maudit::color::bright_black;
+        ++x;
+        ++i;
+    }
+
+    data.data[i].text = std::string(" ");
+    data.data[i].fore = maudit::color::bright_yellow;
+    data.data[i].back = maudit::color::bright_black;
+    ++x;
+    ++i;
+
+    for (unsigned char c : message) {
+
+        if (x >= data.w)
+            break;
+
+        data.data[i].text = std::string(1, c);
+        data.data[i].fore = maudit::color::bright_white;
+        data.data[i].back = maudit::color::bright_black;
+        ++x;
+        ++i;
+    }
+}
 
 template <typename SCREEN>
 bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsigned int oh, SCREEN& target) {
@@ -233,18 +296,18 @@ bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsign
 }
 
 template <typename SCREEN>
-void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& done) {
+void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& done, std::string& message) {
 
     while (1) {
 
         maudit::keypress k;
 
         std::cout << "+  waiting for key" << std::endl;
-        if (!screen.wait_key(k) || k.letter == 'q') {
+        if (!screen.wait_key(k) || k.key == maudit::keycode::esc) {
 
             screens<SCREEN>().notify(tag);
 
-            std::cout << "Got 'q'!" << std::endl;
+            std::cout << "Got 'ESC'!" << std::endl;
             std::unique_lock<std::mutex> l(mutex);
             done = true;
             return;
@@ -252,10 +315,24 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
 
         std::cout << "Keypress: " << k.letter << std::endl;
 
+        unsigned char cc = '\0';
+
+        if (k.letter == '\n' || (k.letter >= ' ' && k.letter <= '~'))
+            cc = k.letter;
+
         std::unique_lock<std::mutex> l(mutex);
 
         if (done)
             return;
+
+        if (cc == '\n') {
+            screens<SCREEN>().send_message(tag, message);
+            message.clear();
+
+        } else if (cc != '\0' && message.size() < 60) {
+            message += cc;
+        }
+        
     }
 }
 
@@ -317,20 +394,26 @@ void choose_and_watch(SCREEN& screen) {
             std::cout << "start loop" << std::endl;
             std::mutex mutex;
             bool done = false;
+            std::string message;
+
             screens<SCREEN>().link(parent, screen);
 
             std::thread thread(watcher_input_thread<SCREEN>, 
-                               std::ref(screen), parent, std::ref(mutex), std::ref(done));
+                               std::ref(screen), parent, std::ref(mutex), std::ref(done), std::ref(message));
 
             size_t last_frame_no = 0;
 
             while (1) {
+
+                std::string tmp;
 
                 {
                     std::unique_lock<std::mutex> l(mutex);
 
                     if (done)
                         break;
+
+                    tmp = message;
                 }
 
                 typename Screens<SCREEN>::data_t data;
@@ -342,6 +425,8 @@ void choose_and_watch(SCREEN& screen) {
                     ::sleep(1);
                     continue;
                 }
+
+                add_message_line(data, message);
 
                 std::cout << "copy_screen()" << std::endl;
 
