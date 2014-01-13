@@ -179,7 +179,12 @@ struct Screens {
         sender.cv.notify_all();
     }
 
-    bool get_next_data(void* tag, data_t& out, size_t& last_frame_no) {
+    // Tri-state return value:
+    // -1 means a lost connection,
+    // 1 means a valid frame,
+    // 0 means we tried to wait for a frame and need to call this function again. (No frame is returned.)
+
+    int get_next_data(void* tag, data_t& out, size_t& last_frame_no) {
 
         SCREEN* parent = (SCREEN*)tag;
 
@@ -187,32 +192,29 @@ struct Screens {
 
         std::cout << " | locked " << last_frame_no << std::endl;
 
-        while (1) {
+        auto i = players.find(parent);
 
-            auto i = players.find(parent);
-
-            if (i == players.end()) {
-                std::cout << " | oops, no tag" << std::endl;
-                return false;
-            }
-
-            sender_t& sender = i->second;
-
-            auto j = sender.datastream.upper_bound(last_frame_no);
-
-            if (j == sender.datastream.end()) {
-                std::cout << " | no frame found, waiting" << std::endl;
-                sender.cv.wait(l);
-                continue;
-            }
-
-            out = j->second;
-            last_frame_no = j->first;
-
-            std::cout << " | frame found, ok" << std::endl;
-
-            return true;
+        if (i == players.end()) {
+            std::cout << " | oops, no tag" << std::endl;
+            return -1;
         }
+
+        sender_t& sender = i->second;
+
+        auto j = sender.datastream.upper_bound(last_frame_no);
+
+        if (j == sender.datastream.end()) {
+            std::cout << " | no frame found, waiting" << std::endl;
+            sender.cv.wait(l);
+            return 0;
+        }
+
+        out = j->second;
+        last_frame_no = j->first;
+
+        std::cout << " | frame found, ok" << std::endl;
+
+        return 1;
     }
 };
 
@@ -222,67 +224,79 @@ Screens<SCREEN>& screens() {
     return ret;
 }
 
-template <typename DATA>
-void add_message_line(DATA& data, const std::string& message) {
+void add_message_line(std::vector<maudit::glyph>& data, unsigned int w, unsigned int h, const std::string& message) {
 
     if (message.empty())
         return;
 
-    if (data.w < 5)
+    if (w < 5)
         return;
 
     size_t x = 0;
-    size_t i = (data.h - 1) * data.w;
+    size_t i = (h - 1) * w;
 
     std::string gt(">");
+    std::string space(" ");
 
-    while (i < 3) {
-        data.data[i].text = gt;
-        data.data[i].fore = maudit::color::bright_yellow;
-        data.data[i].back = maudit::color::bright_black;
+    while (x < 3) {
+        data[i].text = gt;
+        data[i].fore = maudit::color::bright_yellow;
+        data[i].back = maudit::color::bright_black;
         ++x;
         ++i;
     }
 
-    data.data[i].text = std::string(" ");
-    data.data[i].fore = maudit::color::bright_yellow;
-    data.data[i].back = maudit::color::bright_black;
+    data[i].text = space;
+    data[i].fore = maudit::color::bright_yellow;
+    data[i].back = maudit::color::bright_black;
     ++x;
     ++i;
 
     for (unsigned char c : message) {
 
-        if (x >= data.w)
+        if (x >= w)
             break;
 
-        data.data[i].text = std::string(1, c);
-        data.data[i].fore = maudit::color::bright_white;
-        data.data[i].back = maudit::color::bright_black;
+        data[i].text = std::string(1, c);
+        data[i].fore = maudit::color::bright_white;
+        data[i].back = maudit::color::bright_black;
+        ++x;
+        ++i;
+    }
+
+    while (x < w) {
+        data[i].text = space;
+        data[i].fore = maudit::color::bright_white;
+        data[i].back = maudit::color::bright_black;
         ++x;
         ++i;
     }
 }
 
 template <typename SCREEN>
-bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsigned int oh, SCREEN& target) {
+bool copy_screen(const std::vector<maudit::glyph>& data, const std::string& message, 
+                 unsigned int ow, unsigned int oh, SCREEN& target) {
 
-    if (target.w == ow && target.h == oh) {
+    if (target.w == ow && target.h == oh && message.empty()) {
         return target.send_screen(data);
     }
 
-    std::vector<maudit::glyph> temp;
-    temp.resize(target.w * target.h);
+    unsigned int tw = target.w;
+    unsigned int th = target.h;
 
-    unsigned int truw = std::min(target.w, ow);
-    unsigned int truh = std::min(target.h, oh);
+    std::vector<maudit::glyph> temp;
+    temp.resize(tw * th);
+
+    unsigned int truw = std::min(tw, ow);
+    unsigned int truh = std::min(th, oh);
 
     // Clip to an even-sized width.
-    if (target.w < ow && (truw & 1)) {
+    if (tw < ow && (truw & 1)) {
         truw--;
     }
 
     for (unsigned int y = 0; y < truh; ++y) {
-        auto i = temp.begin() + (y * target.w);
+        auto i = temp.begin() + (y * tw);
         auto j = data.begin() + (y * ow);
 
         for (unsigned int x = 0; x < truw; ++x) {
@@ -291,6 +305,8 @@ bool copy_screen(const std::vector<maudit::glyph>& data, unsigned int ow, unsign
             ++j;
         }
     }
+
+    add_message_line(temp, tw, th, message);
 
     return target.send_screen(temp);
 }
@@ -319,6 +335,9 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
 
         if (k.letter == '\n' || (k.letter >= ' ' && k.letter <= '~')) {
             cc = k.letter;
+
+        } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
+            cc = '\x08';
         }
 
         std::unique_lock<std::mutex> l(mutex);
@@ -329,6 +348,10 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
         if (cc == '\n') {
             screens<SCREEN>().send_message(tag, message);
             message.clear();
+            screens<SCREEN>().notify(tag);
+
+        } else if (cc == '\x08' && message.size() > 0) {
+            message.resize(message.size() - 1);
             screens<SCREEN>().notify(tag);
 
         } else if (cc != '\0' && message.size() < 60) {
@@ -352,8 +375,9 @@ void choose_and_watch(SCREEN& screen) {
         auto games = screens<SCREEN>().list();
 
         std::string window = 
-            "Active games:\n"
-            " (press space to refresh; when viewing a game, press 'q' to stop and return to this screen.)\n\n";
+            "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
+            "   Simply start typing and press 'Enter' to send a chat message.\n\n";
+            "Active games: (press space to refresh)\n\n"
 
         char c = 'a';
 
@@ -404,6 +428,8 @@ void choose_and_watch(SCREEN& screen) {
             std::thread thread(watcher_input_thread<SCREEN>, 
                                std::ref(screen), parent, std::ref(mutex), std::ref(done), std::ref(message));
 
+
+            typename Screens<SCREEN>::data_t data;
             size_t last_frame_no = 0;
 
             while (1) {
@@ -419,21 +445,20 @@ void choose_and_watch(SCREEN& screen) {
                     tmp = message;
                 }
 
-                typename Screens<SCREEN>::data_t data;
-
                 std::cout << "get_next_data()" << std::endl;
 
-                if (!screens<SCREEN>().get_next_data(parent, data, last_frame_no)) {
+                int ret = screens<SCREEN>().get_next_data(parent, data, last_frame_no);
+
+                if (ret < 0) {
+                    // Lost connection.
                     // Spin about doing nothing, keeping the last screen in view.
                     ::sleep(1);
                     continue;
                 }
 
-                add_message_line(data, message);
-
                 std::cout << "copy_screen()" << std::endl;
 
-                if (!copy_screen(data.data, data.w, data.h, screen)) {
+                if (!copy_screen(data.data, message, data.w, data.h, screen)) {
                     std::unique_lock<std::mutex> l(mutex);
                     done = true;
                     break;

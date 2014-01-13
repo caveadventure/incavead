@@ -398,6 +398,7 @@ std::string help_text() {
         "  \2#\1 :          Show the current map's overview.\n"
         "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
+        "  \2\"\1 :          Send a message in spectator mode chat. (Also useful for notes to self.)\n"
         "  \2?\1 :          Show this help message.\n"
         "  \2??\1 :         Show detailed instructions.\n"
         "\n\3Shortcut commands:\1\n"
@@ -533,6 +534,11 @@ void handle_input_main(Player& p, GameState& state,
 
     case '?':
         state.push_window(help_text(), screens_t::help);
+        break;
+
+    case '\"':
+        do_player_input(state, p, ">>> ");
+        p.state |= Player::SELFNOTE;
         break;
 
         // WATCH OUT!
@@ -894,6 +900,9 @@ void Game::handle_input(GameState& state,
                 } else {
                     ++ticks;
                 }
+
+            } else if (p.state & Player::SELFNOTE) {
+                state.render.do_message(">>> " + p.input_string);
             }
 
             p.state = Player::MAIN;

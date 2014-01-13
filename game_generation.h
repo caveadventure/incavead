@@ -69,7 +69,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     }
 
     // //
-
+    /*
     for (const auto& xy : state.grid.cornermap) {
         if (state.grid.walkmap.count(xy) == 0)
             throw std::runtime_error("Sanity error 1.1");
@@ -92,6 +92,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         if (state.grid.watermap.count(xy) != 0)
             throw std::runtime_error("Sanity error 1.4");
     }
+    */
 
     state.rng.init(gridseed);
 
@@ -134,6 +135,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
     }
 
+    /*
     for (const auto& xy : state.grid.cornermap) {
         if (state.grid.walkmap.count(xy) == 0)
             throw std::runtime_error("Sanity error 2.1");
@@ -166,6 +168,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         if (state.grid.walkmap.count(mv.first) == 0)
             throw std::runtime_error("Sanity error 3");
     }
+    */
 
     // 
     //
@@ -367,10 +370,12 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
     }
 
+    /*
     for (const auto& mv : state.monsters.mons) {
         if (state.grid.walkmap.count(mv.first) == 0)
             throw std::runtime_error("Sanity error 4");
     }
+    */
 
     p.current_wx = p.worldx;
     p.current_wy = p.worldy;
