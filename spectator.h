@@ -376,8 +376,8 @@ void choose_and_watch(SCREEN& screen) {
 
         std::string window = 
             "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
-            "   Simply start typing and press 'Enter' to send a chat message.\n\n";
-            "Active games: (press space to refresh)\n\n"
+            "   Simply start typing and press 'Enter' to send a chat message.\n\n"
+            "Active games: (press space to refresh)\n\n";
 
         char c = 'a';
 
