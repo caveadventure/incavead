@@ -172,7 +172,9 @@ std::string show_victory(const Player& p, const GameState& state) {
 
 std::string show_stats(const Player& p) {
 
-    std::string ret = "\n\2Your attack capabilities:\1\n\n";
+    std::string ret = nlp::message("\n\2Character level:\1 %d\n", p.level+1);
+
+    ret += "\n\2Your attack capabilities:\1\n\n";
 
     damage::attacks_t att;
     p.inv.get_attack(att);
