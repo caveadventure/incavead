@@ -317,8 +317,9 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
 
         unsigned char cc = '\0';
 
-        if (k.letter == '\n' || (k.letter >= ' ' && k.letter <= '~'))
+        if (k.letter == '\n' || (k.letter >= ' ' && k.letter <= '~')) {
             cc = k.letter;
+        }
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -328,9 +329,11 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
         if (cc == '\n') {
             screens<SCREEN>().send_message(tag, message);
             message.clear();
+            screens<SCREEN>().notify(tag);
 
         } else if (cc != '\0' && message.size() < 60) {
             message += cc;
+            screens<SCREEN>().notify(tag);
         }
         
     }
