@@ -616,6 +616,10 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
         p.health.shield += 1000;
         break;
 
+    case '2':
+        p.health.shield = 0;
+        break;
+
     case 's':
         state.species_counts = species().counts;
         state.render.do_message("Wiped species counts.");
