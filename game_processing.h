@@ -374,7 +374,6 @@ void Game::process_world(GameState& state, size_t& ticks,
     }
 
     if (p.blind > 0) {
-        std::cout << "Blindness: " << p.blind << std::endl;
         --(p.blind);
     }
 

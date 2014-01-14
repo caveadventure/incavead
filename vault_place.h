@@ -45,8 +45,6 @@ struct vault_packing_t {
 inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
                               std::vector<vault_packing_t>& packed, grid::pt& out) {
 
-    std::cout << "Packing vault." << std::endl;
-
     if (packed.empty()) {
         packed.push_back(vault_packing_t{0, 0, state.grid.w, state.grid.h});
     }
@@ -55,8 +53,6 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
     while (i != packed.end()) {
 
         const auto& vp = *i;
-
-        std::cout << "  region: " << vp.x << "," << vp.y << " " << vp.w << "," << vp.h << std::endl;
 
         if (vp.w < w || vp.h < h) {
             ++i;
@@ -70,35 +66,27 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
         out.first = vp.x + offx;
         out.second = vp.y + offy;
 
-        std::cout << "Vault ok! " << out.first << "," << out.second << std::endl;
-
         vault_packing_t tmp = vp;
 
         packed.erase(i);
 
         vault_packing_t s1{out.first, tmp.y, tmp.w - offx, offy};
         if (s1.w > 0 && s1.h > 0) packed.push_back(s1);
-        else std::cout << "  . s1 failed" << std::endl;
 
         vault_packing_t s2{out.first + w, out.second, tmp.w - offx - w, tmp.h - offy};
         if (s2.w > 0 && s2.h > 0) packed.push_back(s2);
-        else std::cout << "  . s2 failed" << std::endl;
 
         vault_packing_t s3{tmp.x, out.second + h, offx + w, tmp.h - offy - h};
         if (s3.w > 0 && s3.h > 0) packed.push_back(s3);
-        else std::cout << "  . s3 failed" << std::endl;
 
         vault_packing_t s4{tmp.x, tmp.y, offx, offy + h};
         if (s4.w > 0 && s4.h > 0) packed.push_back(s4);
-        else std::cout << "  . s4 failed" << std::endl;
 
         std::sort(packed.begin(), packed.end(), 
                   [](const vault_packing_t& a, const vault_packing_t& b) { return (a.w*a.h) > (b.w*b.h); });
 
         return true;
     }
-
-    std::cout << "Vault packing failed!" << std::endl;
 
     return false;
 }

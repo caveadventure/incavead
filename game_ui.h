@@ -214,7 +214,6 @@ std::string show_stats(const Player& p) {
         }
 
         for (const auto& a : ails) {
-            std::cout << a.first << " " << a.second.first << " " << a.second.second << std::endl;
             size_t n = a.second.first / a.second.second;
             if (n <= 1) {
                 ret += nlp::message("  \2%S\1\n", a.first);
@@ -676,7 +675,7 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
     case 'Z':
     {
         uint32_t rnd = state.rng.range(0u, 0xFFFFFFFF);
-        std::cout << "** " << rcode::magick_encode(rnd) << std::endl;
+        state.render.do_message("** " + rcode::magick_encode(rnd));
         cast_random_spell(p, rnd, state);
         break;
     }

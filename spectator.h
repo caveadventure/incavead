@@ -190,12 +190,9 @@ struct Screens {
 
         std::unique_lock<std::mutex> l(player_mutex);
 
-        std::cout << " | locked " << last_frame_no << std::endl;
-
         auto i = players.find(parent);
 
         if (i == players.end()) {
-            std::cout << " | oops, no tag" << std::endl;
             return -1;
         }
 
@@ -204,15 +201,12 @@ struct Screens {
         auto j = sender.datastream.upper_bound(last_frame_no);
 
         if (j == sender.datastream.end()) {
-            std::cout << " | no frame found, waiting" << std::endl;
             sender.cv.wait(l);
             return 0;
         }
 
         out = j->second;
         last_frame_no = j->first;
-
-        std::cout << " | frame found, ok" << std::endl;
 
         return 1;
     }
@@ -318,18 +312,14 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
 
         maudit::keypress k;
 
-        std::cout << "+  waiting for key" << std::endl;
         if (!screen.wait_key(k) || k.key == maudit::keycode::esc) {
 
             screens<SCREEN>().notify(tag);
 
-            std::cout << "Got 'ESC'!" << std::endl;
             std::unique_lock<std::mutex> l(mutex);
             done = true;
             return;
         }
-
-        std::cout << "Keypress: " << k.letter << std::endl;
 
         unsigned char cc = '\0';
 
@@ -418,7 +408,6 @@ void choose_and_watch(SCREEN& screen) {
         void* parent = i->second;
 
         {
-            std::cout << "start loop" << std::endl;
             std::mutex mutex;
             bool done = false;
             std::string message;
@@ -445,8 +434,6 @@ void choose_and_watch(SCREEN& screen) {
                     tmp = message;
                 }
 
-                std::cout << "get_next_data()" << std::endl;
-
                 int ret = screens<SCREEN>().get_next_data(parent, data, last_frame_no);
 
                 if (ret < 0) {
@@ -456,8 +443,6 @@ void choose_and_watch(SCREEN& screen) {
                     continue;
                 }
 
-                std::cout << "copy_screen()" << std::endl;
-
                 if (!copy_screen(data.data, message, data.w, data.h, screen)) {
                     std::unique_lock<std::mutex> l(mutex);
                     done = true;
@@ -465,12 +450,8 @@ void choose_and_watch(SCREEN& screen) {
                 }
             }
 
-            std::cout << "loop done" << std::endl;
-
             thread.join();
             screens<SCREEN>().unlink(parent, screen);
-
-            std::cout << "ok!" << std::endl;
         }
     }
 }
