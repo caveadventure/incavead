@@ -444,22 +444,34 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
         }
     }
 
-    if (counts.empty()) {
-        state.render.do_message("Strange. Nothing happened.");
-        return false;
+    while (1) {
+
+        if (counts.empty()) {
+            state.render.do_message("Strange. Nothing happened.");
+            return false;
+        }
+
+        std::discrete_distribution<unsigned int> d(counts.begin(), counts.end());
+        unsigned int ntag = d(state.rng.gen);
+
+        tag_t design = desgns[ntag];
+
+        unsigned int trucount = state.designs_counts.take(design);
+
+        if (trucount == 0) {
+            counts.erase(counts.begin() + ntag);
+            desgns.erase(desgns.begin() + ntag);
+            continue;
+        }
+
+        const Design& _design = designs().get(design);
+
+        items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+        state.items.place(px, py, made, state.render);
+
+        state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+        return true;
     }
-
-    std::discrete_distribution<unsigned int> d(counts.begin(), counts.end());
-    unsigned int ntag = d(state.rng.gen);
-
-    tag_t design = desgns[ntag];
-    const Design& _design = designs().get(design);
-
-    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
-    state.items.place(px, py, made, state.render);
-
-    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
-    return true;
 }
 
 

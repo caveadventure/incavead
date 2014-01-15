@@ -109,6 +109,21 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, const st
                           nlp::count(), d, tmp.count);
     }
 
+    // HACK
+    for (const auto& ii : inv.stuff) {
+
+        const auto& slot = inv.slots[ii.first];
+
+        if (slot.letter != ' ')
+            continue;
+
+        const Design& d = designs().get(ii.second.tag);
+
+        m += nlp::message("   %s:    \1%S\n", 
+                          slot.label, nlp::count(), d, ii.second.count);
+    }
+        
+
     m += nlp::message("\n"
                       "\2Floor items:\n");
 
