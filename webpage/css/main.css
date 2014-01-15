@@ -1,4 +1,7 @@
-
+  body {
+    font-size: 14pt;
+    font-family: 'PT Sans', sans-serif;
+  }
   h3 {
     color: #222262;
     font-size: 75%;
@@ -57,7 +60,7 @@
   }
   .row {
     clear: both;
-    float: right;
+    float: left;
   }
   .required-right {
     float: left;
