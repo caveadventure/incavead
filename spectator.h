@@ -269,20 +269,26 @@ void add_message_line(std::vector<maudit::glyph>& data, unsigned int w, unsigned
 
 template <typename SCREEN>
 bool copy_screen(const std::vector<maudit::glyph>& data, const std::string& message, 
-                 unsigned int ow, unsigned int oh, SCREEN& target) {
+                 unsigned int ow, unsigned int oh, unsigned int offx, unsigned int offy, 
+                 SCREEN& target) {
 
-    if (target.w == ow && target.h == oh && message.empty()) {
+    if (target.w == ow && target.h == oh && message.empty() && offx == 0 && offy == 0) {
         return target.send_screen(data);
     }
 
     unsigned int tw = target.w;
     unsigned int th = target.h;
 
+    offy = std::min(offy, oh - 1);
+    offx = std::min(offx, ow - 1);
+
+    auto datai = data.begin() + (offy * ow) + offx;
+
     std::vector<maudit::glyph> temp;
     temp.resize(tw * th);
 
-    unsigned int truw = std::min(tw, ow);
-    unsigned int truh = std::min(th, oh);
+    unsigned int truw = std::min(tw, ow - offx);
+    unsigned int truh = std::min(th, oh - offy);
 
     // Clip to an even-sized width.
     if (tw < ow && (truw & 1)) {
@@ -291,7 +297,7 @@ bool copy_screen(const std::vector<maudit::glyph>& data, const std::string& mess
 
     for (unsigned int y = 0; y < truh; ++y) {
         auto i = temp.begin() + (y * tw);
-        auto j = data.begin() + (y * ow);
+        auto j = datai + (y * ow);
 
         for (unsigned int x = 0; x < truw; ++x) {
             *i = *j;
@@ -305,8 +311,20 @@ bool copy_screen(const std::vector<maudit::glyph>& data, const std::string& mess
     return target.send_screen(temp);
 }
 
+
+struct watcher_state_t {
+    std::mutex mutex;
+    bool done;
+    std::string message;
+    unsigned int offx;
+    unsigned int offy;
+
+    watcher_state_t() : done(false), offx(0), offy(0) {}
+};
+
+
 template <typename SCREEN>
-void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& done, std::string& message) {
+void watcher_input_thread(SCREEN& screen, void* tag, watcher_state_t& state) {
 
     while (1) {
 
@@ -316,8 +334,8 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
 
             screens<SCREEN>().notify(tag);
 
-            std::unique_lock<std::mutex> l(mutex);
-            done = true;
+            std::unique_lock<std::mutex> l(state.mutex);
+            state.done = true;
             return;
         }
 
@@ -330,22 +348,38 @@ void watcher_input_thread(SCREEN& screen, void* tag, std::mutex& mutex, bool& do
             cc = '\x08';
         }
 
-        std::unique_lock<std::mutex> l(mutex);
+        std::unique_lock<std::mutex> l(state.mutex);
 
-        if (done)
+        if (state.done)
             return;
 
         if (cc == '\n') {
-            screens<SCREEN>().send_message(tag, message);
-            message.clear();
+            screens<SCREEN>().send_message(tag, state.message);
+            state.message.clear();
             screens<SCREEN>().notify(tag);
 
-        } else if (cc == '\x08' && message.size() > 0) {
-            message.resize(message.size() - 1);
+        } else if (cc == '\x08' && state.message.size() > 0) {
+            state.message.resize(state.message.size() - 1);
             screens<SCREEN>().notify(tag);
 
-        } else if (cc != '\0' && message.size() < 60) {
-            message += cc;
+        } else if (cc != '\0' && state.message.size() < 60) {
+            state.message += cc;
+            screens<SCREEN>().notify(tag);
+
+        } else if (k.key == maudit::keycode::right) {
+            state.offx += 2;
+            screens<SCREEN>().notify(tag);
+
+        } else if (k.key == maudit::keycode::left && state.offx > 0) {
+            state.offx -= 2;
+            screens<SCREEN>().notify(tag);
+
+        } else if (k.key == maudit::keycode::down) {
+            state.offy++;
+            screens<SCREEN>().notify(tag);
+
+        } else if (k.key == maudit::keycode::up && state.offy > 0) {
+            state.offy--;
             screens<SCREEN>().notify(tag);
         }
         
@@ -366,6 +400,7 @@ void choose_and_watch(SCREEN& screen) {
 
         std::string window = 
             "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
+            "   Use the arrow keys to scroll your view in case the player's window is larger than yours.\n"
             "   Simply start typing and press 'Enter' to send a chat message.\n\n"
             "Active games: (press space to refresh)\n\n";
 
@@ -408,14 +443,11 @@ void choose_and_watch(SCREEN& screen) {
         void* parent = i->second;
 
         {
-            std::mutex mutex;
-            bool done = false;
-            std::string message;
+            watcher_state_t state;
 
             screens<SCREEN>().link(parent, screen);
 
-            std::thread thread(watcher_input_thread<SCREEN>, 
-                               std::ref(screen), parent, std::ref(mutex), std::ref(done), std::ref(message));
+            std::thread thread(watcher_input_thread<SCREEN>, std::ref(screen), parent, std::ref(state));
 
 
             typename Screens<SCREEN>::data_t data;
@@ -423,29 +455,53 @@ void choose_and_watch(SCREEN& screen) {
 
             while (1) {
 
-                std::string tmp;
-
-                {
-                    std::unique_lock<std::mutex> l(mutex);
-
-                    if (done)
-                        break;
-
-                    tmp = message;
-                }
-
                 int ret = screens<SCREEN>().get_next_data(parent, data, last_frame_no);
 
                 if (ret < 0) {
+
+                    {
+                        std::unique_lock<std::mutex> l(state.mutex);
+
+                        if (state.done)
+                            break;
+                    }
+
                     // Lost connection.
                     // Spin about doing nothing, keeping the last screen in view.
                     ::sleep(1);
                     continue;
                 }
 
-                if (!copy_screen(data.data, message, data.w, data.h, screen)) {
-                    std::unique_lock<std::mutex> l(mutex);
-                    done = true;
+                std::string tmp;
+                unsigned int offx;
+                unsigned int offy;
+
+                {
+                    std::unique_lock<std::mutex> l(state.mutex);
+
+                    if (state.done)
+                        break;
+
+                    tmp = state.message;
+
+                    if (state.offx > data.w) {
+                        state.offx = data.w;
+
+                        if (state.offx & 1)
+                            ++state.offx;
+                    }
+
+                    if (state.offy > data.h) {
+                        state.offy = data.h;
+                    }
+
+                    offx = state.offx;
+                    offy = state.offy;
+                }
+
+                if (!copy_screen(data.data, tmp, data.w, data.h, offx, offy, screen)) {
+                    std::unique_lock<std::mutex> l(state.mutex);
+                    state.done = true;
                     break;
                 }
             }
