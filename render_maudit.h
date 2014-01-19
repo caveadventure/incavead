@@ -194,6 +194,7 @@ struct Grid {
 
     std::vector<ui_symbol_t> ui_symbol_themes;
     ui_symbol_t ui_symbol;
+    size_t ui_symbol_index;
 
 private:
 
@@ -489,7 +490,8 @@ public:
 
     Grid() : w(0), h(0), 
              current_draw_n(0),
-             keylog_do_replay(false), keylog_index(0)
+             keylog_do_replay(false), keylog_index(0),
+             ui_symbol_index(0)
         {}
 
     ~Grid() {}
@@ -509,6 +511,12 @@ public:
 
             path.init(w, h);
         }
+    }
+
+    void set_ui_symbol(size_t i = 0) {
+        ui_symbol_index += i;
+        ui_symbol_index = ui_symbol_index % ui_symbol_themes.size();
+        ui_symbol = ui_symbol_themes[ui_symbol_index];
     }
 
     void clear() {
@@ -958,8 +966,17 @@ public:
             }
         }
 
+        std::string help_message = "[ Use arrow keys to scroll view, tab to change color scheme ]";
+
         bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
+
+                unsigned int hm_start = view_w;
+                unsigned int hm_end = view_w - 2;
+
+                if (view_w > help_message.size() + 2) {
+                    hm_start = view_w - help_message.size() - 2;
+                }
 
                 for (unsigned int y = 0; y < view_h; ++y) {
                     for (unsigned int x = 0; x < view_w; ++x) {
@@ -991,7 +1008,13 @@ public:
                                     ret = ui_symbol.arrow_u;
 
                                 } else {
+
                                     ret = ui_symbol.box_h;
+
+                                    if (y == 0 && x >= hm_start && x < hm_end) {
+                                        ret.text = help_message[x - hm_start];
+                                    }
+
                                 }
 
                             } else if (x <= 0 || x >= view_w-1) {
@@ -1060,6 +1083,11 @@ public:
                 break;
 
             default:
+                if (k.letter == '\t') {
+                    set_ui_symbol(1);
+                    break;
+                }
+
                 return k;
             }
         }

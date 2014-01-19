@@ -117,7 +117,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     ui_symbols_t* ui_syms = NULL;
 
     
-#line 962 "configparser.rl"
+#line 961 "configparser.rl"
 
 /*
 
@@ -12246,7 +12246,7 @@ static const int ConfigParser_en_one_levelskin = 4898;
 static const int ConfigParser_en_main = 1;
 
 
-#line 968 "configparser.rl"
+#line 967 "configparser.rl"
     
 #line 12252 "configparser.h"
 	{
@@ -12254,7 +12254,7 @@ static const int ConfigParser_en_main = 1;
 	 state.top = 0;
 	}
 
-#line 969 "configparser.rl"
+#line 968 "configparser.rl"
 
     bool done = false;
 
@@ -13837,54 +13837,53 @@ _match:
 	case 370:
 #line 894 "configparser.rl"
 	{ __constants__().ui_symbols.push_back(ui_symbols_t()); 
-               std::cout << "UI SYMS!" << std::endl;
                ui_syms = &(__constants__().ui_symbols.back()); }
 	break;
 	case 371:
-#line 905 "configparser.rl"
+#line 904 "configparser.rl"
 	{ __constants__().achievements[ach_tag].genus = tag_t(state.match, tagmem); }
 	break;
 	case 372:
-#line 908 "configparser.rl"
+#line 907 "configparser.rl"
 	{ __constants__().achievements[ach_tag].kills = toint(state.match); }
 	break;
 	case 373:
-#line 911 "configparser.rl"
+#line 910 "configparser.rl"
 	{ __constants__().achievements[ach_tag].priority = toint(state.match); }
 	break;
 	case 374:
-#line 914 "configparser.rl"
+#line 913 "configparser.rl"
 	{ __constants__().achievements[ach_tag].label = state.match; }
 	break;
 	case 375:
-#line 917 "configparser.rl"
+#line 916 "configparser.rl"
 	{ __constants__().achievements[ach_tag].summon = tag_t(state.match, tagmem); }
 	break;
 	case 376:
-#line 925 "configparser.rl"
+#line 924 "configparser.rl"
 	{ ach_tag = tag_t(state.match, tagmem); }
 	break;
 	case 377:
-#line 933 "configparser.rl"
+#line 932 "configparser.rl"
 	{ __constants__().ailments[ail_tag].attacks.add(dmgval); }
 	break;
 	case 378:
-#line 936 "configparser.rl"
+#line 935 "configparser.rl"
 	{ __constants__().ailments[ail_tag].level = toint(state.match); }
 	break;
 	case 379:
-#line 939 "configparser.rl"
+#line 938 "configparser.rl"
 	{ __constants__().ailments[ail_tag].name = state.match; }
 	break;
 	case 380:
-#line 942 "configparser.rl"
+#line 941 "configparser.rl"
 	{ __constants__().ailments[ail_tag].triggers = toint(state.match); }
 	break;
 	case 381:
-#line 949 "configparser.rl"
+#line 948 "configparser.rl"
 	{ ail_tag = tag_t(state.match, tagmem); }
 	break;
-#line 13888 "configparser.h"
+#line 13887 "configparser.h"
 		}
 	}
 
@@ -13924,7 +13923,7 @@ _again:
 #line 780 "configparser.rl"
 	{ init_levelskin_(lev); }
 	break;
-#line 13928 "configparser.h"
+#line 13927 "configparser.h"
 		}
 	}
 	}
@@ -13932,7 +13931,7 @@ _again:
 	_out: {}
 	}
 
-#line 987 "configparser.rl"
+#line 986 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;

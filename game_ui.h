@@ -60,6 +60,39 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                         }
                     }
 
+                    double hh = state.grid.get(xx, yy);
+
+                    if (state.grid.is_floor(xx, yy) && intensity == 0 && feat.tag.null()) {
+                        if (hh >= 0 && hh < 1) {
+                            charz = "1";
+                            intensity = 1;
+                        } else if (hh >= 1 && hh < 2) {
+                            charz = "2";
+                            intensity = 1;
+                        } else if (hh >= 2 && hh < 3) {
+                            charz = "3";
+                            intensity = 1;
+                        } else if (hh >= 3 && hh < 4) {
+                            charz = "5";
+                            intensity = 1;
+                        } else if (hh >= 4 && hh < 5) {
+                            charz = "4";
+                            intensity = 1;
+                        } else if (hh >= 5 && hh < 6) {
+                            charz = "6";
+                            intensity = 1;
+                        } else if (hh >= 6 && hh < 7) {
+                            charz = "7";
+                            intensity = 1;
+                        } else if (hh >= 7 && hh < 8) {
+                            charz = "8";
+                            intensity = 1;
+                        } else {
+                            charz = ".";
+                            intensity = 1;
+                        }
+                    }
+
                 }
             }
 
@@ -656,7 +689,8 @@ void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen,
     }
 
     case '.':
-        state.render.do_message(nlp::message("%d %d", p.px, p.py));
+        //state.render.do_message(nlp::message("%d %d | %d", p.px, p.py, state.grid._get(p.px, p.py)));
+        state.render.do_message(dowsing_message(p, state));
         break;
 
     case '+':
@@ -771,6 +805,10 @@ bool handle_input_pick_direction(unsigned int px, unsigned int py, GameState& st
         nx++;
         ny++;
         break;
+
+    case '.':
+    case '>':
+        return true;
 
     default:
         break;
@@ -941,15 +979,34 @@ void Game::handle_input(GameState& state,
 
         bool ok = handle_input_pick_direction(p.px, p.py, state, k, nx, ny);
 
-        if (!ok || state.grid.is_walk(nx, ny)) {
-            state.render.do_message("There is nothing to dig there.");
+        if (ok) {
+            if (nx == p.px && ny == p.py) {
 
-        } else {
-            state.render.do_message("You start digging.");
-            p.digging = true;
-            p.dig_x = nx;
-            p.dig_y = ny;
-            ++ticks;
+                features::Feature feat;
+                if (!state.grid.is_floor(nx, ny) || state.features.get(nx, ny, feat)) {
+                    state.render.do_message("You cannot dig here.");
+
+                } else {
+                    state.render.do_message("You start digging.");
+                    p.digging = true;
+                    p.dig_x = nx;
+                    p.dig_y = ny;
+                    ++ticks;
+                }
+
+            } else {
+
+                if (state.grid.is_walk(nx, ny)) {
+                    state.render.do_message("There is nothing to dig there.");
+
+                } else {
+                    state.render.do_message("You start digging.");
+                    p.digging = true;
+                    p.dig_x = nx;
+                    p.dig_y = ny;
+                    ++ticks;
+                }
+            }
         }
 
         p.state = Player::MAIN;

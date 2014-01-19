@@ -11,17 +11,11 @@ void Game::make_screen(mainloop::screen_params_t& sp, GameState& state) {
 
     auto& themes = state.render.ui_symbol_themes;
 
-    std::cout << "NCFG: " << constants().ui_symbols.size() << std::endl;
-
     for (const auto& i : constants().ui_symbols) {
         themes.push_back(i[n_skin]);
     }
 
-    std::cout << "NTHEMES: " << themes.size() << std::endl;
-
-    if (themes.size() > 0) {
-        state.render.ui_symbol = themes[0];
-    }
+    state.render.set_ui_symbol();
 }
 
 void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {

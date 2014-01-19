@@ -403,15 +403,8 @@ void Game::process_world(GameState& state, size_t& ticks,
 
     if (p.digging) {
 
-        if (state.grid.is_walk(p.dig_x, p.dig_y)) {
-            state.render.do_message("OOPS");
-            p.digging = false;
-            return;
-        }
-
         ++ticks;
-        do_draw = true;
-            
+        do_draw = true;            
 
         double digspeed = p.inv.get_digging();
 
@@ -421,13 +414,16 @@ void Game::process_world(GameState& state, size_t& ticks,
 
         if (height < -10) {
             height = -10;
+
+            if (p.dig_x != p.px || p.dig_y != p.py) {
             
-            bool water = state.grid.is_water(p.dig_x, p.dig_y);
+                bool water = state.grid.is_water(p.dig_x, p.dig_y);
 
-            state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
-            state.render.invalidate(p.dig_x, p.dig_y);
+                state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
+                state.render.invalidate(p.dig_x, p.dig_y);
 
-            permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
+                permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
+            }
 
             p.digging = false;
             state.render.do_message("Digging done.");

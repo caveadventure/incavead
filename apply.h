@@ -3,6 +3,43 @@
 
 #include <valarray>
 
+inline std::string dowsing_message(const Player& p, const GameState& state) {
+
+    double h = state.grid.get(p.px, p.py);
+
+    if (h <= -1) {
+        return "Completely cold.";
+
+    } else if (h < 0.5) {
+        return "Very cold.";
+
+    } else if (h < 0) {
+        return "Cold.";
+
+    } else if (h < 0.5) {
+        return "A little bit warm.";
+
+    } else if (h < 1) {
+        return "Warm.";
+
+    } else if (h < 1.5) {
+        return "Warm and getting warmer.";
+
+    } else if (h < 2) {
+        return "A little bit hot.";
+
+    } else if (h < 2.5) {
+        return "Hot.";
+
+    } else if (h < 3.0) {
+        return "Very hot.";
+
+    } else {
+        return "Extremely hot.";
+    }
+}
+
+
 inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, size_t& ticks) {
 
     items::Item tmp;

@@ -186,6 +186,10 @@ struct Map {
         return karma[y*w+x];
     }
 
+    double get(unsigned int x, unsigned int y) const {
+        return grid[y*w+x];
+    }
+
 
     /*** *** *** *** *** ***/
 

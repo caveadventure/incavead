@@ -64,7 +64,7 @@ inline bool handle_input_inv_item(Player& p, GameState& state,
 
     } else if (k.letter == 'D' && start_digging(p, p.inv.selected_slot, state)) {
 
-        state.render.do_message("Press a direction key to start tunneling.");
+        state.render.do_message("Press a direction key to start tunneling. ('>' or '.' for down)");
         state.window_stack.clear();
         return true;
     }

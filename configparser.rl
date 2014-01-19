@@ -892,7 +892,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ui_syms = 'ui_syms' ws
             %{ __constants__().ui_symbols.push_back(ui_symbols_t()); 
-               std::cout << "UI SYMS!" << std::endl;
                ui_syms = &(__constants__().ui_symbols.back()); }
             '{'
             ( ws ui_syms_one_sym ws ';')+
