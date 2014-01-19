@@ -38,7 +38,7 @@ struct ConstantsBank {
 
     size_t max_gold_per_grave;
 
-    ui_symbols_t ui_symbols;
+    std::vector<ui_symbols_t> ui_symbols;
 
     size_t max_celauto_cells;
 

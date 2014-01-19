@@ -192,6 +192,7 @@ struct Grid {
     astar::Path path;
 
 
+    std::vector<ui_symbol_t> ui_symbol_themes;
     ui_symbol_t ui_symbol;
 
 private:

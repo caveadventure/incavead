@@ -112,6 +112,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     tag_t ach_tag;
     tag_t ail_tag;
 
+    ui_symbols_t* ui_syms = NULL;
+
     %%{
 
         machine ConfigParser;
@@ -832,21 +834,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             )+
             ;
 
-        constant_ui_circle  = 'ui' ws1 'circle'  ws1 skin %{ __constants__().ui_symbols.circle.set(SKINS); };
-        constant_ui_fill    = 'ui' ws1 'fill'    ws1 skin %{ __constants__().ui_symbols.fill.set(SKINS); };
-        constant_ui_line    = 'ui' ws1 'line'    ws1 skin %{ __constants__().ui_symbols.line.set(SKINS); };
-        constant_ui_box_v   = 'ui' ws1 'box_v'   ws1 skin %{ __constants__().ui_symbols.box_v.set(SKINS); };
-        constant_ui_box_h   = 'ui' ws1 'box_h'   ws1 skin %{ __constants__().ui_symbols.box_h.set(SKINS); };
-        constant_ui_box_rd  = 'ui' ws1 'box_rd'  ws1 skin %{ __constants__().ui_symbols.box_rd.set(SKINS); };
-        constant_ui_box_ru  = 'ui' ws1 'box_ru'  ws1 skin %{ __constants__().ui_symbols.box_ru.set(SKINS); };
-        constant_ui_box_ld  = 'ui' ws1 'box_ld'  ws1 skin %{ __constants__().ui_symbols.box_ld.set(SKINS); };
-        constant_ui_box_lu  = 'ui' ws1 'box_lu'  ws1 skin %{ __constants__().ui_symbols.box_lu.set(SKINS); };
-        constant_ui_arrow_l = 'ui' ws1 'arrow_l' ws1 skin %{ __constants__().ui_symbols.arrow_l.set(SKINS); };
-        constant_ui_arrow_r = 'ui' ws1 'arrow_r' ws1 skin %{ __constants__().ui_symbols.arrow_r.set(SKINS); };
-        constant_ui_arrow_u = 'ui' ws1 'arrow_u' ws1 skin %{ __constants__().ui_symbols.arrow_u.set(SKINS); };
-        constant_ui_arrow_d = 'ui' ws1 'arrow_d' ws1 skin %{ __constants__().ui_symbols.arrow_d.set(SKINS); };
-        constant_ui_wspace  = 'ui' ws1 'wspace'  ws1 skin %{ __constants__().ui_symbols.wspace.set(SKINS); };
-
         constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
 
         constant_tombstone_text = 'tombstone_text' ws1 string %{ __constants__().tombstone_text = state.match; };
@@ -874,16 +861,43 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
-                       constant_ui_circle  | constant_ui_fill    | constant_ui_line    |
-                       constant_ui_box_v   | constant_ui_box_h   | constant_ui_wspace |
-                       constant_ui_box_rd  | constant_ui_box_ru  | constant_ui_box_ld  | constant_ui_box_lu  |
-                       constant_ui_arrow_l | constant_ui_arrow_r | constant_ui_arrow_u | constant_ui_arrow_d |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
+
+        ####
+
+        ui_syms_circle  = 'circle'  ws1 skin %{ ui_syms->circle.set(SKINS); };
+        ui_syms_fill    = 'fill'    ws1 skin %{ ui_syms->fill.set(SKINS); };
+        ui_syms_line    = 'line'    ws1 skin %{ ui_syms->line.set(SKINS); };
+        ui_syms_box_v   = 'box_v'   ws1 skin %{ ui_syms->box_v.set(SKINS); };
+        ui_syms_box_h   = 'box_h'   ws1 skin %{ ui_syms->box_h.set(SKINS); };
+        ui_syms_box_rd  = 'box_rd'  ws1 skin %{ ui_syms->box_rd.set(SKINS); };
+        ui_syms_box_ru  = 'box_ru'  ws1 skin %{ ui_syms->box_ru.set(SKINS); };
+        ui_syms_box_ld  = 'box_ld'  ws1 skin %{ ui_syms->box_ld.set(SKINS); };
+        ui_syms_box_lu  = 'box_lu'  ws1 skin %{ ui_syms->box_lu.set(SKINS); };
+        ui_syms_arrow_l = 'arrow_l' ws1 skin %{ ui_syms->arrow_l.set(SKINS); };
+        ui_syms_arrow_r = 'arrow_r' ws1 skin %{ ui_syms->arrow_r.set(SKINS); };
+        ui_syms_arrow_u = 'arrow_u' ws1 skin %{ ui_syms->arrow_u.set(SKINS); };
+        ui_syms_arrow_d = 'arrow_d' ws1 skin %{ ui_syms->arrow_d.set(SKINS); };
+        ui_syms_wspace  = 'wspace'  ws1 skin %{ ui_syms->wspace.set(SKINS); };
+
+        ui_syms_one_sym = ui_syms_circle | ui_syms_fill | ui_syms_line | ui_syms_box_v | ui_syms_box_h |
+                          ui_syms_box_rd | ui_syms_box_ru | ui_syms_box_ld | ui_syms_box_lu | 
+                          ui_syms_arrow_l | ui_syms_arrow_r | ui_syms_arrow_u | ui_syms_arrow_d |
+                          ui_syms_wspace;
+
+        ui_syms = 'ui_syms' ws
+            %{ __constants__().ui_symbols.push_back(ui_symbols_t()); 
+               std::cout << "UI SYMS!" << std::endl;
+               ui_syms = &(__constants__().ui_symbols.back()); }
+            '{'
+            ( ws ui_syms_one_sym ws ';')+
+            ws '}'
+            ;
 
         ####
 
@@ -940,7 +954,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        entry = species | design | terrain | vault | celauto | levelskin | constant | achievement | ailment;
+        entry = species | design | terrain | vault | celauto | levelskin | constant | 
+                achievement | ailment | ui_syms;
             
       main := (ws entry)+ ws ;
         
