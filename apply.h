@@ -547,12 +547,16 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
     tag_t design = desgns[state.rng.n(desgns.size())];
     const Design& _design = designs().get(design);
 
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+
     // HACK
     if (design == constants().unique_item) {
         p.uniques_disabled = true;
+
+        // TODO Really this is just a way to hardcode a value.
+        made.count = 0.1/_design.hunger;
     }
 
-    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
     state.items.place(px, py, made, state.render);
 
     state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
