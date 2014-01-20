@@ -88,6 +88,15 @@ struct ConstantsBank {
 
     std::map<tag_t, ailment_t> ailments;
 
+    struct mean_deviation_t {
+        double mean;
+        double deviation;
+        
+        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
+    };
+
+    mean_deviation_t treasure_chance;
+
     ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
                       achievement_trigger_rate(15),

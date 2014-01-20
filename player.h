@@ -66,6 +66,7 @@ struct Player {
 
     unsigned int dig_x;
     unsigned int dig_y;
+    double dig_h;
     bool digging;
 
     inventory_t inv;
@@ -130,7 +131,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), blind(0), dig_x(0), dig_y(0), digging(false), state(MAIN), overmap_scale(0),
+               sleep(0), blind(0), dig_x(0), dig_y(0), dig_h(0), digging(false), state(MAIN), overmap_scale(0),
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -245,6 +246,8 @@ struct reader<Player> {
         serialize::read(s, p.blind);
         serialize::read(s, p.dig_x);
         serialize::read(s, p.dig_y);
+        serialize::read(s, p.dig_h);
+        serialize::read(s, p.digging);
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -283,6 +286,8 @@ struct writer<Player> {
         serialize::write(s, p.blind);
         serialize::write(s, p.dig_x);
         serialize::write(s, p.dig_y);
+        serialize::write(s, p.dig_h);
+        serialize::write(s, p.digging);
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);

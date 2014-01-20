@@ -898,6 +898,15 @@ bool handle_input_input(GameState& state, std::string& input_string, maudit::key
 }
 
 
+inline void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny) {
+
+    state.render.do_message("You start digging.");
+
+    p.digging = true;
+    p.dig_x = nx;
+    p.dig_y = ny;
+    p.dig_h = state.grid.get(nx, ny);
+}
 
 void Game::handle_input(GameState& state,
                         size_t& ticks, bool& done, bool& dead, bool& regen, 
@@ -987,10 +996,7 @@ void Game::handle_input(GameState& state,
                     state.render.do_message("You cannot dig here.");
 
                 } else {
-                    state.render.do_message("You start digging.");
-                    p.digging = true;
-                    p.dig_x = nx;
-                    p.dig_y = ny;
+                    start_digging(p, state, nx, ny);
                     ++ticks;
                 }
 
@@ -1000,10 +1006,7 @@ void Game::handle_input(GameState& state,
                     state.render.do_message("There is nothing to dig there.");
 
                 } else {
-                    state.render.do_message("You start digging.");
-                    p.digging = true;
-                    p.dig_x = nx;
-                    p.dig_y = ny;
+                    start_digging(p, state, nx, ny);
                     ++ticks;
                 }
             }

@@ -151,6 +151,50 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
     return res;
 }
 
+void do_digging_step(Player& p, GameState& state) {
+
+    double digspeed = p.inv.get_digging();
+
+    double& height = state.grid._get(p.dig_x, p.dig_y);
+
+    height -= digspeed;
+
+    if (height < -10) {
+        height = -10;
+
+        if (!state.grid.is_walk(p.dig_x, p.dig_y)) {
+            
+            bool water = state.grid.is_water(p.dig_x, p.dig_y);
+
+            state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
+            state.render.invalidate(p.dig_x, p.dig_y);
+
+            permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
+
+        } else {
+                
+            const auto& tc = constants().treasure_chance;
+            int lev = state.rng.gauss(p.dig_h + tc.mean, tc.deviation);
+
+            if (lev >= 0) {
+
+                auto is = state.designs_counts.take(state.rng, lev);
+
+                for (const auto& ii : is) {
+                    items::Item made = state.items.make_item(ii.first, items::pt(p.dig_x, p.dig_y), state.rng);
+                    state.items.place(p.dig_x, p.dig_y, made, state.render);
+
+                    state.render.do_message(nlp::message("You found %s!", nlp::count(), 
+                                                         designs().get(made.tag), made.count));
+                }
+            }
+        }
+
+        p.digging = false;
+        state.render.do_message("Digging done.");
+    }
+}
+
 void Game::process_world(GameState& state, size_t& ticks, 
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
@@ -406,28 +450,7 @@ void Game::process_world(GameState& state, size_t& ticks,
         ++ticks;
         do_draw = true;            
 
-        double digspeed = p.inv.get_digging();
-
-        double& height = state.grid._get(p.dig_x, p.dig_y);
-
-        height -= digspeed;
-
-        if (height < -10) {
-            height = -10;
-
-            if (p.dig_x != p.px || p.dig_y != p.py) {
-            
-                bool water = state.grid.is_water(p.dig_x, p.dig_y);
-
-                state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
-                state.render.invalidate(p.dig_x, p.dig_y);
-
-                permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
-            }
-
-            p.digging = false;
-            state.render.do_message("Digging done.");
-        }
+        do_digging_step(p, state);
     }
 }
 

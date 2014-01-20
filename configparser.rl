@@ -855,6 +855,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_blindturns_to_radius = 'blindturns_to_radius' ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
 
+        constant_treasure_chance = 'treasure_chance' 
+            ws1 real %{ __constants__().treasure_chance.mean = toreal(state.match); } 
+            ws1 real %{ __constants__().treasure_chance.deviation = toreal(state.match); } 
+        ;
+
         one_constant = constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | constant_player_skin |
@@ -863,7 +868,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
-                       constant_blindturns_to_radius
+                       constant_blindturns_to_radius | constant_treasure_chance
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
