@@ -162,6 +162,8 @@ void do_digging_step(Player& p, GameState& state) {
     if (height < -10) {
         height = -10;
 
+        features::Feature feat;
+
         if (!state.grid.is_walk(p.dig_x, p.dig_y)) {
             
             bool water = state.grid.is_water(p.dig_x, p.dig_y);
@@ -170,6 +172,11 @@ void do_digging_step(Player& p, GameState& state) {
             state.render.invalidate(p.dig_x, p.dig_y);
 
             permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
+
+        } else if (state.features.get(p.dig_x, p.dig_y, feat) && feat.tag == constants().grave) {
+
+            state.features.set(p.dig_x, p.dig_y, constants().bad_grave, state.render);        
+            permafeats::features().add(p, p.dig_x, p.dig_y, constants().bad_grave);
 
         } else {
                 

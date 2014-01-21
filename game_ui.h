@@ -991,8 +991,19 @@ void Game::handle_input(GameState& state,
         if (ok) {
             if (nx == p.px && ny == p.py) {
 
+                bool ok = true;
+
                 features::Feature feat;
-                if (!state.grid.is_floor(nx, ny) || state.features.get(nx, ny, feat)) {
+                if (!state.grid.is_floor(nx, ny)) {
+                    ok = false;
+
+                } else if (state.features.get(nx, ny, feat) && 
+                           feat.tag != constants().grave) {
+
+                    ok = false;
+                }
+
+                if (!ok) {
                     state.render.do_message("You cannot dig here.");
 
                 } else {
