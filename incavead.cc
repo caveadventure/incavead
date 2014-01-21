@@ -201,10 +201,10 @@ int main(int argc, char** argv) {
 
     init_statics();
 
-    bones::bones().load();
+    bones::bones().load(constants().max_bones);
     uniques::uniques().load();
     uniques::items().load();
-    permafeats::features().load();
+    permafeats::features().load(constants().max_permafeats);
 
 
     bool singleplayer = false;

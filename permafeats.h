@@ -17,8 +17,6 @@ using key_t = worldkey::key_t;
 
 struct Features {
 
-    // HACK TODO WARNING
-    // Magic number
     static const size_t NUMBER = 150;
 
     struct terrain_t {
@@ -38,6 +36,10 @@ struct Features {
 
     std::mutex mutex;
 
+    size_t max_level_feats;
+
+    Features() : max_level_feats(NUMBER) {}
+
     template <typename PLAYER>
     void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, bool walk, bool water) {
 
@@ -50,7 +52,7 @@ struct Features {
         m.l.push_back(std::make_pair(xy, terrain_t{feat, walk, water}));
         ++m.size;
 
-        while (m.size > NUMBER) {
+        while (m.size > max_level_feats) {
             m.l.pop_front();
             --m.size;
         }
@@ -86,7 +88,9 @@ struct Features {
         add(p, p.px, p.py, walk, water);
     }
 
-    void load() {
+    void load(size_t _max = NUMBER) {
+
+        max_level_feats = _max;
 
         try {
             serialize::Source source("permafeats.dat");
@@ -122,7 +126,7 @@ struct Features {
         }
 
         for (auto& i : data) {
-            while (i.second.size > NUMBER) {
+            while (i.second.size > max_level_feats) {
                 i.second.l.pop_front();
                 --i.second.size;
             }

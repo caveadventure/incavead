@@ -146,8 +146,6 @@ namespace bones {
 
 struct Bones {
 
-    // HACK TODO WARNING
-    // Magic number
     static const size_t NUMBER = 1000;
 
     struct data_t {
@@ -160,6 +158,10 @@ struct Bones {
     std::unordered_map<session_t, size_t> replay_codes;
     
     std::mutex mutex;
+
+    size_t max_bones;
+
+    Bones() : max_bones(NUMBER) {}
 
     template <typename PLAYER, typename ACHI>
     void add(const std::string& name, const PLAYER& p, const ACHI& achievements, 
@@ -178,7 +180,7 @@ struct Bones {
 
         replay_codes[sess]++;
 
-        while (m.size() > NUMBER) {
+        while (m.size() > max_bones) {
             m.erase(m.begin());
         }
 
@@ -189,7 +191,9 @@ struct Bones {
         serialize::write(sink, sess);
     }
 
-    void load() {
+    void load(size_t _max = NUMBER) {
+
+        max_bones = _max;
 
         try {
             serialize::Source source("bones.dat");
@@ -221,7 +225,7 @@ struct Bones {
         }
 
         for (auto& i : data) {
-            while (i.second.size() > NUMBER) {
+            while (i.second.size() > max_bones) {
                 i.second.erase(i.second.begin());
             }
         }

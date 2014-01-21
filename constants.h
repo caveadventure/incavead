@@ -3,6 +3,9 @@
 
 struct ConstantsBank {
 
+    size_t max_permafeats;
+    size_t max_bones;
+
     double hunger_rate;
     double starvation_damage;
 
@@ -97,7 +100,8 @@ struct ConstantsBank {
 
     mean_deviation_t treasure_chance;
 
-    ConstantsBank() : hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
+    ConstantsBank() : max_permafeats(150), max_bones(1000),
+                      hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
                       damage_to_sleepturns(20, 15),

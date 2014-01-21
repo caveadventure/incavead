@@ -783,6 +783,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
+        constant_max_permafeats = 'max_permafeats' ws1 number %{ __constants__().max_permafeats = toint(state.match); };
+        constant_max_bones      = 'max_bones'      ws1 number %{ __constants__().max_bones = toint(state.match); };
+
         constant_hunger_rate       = 'hunger_rate'       
             ws1 real %{ __constants__().hunger_rate = toreal(state.match); };
 
@@ -861,7 +864,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().treasure_chance.deviation = toreal(state.match); } 
         ;
 
-        one_constant = constant_hunger_rate | constant_starvation_damage |
+        one_constant = constant_max_permafeats | constant_max_bones |
+                       constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
