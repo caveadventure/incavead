@@ -208,7 +208,8 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
         }
 
         if (t.view_radius >= 0) {
-            range = t.view_radius;
+            // HACK. Monsters are dumber than the player, give the player a slight advantage.
+            range = std::max(0, t.view_radius - 1);
         }
     }
 
