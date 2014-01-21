@@ -52,6 +52,12 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, siz
     if (!d.usable) 
         return false;
         
+    // Dowsing rods are permanent.
+    if (d.flags.dowsing) {
+        state.render.do_message(dowsing_message(p, state));
+        return true;
+    }
+
     if (!p.inv.take(slot, tmp, 1))
         return false;
 

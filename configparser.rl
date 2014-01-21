@@ -391,6 +391,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_safe_descend = 'safe_descend' ws1 snumber %{ des.safe_descend = toint(state.match); };
 
         design_blink      = 'blink' %{ des.flags.blink = true; };
+        design_dowsing    = 'dowsing' %{ des.flags.dowsing = true; };
 
         design_blast      = 'blast' 
             ws1 number %{ des.blast.radius = toint(state.match); }
@@ -465,7 +466,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_place_permafloor | design_luck | design_hunger | 
-            design_other_hunger_multiplier |
+            design_other_hunger_multiplier | design_dowsing |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind |

@@ -61,8 +61,9 @@ struct Design {
         bool blink;
         bool enable_spells;
         bool random_spell;
+        bool dowsing;
 
-        useflags_t() : blink(false), enable_spells(false), random_spell(false) {}
+        useflags_t() : blink(false), enable_spells(false), random_spell(false), dowsing(false) {}
     };
 
     useflags_t flags;
