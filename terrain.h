@@ -87,10 +87,12 @@ struct Terrain {
 
     bool important;
 
+    int view_radius;
+
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),
                 sticky(false), is_lit(false), air(false), charges(0), safebox(false),
-                wishing(NO_WISH), important(false) {}
+                wishing(NO_WISH), important(false), view_radius(-1) {}
 
 };
 

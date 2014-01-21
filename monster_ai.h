@@ -181,6 +181,8 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
     bool do_stop = false;
 
+    unsigned int range = s.range;
+
     features::Feature feat;
     if (state.features.get(m.xy.first, m.xy.second, feat) && 
         !s.flags.terrain_immune) {
@@ -204,6 +206,10 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
             do_stop = true;
         }
+
+        if (t.view_radius >= 0) {
+            range = t.view_radius;
+        }
     }
 
 
@@ -226,8 +232,6 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
     }
 
     double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
-
-    unsigned int range = s.range;
 
     if (m.blind > 0) {
         range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) - 1);

@@ -45,7 +45,7 @@ struct Game {
 
     void set_skin(GameState& state, unsigned int x, unsigned int y);
 
-    void drawing_context(mainloop::drawing_context_t& ctx);
+    void drawing_context(mainloop::drawing_context_t& ctx, const GameState& state);
 
     void draw_hud(GameState& state, size_t ticks);
 

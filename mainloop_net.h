@@ -195,7 +195,7 @@ struct Main {
         drawing_context_t ctx;
         ctx.view_w = screen.w;
         ctx.view_h = screen.h;
-        game.drawing_context(ctx);
+        game.drawing_context(ctx, state);
 
         if (ctx.do_hud) {
             game.draw_hud(state, ticks);

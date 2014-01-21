@@ -553,6 +553,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_important = 'important' %{ ter.important = true; } ;
 
+        terrain_view_radius = 'view_radius' ws1 number %{ ter.view_radius = toint(state.match); } ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
@@ -560,6 +562,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_protection_racket |
             terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
+            terrain_view_radius |
             '}' 
             ${ fret; })
             ;
@@ -796,6 +799,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_meat     = 'meat'     ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat = 'bad_meat' ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
         constant_money    = 'money'    ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
+        constant_pit      = 'pit'      ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
 
         constant_unique_item = 'unique_item' ws1 tag %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
@@ -866,7 +870,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
-                       constant_grave | constant_meat | constant_bad_meat | constant_money |
+                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |

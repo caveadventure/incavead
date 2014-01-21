@@ -149,24 +149,34 @@ void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x,
     ctx.centery = y;
 }
 
-unsigned int get_lightradius(const Player& p) {
+unsigned int get_lightradius(const Player& p, const GameState& state) {
 
-    const Levelskin& ls = levelskins().get(p.worldz);
+    int r = -1;
 
-    unsigned int r = std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
+    features::Feature feat;
+    if (state.features.get(p.px, p.py, feat)) {
+
+        r = terrain().get(feat.tag).view_radius;
+    }
+
+    if (r < 0) {
+        const Levelskin& ls = levelskins().get(p.worldz);
+
+        r = std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
+    }
 
     if (p.blind > 0) {
-        r = std::max(1, (int)r - static_cast<int>(p.blind / constants().blindturns_to_radius) - 1);
+        r = std::max(1, r - static_cast<int>(p.blind / constants().blindturns_to_radius) - 1);
     }
 
     return r;
 }
 
-void Game::drawing_context(mainloop::drawing_context_t& ctx) {
+void Game::drawing_context(mainloop::drawing_context_t& ctx, const GameState& state) {
 
     ctx.px = p.px;
     ctx.py = p.py;
-    ctx.lightradius = get_lightradius(p);
+    ctx.lightradius = get_lightradius(p, state);
 
     if (p.state & Player::LOOKING) {
 

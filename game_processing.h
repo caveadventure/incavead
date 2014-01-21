@@ -119,7 +119,7 @@ bool process_feature(GameState& state, features::Feature& f, const Terrain& t) {
 
 unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster, unsigned int count) {
 
-    int radius = get_lightradius(p) + 1;
+    int radius = get_lightradius(p, state) + 1;
 
     std::unordered_set<monsters::pt> range;
 
@@ -188,6 +188,10 @@ void do_digging_step(Player& p, GameState& state) {
                                                          designs().get(made.tag), made.count));
                 }
             }
+
+            state.features.set(p.dig_x, p.dig_y, constants().pit, state.render);        
+            permafeats::features().add(p, p.dig_x, p.dig_y, constants().pit);
+
         }
 
         p.digging = false;
