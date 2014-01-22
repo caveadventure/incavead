@@ -244,6 +244,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     const Species& s = species().get(mon.tag);
 
     unsigned int species_level = s.get_computed_level();
+
+    std::cout << "ATTACK: " << plevel << " ( " << species_level << ") " << std::endl;
         
     if (attacks.empty()) {
         state.render.do_message("You can't attack without a weapon!", true);
