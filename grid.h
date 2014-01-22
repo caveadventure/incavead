@@ -764,6 +764,8 @@ struct Map {
             affected.insert(v);
         }
 
+        affected.insert(tmp);
+
         _set_maps_of(neigh, affected);
     }
 

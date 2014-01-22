@@ -995,11 +995,12 @@ void Game::handle_input(GameState& state,
 
                 features::Feature feat;
                 if (!state.grid.is_floor(nx, ny)) {
+                    std::cout << "not floor" << std::endl;
                     ok = false;
 
                 } else if (state.features.get(nx, ny, feat) && 
                            feat.tag != constants().grave) {
-
+                    std::cout << "features" << std::endl;
                     ok = false;
                 }
 
