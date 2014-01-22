@@ -19,8 +19,8 @@ struct Counts {
         }
     }
 
-    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, 
-                                       unsigned int n = 1, bool exclusive = false) {
+    template <typename FUNC>
+    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, unsigned int n, bool exclusive, FUNC filter) {
 
         std::map<tag_t, unsigned int> ret;
 
@@ -37,11 +37,13 @@ struct Counts {
                 }
             }
 
-
             std::vector<double> weights;
 
             for (const auto& i : data[level]) {
-                weights.push_back(i.second);
+
+                if (filter(i.first)) {
+                    weights.push_back(i.second);
+                }
             }
 
             std::discrete_distribution<unsigned int> d(weights.begin(), weights.end());
@@ -64,6 +66,14 @@ struct Counts {
 
         return ret;
     }
+
+
+    std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, 
+                                       unsigned int n = 1, bool exclusive = false) {
+
+        return take(rng, level, n, exclusive, [](tag_t) { return true; });
+    }
+
 
     unsigned int take(unsigned int level, tag_t tag, unsigned int n = 1) {
 

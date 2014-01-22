@@ -376,6 +376,28 @@ struct Monsters {
         return ret;
     }
 
+    unsigned int summon_genus(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
+                              grender::Grid& render, 
+                              unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
+                              tag_t genus, unsigned int level, unsigned int count) {
+
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, count, false,
+                                                      [genus](tag_t s) {
+                                                          const Species& sp = species().get(s);
+                                                          return (genus.null() || sp.genus == genus);
+                                                      });
+
+        unsigned int ret = 0;
+
+        for (auto& i : q) {
+
+            ret += summon(neigh, rng, grid, counts, render, 
+                          x, y, px, py, i.first, i.second);
+        }
+
+        return ret;
+    }
+
 
     template <typename T>
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,

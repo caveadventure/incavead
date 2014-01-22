@@ -328,6 +328,17 @@ void Game::process_world(GameState& state, size_t& ticks,
                 state.features.uncharge(p.px, p.py, state.render);
             }
         }
+
+        if (t.summon.count > 0) {
+            state.monsters.summon_genus(state.neigh, state.rng, state.grid, 
+                                        state.species_counts, state.render, 
+                                        p.px, p.py, &p.px, &p.py, 
+                                        t.summon.genus, t.summon.level, t.summon.count);
+
+            if (t.uncharge.summon) {
+                state.features.uncharge(p.px, p.py, state.render);
+            }
+        }
     }
 
     if ((ticks % constants().achievement_trigger_rate) == 0) {

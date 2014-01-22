@@ -543,7 +543,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |
-                                ('move'   %{ ter.uncharge.move = true; }   ) ;
+                                ('move'   %{ ter.uncharge.move = true; }   ) |
+                                ('summon' %{ ter.uncharge.summon = true; } ) ;
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
@@ -559,6 +560,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_important = 'important' %{ ter.important = true; } ;
 
         terrain_view_radius = 'view_radius' ws1 number %{ ter.view_radius = toint(state.match); } ;
+
+        terrain_summon = 'summon' 
+                         ws1 tag    %{ ter.summon.genus = tag_t(state.match, tagmem); }
+                         ws1 number %{ ter.summon.level = tonumber(state.match); }
+                         ws1 number %{ ter.summon.count = tonumber(state.match); }
+                         ;
 
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
