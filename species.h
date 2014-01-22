@@ -74,8 +74,9 @@ struct Species {
     struct drop_t {
         tag_t tag;
         double chance;
+        unsigned int level;
 
-        drop_t(tag_t t = tag_t(), double c = 0.0) : tag(t), chance(c) {}
+        drop_t(tag_t t = tag_t(), double c = 0.0, unsigned int l = 0) : tag(t), chance(c), level(0) {}
     };
 
     std::vector<drop_t> drop;

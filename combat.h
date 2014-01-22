@@ -59,8 +59,21 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
         if (v <= drop.chance)
             continue;
 
-        items::Item idrop = state.items.make_item(drop.tag, mon.xy, state.rng);
-        state.items.place(mon.xy.first, mon.xy.second, idrop, state.render);
+        tag_t item = drop.tag;
+
+        if (item.null()) {
+
+            auto is = state.designs_counts.take(state.rng, drop.level);
+
+            if (is.size() > 0) {
+                item = is.begin()->first;
+            }
+        }
+
+        if (!item.null()) {
+            items::Item idrop = state.items.make_item(item, mon.xy, state.rng);
+            state.items.place(mon.xy.first, mon.xy.second, idrop, state.render);
+        }
     }
 
     if (do_track && !s.genus.null()) {

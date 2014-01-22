@@ -295,6 +295,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
             ;
 
+        species_drop_random = 'drop_random' %{ spe.drop.push_back(Species::drop_t()); }
+            ws1 number %{ spe.drop.back().level = toint(state.match); }
+            ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
+            ;
+
         species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }
             ws1 real   %{ spe.cast_cloud.back().chance = toreal(state.match); }
             ws1 tag    %{ spe.cast_cloud.back().terraintag = tag_t(state.match, tagmem); }
@@ -339,7 +344,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
-            species_companion | species_attack | species_defense | species_drop |
+            species_companion | species_attack | species_defense | species_drop | species_drop_random |
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
