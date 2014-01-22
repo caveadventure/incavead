@@ -46,6 +46,9 @@ struct Levelskin {
 
     std::string name;
 
+    bool has_treasure;
+    double treasure_level;
+
     struct mapgen_params_t {
         double flow_epsilon;
         unsigned int flow_n_freq;
@@ -93,7 +96,8 @@ struct Levelskin {
                   species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),
-                  number_features(85.0, 10.0)
+                  number_features(85.0, 10.0),
+                  has_treasure(false), treasure_level(0)
         {}
 };
 

@@ -5,6 +5,12 @@
 
 inline std::string dowsing_message(const Player& p, const GameState& state) {
 
+    const Levelskin& ls = levelskins().get(p.worldz);
+
+    if (!ls.has_treasure) {
+        return "Dowsing is useless here.";
+    }
+
     double h = state.grid.get(p.px, p.py);
 
     if (h <= -1) {

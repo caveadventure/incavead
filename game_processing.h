@@ -180,19 +180,26 @@ void do_digging_step(Player& p, GameState& state) {
 
         } else {
                 
-            const auto& tc = constants().treasure_chance;
-            int lev = state.rng.gauss(p.dig_h + tc.mean, tc.deviation);
+            const Levelskin& ls = levelskins().get(p.worldz);
 
-            if (lev >= 0) {
+            if (ls.has_treasure) {
 
-                auto is = state.designs_counts.take(state.rng, lev);
+                const auto& tc = constants().treasure_chance;
+                double lev = state.rng.gauss(p.dig_h + tc.mean, tc.deviation);
 
-                for (const auto& ii : is) {
-                    items::Item made = state.items.make_item(ii.first, items::pt(p.dig_x, p.dig_y), state.rng);
-                    state.items.place(p.dig_x, p.dig_y, made, state.render);
+                if (lev >= 0 && lev + ls.treasure_level >= 0) {
 
-                    state.render.do_message(nlp::message("You found %s!", nlp::count(), 
-                                                         designs().get(made.tag), made.count));
+                    int tlev = lev + ls.treasure_level;
+
+                    auto is = state.designs_counts.take(state.rng, tlev);
+
+                    for (const auto& ii : is) {
+                        items::Item made = state.items.make_item(ii.first, items::pt(p.dig_x, p.dig_y), state.rng);
+                        state.items.place(p.dig_x, p.dig_y, made, state.render);
+
+                        state.render.do_message(nlp::message("You found %s!", nlp::count(), 
+                                                             designs().get(made.tag), made.count));
+                    }
                 }
             }
 

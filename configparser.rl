@@ -733,6 +733,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
 
+        levelskin_treasure_level = 'treasure_level' ws1 real %{ lev.has_treasure = true; lev.treasure_level = toreal(state.match); };
+
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
         levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
         levelskin_flow_volume            = 'flow_volume'         ws1 real   %{ lev.genparams.flow_volume = toreal(state.match); };
@@ -760,7 +762,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_exclusive | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |
-            levelskin_number_features | levelskin_name |
+            levelskin_number_features | levelskin_name | levelskin_treasure_level |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |
@@ -795,11 +797,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_starvation_damage = 'starvation_damage' 
             ws1 real %{ __constants__().starvation_damage = toreal(state.match); };
 
-        constant_grave    = 'grave'    ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
-        constant_meat     = 'meat'     ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
-        constant_bad_meat = 'bad_meat' ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
-        constant_money    = 'money'    ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
-        constant_pit      = 'pit'      ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
+        constant_grave     = 'grave'     ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
+        constant_meat      = 'meat'      ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
+        constant_bad_meat  = 'bad_meat'  ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
+        constant_money     = 'money'     ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
+        constant_pit       = 'pit'       ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
+        constant_bad_grave = 'bad_grave' ws1 tag  %{ __constants__().bad_grave = tag_t(state.match, tagmem); };
 
         constant_unique_item = 'unique_item' ws1 tag %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
@@ -870,7 +873,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
-                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit |
+                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | constant_bad_grave |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |
