@@ -289,7 +289,7 @@ std::string show_spells(const std::vector<Terrain::spell_t>& p_spells,
     return m;
 }
 
-void handle_input_spells(const Player& p, GameState& state, size_t& ticks, maudit::keypress k) {
+void handle_input_spells(const Player& p, GameState& state, maudit::keypress k) {
 
     int _z = k.letter - 'a';
 
@@ -309,21 +309,21 @@ void handle_input_spells(const Player& p, GameState& state, size_t& ticks, maudi
         const auto& sp = p_spells[z];
 
         seed_celauto(state, p.px, p.py, sp.ca_tag);        
-        ++ticks;
+        ++(state.ticks);
 
     } else if (z < p_spells.size() + i_spells.size()) {
 
         const auto& sp = i_spells[z - p_spells.size()];
 
         seed_celauto(state, p.px, p.py, sp.ca_tag);
-        ++ticks;
+        ++(state.ticks);
 
     } else if (z < p_spells.size() + i_spells.size() + r_spells.size()) {
 
         uint32_t rspell = r_spells[z - p_spells.size() - i_spells.size()];
 
         cast_random_spell(p, rspell, state);
-        ++ticks;
+        ++(state.ticks);
     }
 
     state.window_stack.pop_back();
@@ -454,7 +454,7 @@ std::string help_text() {
 
 
 void handle_input_main(Player& p, GameState& state,
-                       size_t& ticks, bool& done, bool& dead, bool& regen, 
+                       bool& done, bool& dead, bool& regen, 
                        maudit::keypress k, bool debug_enabled, size_t n_skin) {
 
     bool redraw = false;
@@ -472,47 +472,47 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case 'q':
-        run_away(p, state, ticks, n_skin);
+        run_away(p, state, n_skin);
         break;
 
     case 'h':
-        move(p, state, -1, 0, ticks, n_skin);
+        move(p, state, -1, 0, n_skin);
         break;
     case 'j':
-        move(p, state, 0, 1, ticks, n_skin);
+        move(p, state, 0, 1, n_skin);
         break;
     case 'k':
-        move(p, state, 0, -1, ticks, n_skin);
+        move(p, state, 0, -1, n_skin);
         break;
     case 'l':
-        move(p, state, 1, 0, ticks, n_skin);
+        move(p, state, 1, 0, n_skin);
         break;
     case 'y':
-        move(p, state, -1, -1, ticks, n_skin);
+        move(p, state, -1, -1, n_skin);
         break;
     case 'u':
-        move(p, state, 1, -1, ticks, n_skin);
+        move(p, state, 1, -1, n_skin);
         break;
     case 'b':
-        move(p, state, -1, 1, ticks, n_skin);
+        move(p, state, -1, 1, n_skin);
         break;
     case 'n':
-        move(p, state, 1, 1, ticks, n_skin);
+        move(p, state, 1, 1, n_skin);
         break;
 
     case '>':
     case '<':
     case 's':
-        use_terrain(p, state, ticks, regen, done, dead);
+        use_terrain(p, state, regen, done, dead);
         break;
 
     case '.':
-        rest(state, ticks);
+        rest(state);
         break;
 
     case 'T':
     case 'a':
-        take_item(p.px, p.py, 0, p, state, ticks);
+        take_item(p.px, p.py, 0, p, state);
         break;
 
     case ',':
@@ -586,28 +586,28 @@ void handle_input_main(Player& p, GameState& state,
 
     switch (k.key) {
     case maudit::keycode::up:
-        move(p, state, 0, -1, ticks, n_skin);
+        move(p, state, 0, -1, n_skin);
         break;
     case maudit::keycode::left:
-        move(p, state, -1, 0, ticks, n_skin);
+        move(p, state, -1, 0, n_skin);
         break;
     case maudit::keycode::right:
-        move(p, state, 1, 0, ticks, n_skin);
+        move(p, state, 1, 0, n_skin);
         break;
     case maudit::keycode::down:
-        move(p, state, 0, 1, ticks, n_skin);
+        move(p, state, 0, 1, n_skin);
         break;
     case maudit::keycode::kp_7:
-        move(p, state, -1, -1, ticks, n_skin);
+        move(p, state, -1, -1, n_skin);
         break;
     case maudit::keycode::kp_9:
-        move(p, state, 1, -1, ticks, n_skin);
+        move(p, state, 1, -1, n_skin);
         break;
     case maudit::keycode::kp_1:
-        move(p, state, -1, 1, ticks, n_skin);
+        move(p, state, -1, 1, n_skin);
         break;
     case maudit::keycode::kp_3:
-        move(p, state, 1, 1, ticks, n_skin);
+        move(p, state, 1, 1, n_skin);
         break;
     default:
         break;
@@ -622,7 +622,7 @@ void handle_input_main(Player& p, GameState& state,
             for (const auto& slot_keypress : shortcut->second.slot_keypress) {
 
                 p.inv.selected_slot = slot_keypress.first;
-                if (handle_input_inv_item(p, state, ticks, done, dead, regen, 
+                if (handle_input_inv_item(p, state, done, dead, regen, 
                                               maudit::keypress(slot_keypress.second))) {
                     ok = true;
                     break;
@@ -641,7 +641,7 @@ void handle_input_main(Player& p, GameState& state,
 }
 
 
-void handle_input_debug(Player& p, GameState& state, size_t& ticks, bool& regen, maudit::keypress k) {
+void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypress k) {
 
     switch (k.letter) {
 
@@ -909,11 +909,11 @@ inline void start_digging(Player& p, GameState& state, unsigned int nx, unsigned
 }
 
 void Game::handle_input(GameState& state,
-                        size_t& ticks, bool& done, bool& dead, bool& regen, 
+                        bool& done, bool& dead, bool& regen, 
                         maudit::keypress k) {
 
     if (p.state == Player::DEBUG) {
-        handle_input_debug(p, state, ticks, regen, k);
+        handle_input_debug(p, state, regen, k);
         return;
     }
 
@@ -948,7 +948,7 @@ void Game::handle_input(GameState& state,
                     return;
 
                 } else {
-                    ++ticks;
+                    ++(state.ticks);
                 }
 
             } else if (p.state & Player::SELFNOTE) {
@@ -974,7 +974,7 @@ void Game::handle_input(GameState& state,
                 end_blast_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
             }
 
-            ++ticks;
+            ++(state.ticks);
             p.state = Player::MAIN;
         }
 
@@ -1008,7 +1008,7 @@ void Game::handle_input(GameState& state,
 
                 } else {
                     start_digging(p, state, nx, ny);
-                    ++ticks;
+                    ++(state.ticks);
                 }
 
             } else {
@@ -1018,7 +1018,7 @@ void Game::handle_input(GameState& state,
 
                 } else {
                     start_digging(p, state, nx, ny);
-                    ++ticks;
+                    ++(state.ticks);
                 }
             }
         }
@@ -1028,7 +1028,7 @@ void Game::handle_input(GameState& state,
     }
 
     if (state.window_stack.empty()) {
-        handle_input_main(p, state, ticks, done, dead, regen, k, debug_enabled, n_skin);
+        handle_input_main(p, state, done, dead, regen, k, debug_enabled, n_skin);
         return;
     }
 
@@ -1052,19 +1052,19 @@ void Game::handle_input(GameState& state,
         break;
 
     case screens_t::inventory:
-        handle_input_inventory(p, state, ticks, done, dead, regen, k);
+        handle_input_inventory(p, state, done, dead, regen, k);
         break;
 
     case screens_t::inv_item:
-        handle_input_inv_item(p, state, ticks, done, dead, regen, k);
+        handle_input_inv_item(p, state, done, dead, regen, k);
         break;
 
     case screens_t::floor_item:
-        handle_input_floor_item(p, state, ticks, done, dead, regen, k);
+        handle_input_floor_item(p, state, done, dead, regen, k);
         break;
 
     case screens_t::spells:
-        handle_input_spells(p, state, ticks, k);
+        handle_input_spells(p, state, k);
         break;
 
     default:

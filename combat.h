@@ -77,7 +77,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
     }
 
     if (do_track && !s.genus.null()) {
-        p.track_kill(s.genus);
+        p.track_kill(s.genus, state);
     }
 }
 
@@ -144,7 +144,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else if (v.type == damage::type_t::vampiric) {
 
-        if (!s.flags.robot) {
+        if (!s.flags.robot && !s.flags.undead && !s.flags.plant) {
 
             p.health.inc(dmg);
             totvamp += dmg;
@@ -416,11 +416,13 @@ inline void defend(Player& p,
     }
 }
 
-inline void defend(Player& p, 
-                   const damage::defenses_t& defenses, unsigned int plevel, 
-                   const Species& s, const damage::attacks_t& attacks,
-                   GameState& state) {
+inline double defend(Player& p, 
+                     const damage::defenses_t& defenses, unsigned int plevel, 
+                     const Species& s, const damage::attacks_t& attacks,
+                     GameState& state) {
 
+
+    double vamp = 0;
 
     damage::attacks_t attack_res;
     defend(p, defenses, plevel, attacks, s.get_computed_level(), state, attack_res);
@@ -474,6 +476,11 @@ inline void defend(Player& p,
             } else if (v.type == damage::type_t::unluck) {
                 state.render.do_message(nlp::message("%s casts the evil eye.", s));
 
+            } else if (v.type == damage::type_t::vampiric) {
+
+                vamp += v.val;
+                state.render.do_message(nlp::message("%s is sucking your blood.", s));
+
             } else if (v.type == damage::type_t::physical || 
                        v.type == damage::type_t::poison ||
                        v.type == damage::type_t::magic) {
@@ -484,14 +491,16 @@ inline void defend(Player& p,
 
         handle_post_defend(p, state);
     }
+
+    return vamp;
 }
 
-inline void defend(Player& p, 
-                   const damage::defenses_t& defenses, unsigned int plevel, 
-                   const Species& s,
-                   GameState& state) {
+inline double defend(Player& p, 
+                     const damage::defenses_t& defenses, unsigned int plevel, 
+                     const Species& s,
+                     GameState& state) {
 
-    defend(p, defenses, plevel, s, s.attacks, state);
+    return defend(p, defenses, plevel, s, s.attacks, state);
 }
 
 

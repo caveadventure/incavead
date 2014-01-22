@@ -47,7 +47,7 @@ struct Game {
 
     void drawing_context(mainloop::drawing_context_t& ctx, const GameState& state);
 
-    void draw_hud(GameState& state, size_t ticks);
+    void draw_hud(GameState& state);
 
     // processing
 
@@ -57,7 +57,7 @@ struct Game {
 
     void endgame(GameState& state, const std::string& name, unsigned int address, unsigned int seed);
 
-    void process_world(GameState& state, size_t& ticks, 
+    void process_world(GameState& state, 
                        bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw);
 
     // actions
@@ -67,7 +67,7 @@ struct Game {
     // ui
 
     void handle_input(GameState& state,
-                      size_t& ticks, bool& done, bool& dead, bool& regen, 
+                      bool& done, bool& dead, bool& regen, 
                       maudit::keypress k);
 
     template <typename FUNC>

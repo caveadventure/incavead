@@ -543,8 +543,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |
-                                ('move'   %{ ter.uncharge.move = true; }   ) |
-                                ('summon' %{ ter.uncharge.summon = true; } ) ;
+                                ('move'   %{ ter.uncharge.move = true; }   ) ;
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
@@ -560,12 +559,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_important = 'important' %{ ter.important = true; } ;
 
         terrain_view_radius = 'view_radius' ws1 number %{ ter.view_radius = toint(state.match); } ;
-
-        terrain_summon = 'summon' 
-                         ws1 tag    %{ ter.summon.genus = tag_t(state.match, tagmem); }
-                         ws1 number %{ ter.summon.level = tonumber(state.match); }
-                         ws1 number %{ ter.summon.count = tonumber(state.match); }
-                         ;
 
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
@@ -815,6 +808,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_money     = 'money'     ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
         constant_pit       = 'pit'       ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
         constant_bad_grave = 'bad_grave' ws1 tag  %{ __constants__().bad_grave = tag_t(state.match, tagmem); };
+        constant_ghost     = 'ghost'     ws1 tag  %{ __constants__().ghost = tag_t(state.match, tagmem); };
 
         constant_unique_item = 'unique_item' ws1 tag %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
@@ -885,7 +879,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
-                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | constant_bad_grave |
+                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | 
+                       constant_bad_grave | constant_ghost |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |

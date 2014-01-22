@@ -3,7 +3,7 @@
 
 
 inline void handle_input_inventory(Player& p, GameState& state,
-                                   size_t& ticks, bool& done, bool& dead, bool& regen, 
+                                   bool& done, bool& dead, bool& regen, 
                                    maudit::keypress k) {
 
     auto i = p.inv.slot_keys.find(k.letter);
@@ -29,24 +29,24 @@ inline void handle_input_inventory(Player& p, GameState& state,
 }
 
 inline bool handle_input_inv_item(Player& p, GameState& state,
-                                  size_t& ticks, bool& done, bool& dead, bool& regen, 
+                                  bool& done, bool& dead, bool& regen, 
                                   maudit::keypress k) {
 
     if (k.letter == 'd') {
         p.inv.inv_to_floor(p.inv.selected_slot, p.px, p.py, state.items, state.render);
 
-        ticks++;
+        ++(state.ticks);
         state.window_stack.clear();
         return true;
 
-    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state, regen, ticks)) {
+    } else if (k.letter == 'a' && apply_item(p, p.inv.selected_slot, state, regen)) {
 
         state.window_stack.clear();
         return true;
 
     } else if (k.letter == 'D' && destroy_item(p, p.inv.selected_slot)) {
         
-        ticks++;
+        ++(state.ticks);
         state.window_stack.clear();
         return true;
 
@@ -56,8 +56,8 @@ inline bool handle_input_inv_item(Player& p, GameState& state,
         return true;
 
     } else if (k.letter == 'f' && 
-               (start_blast_item(p, p.inv.selected_slot, state, ticks) ||
-                start_cloud_item(p, p.inv.selected_slot, state, ticks))) {
+               (start_blast_item(p, p.inv.selected_slot, state) ||
+                start_cloud_item(p, p.inv.selected_slot, state))) {
 
         state.window_stack.clear();
         return true;
@@ -77,12 +77,12 @@ inline bool handle_input_inv_item(Player& p, GameState& state,
 }
 
 inline void handle_input_floor_item(Player& p, GameState& state,
-                                    size_t& ticks, bool& done, bool& dead, bool& regen, 
+                                    bool& done, bool& dead, bool& regen, 
                                     maudit::keypress k) {
 
     if (k.letter == 't') {
 
-        if (take_item(p.px, p.py, p.inv.selected_floor_item, p, state, ticks)) {
+        if (take_item(p.px, p.py, p.inv.selected_floor_item, p, state)) {
 
             state.window_stack.clear();
             return;

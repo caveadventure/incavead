@@ -21,6 +21,8 @@
 
 struct GameState {
 
+    size_t ticks;
+
     rnd::Generator rng;
     neighbors::Neighbors neigh;
     celauto::CaMap camap;
@@ -36,6 +38,41 @@ struct GameState {
     monsters::Monsters monsters;
     items::Items items;
     features::Features features;
+
+    struct trigger_t {
+
+        struct summon_out_of_view_t {
+            tag_t monster;
+            unsigned int count;
+
+            summon_out_of_view_t() : count(0) {}
+        };
+
+        summon_out_of_view_t summon_out_of_view;
+
+        struct summon_genus_t {
+            tag_t genus;
+            unsigned int level;
+            unsigned int count;
+            unsigned int x;
+            unsigned int y;
+            
+            summon_genus_t() : level(0), count(0), x(0), y(0) {}
+        };
+
+        summon_genus_t summon_genus;
+
+        struct message_t {
+            std::string message;
+            bool important;
+
+            message_t() : important(false) {}
+        };
+
+        message_t message;
+    };
+
+    std::map<size_t, trigger_t> triggers;
 
     struct window_t {
         std::string message;
@@ -58,11 +95,27 @@ struct GameState {
     // HACK
     bool fullwidth;
 
-    GameState() : fullwidth(false) {}
+    GameState() : ticks(1), fullwidth(false) {}
 };
 
 
 namespace serialize {
+
+template <>
+struct reader<GameState::trigger_t> {
+    void read(Source& s, GameState::trigger_t& t) {
+
+        serialize::read(s, t.summon_out_of_view.monster);
+        serialize::read(s, t.summon_out_of_view.count);
+        serialize::read(s, t.summon_genus.genus);
+        serialize::read(s, t.summon_genus.level);
+        serialize::read(s, t.summon_genus.count);
+        serialize::read(s, t.summon_genus.x);
+        serialize::read(s, t.summon_genus.y);
+        serialize::read(s, t.message.message);
+        serialize::read(s, t.message.important);
+    }
+};
 
 template <>
 struct reader<GameState::window_t> {
@@ -77,6 +130,7 @@ template <>
 struct reader<GameState> {
     void read(Source& s, GameState& state) {
 
+        serialize::read(s, state.ticks);
         serialize::read(s, state.rng);
         serialize::read(s, state.neigh);
         serialize::read(s, state.camap);
@@ -92,7 +146,24 @@ struct reader<GameState> {
         serialize::read(s, state.features);
         serialize::read(s, state.dungeon_visits_count);
 
+        serialize::read(s, state.triggers);
         serialize::read(s, state.window_stack);
+    }
+};
+
+template <>
+struct writer<GameState::trigger_t> {
+    void write(Sink& s, const GameState::trigger_t& t) {
+
+        serialize::write(s, t.summon_out_of_view.monster);
+        serialize::write(s, t.summon_out_of_view.count);
+        serialize::write(s, t.summon_genus.genus);
+        serialize::write(s, t.summon_genus.level);
+        serialize::write(s, t.summon_genus.count);
+        serialize::write(s, t.summon_genus.x);
+        serialize::write(s, t.summon_genus.y);
+        serialize::write(s, t.message.message);
+        serialize::write(s, t.message.important);
     }
 };
 
@@ -108,6 +179,7 @@ template <>
 struct writer<GameState> {
     void write(Sink& s, const GameState& state) {
 
+        serialize::write(s, state.ticks);
         serialize::write(s, state.rng);
         serialize::write(s, state.neigh);
         serialize::write(s, state.camap);
@@ -123,6 +195,7 @@ struct writer<GameState> {
         serialize::write(s, state.features);
         serialize::write(s, state.dungeon_visits_count);
 
+        serialize::write(s, state.triggers);
         serialize::write(s, state.window_stack);
     }
 };

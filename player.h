@@ -116,13 +116,7 @@ struct Player {
 
     std::map<tag_t, unsigned int> kills;
 
-    struct achievement_t {
-        bool triggered;
-
-        achievement_t() : triggered(false) {}
-    };
-
-    std::map<tag_t, achievement_t> achievements;
+    std::set<tag_t> achievements;
 
     size_t num_replay_codes;
 
@@ -138,7 +132,7 @@ struct Player {
             luck.val = 0;
         }
 
-    void track_kill(tag_t genus) {
+    void track_kill(tag_t genus, GameState& state) {
 
         const auto& _ach = constants().achievements;
 
@@ -155,7 +149,15 @@ struct Player {
             if (achievements.count(i.first) != 0)
                 continue;
 
-            achievements[i.first] = achievement_t();
+            achievements.insert(i.first);
+
+            if (!i.second.summon.null()) {
+
+                size_t time = state.ticks + state.rng.n(constants().achievement_trigger_rate);
+
+                state.triggers[time].summon_out_of_view.monster = i.second.summon;
+                state.triggers[time].summon_out_of_view.count = 0;
+            }
         }
     }
     
@@ -211,20 +213,6 @@ struct writer<Terrain::spell_t> {
         serialize::write(s, sp.ca_tag);
         serialize::write(s, sp.name);
         serialize::write(s, sp.timeout);
-    }
-};
-
-template <>
-struct reader<Player::achievement_t> {
-    void read(Source& s, Player::achievement_t& a) {
-        serialize::read(s, a.triggered);
-    }
-};
-
-template <>
-struct writer<Player::achievement_t> {
-    void write(Sink& s, const Player::achievement_t& a) {
-        serialize::write(s, a.triggered);
     }
 };
 

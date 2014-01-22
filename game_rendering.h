@@ -217,7 +217,7 @@ void draw_one_stat(GameState& state, const stat_t& s, const std::string& name) {
     }
 }
 
-void Game::draw_hud(GameState& state, size_t ticks) {
+void Game::draw_hud(GameState& state) {
 
     draw_one_stat(state, p.health, "Health");
     draw_one_stat(state, p.food,   "Food");
@@ -238,14 +238,14 @@ void Game::draw_hud(GameState& state, size_t ticks) {
         state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                    std::min(p.sleep / 15 + 1, (unsigned int)6), 
                                    '+', 
-                                   (ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
     }
 
     if (p.blind > 0) {
         state.render.push_hud_line("Blind", maudit::color::bright_red,
                                    std::min(p.blind / constants().blindturns_to_radius + 1, (unsigned int)6), 
                                    '+', 
-                                   (ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
     }
 
     if (p.digging) {
@@ -258,11 +258,8 @@ void Game::draw_hud(GameState& state, size_t ticks) {
         state.render.push_hud_line("Tunnel", maudit::color::dim_green,
                                    q,
                                    '+', 
-                                   (ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
+                                   (state.ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
     }
-
-    //state.render.push_hud_line("Foo", maudit::color::bright_yellow, 
-    //                           4, '+', maudit::color::bright_green);
 }
 
 

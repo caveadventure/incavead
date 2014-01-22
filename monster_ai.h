@@ -98,7 +98,7 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 }
 
 
-inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double dist, unsigned int range,
+inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned int range,
                              std::vector<summons_t>& summons, 
                              const monsters::Monster& m, const Species& s) {
 
@@ -117,7 +117,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
             if (dist >= b.range) 
                 continue;
 
-            if ((ticks % b.turns) != 0)
+            if ((state.ticks % b.turns) != 0)
                 continue;
 
             double v = state.rng.gauss(0.0, 1.0);
@@ -129,7 +129,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
 
         for (const auto& c : s.cast_cloud) {
 
-            if ((ticks % c.turns) != 0) continue;
+            if ((state.ticks % c.turns) != 0) continue;
                     
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
@@ -144,7 +144,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
 
         for (const auto& c : s.summon) {
 
-            if ((ticks & c.turns) != 0) continue;
+            if ((state.ticks & c.turns) != 0) continue;
 
             const Species& s = species().get(c.speciestag);
             if (!state.species_counts.has(s.level, c.speciestag))
@@ -161,7 +161,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
 
         for (const auto& c : s.spawns) {
 
-            if ((ticks & c.turns) != 0) continue;
+            if ((state.ticks & c.turns) != 0) continue;
 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
@@ -174,7 +174,7 @@ inline bool do_monster_magic(Player& p, GameState& state, size_t ticks, double d
 }
 
 
-inline bool move_monster(Player& p, GameState& state, size_t ticks, 
+inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
                          const monsters::Monster& m, const Species& s,
                          monsters::pt& nxy, bool& do_die) {
@@ -242,7 +242,7 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
 
     if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
 
-        if (do_monster_magic(p, state, ticks, dist, range, summons, m, s)) 
+        if (do_monster_magic(p, state, dist, range, summons, m, s)) 
             return false;
     }
 
@@ -314,7 +314,11 @@ inline bool move_monster(Player& p, GameState& state, size_t ticks,
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), s, state);
+        double vamp = defend(p, defenses, p.get_computed_level(state.rng), s, state);
+
+        // Monsters cheat -- they can go above 3 health.
+        state.monsters.change(m, [vamp](monsters::Monster& m) { m.health += vamp; });
+
         return false;
 
     } else {

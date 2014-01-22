@@ -58,17 +58,14 @@ struct Main {
 
     std::vector<std::string> messages;
 
-    size_t ticks;
-
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 11;
+    static const unsigned int SAVEFILE_VERSION = 12;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
         game(debug, n_skin), 
-        screen(s), 
-        ticks(1) 
+        screen(s)
         {
 
             // HACK!
@@ -88,7 +85,6 @@ struct Main {
                 return false;
 
             serialize::read(s, state);
-            serialize::read(s, ticks);
 
             game.load(s);
 
@@ -104,7 +100,6 @@ struct Main {
 
         serialize::write(s, SAVEFILE_VERSION);
         serialize::write(s, state);
-        serialize::write(s, ticks);
 
         game.save(s);
     }
@@ -155,7 +150,7 @@ struct Main {
         state.items.init();
         state.monsters.init();
 
-        ticks = 1;
+        state.ticks = 1;
 
         game.init(state, screen.address, seed);
 
@@ -198,11 +193,11 @@ struct Main {
         game.drawing_context(ctx, state);
 
         if (ctx.do_hud) {
-            game.draw_hud(state, ticks);
+            game.draw_hud(state);
         }
 
         state.render.draw(screen, 
-                          ticks, 
+                          state.ticks, 
                           ctx,
                           state.fullwidth,
                           std::bind(&GAME::set_skin, &game, std::ref(state),
@@ -212,16 +207,16 @@ struct Main {
 
     bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
 
-        if (ticks == oldticks) {
+        if (state.ticks == oldticks) {
             need_input = true;
             return false;
         }
 
-        oldticks = ticks;
+        oldticks = state.ticks;
 
-        game.process_world(state, ticks, done, dead, regen, need_input, draw);
+        game.process_world(state, done, dead, regen, need_input, draw);
 
-        if (ticks != oldticks) {
+        if (state.ticks != oldticks) {
             need_input = false;
         }
 
@@ -234,13 +229,13 @@ struct Main {
 
             grender::Grid::keypress k = state.render.wait_for_key(screen);
 
-            game.handle_input(state, ticks, done, dead, regen, k);
+            game.handle_input(state, done, dead, regen, k);
 
             while (state.window_stack.size() > 0) {
 
                 k = state.render.draw_window(screen, state.window_stack.back().message);
 
-                game.handle_input(state, ticks, done, dead, regen, k);
+                game.handle_input(state, done, dead, regen, k);
             }
         }
     }

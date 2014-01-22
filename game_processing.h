@@ -39,6 +39,28 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
             }
         }
     }
+
+    if (num_ails > 0) {
+
+        std::string& msg = state.triggers[1].message.message;
+        state.triggers[1].message.important = true;
+
+        switch (num_ails) {
+        case 1:
+            msg = "This reincarnation of your body seems frail. (Press '@')";
+            break;
+        case 2:
+            msg = "This reincarnation of your body is very frail.";
+            break;
+        case 3:
+            msg = "This reincarnation of your body is extremely fragile.";
+            break;
+        default:
+            msg = "This reincarnation of your body is no good at all.";
+            break;
+        }
+    }
+
 }
 
 void Game::dispose(GameState& state) {
@@ -151,6 +173,67 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
     return res;
 }
 
+void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned int y, double h) {
+
+    features::Feature feat;
+
+    if (!state.grid.is_walk(x, y)) {
+            
+        bool water = state.grid.is_water(x, y);
+
+        state.grid.set_walk_water(state.neigh, x, y, true, water);
+        state.render.invalidate(x, y);
+
+        permafeats::features().add(p, x, y, true, water);
+
+    } else if (state.features.get(x, y, feat) && feat.tag == constants().grave) {
+
+        state.features.set(x, y, constants().bad_grave, state.render);        
+
+        bones::bone_t bone;
+
+        if (!bones::bones().get(p, x, y, bone))
+            return;
+
+        auto& trig = state.triggers[state.ticks];
+
+        trig.summon_genus.genus = constants().ghost;
+        trig.summon_genus.level = bone.level;
+        trig.summon_genus.count = 1;
+        trig.summon_genus.x = x;
+        trig.summon_genus.y = y;
+
+    } else {
+
+        state.features.set(x, y, constants().pit, state.render);        
+        permafeats::features().add(p, x, y, constants().pit);
+                
+        const Levelskin& ls = levelskins().get(p.worldz);
+
+        if (!ls.has_treasure)
+            return;
+                
+        const auto& tc = constants().treasure_chance;
+        double lev = state.rng.gauss(h + tc.mean, tc.deviation);
+
+        if (lev < 0 && lev + ls.treasure_level < 0)
+            return;
+
+        int tlev = lev + ls.treasure_level;
+
+        auto is = state.designs_counts.take(state.rng, tlev);
+
+        for (const auto& ii : is) {
+            items::Item made = state.items.make_item(ii.first, items::pt(x, y), state.rng);
+            state.items.place(x, y, made, state.render);
+
+            state.render.do_message(nlp::message("You found %s!", nlp::count(), 
+                                                 designs().get(made.tag), made.count));
+        }
+    }
+}
+
+
 void do_digging_step(Player& p, GameState& state) {
 
     double digspeed = p.inv.get_digging();
@@ -162,58 +245,14 @@ void do_digging_step(Player& p, GameState& state) {
     if (height < -10) {
         height = -10;
 
-        features::Feature feat;
-
-        if (!state.grid.is_walk(p.dig_x, p.dig_y)) {
-            
-            bool water = state.grid.is_water(p.dig_x, p.dig_y);
-
-            state.grid.set_walk_water(state.neigh, p.dig_x, p.dig_y, true, water);
-            state.render.invalidate(p.dig_x, p.dig_y);
-
-            permafeats::features().add(p, p.dig_x, p.dig_y, true, water);
-
-        } else if (state.features.get(p.dig_x, p.dig_y, feat) && feat.tag == constants().grave) {
-
-            state.features.set(p.dig_x, p.dig_y, constants().bad_grave, state.render);        
-            permafeats::features().add(p, p.dig_x, p.dig_y, constants().bad_grave);
-
-        } else {
-                
-            const Levelskin& ls = levelskins().get(p.worldz);
-
-            if (ls.has_treasure) {
-
-                const auto& tc = constants().treasure_chance;
-                double lev = state.rng.gauss(p.dig_h + tc.mean, tc.deviation);
-
-                if (lev >= 0 && lev + ls.treasure_level >= 0) {
-
-                    int tlev = lev + ls.treasure_level;
-
-                    auto is = state.designs_counts.take(state.rng, tlev);
-
-                    for (const auto& ii : is) {
-                        items::Item made = state.items.make_item(ii.first, items::pt(p.dig_x, p.dig_y), state.rng);
-                        state.items.place(p.dig_x, p.dig_y, made, state.render);
-
-                        state.render.do_message(nlp::message("You found %s!", nlp::count(), 
-                                                             designs().get(made.tag), made.count));
-                    }
-                }
-            }
-
-            state.features.set(p.dig_x, p.dig_y, constants().pit, state.render);        
-            permafeats::features().add(p, p.dig_x, p.dig_y, constants().pit);
-
-        }
-
         p.digging = false;
         state.render.do_message("Digging done.");
+
+        finish_digging(p, state, p.dig_x, p.dig_y, p.dig_h);
     }
 }
 
-void Game::process_world(GameState& state, size_t& ticks, 
+void Game::process_world(GameState& state, 
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
     // Handle victory items.
@@ -236,24 +275,6 @@ void Game::process_world(GameState& state, size_t& ticks,
     // Ailments.
 
     if (p.ailments.size() > 0) {
-
-        if (ticks == 1) {
-
-            switch (p.ailments.size()) {
-            case 1:
-                state.render.do_message("This reincarnation of your body seems frail. (Press '@')", true);
-                break;
-            case 2:
-                state.render.do_message("This reincarnation of your body is very frail.", true);
-                break;
-            case 3:
-                state.render.do_message("This reincarnation of your body is extremely fragile.", true);
-                break;
-            default:
-                state.render.do_message("This reincarnation of your body is no good at all.", true);
-                break;
-            }
-        }
 
         unsigned int t = state.rng.range(0u, 99u);
 
@@ -328,45 +349,44 @@ void Game::process_world(GameState& state, size_t& ticks,
                 state.features.uncharge(p.px, p.py, state.render);
             }
         }
-
-        if (t.summon.count > 0) {
-            state.monsters.summon_genus(state.neigh, state.rng, state.grid, 
-                                        state.species_counts, state.render, 
-                                        p.px, p.py, &p.px, &p.py, 
-                                        t.summon.genus, t.summon.level, t.summon.count);
-
-            if (t.uncharge.summon) {
-                state.features.uncharge(p.px, p.py, state.render);
-            }
-        }
     }
 
-    if ((ticks % constants().achievement_trigger_rate) == 0) {
+    if (state.triggers.size() > 0) {
+        
+        auto i = state.triggers.begin();
 
-        for (auto& a : p.achievements) {
+        while (i != state.triggers.end() && i->first <= state.ticks) {
 
-            if (a.second.triggered)
-                continue;
+            const auto& trig = i->second;
 
-            const auto& ach = constants().achievements;
-            auto i = ach.find(a.first);
+            if (!trig.summon_out_of_view.monster.null()) {
 
-            if (i == ach.end())
-                throw std::runtime_error("Sanity error in achievement trigger");
-                
-            if (!(i->second.summon.null())) {
-
-                summon_out_of_view(p, state, i->second.summon, 0);
+                summon_out_of_view(p, state, trig.summon_out_of_view.monster, trig.summon_out_of_view.count);
             }
 
-            a.second.triggered = true;
+            if (trig.summon_genus.count > 0) {
+
+                const auto& sg = trig.summon_genus;
+
+                state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts,
+                                            state.render, 
+                                            sg.x, sg.y, &p.px, &p.py, 
+                                            sg.genus, sg.level, sg.count);
+            }
+
+            if (trig.message.message.size() > 0) {
+
+                state.render.do_message(trig.message.message, trig.message.important);
+            }
+            
+            i = state.triggers.erase(i);
         }
     }
 
     std::vector<summons_t> summons;
 
     state.monsters.process(state.render, 
-                           std::bind(move_monster, std::ref(p), std::ref(state), ticks, std::ref(summons),
+                           std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),
                                      std::placeholders::_1, std::placeholders::_2, 
                                      std::placeholders::_3, std::placeholders::_4));
 
@@ -468,7 +488,7 @@ void Game::process_world(GameState& state, size_t& ticks,
     }
 
     if (p.sleep > 0) {
-        ++ticks;
+        ++(state.ticks);
         --(p.sleep);
         do_draw = true;
         return;
@@ -476,7 +496,7 @@ void Game::process_world(GameState& state, size_t& ticks,
 
     if (p.digging) {
 
-        ++ticks;
+        ++(state.ticks);
         do_draw = true;            
 
         do_digging_step(p, state);

@@ -46,7 +46,7 @@ void move_player(const Player& p, GameState& state) {
     }
 }
 
-void move(Player& p, GameState& state, int dx, int dy, size_t& ticks, size_t n_skin) {
+void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     int nx = p.px + dx;
     int ny = p.py + dy;
 
@@ -66,7 +66,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t& ticks, size_t n_s
         p.inv.get_attack(attacks);
 
         if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, mon, false)) {
-            ++ticks;
+            ++(state.ticks);
         }
 
         return;
@@ -76,7 +76,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t& ticks, size_t n_s
         return;
     }
 
-    ++ticks;
+    ++(state.ticks);
 
     features::Feature feat;
     if (state.features.get(p.px, p.py, feat)) {
@@ -104,7 +104,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t& ticks, size_t n_s
     move_player(p, state);
 }
 
-void run_away(Player& p, GameState& state, size_t& ticks, size_t n_skin) {
+void run_away(Player& p, GameState& state, size_t n_skin) {
 
     std::vector< std::pair<int, int> > ns;
 
@@ -160,7 +160,7 @@ void run_away(Player& p, GameState& state, size_t& ticks, size_t n_skin) {
     int dx = ns[maxi].first;
     int dy = ns[maxi].second;
 
-    move(p, state, dx, dy, ticks, n_skin);
+    move(p, state, dx, dy, n_skin);
 }
 
 std::string tombstone_text(const Player& p) {
@@ -185,7 +185,7 @@ std::string tombstone_text(const Player& p) {
                         std::max(bone.worth, 0.0));
 }
 
-void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& done, bool& dead) {
+void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dead) {
 
     features::Feature feat;
     if (!state.features.get(p.px, p.py, feat)) {
@@ -249,7 +249,7 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
                 p.money_curse -= money_curse;
             }
 
-            ++ticks;
+            ++(state.ticks);
 
         } else {
             state.render.do_message("You don't have any gold to sacrifice.");
@@ -267,7 +267,7 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
 
         p.worldz += t.stairs;
 
-        ++ticks;
+        ++(state.ticks);
         regen = true;
         return;
     }
@@ -283,7 +283,7 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
         if (p.worldy > 1) p.worldy = -1;
         else if (p.worldy < -1) p.worldy = 1;
 
-        ++ticks;
+        ++(state.ticks);
         regen = true;
         return;
     }
@@ -335,7 +335,7 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
 
                 state.render.do_message(nlp::message("You now have %s!", nlp::count(), cto, vi.count));
 
-                ++ticks;
+                ++(state.ticks);
                 return;
             }
         }
@@ -359,8 +359,8 @@ void use_terrain(Player& p, GameState& state, size_t& ticks, bool& regen, bool& 
     state.render.do_message("There is nothing here to use.");
 }
 
-void rest(GameState& state, size_t& ticks) {
-    ++ticks;
+void rest(GameState& state) {
+    ++(state.ticks);
 }
 
 void seed_celauto(GameState& state, 

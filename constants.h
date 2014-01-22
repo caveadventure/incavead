@@ -15,6 +15,7 @@ struct ConstantsBank {
     tag_t money;
     tag_t pit;
     tag_t bad_grave;
+    tag_t ghost;
 
     tag_t unique_item;
 

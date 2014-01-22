@@ -46,7 +46,7 @@ inline std::string dowsing_message(const Player& p, const GameState& state) {
 }
 
 
-inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, size_t& ticks) {
+inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     items::Item tmp;
 
@@ -221,7 +221,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen, siz
         return true;
     }
 
-    ++ticks;
+    ++(state.ticks);
     return true;
 }
 
@@ -294,7 +294,7 @@ inline bool end_blast_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
     return true;
 }
 
-inline bool start_blast_item(Player& p, tag_t slot, GameState& state, size_t& ticks) {
+inline bool start_blast_item(Player& p, tag_t slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -317,14 +317,14 @@ inline bool start_blast_item(Player& p, tag_t slot, GameState& state, size_t& ti
         if (!end_blast_item(p, slot, p.px, p.py, state)) 
             return false;
 
-        ++ticks;
+        ++(state.ticks);
     }
 
     return true;
 }
 
 
-inline bool start_cloud_item(Player& p, tag_t slot, GameState& state, size_t& ticks) {
+inline bool start_cloud_item(Player& p, tag_t slot, GameState& state) {
 
     items::Item tmp;
     if (!p.inv.get(slot, tmp)) {
@@ -342,7 +342,7 @@ inline bool start_cloud_item(Player& p, tag_t slot, GameState& state, size_t& ti
 
     cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
 
-    ++ticks;
+    ++(state.ticks);
 
     return true;
 }
@@ -414,7 +414,7 @@ inline bool start_digging(Player& p, tag_t slot, GameState& state) {
 
 
 inline bool take_item(unsigned int x, unsigned int y, unsigned int z, 
-                      Player& p, GameState& state, size_t& ticks) {
+                      Player& p, GameState& state) {
 
     items::Item disc;
         
@@ -428,7 +428,7 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
             state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, disc.count));
         }
 
-        ticks++;
+        ++(state.ticks);
         return true;
     }
 

@@ -66,9 +66,8 @@ struct Terrain {
         bool attack;
         bool move;
         bool use;
-        bool summon;
 
-        uncharge_t() : attack(false), move(false), use(false), summon(false) {}
+        uncharge_t() : attack(false), move(false), use(false) {}
     };
 
     uncharge_t uncharge;
@@ -89,16 +88,6 @@ struct Terrain {
     bool important;
 
     int view_radius;
-
-    struct summon_t {
-        tag_t genus;
-        unsigned int level;
-        unsigned int count;
-
-        summon_t() : level(0), count(0) {}
-    };
-
-    summon_t summon;
 
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),

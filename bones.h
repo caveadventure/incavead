@@ -45,7 +45,7 @@ struct bone_t {
 
             for (const auto& i : p.achievements) {
 
-                auto j = achievements.find(i.first);
+                auto j = achievements.find(i);
 
                 if (j == achievements.end())
                     throw std::runtime_error("sanity error in achievements");
@@ -232,7 +232,7 @@ struct Bones {
     }
 
     template <typename PLAYER>
-    bool get(const PLAYER& p, bone_t& ret) {
+    bool get(const PLAYER& p, unsigned int x, unsigned int y, bone_t& ret) {
 
         std::unique_lock<std::mutex> l(mutex);
         
@@ -241,13 +241,19 @@ struct Bones {
         if (i == data.end())
             return false;
 
-        const auto& j = i->second.find(pt(p.px, p.py));
+        const auto& j = i->second.find(pt(x, y));
 
         if (j == i->second.end())
             return false;
 
         ret = j->second.bone;
         return true;
+    }
+
+    template <typename PLAYER>
+    bool get(const PLAYER& p, bone_t& ret) {
+
+        return get(p, p.px, p.py, ret);
     }
 
     void get_marks(int x, int y, int z, std::vector< std::pair<pt,double> >& out) {

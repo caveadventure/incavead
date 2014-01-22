@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include <vector>
+#include <set>
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
@@ -209,6 +210,13 @@ struct writer< std::vector<T> > {
     }
 };
 
+template <typename K>
+struct writer< std::set<K> > {
+    void write(Sink& s, const std::set<K>& v) {
+        write_stl(s, v);
+    }
+};
+
 template <typename K,typename V>
 struct writer< std::map<K,V> > {
     void write(Sink& s, const std::map<K,V>& v) {
@@ -234,6 +242,13 @@ struct writer< std::unordered_map<K,V> > {
 template <typename T>
 struct reader< std::vector<T> > {
     void read(Source& s, std::vector<T>& v) {
+        read_stl(s, v);
+    }
+};
+
+template <typename K>
+struct reader< std::set<K> > {
+    void read(Source& s, std::set<K>& v) {
         read_stl(s, v);
     }
 };

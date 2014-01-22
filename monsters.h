@@ -381,21 +381,28 @@ struct Monsters {
                               unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
                               tag_t genus, unsigned int level, unsigned int count) {
 
-        std::map<tag_t, unsigned int> q = counts.take(rng, level, count, false,
-                                                      [genus](tag_t s) {
-                                                          const Species& sp = species().get(s);
-                                                          return (genus.null() || sp.genus == genus);
-                                                      });
+        std::map< unsigned int, std::vector<tag_t> > found;
 
-        unsigned int ret = 0;
+        for (const auto& i : counts.data) {
+            for (const auto& j : i.second) {
 
-        for (auto& i : q) {
+                const Species& s = species().get(j.first);
 
-            ret += summon(neigh, rng, grid, counts, render, 
-                          x, y, px, py, i.first, i.second);
+                if (s.get_computed_level() <= level && s.genus == genus) {
+                    found[s.get_computed_level()].push_back(j.first);
+                }
+            }
         }
 
-        return ret;
+        if (found.empty())
+            return 0;
+
+        const std::vector<tag_t>& maxlev = found.rbegin()->second;
+
+        if (maxlev.empty())
+            return 0;
+
+        return summon(neigh, rng, grid, counts, render, x, y, px, py, maxlev[rng.n(maxlev.size())], count);
     }
 
 
