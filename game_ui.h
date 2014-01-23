@@ -60,39 +60,6 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                         }
                     }
 
-                    double hh = state.grid.get(xx, yy);
-
-                    if (state.grid.is_floor(xx, yy) && intensity == 0 && feat.tag.null()) {
-                        if (hh >= 0 && hh < 1) {
-                            charz = "1";
-                            intensity = 1;
-                        } else if (hh >= 1 && hh < 2) {
-                            charz = "2";
-                            intensity = 1;
-                        } else if (hh >= 2 && hh < 3) {
-                            charz = "3";
-                            intensity = 1;
-                        } else if (hh >= 3 && hh < 4) {
-                            charz = "5";
-                            intensity = 1;
-                        } else if (hh >= 4 && hh < 5) {
-                            charz = "4";
-                            intensity = 1;
-                        } else if (hh >= 5 && hh < 6) {
-                            charz = "6";
-                            intensity = 1;
-                        } else if (hh >= 6 && hh < 7) {
-                            charz = "7";
-                            intensity = 1;
-                        } else if (hh >= 7 && hh < 8) {
-                            charz = "8";
-                            intensity = 1;
-                        } else {
-                            charz = ".";
-                            intensity = 1;
-                        }
-                    }
-
                 }
             }
 

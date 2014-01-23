@@ -320,10 +320,13 @@ inline bool move_monster(Player& p, GameState& state,
         state.monsters.change(m, [vamp](monsters::Monster& m) { m.health += vamp; });
 
         return false;
-
-    } else {
-        return true;
     }
+
+    if (!s.trail.null()) {
+        state.features.set(nxy.first, nxy.second, s.trail, state.render);
+    }
+
+    return true;
 }
 
 

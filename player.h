@@ -163,6 +163,9 @@ struct Player {
     
     unsigned int get_computed_level(rnd::Generator& rng) {
 
+        if (luck.val == 0)
+            return level;
+
         bool neg = (luck.val < 0);
         double l = ::fabs(luck.val);
 
@@ -188,7 +191,7 @@ struct Player {
 
             std::cout << " |||| " << fudge << " " << level - fudge << std::endl;
 
-            if (fudge > level)
+            if (fudge > (int)level)
                 return 0;
 
             return level - fudge;

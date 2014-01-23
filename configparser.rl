@@ -341,6 +341,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_eyeless = 'eyeless' %{ spe.flags.eyeless = true; } ;
 
+        species_trail = 'trail' ws1 tag %{ spe.trail = tag_t(state.match, tagmem); } ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
@@ -348,7 +350,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_cast_cloud | species_summon | species_spawn |
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
-            species_karma | species_blast | species_true_level |
+            species_karma | species_blast | species_true_level | species_trail |
             '}'
             ${ fret; })
             ;
