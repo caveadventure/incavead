@@ -147,7 +147,14 @@ struct Species {
 
     std::vector<blast_t> blast;
 
-    tag_t trail;
+    struct trail_t {
+        tag_t terrain;
+        double cost;
+
+        trail_t() : cost(0) {}
+    };
+
+    trail_t trail;
 
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::walk), range(0), clumpsize(), flags(), karma(0) {}

@@ -322,8 +322,14 @@ inline bool move_monster(Player& p, GameState& state,
         return false;
     }
 
-    if (!s.trail.null()) {
-        state.features.x_set(nxy.first, nxy.second, s.trail, state.render);
+    if (!s.trail.terrain.null()) {
+
+        if (s.trail.cost != 0) {
+            double c = s.trail.cost;
+            state.monsters.change(m, [c](monsters::Monster& m) { m.health -= c; });
+        }
+
+        state.features.x_set(nxy.first, nxy.second, s.trail.terrain, state.render);
     }
 
     return true;

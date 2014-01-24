@@ -341,7 +341,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_eyeless = 'eyeless' %{ spe.flags.eyeless = true; } ;
 
-        species_trail = 'trail' ws1 tag %{ spe.trail = tag_t(state.match, tagmem); } ;
+        species_trail = 'trail' 
+            ws1 tag  %{ spe.trail.terrain = tag_t(state.match, tagmem); } 
+            ws1 real %{ spe.trail.cost = toreal(state.match); } 
+            ;
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
