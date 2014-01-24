@@ -65,12 +65,15 @@ struct Features {
         init();
     }
 
-    void x_set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
+    bool x_set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {
 
         pt xy(x, y);
         if (feats.find(xy) == feats.end()) {
             set(x, y, tag, render);
+            return true;
         }
+
+        return false;
     }
 
     void x_unset(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {

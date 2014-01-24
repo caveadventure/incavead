@@ -316,20 +316,22 @@ inline bool move_monster(Player& p, GameState& state,
 
         double vamp = defend(p, defenses, p.get_computed_level(state.rng), s, state);
 
-        // Monsters cheat -- they can go above 3 health.
-        state.monsters.change(m, [vamp](monsters::Monster& m) { m.health += vamp; });
+        state.monsters.change(m, [vamp](monsters::Monster& m) { 
+                m.health += vamp; 
+                m.health = std::min(3.0, m.health);
+            });
 
         return false;
     }
 
-    if (!s.trail.terrain.null()) {
+    if (!s.trail.terrain.null() &&
+        state.features.x_set(nxy.first, nxy.second, s.trail.terrain, state.render)) {
 
-        if (s.trail.cost != 0) {
-            double c = s.trail.cost;
+        double c = state.rng.gauss(s.trail.cost.mean, s.trail.cost.deviation);
+
+        if (c != 0) {
             state.monsters.change(m, [c](monsters::Monster& m) { m.health -= c; });
         }
-
-        state.features.x_set(nxy.first, nxy.second, s.trail.terrain, state.render);
     }
 
     return true;

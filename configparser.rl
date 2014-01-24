@@ -343,7 +343,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_trail = 'trail' 
             ws1 tag  %{ spe.trail.terrain = tag_t(state.match, tagmem); } 
-            ws1 real %{ spe.trail.cost = toreal(state.match); } 
+            ws1 real %{ spe.trail.cost.mean = toreal(state.match); } 
+            ws1 real %{ spe.trail.cost.deviation = toreal(state.match); }
             ;
 
         species_one_data = 
