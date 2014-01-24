@@ -492,7 +492,7 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case 'i':
-        state.push_window(show_inventory(p.inv, p.level, 
+        state.push_window(show_inventory(p.inv, p.level, p.worldz,
                                          levelskins().get(p.worldz).name, 
                                          state.moon.pi.phase_str, 
                                          state.items, p.px, p.py), 

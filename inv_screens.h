@@ -77,7 +77,7 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
 }
 
 
-inline std::string show_inventory(inventory_t& inv, unsigned int level, const std::string& level_name, 
+inline std::string show_inventory(inventory_t& inv, unsigned int level, unsigned int dlev, const std::string& level_name, 
                                   const std::string& moon_phase,
                                   items::Items& items, unsigned int px, unsigned int py) {
 
@@ -85,11 +85,11 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, const st
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level: %d\n"
-                     "  Dungeon level:   %s    (phase of the moon: %s)\n"
+                     "  Dungeon level:   %d (%s)    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
                      level+1, 
-                     level_name,
+                     dlev+1, level_name,
                      moon_phase);
 
     for (const auto& slotk : inv.slot_keys) {
