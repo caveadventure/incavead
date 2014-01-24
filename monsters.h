@@ -136,8 +136,16 @@ struct Monsters {
                 clump.insert(tmp);
             }
 
-            pt xy = *(clump.begin());
-            clump.erase(clump.begin());
+            size_t clumpn = rng.n(clump.size());
+            auto clumpi = clump.begin();
+
+            while (clumpn > 0) {
+                --clumpn;
+                ++clumpi;
+            }
+
+            pt xy = *clumpi;
+            clump.erase(clumpi);
 
             mons[xy] = Monster(tag, xy);
             placed.insert(xy);
