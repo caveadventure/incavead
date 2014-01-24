@@ -4,10 +4,10 @@ project (incavead)
 
 SET(CMAKE_BUILD_TYPE "Release")
 
-SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O4 -pthread -ftime-report -fmem-report")
+SET(CMAKE_CXX_FLAGS "-Wall -std=c++11 -O4 -pthread -ftime-report -fmem-report -flto")
 
 #if(WIN32)
-#  SET(CMAKE_EXE_LINKER_FLAGS "-static -pthread")
+SET(CMAKE_EXE_LINKER_FLAGS "-flto")
 #endif()
 
 
