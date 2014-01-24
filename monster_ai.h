@@ -323,7 +323,7 @@ inline bool move_monster(Player& p, GameState& state,
     }
 
     if (!s.trail.null()) {
-        state.features.set(nxy.first, nxy.second, s.trail, state.render);
+        state.features.x_set(nxy.first, nxy.second, s.trail, state.render);
     }
 
     return true;

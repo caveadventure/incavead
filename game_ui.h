@@ -958,17 +958,16 @@ void Game::handle_input(GameState& state,
         if (ok) {
             if (nx == p.px && ny == p.py) {
 
-                bool ok = true;
+                bool ok = false;
 
                 features::Feature feat;
-                if (!state.grid.is_floor(nx, ny)) {
-                    std::cout << "not floor" << std::endl;
-                    ok = false;
+                if (state.features.get(nx, ny, feat) && 
+                    feat.tag == constants().grave) {
 
-                } else if (state.features.get(nx, ny, feat) && 
-                           feat.tag != constants().grave) {
-                    std::cout << "features" << std::endl;
-                    ok = false;
+                    ok = true;
+
+                } else if (state.grid.is_floor(nx, ny)) {
+                    ok = true;
                 }
 
                 if (!ok) {
