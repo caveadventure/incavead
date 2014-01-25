@@ -393,6 +393,15 @@ void choose_and_watch(SCREEN& screen) {
     grender::Grid render;
     render.init(0, 0);
 
+    auto& themes = render.ui_symbol_themes;
+
+    for (const auto& i : constants().ui_symbols) {
+        // HACK!
+        themes.push_back(i[1]);
+    }
+
+    render.set_ui_symbol();
+
     while (1) {
 
         time_t now = ::time(NULL);
@@ -402,7 +411,7 @@ void choose_and_watch(SCREEN& screen) {
             "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
             "   Use the arrow keys to scroll your view in case the player's window is larger than yours.\n"
             "   Simply start typing and press 'Enter' to send a chat message.\n\n"
-            "Active games: (press space to refresh)\n\n";
+            "\2Active games: (press space to refresh)\3\n\n";
 
         char c = 'a';
 

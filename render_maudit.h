@@ -514,6 +514,10 @@ public:
     }
 
     void set_ui_symbol(size_t i = 0) {
+
+        if (ui_symbol_themes.empty())
+            return;
+
         ui_symbol_index += i;
         ui_symbol_index = ui_symbol_index % ui_symbol_themes.size();
         ui_symbol = ui_symbol_themes[ui_symbol_index];

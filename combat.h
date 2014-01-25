@@ -50,10 +50,14 @@ inline void roll_attack(rnd::Generator& rng,
         } else if (v.type == damage::type_t::heavenly_fire || 
                    v.type == damage::type_t::hellish_fire) {
 
-            karma *= (v.type == damage::type_t::hellish_fire ? -1 : 1);
+            double kk = karma;
 
-            if (karma < 0) {
-                double factor = (karma)/2;
+            if (v.type == damage::type_t::hellish_fire) {
+                kk = -kk;
+            }
+
+            if (kk < 0) {
+                double factor = (kk)/2;
                 factor = factor * factor;
 
                 dmg *= factor;
