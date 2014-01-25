@@ -27,6 +27,7 @@ inline unsigned int damage_to_turns(double v, const PARAM& p) {
 inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
                         const damage::attacks_t& attacks, unsigned int alevel,
+                        double karma,
                         damage::attacks_t& out) {
 
 
@@ -42,6 +43,24 @@ inline void roll_attack(rnd::Generator& rng,
 
         } else if (v.type == damage::type_t::blindness) {
             dmg = damage_to_turns(dmg, constants().damage_to_blindturns);
+
+        } else if (v.type == damage::type_t::make_meat && dmg <= 0.5) {
+            dmg = 0;
+
+        } else if (v.type == damage::type_t::heavenly_fire || 
+                   v.type == damage::type_t::hellish_fire) {
+
+            karma *= (v.type == damage::type_t::hellish_fire ? -1 : 1);
+
+            if (karma < 0) {
+                double factor = (karma)/2;
+                factor = factor * factor;
+
+                dmg *= factor;
+
+            } else {
+                dmg = 0;
+            }
         }
 
         if (dmg > 0) {
@@ -132,7 +151,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     } else if (v.type == damage::type_t::make_meat) {
 
         //
-        if (dmg > 0.5 && !s.flags.robot) {
+        if (!s.flags.robot) {
             if (s.karma < 0 || s.flags.undead) {
                 state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
             } else {
@@ -154,15 +173,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
 
-        double fac = (v.type == damage::type_t::hellish_fire ? -1 : 1);
-        double karma = s.karma * fac;
-
-        if (karma > 0) {
-            double factor = (karma)/2;
-            factor = factor * factor;
-
-            hurt = dmg * factor;
-        }
+        hurt = dmg;
 
     } else if (v.type == damage::type_t::sonic) {
 
@@ -212,7 +223,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     const Species& s = species().get(mon.tag);
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, attack_res);
 
     if (attack_res.empty()) {
         return;
@@ -253,7 +264,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, attack_res);
 
     if (attack_res.empty()) {
 
@@ -368,7 +379,7 @@ inline void defend(Player& p,
     if (attacks.empty())
         return;
 
-    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, attack_res);
+    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, p.karma.val, attack_res);
 
     for (const auto& v : attack_res) {
 
@@ -379,22 +390,7 @@ inline void defend(Player& p,
             p.blind += v.val;
 
         } else if (v.type == damage::type_t::make_meat) {
-
-            if (v.val > 0.5) {
-                p.health.dec(6.0);
-            }
-
-        } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
-
-            double fac = (v.type == damage::type_t::hellish_fire ? -1 : 1);
-            double karma = p.karma.val * fac;
-
-            if (karma < 0) {
-                double factor = (-karma)/2;
-                factor = factor * factor;
-
-                p.health.dec(v.val * factor);
-            }
+            p.health.dec(6.0);
 
         } else if (v.type == damage::type_t::hunger) {
             p.food.dec(v.val);
@@ -409,6 +405,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::drain ||
                    v.type == damage::type_t::vampiric ||
                    v.type == damage::type_t::electric ||
+                   v.type == damage::type_t::heavenly_fire || 
+                   v.type == damage::type_t::hellish_fire ||
                    v.type == damage::type_t::magic) {
 
             // No sonic damage for the player.
@@ -449,9 +447,7 @@ inline double defend(Player& p,
                 state.render.do_message(nlp::message("%s is destroying your mind!", s));
 
             } else if (v.type == damage::type_t::make_meat) {
-
-                if (v.val > 0.5)
-                    state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
+                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
 
             } else if (v.type == damage::type_t::eat_brain) {
                 state.render.do_message(nlp::message("%s is eating your brain!", s));
@@ -463,14 +459,10 @@ inline double defend(Player& p,
                 state.render.do_message(nlp::message("%s shocks you with lightning!", s));
 
             } else if (v.type == damage::type_t::heavenly_fire) {
-
-                if (p.karma.val < 0)
-                    state.render.do_message(nlp::message("%s blasts you with heavenly fire.", s));
+                state.render.do_message(nlp::message("%s blasts you with heavenly fire.", s));
 
             } else if (v.type == damage::type_t::hellish_fire) {
-
-                if (p.karma.val > 0)
-                    state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
+                state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
 
             } else if (v.type == damage::type_t::hunger) {
                 state.render.do_message(nlp::message("%s casts a hunger charm.", s));
@@ -513,13 +505,6 @@ inline bool defend_env_message(Player& p, GameState& state, const damage::attack
     std::set<damage::type_t> damages;
 
     for (const auto& v : attack_res) {
-
-        if ((v.type == damage::type_t::make_meat && v.val <= 0.5) ||
-            (v.type == damage::type_t::heavenly_fire && p.karma.val >= 0) ||
-            (v.type == damage::type_t::hellish_fire && p.karma.val <= 0)) {
-
-            continue;
-        }
 
         damages.insert(v.type);
     }

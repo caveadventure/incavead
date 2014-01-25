@@ -172,24 +172,16 @@ struct Player {
         // Warning, magic numbers.
         double p = (0.9 / l);
 
-        std::cout << " || " << luck.val << " " << p << std::endl;
-
         if (p > 1.0)
             return level;
 
         int fudge = rng.geometric(p);
 
-        std::cout << " ||| " << neg << " " << fudge << " " << l << " " << level << std::endl;
-
         if (neg) {
-
-            std::cout << " ||. " << -fudge << " " << (int)(-l - 3) << std::endl;
 
             fudge = -std::max(-fudge, (int)(-l - 3));
 
             luck.dec(fudge);
-
-            std::cout << " |||| " << fudge << " " << level - fudge << std::endl;
 
             if (fudge > (int)level)
                 return 0;
