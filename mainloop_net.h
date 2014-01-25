@@ -367,8 +367,6 @@ struct Main {
             bool need_input = false;
 
             do {
-                bm b("frame");
-
                 bool do_draw = false;
                 bool time_passed = process(oldticks, done, dead, regen, need_input, do_draw);
 

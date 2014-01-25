@@ -216,8 +216,6 @@ void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned 
         const auto& tc = constants().treasure_chance;
         double lev = state.rng.gauss(h + tc.mean, tc.deviation);
 
-        std::cout << "! " << h << " " << lev << " " << ls.treasure_level << std::endl;
-
         if (lev < 0 || lev + ls.treasure_level < 0)
             return;
 
