@@ -614,6 +614,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ vau.py = toint(state.match); }
             ;      
 
+        vault_brush_design_level_or_tag = 
+            (string %{ vbrush.design = tag_t(state.match, tagmem); } |
+             number %{ vbrush.design_level = toint(state.match); });
+
         vault_brush = 'brush' %{ vbrush = Vault::brush(); }
             ws1 ('blank' ${ vbrush.is_blank = true; } |
                  'floor' ${ vbrush.is_walk = true; vbrush.is_water = false;  } |
@@ -621,7 +625,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                  'wall'  ${ vbrush.is_walk = false; vbrush.is_water = false; } |
                  'wwall' ${ vbrush.is_walk = false; vbrush.is_water = true;  })
             ws1 string   %{ vbrush.terrain = tag_t(state.match, tagmem); }
-            ws1 string   %{ vbrush.design = tag_t(state.match, tagmem); }
+            ws1 vault_brush_design_level_or_tag
             ws1 string   %{ vbrush.species = tag_t(state.match, tagmem); }
             ws1 '\'' any ${ vau.brushes[fc] = vbrush; } '\''
             ;

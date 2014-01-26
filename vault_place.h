@@ -234,9 +234,23 @@ inline void generate_vault(const Vault& vault, GameState& state,
                 state.features.unset(xi, yi, state.render);
             }
 
+            tag_t item;
+
             if (!b.design.null()) {
+                item = b.design;
+
+            } else if (b.design_level >= 0) {
+
+                auto is = state.designs_counts.take(state.rng, b.design_level);
+
+                if (is.size() > 0) {
+                    item = is.begin()->first;
+                }
+            }
+
+            if (!item.null()) {
                 state.items.place(xi, yi,
-                                  state.items.make_item(b.design, items::pt(xi, yi), state.rng),
+                                  state.items.make_item(item, items::pt(xi, yi), state.rng),
                                   state.render);
             }
 

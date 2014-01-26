@@ -19,8 +19,9 @@ struct Vault {
         tag_t terrain;
         tag_t design;
         tag_t species;
+        int design_level;
 
-        brush() : is_blank(false), is_walk(false), is_water(false) {}
+        brush() : is_blank(false), is_walk(false), is_water(false), design_level(-1) {}
     };
 
     std::map<unsigned char, brush> brushes;
