@@ -235,14 +235,54 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
             const Design& d2 = designs().get(vi.tag);
 
-            unsigned int c = (d2.count_is_only_one ? 1 : vi.count) * d2.worth;
+            unsigned int count = (d2.count_is_only_one ? 1 : vi.count);
+            unsigned int c = count * d2.worth;
 
             double shield_bonus = t.protection_racket.shield_bonus * c;
             double money_curse = t.protection_racket.money_curse * c;
 
             if (shield_bonus > 0) {
-                p.health.shield += shield_bonus;
-                state.render.do_message("Your body glows with a shiny gold aura.");
+                
+                if (p.health.shield + shield_bonus < constants().health_shield_max) {
+                    p.health.shield += shield_bonus;
+                    state.render.do_message("Your body glows with a shiny gold aura.");
+
+                } else {
+                    double x = constants().health_shield_max - p.health.shield;
+
+                    std::cout << ": " << x << " " << d2.worth << " " << t.protection_racket.shield_bonus << std::endl;
+
+                    p.health.shield = constants().health_shield_max;
+
+                    if (count > 0) {
+                        count = count - ((x / (d2.worth * t.protection_racket.shield_bonus)) + 1);
+                    }
+
+                    money_curse = t.protection_racket.money_curse * x;
+
+                    std::cout << "| " << count << " " << money_curse << std::endl;
+
+                    std::string msg;
+
+                    if (x > 0) {
+                        msg = "Thank you for doing business with us.";
+                    } else {
+                        msg = "Thank you, but your services will not be needed.";
+                    }
+
+                    if (count > 0) {
+                        vi.count = count;
+                        items::Item tmp;
+                        p.inv.place(d.slot, vi, tmp);
+
+                        msg += " Please keep the change.";
+                    }
+
+                    state.render.do_message(msg);
+                }
+
+            } else {
+                state.render.do_message("Nothing happens. Strange.");
             }
 
             if (money_curse > 0) {

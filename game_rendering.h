@@ -229,7 +229,14 @@ void Game::draw_hud(GameState& state) {
 
     if (p.health.shield > 0) {
         state.render.push_hud_line("Shield", maudit::color::dim_green,
-                                   std::min((unsigned int)(p.health.shield + 1), (unsigned int)6),
+                                   std::min((unsigned int)(p.health.shield + 1), 6u),
+                                   '*',
+                                   maudit::color::bright_yellow);
+    }
+    
+    if (p.karma.shield > 0) {
+        state.render.push_hud_line("Penance", maudit::color::dim_red,
+                                   std::min((unsigned int)(p.karma.shield + 1), 6u),
                                    '*',
                                    maudit::color::bright_yellow);
     }

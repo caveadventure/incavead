@@ -27,7 +27,7 @@ inline unsigned int damage_to_turns(double v, const PARAM& p) {
 inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
                         const damage::attacks_t& attacks, unsigned int alevel,
-                        double karma,
+                        double karma, double penance,
                         damage::attacks_t& out) {
 
 
@@ -55,6 +55,8 @@ inline void roll_attack(rnd::Generator& rng,
             if (v.type == damage::type_t::hellish_fire) {
                 kk = -kk;
             }
+
+            kk = std::min(kk, -penance);
 
             if (kk < 0) {
                 double factor = (kk)/2;
@@ -227,7 +229,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     const Species& s = species().get(mon.tag);
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, 0, attack_res);
 
     if (attack_res.empty()) {
         return;
@@ -266,7 +268,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, 0, attack_res);
 
     if (attack_res.empty()) {
 
@@ -381,7 +383,8 @@ inline void defend(Player& p,
     if (attacks.empty())
         return;
 
-    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, p.karma.val, attack_res);
+    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, 
+                p.karma.val, p.karma.shield, attack_res);
 
     for (const auto& v : attack_res) {
 

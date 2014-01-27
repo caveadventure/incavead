@@ -20,11 +20,11 @@ struct stat_t {
     }
 };
 
-struct shielded_stat_t : stat_t {
+struct shielded_a_stat_t : stat_t {
 
     double shield;
 
-    shielded_stat_t() : stat_t(), shield(0) {}
+    shielded_a_stat_t() : stat_t(), shield(0) {}
 
     void dec(double v) {
 
@@ -36,6 +36,46 @@ struct shielded_stat_t : stat_t {
         }
 
         stat_t::dec(v);
+    }
+};
+
+struct shielded_b_stat_t : stat_t {
+
+    double shield;
+
+    shielded_b_stat_t() : stat_t(), shield(0) {}
+
+    double buff(double v) {
+
+        v = ::fabs(v);
+
+        if (v < shield) {
+            shield -= v;
+            return 0;
+
+        } else {
+            v = v - shield;
+            shield = 0;
+            return v;
+        }
+    }
+
+    void inc(double v) {
+
+        v = buff(v);
+
+        if (v != 0) {
+            stat_t::inc(v);
+        }
+    }
+
+    void dec(double v) {
+
+        v = buff(v);
+
+        if (v != 0) {
+            stat_t::dec(v);
+        }
     }
 };
 
@@ -56,9 +96,9 @@ struct Player {
 
     unsigned int level;
 
-    shielded_stat_t health;
+    shielded_a_stat_t health;
     stat_t food;
-    stat_t karma;
+    shielded_b_stat_t karma;
     stat_t luck;
 
     unsigned int sleep;
@@ -235,6 +275,7 @@ struct reader<Player> {
         serialize::read(s, p.health.shield);
         serialize::read(s, p.food.val);
         serialize::read(s, p.karma.val);
+        serialize::read(s, p.karma.shield);
         serialize::read(s, p.luck.val);
         serialize::read(s, p.sleep);
         serialize::read(s, p.blind);
@@ -275,6 +316,7 @@ struct writer<Player> {
         serialize::write(s, p.health.shield);
         serialize::write(s, p.food.val);
         serialize::write(s, p.karma.val);
+        serialize::write(s, p.karma.shield);
         serialize::write(s, p.luck.val);
         serialize::write(s, p.sleep);
         serialize::write(s, p.blind);

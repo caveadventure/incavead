@@ -385,8 +385,8 @@ private:
 
         std::string l;
         
-        if (line.label.size() < 6)
-            l += std::string(6 - line.label.size(), ' ');
+        if (line.label.size() < 7)
+            l += std::string(7 - line.label.size(), ' ');
 
         l += line.label;
         l += ": ";
