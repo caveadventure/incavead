@@ -14,11 +14,10 @@ int main(int argc, char** argv) {
 
     try {
 
+        std::unordered_map<bones::key_t,double> money;
+
         try {
             serialize::Source source("bones.dat");
-            serialize::Sink sink("bones.dat.new");
-
-            unsigned int q = 0;
 
             while (1) {
                 try {
@@ -30,17 +29,30 @@ int main(int argc, char** argv) {
                     serialize::read(source, key);
                     serialize::read(source, xy);
                     serialize::read(source, bone);
+                    serialize::read(source, sess);
 
-                    sess.address = ++q;
+                    if (bone.cause.name == "VICTORY")
+                        continue;
 
-                    serialize::write(sink, key);
-                    serialize::write(sink, xy);
-                    serialize::write(sink, bone);
-                    serialize::write(sink, sess);
+                    money[key] += bone.worth;
 
                 } catch (...) {
+                    std::cout << "oops" << std::endl;
                     break;
                 }
+            }
+
+            std::unordered_map<bones::key_t,double> money2;
+
+            for (const auto& i : money) {
+                std::cout << i.first.worldx << "," << i.first.worldy << ":" << i.first.worldz << " = " << i.second << std::endl;
+                money2[bones::key_t(i.first.worldx, i.first.worldy, 0)] += i.second;
+            }
+
+            std::cout << "----" << std::endl;
+
+            for (const auto& i : money2) {
+                std::cout << i.first.worldx << "," << i.first.worldy << " = " << i.second << std::endl;
             }
 
         } catch (...) {

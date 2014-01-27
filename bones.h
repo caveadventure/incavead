@@ -266,7 +266,10 @@ struct Bones {
             return;
 
         for (const auto& j : i->second) {
-            out.push_back(std::make_pair(j.first, j.second.bone.worth));
+            // HACK!! FIXME!
+            if (j.second.bone.cause.name != "VICTORY") {
+                out.push_back(std::make_pair(j.first, j.second.bone.worth));
+            }
         }
     }
 
