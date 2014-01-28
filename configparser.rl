@@ -888,6 +888,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().treasure_chance.deviation = toreal(state.match); } 
         ;
 
+        constant_monetary_supply_base = 'monetary_supply_base'
+            ws1 real %{ __constants__().monetary_supply_base = toreal(state.match); }
+        ;
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | 
@@ -898,7 +902,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
-                       constant_blindturns_to_radius | constant_treasure_chance
+                       constant_blindturns_to_radius | constant_treasure_chance |
+                       constant_monetary_supply_base
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

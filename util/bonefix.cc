@@ -34,7 +34,9 @@ int main(int argc, char** argv) {
                     if (bone.cause.name == "VICTORY")
                         continue;
 
-                    money[key] += bone.worth;
+                    double w = std::max(-6000.0, bone.worth);
+                    
+                    money[key] += w;
 
                 } catch (...) {
                     std::cout << "oops" << std::endl;

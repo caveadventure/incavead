@@ -46,6 +46,7 @@
 #include "bones.h"
 #include "uniques.h"
 #include "permafeats.h"
+#include "finance.h"
 
 
 //#include "configparser.h"
@@ -205,6 +206,7 @@ int main(int argc, char** argv) {
     uniques::uniques().load();
     uniques::items().load();
     permafeats::features().load(constants().max_permafeats);
+    finance::supply().load(constants().monetary_supply_base);
 
 
     bool singleplayer = false;
