@@ -1,6 +1,10 @@
 #ifndef __CONSTANTS_BANK_H
 #define __CONSTANTS_BANK_H
 
+#include <vector>
+#include <set>
+#include <map>
+
 struct ConstantsBank {
 
     size_t max_permafeats;
@@ -12,10 +16,11 @@ struct ConstantsBank {
     tag_t grave;
     tag_t meat;
     tag_t bad_meat;
-    tag_t money;
     tag_t pit;
     tag_t bad_grave;
     tag_t ghost;
+
+    std::set<tag_t> money;
 
     tag_t unique_item;
 

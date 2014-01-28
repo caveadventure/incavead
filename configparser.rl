@@ -544,9 +544,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
 
-        terrain_protection_racket = 'protection_racket' 
-            ws1 real   %{ ter.protection_racket.shield_bonus = toreal(state.match); }
-            ws1 real   %{ ter.protection_racket.money_curse = toreal(state.match); } ;
+        terrain_banking = 'banking' 
+            ws1 real   %{ ter.banking.buy_margin = toreal(state.match); }
+            ws1 real   %{ ter.banking.sell_margin = toreal(state.match); } 
+            ws1 real   %{ ter.banking.shield_bonus = toreal(state.match); }
+            ws1 real   %{ ter.banking.money_curse = toreal(state.match); } ;
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |
@@ -572,7 +574,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
-            terrain_victory_item | terrain_safebox | terrain_protection_racket |
+            terrain_victory_item | terrain_safebox | terrain_banking |
             terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
             terrain_view_radius |
             '}' 
@@ -816,7 +818,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_grave     = 'grave'     ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
         constant_meat      = 'meat'      ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat  = 'bad_meat'  ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
-        constant_money     = 'money'     ws1 tag  %{ __constants__().money = tag_t(state.match, tagmem); };
+        constant_money     = 'money'     ws1 tag  %{ __constants__().money.insert(tag_t(state.match, tagmem)); };
         constant_pit       = 'pit'       ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
         constant_bad_grave = 'bad_grave' ws1 tag  %{ __constants__().bad_grave = tag_t(state.match, tagmem); };
         constant_ghost     = 'ghost'     ws1 tag  %{ __constants__().ghost = tag_t(state.match, tagmem); };

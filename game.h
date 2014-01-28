@@ -81,6 +81,7 @@ struct Game {
 #include "actions.h"
 #include "inv_screens.h"
 #include "look_screens.h"
+#include "bank_screens.h"
 #include "apply.h"
 #include "inv_screens2.h"
 #include "highscore.h"

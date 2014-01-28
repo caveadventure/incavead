@@ -1,7 +1,8 @@
 #ifndef __BANK_SCREENS_H
 #define __BANK_SCREENS_H
 
-inline void purchase_protection(Player& p, double cost) {
+
+inline void purchase_protection(Player& p, GameState& state, double cost) {
 
     features::Feature feat;
     if (!state.features.get(p.px, p.py, feat)) {
@@ -10,8 +11,8 @@ inline void purchase_protection(Player& p, double cost) {
 
     const Terrain& t = terrain().get(feat.tag);
 
-    double shield_bonus = t.bank.shield_bonus * c;
-    double money_curse = t.bank.money_curse * c;
+    double shield_bonus = t.banking.shield_bonus * cost;
+    double money_curse = t.banking.money_curse * cost;
 
     if (shield_bonus <= 0)
         return;
@@ -20,26 +21,41 @@ inline void purchase_protection(Player& p, double cost) {
         p.health.shield += shield_bonus;
         state.render.do_message("Your body glows with a shiny gold aura.");
 
+        ++(state.ticks);
+
     } else {
         double x = constants().health_shield_max - p.health.shield;
-        double xcost = x / t.bank.shield_bonus;
+        double xcost = x / t.banking.shield_bonus;
 
         p.health.shield = constants().health_shield_max;
-        money_curse = t.protection_racket.money_curse * xcost;
+        money_curse = t.banking.money_curse * xcost;
 
         if (x > 0) {
             state.render.do_message("Your body glows with a shiny gold aura.");
+
+            ++(state.ticks);
         }
 
-        give_change(cost - xcost);
+        if (xcost < cost) {
+            give_change(state, p.px, p.py, cost - xcost);
+            state.render.do_message("Please keep the change.");
+        }
+    }
+
+    if (money_curse > 0) {
+        p.money_curse -= money_curse;
     }
 }
 
 inline std::string show_banking_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
 
-    std::string m;
+    const auto& money = constants().money;
 
-    const Design& zm = designs().get(constants().money);
+    if (money.empty()) {
+        return "Sorry, money doesn't exist yet.";
+    }
+
+    const Design& zm = designs().get(*(money.begin()));
 
     double assets = 0;
 
@@ -52,7 +68,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
         unsigned int count = (liq.count_is_only_one ? 1 : vi.count);
 
-        if (vi.tag == constants().money) {
+        if (money.count(vi.tag) != 0) {
             assets = zm.worth * count;
 
             msg += nlp::message("Your liquid assets: \2%d\1 $ZM.\n", assets);

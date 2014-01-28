@@ -1,6 +1,41 @@
 #ifndef __GAME_GENERATION_H
 #define __GAME_GENERATION_H
 
+inline void give_change(GameState& state, unsigned int x, unsigned int y, double amount) {
+
+    if (amount <= 0)
+        return;
+
+    std::map< double, std::pair<double, tag_t> > currencies;
+
+    for (const auto& i : constants().money) {
+
+        const Design& m = designs().get(i);
+
+        currencies[m.worth * m.stackrange] = std::make_pair(m.worth, i);
+    }
+
+    if (currencies.empty())
+        return;
+
+    for (const auto& i : currencies) {
+        if (amount <= i.first) {
+
+            items::Item zm(i.second.second, items::pt(x, y), 
+                           std::max(1u, (unsigned int)(amount / i.second.first)));
+            state.items.place(x, y, zm, state.render);
+            return;
+        }
+    }
+
+    tag_t maxc = currencies.rbegin()->second.second;
+    const Design& m = designs().get(maxc);
+
+    items::Item zm(maxc, items::pt(x, y), m.stackrange);
+    state.items.place(x, y, zm, state.render);
+}
+
+
 void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
 
     std::ostringstream cached_grid;
@@ -231,15 +266,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                 if (!state.grid.is_walk(nxy.first, nxy.second))
                     continue;
 
-                const Design& d = designs().get(constants().money);
-                unsigned int stackrange = d.stackrange;
-
-                while (worth >= 1) {
-                    unsigned int c = (worth < stackrange ? worth : stackrange);
-                    items::Item zm(constants().money, nxy, c);
-                    state.items.place(nxy.first, nxy.second, zm, state.render);
-                    worth -= c;
-                }
+                give_change(state, nxy.first, nxy.second, worth);
 
                 break;
             }
