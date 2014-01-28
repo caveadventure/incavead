@@ -460,7 +460,7 @@ inline size_t longest_common_subsequence(const std::string& a, const std::string
 }
 
 
-inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
+inline tag_t find_existing_item_search(GameState& state, const std::string& name) {
 
     const auto& data = state.designs_counts.data;
 
@@ -496,8 +496,7 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
     while (1) {
 
         if (counts.empty()) {
-            state.render.do_message("Strange. Nothing happened.");
-            return false;
+            return tag_t();
         }
 
         std::discrete_distribution<unsigned int> d(counts.begin(), counts.end());
@@ -513,14 +512,33 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
             continue;
         }
 
-        const Design& _design = designs().get(design);
-
-        items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
-        state.items.place(px, py, made, state.render);
-
-        state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
-        return true;
+        return design;
     }
+}
+
+
+inline void find_existing_item_make(GameState& state, unsigned int px, unsigned int py, tag_t design) {
+
+    const Design& _design = designs().get(design);
+
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+    state.items.place(px, py, made, state.render);
+
+    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+}
+
+inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
+
+    tag_t d = find_existing_item_search(state, name);
+
+    if (d.null()) {
+        state.render.do_message("Strange. Nothing happened.");
+        return false;
+    }
+
+    find_existing_item_make(state, px, py, d);
+
+    return true;
 }
 
 
