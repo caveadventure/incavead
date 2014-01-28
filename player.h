@@ -104,9 +104,15 @@ struct Player {
     unsigned int sleep;
     unsigned int blind;
 
-    unsigned int dig_x;
-    unsigned int dig_y;
-    double dig_h;
+    struct dig_state_t {
+        unsigned int x;
+        unsigned int y;
+        double h;
+
+        dig_state_t() : x(0), y(0), h(0) {}
+    };
+
+    dig_state_t dig;
     bool digging;
 
     inventory_t inv;
@@ -127,11 +133,21 @@ struct Player {
 
     unsigned int state;
 
-    std::string input_string;
-    size_t overmap_scale;
+    struct input_state_t {
+        std::string s;
+    };
 
+    input_state_t input;
 
-    struct look_t {
+    struct overmap_state_t {
+        size_t scale;
+
+        overmap_state_t() : scale(0) {}
+    };
+
+    overmap_state_t overmap;
+
+    struct look_state_t {
         unsigned int x;
         unsigned int y;
         int target;
@@ -144,6 +160,14 @@ struct Player {
     };
 
     look_t look;
+
+    struct banking_state_t {
+        double assets;
+
+        baking_state_t() : assets(0) {}
+    };
+
+    banking_state_t banking;
 
     std::vector<Terrain::spell_t> spells;
 
@@ -165,7 +189,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), blind(0), dig_x(0), dig_y(0), dig_h(0), digging(false), state(MAIN), overmap_scale(0),
+               sleep(0), blind(0), digging(false), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -279,9 +303,9 @@ struct reader<Player> {
         serialize::read(s, p.luck.val);
         serialize::read(s, p.sleep);
         serialize::read(s, p.blind);
-        serialize::read(s, p.dig_x);
-        serialize::read(s, p.dig_y);
-        serialize::read(s, p.dig_h);
+        serialize::read(s, p.dig.x);
+        serialize::read(s, p.dig.y);
+        serialize::read(s, p.dig.h);
         serialize::read(s, p.digging);
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
@@ -290,14 +314,15 @@ struct reader<Player> {
         serialize::read(s, p.look.target);
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
+        serialize::read(s, p.banking.assets);
         serialize::read(s, p.spells);
         serialize::read(s, p.uniques_disabled);
         serialize::read(s, p.dungeon_unique_series);
         serialize::read(s, p.money_curse);
         serialize::read(s, p.kills);
         serialize::read(s, p.achievements);
-        serialize::read(s, p.input_string);
-        serialize::read(s, p.overmap_scale);
+        serialize::read(s, p.input.s);
+        serialize::read(s, p.overmap.scale);
         serialize::read(s, p.num_replay_codes);
         serialize::read(s, p.ailments);
     }
@@ -320,9 +345,9 @@ struct writer<Player> {
         serialize::write(s, p.luck.val);
         serialize::write(s, p.sleep);
         serialize::write(s, p.blind);
-        serialize::write(s, p.dig_x);
-        serialize::write(s, p.dig_y);
-        serialize::write(s, p.dig_h);
+        serialize::write(s, p.dig.x);
+        serialize::write(s, p.dig.y);
+        serialize::write(s, p.dig.h);
         serialize::write(s, p.digging);
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
@@ -331,14 +356,15 @@ struct writer<Player> {
         serialize::write(s, p.look.target);
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
+        serialize::write(s, p.banking.assets);
         serialize::write(s, p.spells);
         serialize::write(s, p.uniques_disabled);
         serialize::write(s, p.dungeon_unique_series);
         serialize::write(s, p.money_curse);
         serialize::write(s, p.kills);
         serialize::write(s, p.achievements);
-        serialize::write(s, p.input_string);
-        serialize::write(s, p.overmap_scale);
+        serialize::write(s, p.input.s);
+        serialize::write(s, p.overmap.scale);
         serialize::write(s, p.num_replay_codes);
         serialize::write(s, p.ailments);
     }

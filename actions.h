@@ -4,7 +4,7 @@
 
 void do_player_input(GameState& state, Player& p, const std::string& prompt) {
 
-    p.input_string.clear();
+    p.input.s.clear();
     state.render.do_message(prompt, true);
     p.state = Player::INPUTTING;
 }

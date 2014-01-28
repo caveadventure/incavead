@@ -35,6 +35,8 @@ struct ConstantsBank {
 
     std::vector<slot_t> slots;
 
+    tag_t money_slot;
+
     struct shortcut_t {
         std::vector< std::pair<tag_t, unsigned char> > slot_keypress;
         std::string fail_message;

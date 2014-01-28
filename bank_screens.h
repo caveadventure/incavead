@@ -16,6 +16,10 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
 
     if (shield_bonus <= 0)
         return;
+
+    items::Item money;
+    if (!p.inv.take(constants().money_slot, money))
+        return;
                 
     if (p.health.shield + shield_bonus < constants().health_shield_max) {
         p.health.shield += shield_bonus;
@@ -47,6 +51,93 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
     }
 }
 
+inline bool handle_input_pincode(Player& p, maudit::keypress k) {
+
+    if (k.letter >= '0' && k.letter <= '9') {
+
+        if (p.input.s.size() < 3) {
+            p.input.s += k.letter;
+            state.window_stack.back().message += k.letter;
+        }
+
+        if (p.input.s.size() == 3) {
+            return true;
+        }
+
+    } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
+
+        if (p.input.s.size() > 0) {
+            p.input.s.pop_back();
+            state.window_stack.back().message.pop_back();
+        }
+
+    } else if (k.letter == '\n') {
+        return true;
+    }
+
+    return false;
+}
+
+inline std::string show_banking_buy_item_menu(Player& p, GameState& state, tag_t item) {
+
+    tag_t item = find_existing_item_search(state, p.input.s);
+
+    if (item.null()) {
+        state.render.do_message("No such item exists. Please try again.");
+        return
+    }
+
+
+}
+
+inline bool handle_input_text(Player& p, maudit::keypress k) {
+
+    if (k.letter >= ' ' && k.letter <= '~') {
+
+        p.input.string += k.letter;
+        state.window_stack.back().message += k.letter;
+
+    } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
+
+        if (p.input.s.size() > 0) {
+            p.input.s.pop_back();
+            state.window_stack.back().message.pop_back();
+        }
+
+    } else if (k.letter == '\n') {
+        return true;
+    }
+
+    return false;
+}
+
+inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k) {
+
+    switch (k.letter) {
+    case 'w':
+        state.push_window("\2Input your account's PIN code (three digits)\1: \3", 
+                          screens_t::bank_withdrawal);
+        break;
+
+    case 'd':
+        state.push_window("\2Choose a PIN code for your account (three digits)\1: \3",
+                          screens_t::bank_deposit);
+        break;
+
+    case 'p':
+        purchase_protection(p, state, p.banking.assets);
+        break;
+
+    case 'i':
+        state.push_windows("\2Buy what (enter the name)\1: \3", screens_t::bank_buy);
+        break;
+
+    default:
+        state.window_stack.pop_back();
+        break;
+    }
+}
+
 inline std::string show_banking_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
 
     const auto& money = constants().money;
@@ -55,21 +146,22 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
         return "Sorry, money doesn't exist yet.";
     }
 
-    const Design& zm = designs().get(*(money.begin()));
+    tag_t money_slot = constants().money_slot;
 
-    double assets = 0;
+    double& assets = p.banking.assets;
+    assets = 0;
 
     std::string msg = "\2Welcome.\n";
 
     items::Item vi;
-    if (p.inv.take(zm.slot, vi)) {
+    if (p.inv.get(money_slot, vi)) {
 
         const Design& liq = designs().get(vi.tag);
 
         unsigned int count = (liq.count_is_only_one ? 1 : vi.count);
 
         if (money.count(vi.tag) != 0) {
-            assets = zm.worth * count;
+            assets = liq.worth * count;
 
             msg += nlp::message("Your liquid assets: \2%d\1 $ZM.\n", assets);
 

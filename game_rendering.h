@@ -257,7 +257,7 @@ void Game::draw_hud(GameState& state) {
 
     if (p.digging) {
 
-        double q = state.grid._get(p.dig_x, p.dig_y);
+        double q = state.grid._get(p.dig.x, p.dig.y);
 
         q = ((q + 10) / 3.0) + 1.0;
         q = std::max(1.0, std::min(q, 6.0));

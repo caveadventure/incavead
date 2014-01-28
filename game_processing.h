@@ -238,7 +238,7 @@ void do_digging_step(Player& p, GameState& state) {
 
     double digspeed = p.inv.get_digging();
 
-    double& height = state.grid._get(p.dig_x, p.dig_y);
+    double& height = state.grid._get(p.dig.x, p.dig.y);
 
     height -= digspeed;
 
@@ -248,7 +248,7 @@ void do_digging_step(Player& p, GameState& state) {
         p.digging = false;
         state.render.do_message("Digging done.");
 
-        finish_digging(p, state, p.dig_x, p.dig_y, p.dig_h);
+        finish_digging(p, state, p.dig.x, p.dig.y, p.dig.h);
     }
 }
 

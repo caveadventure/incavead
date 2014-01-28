@@ -3,7 +3,7 @@
 
 std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
-    p.overmap_scale = scale;
+    p.overmap.scale = scale;
 
     std::string ret = "The overview map. Use '+' and '-' to zoom in and out.\n\n\3";
 
@@ -820,13 +820,13 @@ void handle_input_overmap(Player& p, GameState& state, maudit::keypress k) {
 
     if (k.letter == '-') {
         state.window_stack.pop_back();
-        state.push_window(show_overmap(p, state, p.overmap_scale * 2), screens_t::overmap);
+        state.push_window(show_overmap(p, state, p.overmap.scale * 2), screens_t::overmap);
 
     } else if (k.letter == '+') {
 
-        if (p.overmap_scale > 2) {
+        if (p.overmap.scale > 2) {
             state.window_stack.pop_back();
-            state.push_window(show_overmap(p, state, p.overmap_scale / 2), screens_t::overmap);
+            state.push_window(show_overmap(p, state, p.overmap.scale / 2), screens_t::overmap);
         }
 
     } else {
@@ -870,9 +870,9 @@ inline void start_digging(Player& p, GameState& state, unsigned int nx, unsigned
     state.render.do_message("You start digging.");
 
     p.digging = true;
-    p.dig_x = nx;
-    p.dig_y = ny;
-    p.dig_h = state.grid.get(nx, ny);
+    p.dig.x = nx;
+    p.dig.y = ny;
+    p.dig.h = state.grid.get(nx, ny);
 }
 
 void Game::handle_input(GameState& state,
@@ -900,14 +900,14 @@ void Game::handle_input(GameState& state,
 
     if (p.state & Player::INPUTTING) {
 
-        if (!handle_input_input(state, p.input_string, k)) {
+        if (!handle_input_input(state, p.input.s, k)) {
 
             if (p.state & Player::WISHING) {
 
                 bool special = (p.state & Player::SPECIAL_WISH);
                 bool ok = (special ? 
-                           special_wish(state, p, p.input_string) :
-                           simple_wish(state, p, p.input_string));
+                           special_wish(state, p, p.input.s) :
+                           simple_wish(state, p, p.input.s));
 
                 if (!ok) {
 
@@ -919,7 +919,7 @@ void Game::handle_input(GameState& state,
                 }
 
             } else if (p.state & Player::SELFNOTE) {
-                state.render.do_message(">>> " + p.input_string);
+                state.render.do_message(">>> " + p.input.s);
             }
 
             p.state = Player::MAIN;

@@ -845,6 +845,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 string   %{ __constants__().slots.back().name = state.match; }
             ;
 
+        constant_money_slot = 'money_slot' ws1 tag %{ __constants__().money_slot = tag_t(state.match, tagmem); };
+
         constant_shortcut_messages = 'shortcut' ws1 'messages'
             ws1 '\'' any ${ shortcut_key = fc; } '\''
             ws1 string %{ __constants__().shortcuts[shortcut_key].help_message = state.match; }
@@ -905,7 +907,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |
-                       constant_monetary_supply_base
+                       constant_monetary_supply_base | constant_money_slot
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
