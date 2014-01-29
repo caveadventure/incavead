@@ -140,11 +140,12 @@ public:
         check_valid();
     }
 
-    void deposit(unsigned int account, double amount) {
+    double deposit(unsigned int account, double amount) {
 
         std::unique_lock<std::mutex> l(mutex);
 
-        accounts[account] += amount;
+        double& balance = accounts[account];
+        balance += amount;
         base -= amount;
 
         {
@@ -155,6 +156,8 @@ public:
         }
 
         check_valid();
+
+        return balance;
     }
 
     double withdraw(unsigned int account) {

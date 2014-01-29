@@ -74,7 +74,9 @@ inline void account_deposit(Player& p, GameState& state, unsigned int account) {
     if (!p.inv.take(constants().money_slot, money))
         return;
 
-    finance::supply().deposit(account, p.banking.assets);
+    double b = finance::supply().deposit(account, p.banking.assets);
+
+    state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM.", b));
 }
 
 inline void account_withdraw(Player& p, GameState& state, unsigned int account) {
