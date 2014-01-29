@@ -1,6 +1,8 @@
 #ifndef __GAME_PROCESSING_H
 #define __GAME_PROCESSING_H
 
+#include <valarray>
+
 void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     game_seed = seed;
@@ -542,5 +544,188 @@ void Game::process_world(GameState& state,
     }
 }
 
+void genocide(GameState& state, tag_t genus) {
+
+    state.species_counts.wipe([genus](tag_t sp) { return (species().get(sp).genus == genus); });
+
+}
+
+inline size_t longest_common_subsequence(const std::string& a, const std::string& b) {
+    
+    size_t w = b.size() + 1;
+    size_t h = a.size() + 1;
+
+    std::valarray<size_t> c(w * h);
+
+    for (size_t i = 0; i < a.size(); ++i) {
+        for (size_t j = 0; j < b.size(); ++j) {
+
+            size_t ix = w * (i + 1) + (j + 1);
+
+            if (a[i] == b[j]) {
+                c[ix] = c[w * i + j] + 1;
+            } else {
+                c[ix] = std::max(c[w * (i + 1) + j], c[w * i + (j + 1)]);
+            }
+        }
+    }
+
+    return c[w * h - 1];
+}
+
+
+inline tag_t find_existing_item_search(GameState& state, const std::string& name) {
+
+    const auto& data = state.designs_counts.data;
+
+    size_t maxlcs = 0;
+    std::vector<double> counts;
+    std::vector<tag_t> desgns;
+
+    for (const auto& i : data) {
+        for (const auto& j : i.second) {
+
+            const Design& _design = designs().get(j.first);
+
+            // HACK
+            if (_design.luck.size() > 0)
+                continue;
+
+            size_t lcs = longest_common_subsequence(_design.name, name);
+
+            if (lcs < maxlcs)
+                continue;
+
+            if (lcs > maxlcs) {
+                maxlcs = lcs;
+                counts.clear();
+                desgns.clear();
+            }
+
+            counts.push_back(j.second);
+            desgns.push_back(j.first);
+        }
+    }
+
+    while (1) {
+
+        if (counts.empty()) {
+            return tag_t();
+        }
+
+        std::discrete_distribution<unsigned int> d(counts.begin(), counts.end());
+        unsigned int ntag = d(state.rng.gen);
+
+        tag_t design = desgns[ntag];
+
+        unsigned int trucount = state.designs_counts.take(design);
+
+        if (trucount == 0) {
+            counts.erase(counts.begin() + ntag);
+            desgns.erase(desgns.begin() + ntag);
+            continue;
+        }
+
+        return design;
+    }
+}
+
+
+inline void find_existing_item_make(GameState& state, unsigned int px, unsigned int py, tag_t design) {
+
+    const Design& _design = designs().get(design);
+
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+    state.items.place(px, py, made, state.render);
+
+    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+}
+
+inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
+
+    tag_t d = find_existing_item_search(state, name);
+
+    if (d.null()) {
+        state.render.do_message("Strange. Nothing happened.");
+        return false;
+    }
+
+    find_existing_item_make(state, px, py, d);
+
+    return true;
+}
+
+
+inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned int py, const std::string& name) {
+
+    const auto& d = designs();
+
+    size_t maxlcs = 0;    
+    std::vector<tag_t> desgns;
+
+    for (const auto& i : d.bank) {
+
+        const Design& _design = designs().get(i.first);
+
+        if (_design.wishing)
+            continue;
+
+        size_t lcs = longest_common_subsequence(_design.name, name);
+
+        if (lcs < maxlcs)
+            continue;
+
+        if (lcs > maxlcs) {
+            maxlcs = lcs;
+            desgns.clear();
+        }
+
+        desgns.push_back(i.first);
+    }
+
+    if (desgns.empty()) {
+        state.render.do_message("Strange. Nothing happened.");
+        return false;
+    }
+
+    tag_t design = desgns[state.rng.n(desgns.size())];
+    const Design& _design = designs().get(design);
+
+    items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
+
+    // HACK
+    if (design == constants().unique_item) {
+        p.uniques_disabled = true;
+
+        // TODO Really this is just a way to hardcode a value.
+        made.count = 0.1/_design.hunger;
+    }
+
+    state.items.place(px, py, made, state.render);
+
+    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+    return true;
+}
+
+
+inline bool simple_wish(GameState& state, Player& p, const std::string& wish) {
+
+    if (wish.empty())
+        return true;
+
+    bool ok = find_existing_item(state, p.px, p.py, wish);
+
+    if (ok) {
+        p.karma.shield = 6;
+        p.luck.dec(6);
+    }
+
+    return ok;
+}
+
+inline bool special_wish(GameState& state, Player& p, const std::string& wish) {
+
+    return find_any_item(state, p, p.px, p.py, wish);
+}
 
 #endif

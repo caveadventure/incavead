@@ -75,7 +75,7 @@ enum class screens_t : unsigned int {
     achievements,
     victory_status,
     stats,
-    overmap
+    overmap,
     bank_main,
     bank_withdrawal,
     bank_deposit,

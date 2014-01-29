@@ -155,11 +155,11 @@ struct Player {
         int rangemin;
         int rangemax;
 
-        look_t(unsigned int _x = 0, unsigned int _y = 0) : 
+        look_state_t(unsigned int _x = 0, unsigned int _y = 0) : 
             x(_x), y(_y), target(-1), rangemin(-1), rangemax(-1) {}
     };
 
-    look_t look;
+    look_state_t look;
 
     struct banking_state_t {
         double assets;
@@ -169,7 +169,7 @@ struct Player {
         tag_t item;
         double item_price;
 
-        baking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), item_price(0) {}
+        banking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), item_price(0) {}
     };
 
     banking_state_t banking;

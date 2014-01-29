@@ -1039,7 +1039,7 @@ void Game::handle_input(GameState& state,
     case screens_t::bank_deposit:
     case screens_t::bank_buy:
     case screens_t::bank_buy_confirm:
-        handle_input_banking_main(p, state, k);
+        handle_input_banking(p, state, k);
         break;
 
     default:

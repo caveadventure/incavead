@@ -227,7 +227,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
     if (t.banking.sell_margin > 0 || t.banking.shield_bonus > 0) {
 
-        state.push_window(show_banking_menu(p, state, t), screens_t::bank_main);
+        state.push_window(show_banking_menu(p, state, t.banking), screens_t::bank_main);
         return;
     }
 
@@ -374,12 +374,6 @@ void cast_random_spell(const Player& p, uint32_t rs, GameState& state) {
             state.camap.seed(state.neigh, celauto::pt(_x, _y), catag);
         }
     }
-}
-
-void genocide(GameState& state, tag_t genus) {
-
-    state.species_counts.wipe([genus](tag_t sp) { return (species().get(sp).genus == genus); });
-
 }
 
 #endif

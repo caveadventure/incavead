@@ -12,7 +12,7 @@ inline void center_draw_text(grender::Grid& render, unsigned int x, unsigned int
     render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
 }
 
-inline void look_move(Player::look_t& look, GameState& state, int dx, int dy) {
+inline void look_move(Player::look_state_t& look, GameState& state, int dx, int dy) {
 
     int nx = look.x + dx;
     int ny = look.y + dy;
@@ -29,7 +29,7 @@ inline void look_move(Player::look_t& look, GameState& state, int dx, int dy) {
     look.y = ny;
 }
 
-inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
+inline void look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                        GameState& state) {
 
     (look.target)++;
@@ -89,7 +89,7 @@ inline void look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int 
     }
 }
 
-inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
+inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                                  GameState& state, maudit::keypress k) {
 
     int stop = 0;
@@ -263,11 +263,11 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_t& look, uns
     state.render.draw_text(look.x+1, look.y, msg, maudit::color::bright_white, maudit::color::dim_blue);
 }
 
-inline void start_look_target(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
+inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                               GameState& state, int rangemin, int rangemax) {
 
     pstate = (Player::LOOKING | Player::TARGET);
-    look = Player::look_t(px, py);
+    look = Player::look_state_t(px, py);
     look.rangemin = rangemin;
     look.rangemax = rangemax;
 
@@ -275,21 +275,21 @@ inline void start_look_target(unsigned int& pstate, Player::look_t& look, unsign
                      "Use <TAB> or arrow keys to select target, '.' to fire");
 }
 
-inline void start_look_plain(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
+inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                              GameState& state) {
 
     pstate = Player::LOOKING;
-    look = Player::look_t(px, py);
+    look = Player::look_state_t(px, py);
 
     center_draw_text(state.render, px, py, state.fullwidth,
                      "Use arrow keys to look around; <TAB> to cycle targets");
 }
 
-inline void start_look_cycle(unsigned int& pstate, Player::look_t& look, unsigned int px, unsigned int py,
+inline void start_look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                              GameState& state, maudit::keypress k) {
 
     pstate = Player::LOOKING;
-    look = Player::look_t(px, py);
+    look = Player::look_state_t(px, py);
         
     handle_input_looking(pstate, look, px, py, state, k);
 }

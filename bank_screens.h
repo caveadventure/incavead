@@ -52,6 +52,8 @@ inline void purchase_item(Player& p, GameState& state) {
     if (!p.inv.take(constants().money_slot, money))
         return;
 
+    const Design& d = designs().get(p.banking.item);
+
     items::Item made(p.banking.item, items::pt(p.px, p.py), std::min(d.stackrange, 1u));
     state.items.place(p.px, p.py, made, state.render);
 
@@ -87,7 +89,7 @@ inline void account_withdraw(Player& p, GameState& state, unsigned int account) 
     }
 }
 
-inline bool handle_input_pincode(Player& p, maudit::keypress k) {
+inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k) {
 
     if (k.letter >= '0' && k.letter <= '9') {
 
@@ -111,11 +113,11 @@ inline bool handle_input_pincode(Player& p, maudit::keypress k) {
     return false;
 }
 
-inline bool handle_input_text(Player& p, maudit::keypress k) {
+inline bool handle_input_text(Player& p, GameState& state, maudit::keypress k) {
 
     if (k.letter >= ' ' && k.letter <= '~') {
 
-        p.input.string += k.letter;
+        p.input.s += k.letter;
         state.window_stack.back().message += k.letter;
 
     } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
@@ -150,7 +152,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
     std::string msg = nlp::message("\n"
                                    "Your assets: %f $ZM.\n"
-                                   "Quote for \3%s\1: %f $ZM.\n\n", p.banking.assets, nlp::count(), liq, count, price);
+                                   "Quote for \3%s\1: %f $ZM.\n\n", p.banking.assets, nlp::count(), d, count, price);
 
     if (p.banking.assets < price) {
         msg += "You cannot afford this item, sorry.";
@@ -278,7 +280,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     return msg;
 }
 
-inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypress k) {
+inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k) {
     
     switch ((screens_t)state.window_stack.back().type) {
 
@@ -287,27 +289,27 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         break;
 
     case screens_t::bank_withdrawal:
-        if (handle_input_pincode(p, k)) {
-            account_withdrawal(p, state, std::stoul(p.input.s));
+        if (handle_input_pincode(p, state, k)) {
+            account_withdraw(p, state, std::stoul(p.input.s));
             state.window_stack.pop_back();
         }
         break;
             
     case screens_t::bank_deposit:
-        if (handle_input_pincode(p, k)) {
+        if (handle_input_pincode(p, state, k)) {
             account_deposit(p, state, std::stoul(p.input.s));
             state.window_stack.pop_back();
         }
         break;
 
     case screens_t::bank_buy:
-        if (handle_input_text(p, k)) {
+        if (handle_input_text(p, state, k)) {
             show_banking_buy_item_menu(p, state);
         }
         break;
 
     case screens_t::bank_buy_confirm:
-        if (k == 'y') {
+        if (k.letter == 'y') {
             purchase_item(p, state);
         }
         state.window_stack.pop_back();
