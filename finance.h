@@ -57,6 +57,7 @@ public:
                     int type;
                     double amount;
                     tag_t purchase;
+                    unsigned int count;
                     unsigned int account;
 
                     serialize::read(source, type);
@@ -66,9 +67,10 @@ public:
                         // Purchases.
                         serialize::read(source, amount);
                         serialize::read(source, purchase);
+                        serialize::read(source, count);
 
                         base -= amount;
-                        purchases[purchase]++;
+                        purchases[purchase] += count;
                         break;
 
                     case DEPOSIT:
@@ -123,11 +125,11 @@ public:
         return scarcity * d.worth * deflation;
     }
 
-    void purchase(tag_t d, double cost) {
+    void purchase(tag_t d, double cost, unsigned int count = 1) {
 
         std::unique_lock<std::mutex> l(mutex);
 
-        purchases[d]++;
+        purchases[d] += count;
         base -= cost;
 
         {
@@ -135,6 +137,7 @@ public:
             serialize::write(sink, (int)PURCHASE);
             serialize::write(sink, cost);
             serialize::write(sink, d);
+            serialize::write(sink, count);
         }
 
         check_valid();

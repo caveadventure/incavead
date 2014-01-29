@@ -7,7 +7,7 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
     double shield_bonus = p.banking.shield_bonus * cost;
     double money_curse = p.banking.money_curse * cost;
 
-    if (shield_bonus <= 0)
+    if (shield_bonus <= 0 || p.health.shield >= constants().health_shield_max)
         return;
 
     items::Item money;
@@ -45,16 +45,16 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
 
 inline void purchase_item(Player& p, GameState& state) {
 
-    if (p.banking.assets < p.banking.item_price || p.banking.item.null())
+    tag_t pitem = p.banking.item;
+
+    if (p.banking.assets < p.banking.item_price || pitem.null())
         return;
 
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
         return;
 
-    const Design& d = designs().get(p.banking.item);
-
-    items::Item made(p.banking.item, items::pt(p.px, p.py), std::min(d.stackrange, 1u));
+    items::Item made(pitem, items::pt(p.px, p.py), 1);
     state.items.place(p.px, p.py, made, state.render);
 
     ++(state.ticks);
@@ -62,6 +62,17 @@ inline void purchase_item(Player& p, GameState& state) {
     if (give_change(state, p.px, p.py, p.banking.assets - p.banking.item_price)) {
         state.render.do_message("Please keep the change.");
     }
+
+    if (constants().money.count(money.tag) == 0) {
+
+        const Design& md = designs().get(money.tag);
+
+        unsigned int count = (md.count_is_only_one ? 1 : money.count);
+
+        finance::supply().purchase(money.tag, 0, count);
+    }
+
+    finance::supply().purchase(pitem, p.banking.item_price);
 }
 
 inline void account_deposit(Player& p, GameState& state, unsigned int account) {
@@ -77,6 +88,8 @@ inline void account_deposit(Player& p, GameState& state, unsigned int account) {
     double b = finance::supply().deposit(account, p.banking.assets);
 
     state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM.", b));
+
+    ++(state.ticks);
 }
 
 inline void account_withdraw(Player& p, GameState& state, unsigned int account) {
@@ -89,6 +102,8 @@ inline void account_withdraw(Player& p, GameState& state, unsigned int account) 
     } else {
         state.render.do_message("This account is empty, sorry.");
     }
+
+    ++(state.ticks);
 }
 
 inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k) {
@@ -142,23 +157,35 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
     if (item.null()) {
 
+        state.window_stack.clear();
         state.push_window("No such item exists. Please try again.", screens_t::messages);
         return;
     }
 
     const Design& d = designs().get(item);
 
-    unsigned int count = std::min(d.stackrange, 1u);
+    unsigned int count = 1;
 
-    double price = finance::supply().get_price(d, 1) * p.banking.sell_margin;
+    double price = finance::supply().get_price(d) * p.banking.sell_margin;
 
-    std::string msg = nlp::message("\n"
-                                   "Your assets: %f $ZM.\n"
-                                   "Quote for \3%s\1: %f $ZM.\n\n", p.banking.assets, nlp::count(), d, count, price);
+    std::string msg;
+
+    if (price < constants().min_money_value) {
+        msg = nlp::message("\n"
+                           "Sorry, but \3%s\1 is not currently for sale.",
+                           nlp::count(), d, count);
+        
+    } else {
+        msg = nlp::message("\n"
+                           "Your assets: \2%f\1 $ZM.\n"
+                           "Quote for \3%s\1: \2%f\1 $ZM.\n\n", 
+                           p.banking.assets, nlp::count(), d, count, price);
+    }
 
     if (p.banking.assets < price) {
         msg += "You cannot afford this item, sorry.";
 
+        state.window_stack.clear();
         state.push_window(msg, screens_t::messages);
 
     } else {
@@ -175,6 +202,7 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
 
     switch (k.letter) {
     case 'w':
+        p.input.s.clear();
         state.push_window("\2Input your account's PIN code (three digits)\1: \3", 
                           screens_t::bank_withdrawal);
         break;
@@ -183,6 +211,7 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         if (p.banking.assets < constants().min_money_value) {
             state.window_stack.pop_back(); 
         } else {
+            p.input.s.clear();
             state.push_window("\2Choose a PIN code for your account (three digits)\1: \3",
                               screens_t::bank_deposit);
         }
@@ -197,6 +226,7 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         if (p.banking.assets < constants().min_money_value) {
             state.window_stack.pop_back(); 
         } else {
+            p.input.s.clear();
             state.push_window("\2Buy what (enter the name)\1: \3", screens_t::bank_buy);
         }
         break;
@@ -224,7 +254,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     double& assets = p.banking.assets;
     assets = 0;
 
-    std::string msg = "\2Welcome.\n";
+    std::string msg = "\2Welcome.\n\n";
 
     items::Item vi;
     if (p.inv.get(money_slot, vi)) {
@@ -240,6 +270,10 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
         } else {
 
+            // Always assume that there is 1 more of the item than there really is;
+            // this is to prevent the player from selling a gem to buy another gem of
+            // the same type, only to sell it again at a higher price, thus creating 
+            // infinite money.
             assets = finance::supply().get_price(liq, 1) * count * bank.buy_margin;
 
             if (assets < 0) {
@@ -252,7 +286,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
                 msg += nlp::message("You have no liquid assets.\n");
 
             } else {
-                msg += nlp::message("Your liquid assets: \2%f\1 $ZM. (Your %s)\n", 
+                msg += nlp::message("Your liquid assets: \2%f\1 $ZM. (%S)\n", 
                                     assets, nlp::count(), liq, vi.count);
             }
         }
@@ -293,14 +327,14 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
     case screens_t::bank_withdrawal:
         if (handle_input_pincode(p, state, k)) {
             account_withdraw(p, state, std::stoul(p.input.s));
-            state.window_stack.pop_back();
+            state.window_stack.clear();
         }
         break;
             
     case screens_t::bank_deposit:
         if (handle_input_pincode(p, state, k)) {
             account_deposit(p, state, std::stoul(p.input.s));
-            state.window_stack.pop_back();
+            state.window_stack.clear();
         }
         break;
 
@@ -314,7 +348,7 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
         if (k.letter == 'y') {
             purchase_item(p, state);
         }
-        state.window_stack.pop_back();
+        state.window_stack.clear();
         break;
 
     default:

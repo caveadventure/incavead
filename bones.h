@@ -246,6 +246,10 @@ struct Bones {
         if (j == i->second.end())
             return false;
 
+        // HACK
+        if (j->second.bone.cause.name == "VICTORY") 
+            return false;
+
         ret = j->second.bone;
         return true;
     }
