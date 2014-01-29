@@ -620,6 +620,10 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
         p.health.shield = 0;
         break;
 
+    case '$':
+        state.render.do_message(nlp::message("Monetary base: %d", finance::supply().get_base()));
+        break;
+
     case 's':
         state.species_counts = species().counts;
         state.render.do_message("Wiped species counts.");

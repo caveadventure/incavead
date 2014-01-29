@@ -102,6 +102,12 @@ public:
         check_valid();
     }
 
+    double get_base() {
+        std::unique_lock<std::mutex> l(mutex);
+
+        return base;
+    }
+
     template <typename DESIGN>
     double get_price(const DESIGN& d, unsigned int fudge = 0) {
 

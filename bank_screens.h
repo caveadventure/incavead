@@ -174,6 +174,9 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
         msg = nlp::message("\n"
                            "Sorry, but \3%s\1 is not currently for sale.",
                            nlp::count(), d, count);
+
+        state.window_stack.clear();
+        state.push_window(msg, screens_t::messages);
         
     } else {
         msg = nlp::message("\n"
