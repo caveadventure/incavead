@@ -177,6 +177,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
         state.window_stack.clear();
         state.push_window(msg, screens_t::messages);
+        return;
         
     } else {
         msg = nlp::message("\n"
