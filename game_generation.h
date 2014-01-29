@@ -1,40 +1,6 @@
 #ifndef __GAME_GENERATION_H
 #define __GAME_GENERATION_H
 
-inline void give_change(GameState& state, unsigned int x, unsigned int y, double amount) {
-
-    if (amount <= 0)
-        return;
-
-    std::map< double, std::pair<double, tag_t> > currencies;
-
-    for (const auto& i : constants().money) {
-
-        const Design& m = designs().get(i);
-
-        currencies[m.worth * m.stackrange] = std::make_pair(m.worth, i);
-    }
-
-    if (currencies.empty())
-        return;
-
-    for (const auto& i : currencies) {
-        if (amount <= i.first) {
-
-            items::Item zm(i.second.second, items::pt(x, y), 
-                           std::max(1u, (unsigned int)(amount / i.second.first)));
-            state.items.place(x, y, zm, state.render);
-            return;
-        }
-    }
-
-    tag_t maxc = currencies.rbegin()->second.second;
-    const Design& m = designs().get(maxc);
-
-    items::Item zm(maxc, items::pt(x, y), m.stackrange);
-    state.items.place(x, y, zm, state.render);
-}
-
 
 void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
 
@@ -242,34 +208,11 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
         tag_t grave = constants().grave;
 
-        double net_worth = 0;
-
-        for (const auto& marks : bxy) {
-            net_worth += marks.second;
-        }
-
         for (const auto& marks : bxy) {
 
             const bones::pt& xy = marks.first;
-            double worth = marks.second;
 
             state.features.set(xy.first, xy.second, grave, state.render);
-
-            if (net_worth <= 0 || worth < 0)
-                continue;
-
-            worth = std::min(net_worth, std::min(worth, (double)constants().max_gold_per_grave));
-            net_worth -= worth;
-
-            for (const auto& nxy : state.neigh(xy)) {
-
-                if (!state.grid.is_walk(nxy.first, nxy.second))
-                    continue;
-
-                give_change(state, nxy.first, nxy.second, worth);
-
-                break;
-            }
         }
     }
 

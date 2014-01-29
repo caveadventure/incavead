@@ -367,6 +367,11 @@ void message(_buffer& b, double v, const TAIL&... args) {
         char tmp[256];
         ::snprintf(tmp, 255, "%g", v);
         b.out += tmp;
+
+    } else if (c == 'f') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%.2g", v);
+        b.out += tmp;
     }
 
     message(b, args...);

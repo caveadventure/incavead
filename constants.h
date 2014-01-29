@@ -49,7 +49,7 @@ struct ConstantsBank {
 
     double health_shield_max;
 
-    size_t max_gold_per_grave;
+    double min_money_value;
 
     std::vector<ui_symbols_t> ui_symbols;
 
@@ -114,7 +114,7 @@ struct ConstantsBank {
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
-                      health_shield_max(0), max_gold_per_grave(1000), max_celauto_cells(1000),
+                      health_shield_max(0), min_money_value(0.01), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
                       damage_to_sleepturns(20, 15),
                       damage_to_scareturns(30, 20),

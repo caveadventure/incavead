@@ -832,8 +832,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_health_shield_max = 'health_shield_max' 
             ws1 real %{ __constants__().health_shield_max = toreal(state.match); };
 
-        constant_max_gold_per_grave = 'max_gold_per_grave'
-            ws1 number %{ __constants__().max_gold_per_grave = toint(state.match); };
+        constant_min_money_value = 'min_money_value'
+            ws1 real %{ __constants__().min_money_value = toreal(state.match); };
 
         constant_max_celauto_cells = 'max_celauto_cells'
             ws1 number %{ __constants__().max_celauto_cells = toint(state.match); };
@@ -903,7 +903,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_unique_item | constant_uniques_timeout |
-                       constant_health_shield_max | constant_max_gold_per_grave | constant_max_celauto_cells |
+                       constant_health_shield_max | constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |

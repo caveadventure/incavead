@@ -173,6 +173,42 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
     return res;
 }
 
+inline bool give_change(GameState& state, unsigned int x, unsigned int y, double amount) {
+
+    if (amount <= constants().min_money_value)
+        return false;
+
+    std::map< double, std::pair<double, tag_t> > currencies;
+
+    for (const auto& i : constants().money) {
+
+        const Design& m = designs().get(i);
+
+        currencies[m.worth * m.stackrange] = std::make_pair(m.worth, i);
+    }
+
+    if (currencies.empty())
+        return false;
+
+    for (const auto& i : currencies) {
+        if (amount <= i.first) {
+
+            items::Item zm(i.second.second, items::pt(x, y), 
+                           std::max(1u, (unsigned int)(amount / i.second.first)));
+            state.items.place(x, y, zm, state.render);
+            return true;
+        }
+    }
+
+    tag_t maxc = currencies.rbegin()->second.second;
+    const Design& m = designs().get(maxc);
+
+    items::Item zm(maxc, items::pt(x, y), m.stackrange);
+    state.items.place(x, y, zm, state.render);
+
+    return true;
+}
+
 void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned int y, double h) {
 
     features::Feature feat;
@@ -189,6 +225,7 @@ void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned 
     } else if (state.features.get(x, y, feat) && feat.tag == constants().grave) {
 
         state.features.set(x, y, constants().bad_grave, state.render);        
+        permafeats::features().add(p, x, y, constants().bad_grave);
 
         bones::bone_t bone;
 
@@ -202,6 +239,8 @@ void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned 
         trig.summon_genus.count = 1;
         trig.summon_genus.x = x;
         trig.summon_genus.y = y;
+
+        give_change(state, x, y, bone.worth);
 
     } else {
 

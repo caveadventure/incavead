@@ -100,16 +100,8 @@ public:
         check_valid();
     }
 
-    
-    double get_base() {
-
-        std::unique_lock<std::mutex> l(mutex);
-
-        return base;
-   }
-
     template <typename DESIGN>
-    double get_price(const DESIGN& d) {
+    double get_price(const DESIGN& d, unsigned int fudge = 0) {
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -126,7 +118,7 @@ public:
             return -1;
         }
 
-        double scarcity = (double)d.count / (double)(d.count - c->second);
+        double scarcity = (double)d.count / (double)(d.count - c->second + fudge);
 
         return scarcity * d.worth * deflation;
     }

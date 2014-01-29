@@ -219,9 +219,15 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
         }
     }
 
-    if (feat.tag == constants().grave) {
+    if (feat.tag == constants().grave || feat.tag == constants().bad_grave) {
 
         state.push_window(tombstone_text(p), screens_t::tombstone);
+        return;
+    }
+
+    if (t.banking.sell_margin > 0 || t.banking.shield_bonus > 0) {
+
+        state.push_window(show_banking_menu(p, state, t), screens_t::bank_main);
         return;
     }
 

@@ -1034,6 +1034,14 @@ void Game::handle_input(GameState& state,
         handle_input_spells(p, state, k);
         break;
 
+    case screens_t::bank_main:
+    case screens_t::bank_withdrawal:
+    case screens_t::bank_deposit:
+    case screens_t::bank_buy:
+    case screens_t::bank_buy_confirm:
+        handle_input_banking_main(p, state, k);
+        break;
+
     default:
         // This is a sanity error check condition.
         state.window_stack.pop_back();

@@ -163,8 +163,13 @@ struct Player {
 
     struct banking_state_t {
         double assets;
+        double sell_margin;
+        double shield_bonus;
+        double money_curse;
+        tag_t item;
+        double item_price;
 
-        baking_state_t() : assets(0) {}
+        baking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), item_price(0) {}
     };
 
     banking_state_t banking;
@@ -315,6 +320,11 @@ struct reader<Player> {
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
         serialize::read(s, p.banking.assets);
+        serialize::read(s, p.banking.sell_margin);
+        serialize::read(s, p.banking.shield_bonus);
+        serialize::read(s, p.banking.money_curse);
+        serialize::read(s, p.banking.item);
+        serialize::read(s, p.banking.item_price);
         serialize::read(s, p.spells);
         serialize::read(s, p.uniques_disabled);
         serialize::read(s, p.dungeon_unique_series);
@@ -357,6 +367,11 @@ struct writer<Player> {
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
         serialize::write(s, p.banking.assets);
+        serialize::write(s, p.banking.sell_margin);
+        serialize::write(s, p.banking.shield_bonus);
+        serialize::write(s, p.banking.money_curse);
+        serialize::write(s, p.banking.item);
+        serialize::write(s, p.banking.item_price);
         serialize::write(s, p.spells);
         serialize::write(s, p.uniques_disabled);
         serialize::write(s, p.dungeon_unique_series);
