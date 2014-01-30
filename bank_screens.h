@@ -112,11 +112,7 @@ inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k
 
         if (p.input.s.size() < 3) {
             p.input.s += k.letter;
-            state.window_stack.back().message += k.letter;
-        }
-
-        if (p.input.s.size() == 3) {
-            return true;
+            state.window_stack.back().message += '*';
         }
 
     } else if (k.letter == '\x7F' || k.letter == '\x08' || k.key == maudit::keycode::del) {
@@ -125,6 +121,10 @@ inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k
             p.input.s.pop_back();
             state.window_stack.back().message.pop_back();
         }
+
+    } else if (k.letter == '\n' && p.input.s.size() == 3) {
+
+        return true;
     }
 
     return false;
