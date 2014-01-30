@@ -121,12 +121,14 @@ public:
             return d.worth * deflation;
         }
 
-        if (c->second >= d.count) {
+        unsigned int count = std::max(d.count, std::max(d.bonus_b_count, d.bonus_a_count));
+
+        if (c->second >= count) {
             // These items are sold out.
             return -1;
         }
 
-        double scarcity = (double)d.count / (double)(d.count - c->second + fudge);
+        double scarcity = (double)count / (double)(count - c->second + fudge);
 
         return scarcity * d.worth * deflation;
     }

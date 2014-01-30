@@ -378,6 +378,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         ####
 
         design_count      = 'count'      ws1 number     %{ des.count = toint(state.match); } ;
+        design_bonus_a    = 'bonus_a'    ws1 number     %{ des.bonus_a_count = toint(state.match); } ;
+        design_bonus_b    = 'bonus_b'    ws1 number     %{ des.bonus_b_count = toint(state.match); } ;
         design_name       = 'name'       ws1 string     %{ des.name = state.match; } ;
         design_skin       = 'skin'       ws1 skin       %{ des.skin.set(SKINS); };
         design_slot       = 'slot'       ws1 tag        %{ des.slot = tag_t(state.match, tagmem); } ;
@@ -818,10 +820,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_grave     = 'grave'     ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
         constant_meat      = 'meat'      ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
         constant_bad_meat  = 'bad_meat'  ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
-        constant_money     = 'money'     ws1 tag  %{ __constants__().money.insert(tag_t(state.match, tagmem)); };
         constant_pit       = 'pit'       ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
         constant_bad_grave = 'bad_grave' ws1 tag  %{ __constants__().bad_grave = tag_t(state.match, tagmem); };
         constant_ghost     = 'ghost'     ws1 tag  %{ __constants__().ghost = tag_t(state.match, tagmem); };
+
+        constant_money     = 'money'     
+             (ws1 tag  %{ __constants__().money.insert(tag_t(state.match, tagmem)); } )+ ;
 
         constant_unique_item = 'unique_item' ws1 tag %{ __constants__().unique_item = tag_t(state.match, tagmem); };
 
@@ -896,6 +900,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().monetary_supply_base = toreal(state.match); }
         ;
 
+        constant_bonus_a_items = 'bonus_a_items' 
+            ws1 real %{ __constants__().bonus_a_items.mean = toreal(state.match); } 
+            ws1 real %{ __constants__().bonus_a_items.deviation = toreal(state.match); } 
+        ;
+
+        constant_bonus_b_items = 'bonus_b_items' 
+            ws1 real %{ __constants__().bonus_b_items.mean = toreal(state.match); } 
+            ws1 real %{ __constants__().bonus_b_items.deviation = toreal(state.match); } 
+        ;
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | 
@@ -907,7 +921,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |
-                       constant_monetary_supply_base | constant_money_slot
+                       constant_monetary_supply_base | constant_money_slot |
+                       constant_bonus_a_items | constant_bonus_b_items
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

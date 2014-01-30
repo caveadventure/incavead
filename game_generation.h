@@ -310,14 +310,32 @@ void Game::generate(GameState& state, FUNC progressbar) {
     {
         progressbar("Placing items...");
 
-        unsigned int itemgroups = ::fabs(state.rng.gauss(lev.number_items.mean, lev.number_items.deviation));
+        unsigned int items = std::max(0.0, state.rng.gauss(lev.number_items.mean, lev.number_items.deviation));
 
-        for (unsigned int i = 0; i < itemgroups; ++i) {
+        state.items.generate(state.neigh, state.rng, state.grid, maps,
+                             state.designs_counts, designs_level, items);
 
-            unsigned int itemcount = std::max(1.0, state.rng.gauss(1.5, 1.0));
 
-            state.items.generate(state.neigh, state.rng, state.grid, maps,
-                                 state.designs_counts, designs_level, itemcount);
+        if (p.worldx != 0 || p.worldy != 0) {
+
+            if (p.worldx == 0 || p.worldy == 0) {
+
+                const auto& bac = constants().bonus_a_items;
+
+                unsigned int bonusa = std::max(0.0, state.rng.gauss(bac.mean, bac.deviation));
+
+                state.items.generate(state.neigh, state.rng, state.grid, maps,
+                                     state.bonus_designs_a_counts, designs_level, bonusa);
+
+            } else {
+
+                const auto& bbc = constants().bonus_b_items;
+
+                unsigned int bonusb = std::max(0.0, state.rng.gauss(bbc.mean, bbc.deviation));
+
+                state.items.generate(state.neigh, state.rng, state.grid, maps,
+                                     state.bonus_designs_b_counts, designs_level, bonusb);
+            }
         }
     }
 

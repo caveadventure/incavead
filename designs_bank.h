@@ -9,6 +9,9 @@ struct DesignsBank {
     std::unordered_map<tag_t,Design> bank;
     counters::Counts counts;
 
+    counters::Counts bonus_a_counts;
+    counters::Counts bonus_b_counts;
+
     void copy(const Design& d) {
 
         if (bank.count(d.tag) != 0) {
@@ -17,6 +20,14 @@ struct DesignsBank {
 
         bank[d.tag] = d;
         counts.init(d.tag, d.level, d.count);
+
+        if (d.bonus_a_count > 0) {
+            bonus_a_counts.init(d.tag, d.level, d.bonus_a_count);
+        }
+
+        if (d.bonus_b_count > 0) {
+            bonus_b_counts.init(d.tag, d.level, d.bonus_b_count);
+        }
     }
 
     const Design& get(tag_t tag) const {
