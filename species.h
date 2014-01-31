@@ -106,6 +106,8 @@ struct Species {
 
     std::vector<summon_t> summon;
 
+    tag_t death_summon;
+
     struct spawn_t {
         double chance;
         unsigned int level;

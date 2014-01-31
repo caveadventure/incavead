@@ -314,6 +314,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
             ;
 
+        species_death_summon = 'death_summon' ws1 tag %{ spe.death_summon = tag_t(state.match, tagmem); } ;
+
         species_spawn = 'spawn' %{ spe.spawns.push_back(Species::spawn_t()); }
             ws1 real   %{ spe.spawns.back().chance = toreal(state.match); }
             ws1 number %{ spe.spawns.back().level = toint(state.match); }
@@ -351,7 +353,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop | species_drop_random |
-            species_cast_cloud | species_summon | species_spawn |
+            species_cast_cloud | species_summon | species_death_summon | species_spawn | 
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail |

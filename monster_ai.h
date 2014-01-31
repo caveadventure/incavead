@@ -146,9 +146,9 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
             if ((state.ticks & c.turns) != 0) continue;
 
-            const Species& s = species().get(c.speciestag);
-            if (!state.species_counts.has(s.level, c.speciestag))
-                continue;
+            //const Species& s = species().get(c.speciestag);
+            //if (!state.species_counts.has(s.level, c.speciestag))
+            //    continue;
 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
@@ -215,6 +215,11 @@ inline bool move_monster(Player& p, GameState& state,
 
 
     if (m.health < -3) {
+
+        if (!s.death_summon.null()) {
+            summons.push_back(summons_t{m.xy.first, m.xy.second, s.death_summon, 1, m.tag});
+        }
+
         do_die = true;
         return true;
     }

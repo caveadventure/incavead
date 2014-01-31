@@ -453,7 +453,7 @@ void Game::process_world(GameState& state,
             if (i.summontag.null()) {
                 state.render.do_message(nlp::message("%s summons monsters!", species().get(i.summonertag)));
 
-            } else {
+            } else if (i.level == 0) {
                 state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
                                                      nlp::count(), species().get(i.summontag), nm));
             }
@@ -589,6 +589,9 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
 
             // HACK
             if (_design.luck.size() > 0)
+                continue;
+
+            if (_design.slot == constants().money_slot)
                 continue;
 
             size_t lcs = longest_common_subsequence(_design.name, name);
