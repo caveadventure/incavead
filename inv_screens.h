@@ -77,29 +77,40 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
 }
 
 
-inline std::string show_inventory(inventory_t& inv, unsigned int level, int dlev, const std::string& level_name, 
-                                  const std::string& moon_phase,
-                                  items::Items& items, unsigned int px, unsigned int py) {
+inline std::string show_inventory(Player& p, const std::string& moon_phase, items::Items& items) {
 
     std::string m;
+
+    std::string level_name = levelskins().get(p.worldz).name;
+
+    if (p.worldx != 0 || p.worldy != 0) {
+        static const std::string tunnels[3][3] = {
+            { "due NW", "due W", "due SW" },
+            { "due N", "", "due S" },
+            { "due NE", "due E", "due SE" } };
+
+
+        level_name += ", ";
+        level_name += tunnels[p.worldx+1][p.worldy+1];
+    }
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level: %d\n"
                      "  Dungeon level:   %d (%s)    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
-                     level+1, 
-                     dlev+1, level_name,
+                     p.level+1, 
+                     p.worldz+1, level_name,
                      moon_phase);
 
-    for (const auto& slotk : inv.slot_keys) {
+    for (const auto& slotk : p.inv.slot_keys) {
 
         items::Item tmp;
 
-        if (!inv.get(slotk.second, tmp)) 
+        if (!p.inv.get(slotk.second, tmp)) 
             continue;
 
-        const auto& slot = inv.slots[slotk.second];
+        const auto& slot = p.inv.slots[slotk.second];
 
         const Design& d = designs().get(tmp.tag);
 
@@ -110,9 +121,9 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, int dlev
     }
 
     // HACK
-    for (const auto& ii : inv.stuff) {
+    for (const auto& ii : p.inv.stuff) {
 
-        const auto& slot = inv.slots[ii.first];
+        const auto& slot = p.inv.slots[ii.first];
 
         if (slot.letter != ' ')
             continue;
@@ -127,14 +138,14 @@ inline std::string show_inventory(inventory_t& inv, unsigned int level, int dlev
     m += nlp::message("\n"
                       "\2Floor items:\n");
 
-    size_t nz = items.stack_size(px, py);
+    size_t nz = items.stack_size(p.px, p.py);
     char letter = '1';
 
     for (size_t z = 0; z < nz; ++z) {
 
         items::Item tmp;
 
-        if (!items.get(px, py, z, tmp))
+        if (!items.get(p.px, p.py, z, tmp))
             throw std::runtime_error("sanity error");
 
         const Design& d = designs().get(tmp.tag);

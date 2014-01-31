@@ -5,7 +5,23 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
     p.overmap.scale = scale;
 
-    std::string ret = "The overview map. Use '+' and '-' to zoom in and out.\n\n\3";
+    std::string ret = "The overview map. Use '+' and '-' to zoom in and out.\n\n";
+
+    std::string level_name = levelskins().get(p.worldz).name;
+
+    if (p.worldx != 0 || p.worldy != 0) {
+        static const std::string tunnels[3][3] = {
+            { "due NW", "due W", "due SW" },
+            { "due N", "", "due S" },
+            { "due NE", "due E", "due SE" } };
+
+
+        level_name += ", ";
+        level_name += tunnels[p.worldx+1][p.worldy+1];
+    }
+
+    ret += nlp::message("  Dungeon level:   %d (%s)    (phase of the moon: %s)\n\n\3",
+                        p.worldz+1, level_name, state.moon.pi.phase_str);
 
     for (unsigned int y = 0; y < state.render.h; y += scale) {
         for (unsigned int x = 0; x < state.render.w; x += scale) {
@@ -492,11 +508,7 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case 'i':
-        state.push_window(show_inventory(p.inv, p.level, p.worldz,
-                                         levelskins().get(p.worldz).name, 
-                                         state.moon.pi.phase_str, 
-                                         state.items, p.px, p.py), 
-                          screens_t::inventory);
+        state.push_window(show_inventory(p, state.moon.pi.phase_str, state.items), screens_t::inventory);
         break;
 
     case 'z':
