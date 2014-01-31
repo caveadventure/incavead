@@ -52,8 +52,11 @@ struct Vault {
     int px;
     int py;
 
+    bool use_species_counts;
+
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
-              w(0), h(0), transpose(false), priority(0), px(-1), py(-1) {}
+              w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
+              use_species_counts(false) {}
 
     void postprocess() {
 

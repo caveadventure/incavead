@@ -346,7 +346,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
         for (const auto& s : summons) {
             state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                  state.render, s.x, s.y, nullptr, nullptr, s.summontag, 0);
+                                  state.render, s.x, s.y, nullptr, nullptr, s.summontag, s.arg);
         }
 
         unsigned int mongroups = ::fabs(state.rng.gauss(lev.number_monsters.mean, lev.number_monsters.deviation));

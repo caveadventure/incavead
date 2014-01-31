@@ -62,6 +62,8 @@ inline void roll_attack(rnd::Generator& rng,
                 double factor = (kk)/2;
                 factor = factor * factor;
 
+                std::cout << "HH damage: " << dmg << " " << factor << std::endl;
+
                 dmg *= factor;
 
             } else {

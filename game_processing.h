@@ -441,7 +441,7 @@ void Game::process_world(GameState& state,
 
         if (i.summontag.null()) {
             nm = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
-                                           i.x, i.y, &p.px, &p.py, i.level, 1);
+                                           i.x, i.y, &p.px, &p.py, i.arg, 1);
 
         } else {
             nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
@@ -453,7 +453,7 @@ void Game::process_world(GameState& state,
             if (i.summontag.null()) {
                 state.render.do_message(nlp::message("%s summons monsters!", species().get(i.summonertag)));
 
-            } else if (i.level == 0) {
+            } else if (i.arg == 0) {
                 state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
                                                      nlp::count(), species().get(i.summontag), nm));
             }

@@ -644,10 +644,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         vault_transpose = 'transpose' %{ vau.transpose = true; };
 
         vault_priority = 'priority' %{ vau.priority = 1; };
+      
+        vault_use_species_counts = 'use_monster_counts' %{ vau.use_species_counts = true; };
 
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
+            vault_use_species_counts |
             '}'
              ${ fret; })
             ;

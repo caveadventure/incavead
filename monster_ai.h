@@ -7,7 +7,7 @@ struct summons_t {
     unsigned int x;
     unsigned int y;
     tag_t summontag;
-    unsigned int level;
+    unsigned int arg;
     tag_t summonertag;
 };
 
