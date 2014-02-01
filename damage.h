@@ -52,6 +52,7 @@ inline std::string name(type_t d) {
     case type_t::hunger:         return "hunger";
     case type_t::blindness:      return "blinding";
     case type_t::unluck:         return "unluck";
+    case type_t::voidness:       return "void emanations";
     default:                     return "oops";
     }
 }        
