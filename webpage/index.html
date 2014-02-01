@@ -87,20 +87,6 @@
           <p><a href="incavead.zip">for Windows</a>  |  <a href="incavead-i386.tar.gz">for Linux 32-bit</a>  |  <a href="incavead-x86_64.tar.gz">for Linux 64-bit</a></p>
         </div>
 
-        <div id="why">
-          <h3>Blurb</h3>
-          <p>Here's what makes this one different:</p>
-          <ul>
-            <li>'Grinding' is impossible or pointless.</li>
-            <li>No experience points, the game advances when you face new challenges, not when you collect kills or equipment.</li>
-            <li>A very limited inventory that makes stockpiling impossible. Choosing what gear to keep and what to discard is a major strategic choice in the game.</li>
-            <li>A steep 'ramping' of power levels and an aggressive hunger clock makes the game fast-paced.</li>
-            <li>Each level is different in flavor in strategy, to make advancing interesting. (You advance by visiting different locales, not by incrementing a number.)</li>
-          </ul>
-          <p>The idea is to make a roguelike game that is skewed much more towards a board or strategy game than a role-playing game. There's very little role-playing, but a lot of 
-            square counting and strategic choice.</p>
-        </div>
-
         <div id="highscore">
           <h3>Highscore table</h3>
           <p>Here's a list of top-10 best players from the public server, 
@@ -136,6 +122,19 @@
           
         </div>
 
+        <div id="why">
+          <h3>Blurb</h3>
+          <p>Here's what makes this one different:</p>
+          <ul>
+            <li>'Grinding' is impossible or pointless.</li>
+            <li>No experience points, the game advances when you face new challenges, not when you collect kills or equipment.</li>
+            <li>A very limited inventory that makes stockpiling impossible. Choosing what gear to keep and what to discard is a major strategic choice in the game.</li>
+            <li>A steep 'ramping' of power levels and an aggressive hunger clock makes the game fast-paced.</li>
+            <li>Each level is different in flavor in strategy, to make advancing interesting. (You advance by visiting different locales, not by incrementing a number.)</li>
+          </ul>
+          <p>The idea is to make a roguelike game that is skewed much more towards a board or strategy game than a role-playing game. There's very little role-playing, but a lot of square counting and strategic choice.</p>
+        </div>
+
         <div id="winning">
           <h3>Winning the game</h3>
           <p>Winning the game is deceptively simple: all you need to do is find the Ring of Power and return it to the Astral Throne. However, there are caveats:</p>
@@ -168,6 +167,23 @@
 
         <div id="news">
           <h3>News</h3>
+          <p><b>2014-02-02</b>:</p><ul>
+            <li>Turned the Temple of Midas into a full-service store and bank, based on a complex deflationary economy. 
+              <ul>
+                <li>You can now do four things in a Temple of Midas: purchase protection, as before, deposit to a bank account, withdraw from a bank account, or buy items. (Buying works similar to wishing, except for a price.)</li>
+                <li>There is a fixed amount of money in the game. When money is spend or deposited, the amount of money in the game decreases.</li>
+                <li>As the money supply deflates, the prices to things become lower. Thus, it is in your interest to hoard money by depositing it in accounts.</li>
+                <li>Unfortunately, this means that eventually the markets will crash when there is no more money in the game. When this happens the supply counters are reset. During the crash all bank accounts are wiped, too; be careful.</li>
+                <li>The price of protection is constant and does not deflate like the price of items.</li>
+                <li>As demand for items goes up, so will the price, to compensate for the deflation.</li>
+                <li>The Temple will accept gems in lieu of money as payment, but the price of gems will fluctuate similar to the prices for items.</li>
+              </ul>
+              <li>Made wishing wells much less powerful and not so abusive.</li>
+              <li>Shields provided by protection are now limited, regardless of how much you want to spend.</li>
+              <li>Money is now buried in graves, not lying next to them. You'll need to dig into a grave to take the money.</li>
+              <li>There are now valuable gems laying about freely in the dungeons, but <em>only</em> if you follow the tunnels to other branches.</li>
+              <li>Bugfixes, interface improvements and a few more useful items and strategies.</li>
+          </ul>
           <p><b>2014-01-26</b>:</p><ul>
             <li>You can now dig down to search for treasure. (But find a dowsing rod first to help you.)</li>
             <li>Defiling graves is also possible now.</li>
@@ -206,6 +222,11 @@
             <li>Highscore and victory status are now accessible from within the game itself.</li>
             <li>Bugfixes and small usability enhancements.</li>
           </ul>
+
+          <p class="expander">
+            <b onclick="$('#oldnews').toggle();">[ Click to see older news ]</b>
+          </p><div id="oldnews">
+
           <p><b>2013-11-02</b>:</p><ul>
             <li>Added new magic mechanics and new spells.</li>
             <li>The twig is now actually useful. (Under certain specific conditions.)</li>
@@ -245,6 +266,7 @@
             <li>Dead players will now leave gravestones which can be seen by others playing the game.</li></ul>
           <p><b>2013-06-16</b>:</p><ul>
             <li>Public server is now online!</li></ul> 
+          </div>
         </div>
 
         <script src="/js/jquery.js"></script>
@@ -253,6 +275,8 @@
         <script>
           do_highscore();
           do_ringstatus();
+
+          $("#oldnews").toggle();
         </script>
 
         <div id="comments">
