@@ -13,6 +13,7 @@ private:
 
     double max_base;
     double base;
+    double min_base;
 
     std::unordered_map<tag_t, unsigned int> purchases;
 
@@ -23,7 +24,7 @@ private:
     void check_valid() {
 
         // Oops, the markets crashed. Lol.
-        if (base < 0) {
+        if (base < min_base) {
 
             serialize::Sink sink("finance.dat");
 
@@ -42,12 +43,13 @@ private:
 public:
 
 
-    Supply() : max_base(1e6), base(max_base) {}
+    Supply() : max_base(1e6), base(max_base), min_base(0.01) {}
 
-    void load(double b = 1e6) {
+    void load(double b = 1e6, double m = 0.01) {
 
         max_base = b;
         base = max_base;
+        min_base = m;
 
         try {
             serialize::Source source("finance.dat");
@@ -109,28 +111,33 @@ public:
     }
 
     template <typename DESIGN>
-    double get_price(const DESIGN& d, unsigned int fudge = 0) {
+    double get_price(const DESIGN& d, bool fixed = false) {
 
         std::unique_lock<std::mutex> l(mutex);
 
         double deflation = base / max_base;
+        double price = d.worth * deflation;
+
+        if (fixed) {
+            return price;
+        }
 
         auto c = purchases.find(d.tag);
 
         if (c == purchases.end()) {
-            return d.worth * deflation;
+            return price;
         }
 
-        unsigned int count = std::max(d.count, std::max(d.bonus_b_count, d.bonus_a_count));
+        unsigned int count = d.count;
 
         if (c->second >= count) {
             // These items are sold out.
             return -1;
         }
 
-        double scarcity = (double)count / (double)(count - c->second + fudge);
+        double scarcity = (double)count / (double)(count - c->second);
 
-        return scarcity * d.worth * deflation;
+        return scarcity * price;
     }
 
     void purchase(tag_t d, double cost, unsigned int count = 1) {

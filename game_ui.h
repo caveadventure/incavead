@@ -20,7 +20,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
         level_name += tunnels[p.worldx+1][p.worldy+1];
     }
 
-    ret += nlp::message("  Dungeon level:   %d (%s)    (phase of the moon: %s)\n\n\3",
+    ret += nlp::message("\1Dungeon level %d (%s), %s moon.\n\n\3",
                         p.worldz+1, level_name, state.moon.pi.phase_str);
 
     for (unsigned int y = 0; y < state.render.h; y += scale) {

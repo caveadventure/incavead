@@ -211,7 +211,7 @@ int main(int argc, char** argv) {
     uniques::uniques().load();
     uniques::items().load();
     permafeats::features().load(constants().max_permafeats);
-    finance::supply().load(constants().monetary_supply_base);
+    finance::supply().load(constants().monetary_supply_base, constants().min_money_value);
 
 
     bool singleplayer = false;

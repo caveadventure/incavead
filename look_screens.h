@@ -166,7 +166,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         unsigned int monc = 0;
 
         state.render.draw_line(px, py, look.x, look.y, true, 
-                               maudit::color::dim_red, maudit::color::bright_white,
+                               maudit::color::bright_white, maudit::color::dim_blue,
                                [&](unsigned int x, unsigned int y) {
 
                                    double dist = distance(px, py, x, y);
@@ -273,6 +273,8 @@ inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, 
 
     center_draw_text(state.render, px, py, state.fullwidth,
                      "Use <TAB> or arrow keys to select target, '.' to fire");
+
+    handle_input_looking(pstate, look, px, py, state, '\t');
 }
 
 inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,

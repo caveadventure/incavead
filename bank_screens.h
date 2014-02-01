@@ -274,11 +274,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
         } else {
 
-            // Always assume that there is 1 more of the item than there really is;
-            // this is to prevent the player from selling a gem to buy another gem of
-            // the same type, only to sell it again at a higher price, thus creating 
-            // infinite money.
-            assets = finance::supply().get_price(liq, 1) * count * bank.buy_margin;
+            assets = finance::supply().get_price(liq, true) * count * bank.buy_margin;
 
             if (assets < 0) {
                 assets = 0;
