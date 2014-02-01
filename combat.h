@@ -198,6 +198,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
             hurt = dmg;
         }
 
+    } else if (v.type == damage::type_t::voidness) {
+
+        if (!s.flags.robot) {
+            hurt = dmg;
+        }
+
     } else if (v.type == damage::type_t::hunger || v.type == damage::type_t::unluck) {
         // Monsters don't feel hunger and don't have luck.
 
@@ -414,7 +420,8 @@ inline void defend(Player& p,
                    v.type == damage::type_t::electric ||
                    v.type == damage::type_t::heavenly_fire || 
                    v.type == damage::type_t::hellish_fire ||
-                   v.type == damage::type_t::magic) {
+                   v.type == damage::type_t::magic ||
+                   v.type == damage::type_t::voidness) {
 
             // No sonic damage for the player.
 

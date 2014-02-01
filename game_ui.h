@@ -5,7 +5,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
     p.overmap.scale = scale;
 
-    std::string ret = "The overview map. Use '+' and '-' to zoom in and out.\n\n";
+    std::string ret = "\2The overview map. Use '+' and '-' to zoom in and out.\n\n";
 
     std::string level_name = levelskins().get(p.worldz).name;
 

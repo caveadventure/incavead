@@ -228,7 +228,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'magic'         %{ dmgval.type = damage::type_t::magic; }         |
             'hunger'        %{ dmgval.type = damage::type_t::hunger; }        |
             'unluck'        %{ dmgval.type = damage::type_t::unluck; }        |
-            'blindness'     %{ dmgval.type = damage::type_t::blindness; }     ;
+            'blindness'     %{ dmgval.type = damage::type_t::blindness; }     |
+            'voidness'      %{ dmgval.type = damage::type_t::voidness; }      ;
 
 
         damage_val = 
@@ -730,7 +731,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8.set(SKINS); };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
-        levelskin_damage        = 'damage'        ws1 real   %{ lev.damage = toreal(state.match); };
+        levelskin_damage_terrain  = 'damage_terrain'  ws1 tag    %{ lev.damage_terrain = tag_t(state.match, tagmem); };
         levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
 
         levelskin_no_phase_level = 'no_phase_level' %{ lev.no_phase_level = true; };
@@ -783,7 +784,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
-            levelskin_lightradius | levelskin_lightradius_max | levelskin_damage |
+            levelskin_lightradius | levelskin_lightradius_max | levelskin_damage_terrain |
             levelskin_exclusive | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |

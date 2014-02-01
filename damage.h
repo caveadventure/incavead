@@ -26,7 +26,8 @@ enum class type_t : unsigned int {
     magic,
     hunger,
     unluck,
-    blindness
+    blindness,
+    voidness
 };
 
 inline std::string name(type_t d) {

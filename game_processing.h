@@ -501,9 +501,16 @@ void Game::process_world(GameState& state,
     {
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        if (ls.damage > 0 && p.health.val > -3.0) {
-            p.attacker = "void emanations";
-            p.health.dec(ls.damage);
+        if (!ls.damage_terrain.null() && p.health.val > -3.0) {
+
+            // HACK. Assume player level is always 0.
+            // This is how it should be when the damage is actually coming from 
+            // the environment itself.
+
+            damage::defenses_t defenses;
+            p.inv.get_defense(defenses);
+
+            defend(p, defenses, 0, terrain().get(ls.damage_terrain), state);
         }
     }
 
