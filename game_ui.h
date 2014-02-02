@@ -977,10 +977,11 @@ void Game::handle_input(GameState& state,
                 bool ok = false;
 
                 features::Feature feat;
-                if (state.features.get(nx, ny, feat) && 
-                    feat.tag == constants().grave) {
+                if (state.features.get(nx, ny, feat)) {
 
-                    ok = true;
+                    if (feat.tag == constants().grave) {
+                        ok = true;
+                    }
 
                 } else if (state.grid.is_floor(nx, ny)) {
                     ok = true;
