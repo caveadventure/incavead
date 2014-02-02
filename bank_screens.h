@@ -4,7 +4,9 @@
 
 inline void purchase_protection(Player& p, GameState& state, double cost) {
 
-    double shield_bonus = p.banking.shield_bonus * cost;
+    double deflation = finance::supply().get_rate();
+
+    double shield_bonus = p.banking.shield_bonus * deflation * cost;
     double money_curse = p.banking.money_curse * cost;
 
     if (shield_bonus <= 0 || p.health.shield >= constants().health_shield_max)
@@ -13,34 +15,32 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
         return;
-                
-    if (p.health.shield + shield_bonus < constants().health_shield_max) {
+
+    double xcost = cost;
+
+    if (p.health.shield + shield_bonus >= constants().health_shield_max) {
+
+        shield_bonus = constants().health_shield_max - p.health.shield;
+        xcost = shield_bonus / (p.banking.shield_bonus * deflation);
+        money_curse = p.banking.money_curse * xcost;
+    }
+
+    if (shield_bonus > 0) {
         p.health.shield += shield_bonus;
         state.render.do_message("Your body glows with a shiny gold aura.");
 
         ++(state.ticks);
-
-    } else {
-        double x = constants().health_shield_max - p.health.shield;
-        double xcost = x / p.banking.shield_bonus;
-
-        p.health.shield = constants().health_shield_max;
-        money_curse = p.banking.money_curse * xcost;
-
-        if (x > 0) {
-            state.render.do_message("Your body glows with a shiny gold aura.");
-
-            ++(state.ticks);
-        }
-
-        if (give_change(state, p.px, p.py, cost - xcost)) {
-            state.render.do_message("Please keep the change.");
-        }
     }
 
     if (money_curse > 0) {
         p.money_curse -= money_curse;
     }
+
+    if (give_change(state, p.px, p.py, cost - xcost)) {
+        state.render.do_message("Please keep the change.");
+    }
+
+    finance::supply().purchase(tag_t(), xcost);
 }
 
 inline void purchase_item(Player& p, GameState& state) {

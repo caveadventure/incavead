@@ -110,6 +110,12 @@ public:
         return base;
     }
 
+    double get_rate() {
+        std::unique_lock<std::mutex> l(mutex);
+
+        return max_base / base;
+    }
+
     template <typename DESIGN>
     double get_price(const DESIGN& d, bool fixed = false) {
 
