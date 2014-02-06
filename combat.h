@@ -2,8 +2,8 @@
 #define __COMBAT_H
 
 inline double roll_attack(rnd::Generator& rng, 
-                   double ddefense, unsigned int dlevel,
-                   double aattack, unsigned int alevel) {
+                          double ddefense, unsigned int dlevel,
+                          double aattack, unsigned int alevel) {
 
     double a = 0;
     for (unsigned int i = 0; i < alevel; ++i) {

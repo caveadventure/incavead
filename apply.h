@@ -82,13 +82,23 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     } 
 
-    if (d.heal_blind > 0) {
+    if (d.heal_blind) {
 
         if (p.blind > 0) {
             p.blind = 0;
             state.render.do_message("You can see again!", true);
         }
 
+        ret = true;
+    }
+
+    if (d.heal_unluck) {
+
+        if (p.luck.val < 0) {
+            p.luck.val = 0;
+            state.render.do_message("You lucky stiff.");
+        }
+        
         ret = true;
     }
 
