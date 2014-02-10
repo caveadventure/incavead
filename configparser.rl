@@ -393,6 +393,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
         design_feed       = 'feed'       ws1 real       %{ des.feed = toreal(state.match); };
         design_karma      = 'karma'      ws1 real       %{ des.karma = toreal(state.match); };
+        design_luck       = 'luck'       ws1 real       %{ des.luck = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_melee      = 'melee'                     %{ des.melee = true; };
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
@@ -480,7 +481,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
-            design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
+            design_luck | design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_place_permafloor | design_luck | design_hunger | 
             design_other_hunger_multiplier | design_dowsing |

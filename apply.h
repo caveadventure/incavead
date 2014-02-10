@@ -107,6 +107,11 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (d.luck != 0) {
+        p.luck.inc(d.luck);
+        ret = true;
+    }
+
     if (d.flags.blink) {
 
         grid::pt xy;
