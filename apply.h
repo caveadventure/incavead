@@ -107,8 +107,8 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
-    if (d.luck != 0) {
-        p.luck.inc(d.luck);
+    if (d.consume_luck != 0) {
+        p.luck.inc(d.consume_luck);
         ret = true;
     }
 

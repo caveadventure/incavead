@@ -153,7 +153,7 @@ inline bool handle_input_text(Player& p, GameState& state, maudit::keypress k) {
 
 inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
-    tag_t item = find_existing_item_search(state, p.input.s);
+    tag_t item = find_existing_item_search(state, p.input.s, false);
 
     if (item.null()) {
 

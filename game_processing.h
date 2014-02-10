@@ -581,7 +581,7 @@ inline size_t longest_common_subsequence(const std::string& a, const std::string
 }
 
 
-inline tag_t find_existing_item_search(GameState& state, const std::string& name) {
+inline tag_t find_existing_item_search(GameState& state, const std::string& name, bool forbid_luck = true) {
 
     const auto& data = state.designs_counts.data;
 
@@ -595,7 +595,7 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
             const Design& _design = designs().get(j.first);
 
             // HACK
-            if (_design.luck.size() > 0)
+            if (forbid_luck && (_design.luck.size() > 0 || _design.consume_luck > 0))
                 continue;
 
             if (_design.slot == constants().money_slot)
