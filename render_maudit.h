@@ -110,13 +110,13 @@ struct Grid {
 	std::vector<skin> skins;
 	uint8_t is_lit;
         uint8_t is_lightsource;
-	bool in_fov;
+	uint8_t in_fov;
         uint8_t is_viewblock;
         uint8_t is_walkblock;
 
         bool valid;
 
-	gridpoint() : is_lit(0), is_lightsource(0), in_fov(false), is_viewblock(0), is_walkblock(0), valid(false)
+	gridpoint() : is_lit(0), is_lightsource(0), in_fov(0), is_viewblock(0), is_walkblock(0), valid(false)
             {
                 skins.resize(skincount);
             }
@@ -199,10 +199,10 @@ private:
 
     color_t color_fade(color_t c, double v) {
 
-        if (v <= 0.3) {
+        if (v <= 30) {
             return c;
 
-        } else if (v <= 0.7) {
+        } else if (v <= 70) {
             switch (c) {
             case color_t::bright_black:   return color_t::bright_black;
             case color_t::bright_red:     return color_t::dim_red;
@@ -215,7 +215,7 @@ private:
             default: return c;
             }
 
-        } else if (v <= 0.90) {
+        } else if (v <= 90) {
             return color_t::bright_black;
 
         } else {
@@ -786,9 +786,7 @@ public:
                         unsigned int x = xy.first;
                         unsigned int y = xy.second;
 
-                        bool in_fov = gp.in_fov; 
-
-                        double d = _dist(xy, pt(px, py));
+                        auto in_fov = gp.in_fov; 
 
                         const std::vector<skin>& skins = gp.skins;
 
@@ -836,7 +834,7 @@ public:
                                 
                             } else {
 
-                                double d1 = d / params.lightradius;
+                                double d = _dist(xy, pt(px, py));
 
                                 if (d < params.rangemin || d > params.rangemax) {
                                     fore = color_t::bright_black;
@@ -844,7 +842,7 @@ public:
 
                                 } else {
 
-                                    fore = color_fade(fore, std::min(d1, 1.0));
+                                    fore = color_fade(fore, in_fov);
                                 }
                             }
                         }

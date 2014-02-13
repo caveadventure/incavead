@@ -50,8 +50,15 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
             auto& thispoint = grid[offset];
 
-            if (dx*dx + dy*dy <= (int)r2) {
-                thispoint.in_fov = true;
+            unsigned int dist = dx*dx + dy*dy;
+
+            if (dist <= r2) {
+
+                uint8_t newfov = ::sqrt((double)dist / (double)r2) * 100 + 1;
+
+                if (thispoint.in_fov == 0 || thispoint.in_fov > newfov) {
+                    thispoint.in_fov = newfov;
+                }
             }
 
             if (blocked) {
@@ -83,9 +90,15 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                     blocked = true;
 
+                    thispoint.in_fov = 1;
+
+                    unsigned int newrad = radius + j + 1;
+
                     cast_light(w, h, grid, 
                                cx, cy,
-                               j+1, start, end, radius + j, (radius + j) * (radius + j),
+                               j+1, start, end, newrad, newrad * newrad,
+                               //X, Y,
+                               //1, 1.0, 0.0, radius, r2,
                                xx, xy, yx, yy);
 
                     new_start = r_slope;
@@ -111,7 +124,7 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
     };
 
     for (auto& i : grid) {
-        i.in_fov = false;
+        i.in_fov = 0;
     }
 
     unsigned int r2 = radius * radius;
@@ -127,7 +140,7 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
                    mult[3][oct]);
     }
 
-    grid[x+w*y].in_fov = true;
+    grid[x+w*y].in_fov = 1;
 }
 
 

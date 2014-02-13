@@ -483,7 +483,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
             design_luck | design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
             design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
-            design_place_permafeat | design_place_permafloor | design_luck | design_hunger | 
+            design_place_permafeat | design_place_permafloor | design_consume_luck | design_hunger | 
             design_other_hunger_multiplier | design_dowsing |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
