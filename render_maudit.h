@@ -109,13 +109,14 @@ struct Grid {
     struct gridpoint {
 	std::vector<skin> skins;
 	uint8_t is_lit;
+        uint8_t is_lightsource;
 	bool in_fov;
         uint8_t is_viewblock;
         uint8_t is_walkblock;
 
         bool valid;
 
-	gridpoint() : is_lit(0), in_fov(false), is_viewblock(0), is_walkblock(0), valid(false)
+	gridpoint() : is_lit(0), is_lightsource(0), in_fov(false), is_viewblock(0), is_walkblock(0), valid(false)
             {
                 skins.resize(skincount);
             }
@@ -551,6 +552,16 @@ public:
 	uint8_t& il = _get(x,y).is_lit;
 
         if (is_lit) {
+            il |= (1<<z);
+	} else {
+	    il &= ~(1<<z);
+	}
+    }
+
+    void set_is_lightsource(unsigned int x, unsigned int y, unsigned int z, bool is_lightsource) {
+	uint8_t& il = _get(x,y).is_lightsource;
+
+        if (is_lightsource) {
             il |= (1<<z);
 	} else {
 	    il &= ~(1<<z);
@@ -1290,6 +1301,7 @@ struct reader<grender::Grid> {
 
             serialize::read(s, p.skins);
             serialize::read(s, p.is_lit);
+            serialize::read(s, p.is_lightsource);
             serialize::read(s, p.in_fov);
             serialize::read(s, p.is_viewblock);
             serialize::read(s, p.is_walkblock);
@@ -1322,6 +1334,7 @@ struct writer<grender::Grid> {
 
             serialize::write(s, t.skins);
             serialize::write(s, t.is_lit);
+            serialize::write(s, t.is_lightsource);
             serialize::write(s, t.in_fov);
             serialize::write(s, t.is_viewblock);
             serialize::write(s, t.is_walkblock);

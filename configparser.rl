@@ -535,8 +535,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_sticky    = 'sticky'                   %{ ter.sticky = true; } ;
         terrain_charges   = 'charges'   ws1 number     %{ ter.charges = toint(state.match); } ;
         
-        terrain_is_lit    = 'is_lit' %{ ter.is_lit = true; } ;
-        terrain_air       = 'air'    %{ ter.air = true; };
+        terrain_is_lit         = 'is_lit'         %{ ter.is_lit = true; } ;
+        terrain_is_lightsource = 'is_lightsource' %{ ter.is_lightsource = true; } ;
+        terrain_air            = 'air'            %{ ter.air = true; };
 
         terrain_safebox   = 'safebox' %{ ter.safebox = true; };
 
@@ -579,7 +580,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
-            terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_air |
+            terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_is_lightsource | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_banking |
             terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
             terrain_view_radius |

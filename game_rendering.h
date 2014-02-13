@@ -83,12 +83,14 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
         state.render.set_is_viewblock(x, y, 1, t.viewblock);
         state.render.set_is_walkblock(x, y, 1, t.walkblock);
         state.render.set_is_lit(x, y, 1, t.is_lit);
+        state.render.set_is_lightsource(x, y, 1, t.is_lightsource);
 
     } else {
         state.render.unset_skin(x, y, 1);
         state.render.set_is_viewblock(x, y, 1, false);
         state.render.set_is_walkblock(x, y, 1, false);
         state.render.set_is_lit(x, y, 1, false);
+        state.render.set_is_lightsource(x, y, 1, false);
     }
 
     // //

@@ -739,6 +739,14 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
         do_player_wish(state, p, true);
         break;
 
+    case 'l':
+    {
+        tag_mem_t tagmem;
+
+        state.features.x_set(p.px, p.py, tag_t("light", tagmem), state.render);
+        break;
+    }
+                             
     case 'L':
         for (unsigned int y = 0; y < state.render.h; ++y) {
             for (unsigned int x = 0; x < state.render.w; ++x) {

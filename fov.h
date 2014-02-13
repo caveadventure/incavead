@@ -48,13 +48,15 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
                 break;
             }
 
+            auto& thispoint = grid[offset];
+
             if (dx*dx + dy*dy <= (int)r2) {
-                grid[offset].in_fov = true;
+                thispoint.in_fov = true;
             }
 
             if (blocked) {
 
-                if (grid[offset].is_viewblock) {
+                if (thispoint.is_viewblock || thispoint.is_lightsource) {
 
                     new_start = r_slope;
                     continue;
@@ -66,13 +68,24 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
             } else {
 
-                if (grid[offset].is_viewblock && j < (int)radius) {
+                if (thispoint.is_viewblock && j < (int)radius) {
 
                     blocked = true;
 
                     cast_light(w, h, grid,
                                cx, cy, 
                                j+1, start, l_slope, radius, r2, 
+                               xx, xy, yx, yy);
+
+                    new_start = r_slope;
+
+                } else if (thispoint.is_lightsource && j < (int)radius) {
+
+                    blocked = true;
+
+                    cast_light(w, h, grid, 
+                               cx, cy,
+                               j+1, start, end, radius + j, (radius + j) * (radius + j),
                                xx, xy, yx, yy);
 
                     new_start = r_slope;
