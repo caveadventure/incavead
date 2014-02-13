@@ -108,16 +108,14 @@ struct Grid {
 
     struct gridpoint {
 	std::vector<skin> skins;
-	unsigned int is_lit;
+	uint8_t is_lit;
 	bool in_fov;
-        unsigned int is_viewblock;
-        unsigned int is_walkblock;
+        uint8_t is_viewblock;
+        uint8_t is_walkblock;
 
         bool valid;
 
-	gridpoint() : is_lit(0), in_fov(false), 
-                      is_viewblock(0), is_walkblock(0),
-                      valid(false)
+	gridpoint() : is_lit(0), in_fov(false), is_viewblock(0), is_walkblock(0), valid(false)
             {
                 skins.resize(skincount);
             }
@@ -550,7 +548,7 @@ public:
     }
 
     void set_is_lit(unsigned int x, unsigned int y, unsigned int z, bool is_lit) {
-	unsigned int& il = _get(x,y).is_lit;
+	uint8_t& il = _get(x,y).is_lit;
 
         if (is_lit) {
             il |= (1<<z);
