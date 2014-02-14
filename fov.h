@@ -8,7 +8,7 @@ template <typename T>
 void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid, 
                 unsigned int cx, unsigned int cy,
                 int row, float start, float end, 
-                unsigned int radius, unsigned int r2,
+                unsigned int radius, unsigned int origradius, unsigned int r2,
                 int xx, int xy, int yx, int yy) {
 
     float new_start = 0.0;
@@ -81,7 +81,7 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                     cast_light(w, h, grid,
                                cx, cy, 
-                               j+1, start, l_slope, radius, r2, 
+                               j+1, start, l_slope, radius, origradius, r2, 
                                xx, xy, yx, yy);
 
                     new_start = r_slope;
@@ -92,13 +92,11 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                     thispoint.in_fov = 1;
 
-                    unsigned int newrad = radius + j + 1;
+                    unsigned int newrad = origradius + j + 1;
 
                     cast_light(w, h, grid, 
                                cx, cy,
-                               j+1, start, end, newrad, newrad * newrad,
-                               //X, Y,
-                               //1, 1.0, 0.0, radius, r2,
+                               j+1, start, end, newrad, origradius, newrad * newrad,
                                xx, xy, yx, yy);
 
                     new_start = r_slope;
@@ -133,7 +131,7 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
 
         cast_light(w, h, grid, x, y, 
 
-                   1, 1.0, 0.0, radius, r2,
+                   1, 1.0, 0.0, radius, radius, r2,
                    mult[0][oct],
                    mult[1][oct],
                    mult[2][oct],
