@@ -63,7 +63,7 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
             if (blocked) {
 
-                if (thispoint.is_viewblock || thispoint.is_lightsource) {
+                if (thispoint.is_viewblock /*|| thispoint.is_lightsource*/) {
 
                     new_start = r_slope;
                     continue;
@@ -88,18 +88,18 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                 } else if (thispoint.is_lightsource && j < (int)radius) {
 
-                    blocked = true;
+                    //blocked = true;
 
                     thispoint.in_fov = 1;
 
-                    unsigned int newrad = origradius + j + 1;
+                    unsigned int newrad = origradius * 2 + j + 1;
 
                     cast_light(w, h, grid, 
                                cx, cy,
-                               j+1, start, end, newrad, origradius, newrad * newrad,
+                               j+1, start, l_slope, newrad, origradius, newrad * newrad,
                                xx, xy, yx, yy);
 
-                    new_start = r_slope;
+                    //new_start = r_slope;
                 }
             }
         }
