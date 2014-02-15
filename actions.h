@@ -55,7 +55,6 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
 
     if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
         !state.grid.is_walk(nx, ny)) {
-
         return;
     }
 
