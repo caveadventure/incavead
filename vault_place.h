@@ -112,7 +112,7 @@ inline void generate_vault(const Vault& vault, GameState& state,
 
     if (ax >= w || ay >= h) {
         std::cerr << "Sanity error in vault anchor! " << ax << "," << ay << " "
-                  << w << "," << h << std::endl;
+                  << w << "," << h << " : " << vault.tag.v << " " << vault.inherit.v << std::endl;
         return;
     }
 

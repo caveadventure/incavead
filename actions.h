@@ -72,13 +72,24 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
         return;
     }
 
+    features::Feature feat;
+    if (state.features.get(nx, ny, feat)) {
+
+        const Terrain& t = terrain().get(feat.tag);
+
+        if (t.uncharge.bump) {
+            state.features.uncharge(nx, ny, state.render);
+            ++(state.ticks);
+            return;
+        }
+    }
+
     if (state.render.is_walkblock(nx, ny)) {
         return;
     }
 
     ++(state.ticks);
 
-    features::Feature feat;
     if (state.features.get(p.px, p.py, feat)) {
 
         const Terrain& t = terrain().get(feat.tag);

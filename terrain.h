@@ -58,8 +58,9 @@ struct Terrain {
         bool attack;
         bool move;
         bool use;
+        bool bump;
 
-        uncharge_t() : attack(false), move(false), use(false) {}
+        uncharge_t() : attack(false), move(false), use(false), bump(false) {}
     };
 
     uncharge_t uncharge;

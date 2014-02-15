@@ -559,7 +559,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |
-                                ('move'   %{ ter.uncharge.move = true; }   ) ;
+                                ('move'   %{ ter.uncharge.move = true; }   ) |
+                                ('bump'   %{ ter.uncharge.bump = true; }   ) ;
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
