@@ -303,6 +303,15 @@ inline bool move_monster(Player& p, GameState& state,
         nxy = tmp[state.rng.n(tmp.size())];
     }
 
+
+    if (state.features.get(nxy.first, nxy.second, feat)) {
+        const Terrain& t = terrain().get(feat.tag);
+
+        if (t.walkblock)
+            return false;
+    }
+
+
     if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
         return false;
 
