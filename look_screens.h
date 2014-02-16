@@ -9,7 +9,7 @@ inline void center_draw_text(grender::Grid& render, unsigned int x, unsigned int
 
     int _x = x;
     unsigned int x1 = std::max(0, _x - halfstr);
-    render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_blue);
+    render.draw_text(x1, y+1, t, maudit::color::bright_white, maudit::color::dim_black);
 }
 
 inline void look_move(Player::look_state_t& look, GameState& state, int dx, int dy) {
@@ -271,7 +271,7 @@ inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, 
     look.rangemin = rangemin;
     look.rangemax = rangemax;
 
-    center_draw_text(state.render, px, py, state.fullwidth,
+    center_draw_text(state.render, px, py-3, state.fullwidth,
                      "Use <TAB> or arrow keys to select target, '.' to fire");
 
     handle_input_looking(pstate, look, px, py, state, '\t');
@@ -283,7 +283,7 @@ inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, u
     pstate = Player::LOOKING;
     look = Player::look_state_t(px, py);
 
-    center_draw_text(state.render, px, py, state.fullwidth,
+    center_draw_text(state.render, px, py-3, state.fullwidth,
                      "Use arrow keys to look around; <TAB> to cycle targets");
 }
 

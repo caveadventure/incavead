@@ -415,6 +415,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ des.blast.range = toint(state.match); }
             ;
 
+        design_attack_level = 'attack_level' ws1 number %{ des.attack_level = toint(state.match); };
+
         design_cast_cloud = 'cast_cloud' 
             ws1 tag    %{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ des.cast_cloud.radius = toint(state.match); }
@@ -477,17 +479,19 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_heal_blind  = 'heal_blind'  %{ des.heal_blind = true; };
         design_heal_unluck = 'heal_unluck' %{ des.heal_unluck = true; };
 
+        design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
-            design_throwrange | design_blast | design_gencount | design_melee | design_feed | design_karma |
-            design_luck | design_lightradius | design_digging | design_descend | design_blink | design_cast_cloud |
-            design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
+            design_throwrange | design_blast | design_attack_level | design_gencount | design_melee | design_feed | 
+            design_karma | design_luck | design_lightradius | design_digging | design_descend | design_blink | 
+            design_cast_cloud | design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_place_permafloor | design_consume_luck | design_hunger | 
             design_other_hunger_multiplier | design_dowsing |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
-            design_heal_blind | design_heal_unluck |
+            design_heal_blind | design_heal_unluck | design_action_name |
             '}'
             ${ fret; })
             ;

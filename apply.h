@@ -78,7 +78,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (d.feed > 0) {
 
         p.food.inc(d.feed);
-        state.render.do_message(nlp::message("You eat %s.", d));
+        state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
         ret = true;
     } 
 
@@ -273,7 +273,9 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack_from_player(p, d.attacks, d.level, state, mon, true);
+            unsigned int lev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level(state.rng));
+
+            attack_from_player(p, d.attacks, lev, state, mon, false);
         }
     }
 }
@@ -383,7 +385,9 @@ inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
             
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 
-        unsigned int lev = (1 - v2) * p.get_computed_level(state.rng);
+        unsigned int ilev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level(state.rng));
+
+        unsigned int lev = (1 - v2) * ilev;
 
         attack_from_player(p, d.attacks, lev, state, mon, false);
     }
