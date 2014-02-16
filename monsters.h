@@ -75,45 +75,31 @@ struct Monsters {
         init();
     }
 
-    static bool is_walkable(const grid::Map& grid, const Species& s, const pt& xy) {
+    static bool is_walkable(const grid::Map& grid, const Species& s, unsigned int x, unsigned int y) {
 
         switch (s.move) {
         case Species::move_t::floor: 
-            if (!grid.is_floor(xy.first, xy.second)) return false;
+            if (!grid.is_floor(x, y)) return false;
             break;
 
         case Species::move_t::water: 
-            if (!grid.is_lake(xy.first, xy.second)) return false;
+            if (!grid.is_lake(x, y)) return false;
             break;
 
         case Species::move_t::corner:
-            if (!grid.is_corner(xy.first, xy.second)) return false;
+            if (!grid.is_corner(x, y)) return false;
             break;
 
         case Species::move_t::shoreline:
-            if (!grid.is_shore(xy.first, xy.second)) return false;
+            if (!grid.is_shore(x, y)) return false;
             break;
 
         default:
-            if (!grid.is_walk(xy.first, xy.second)) return false;
+            if (!grid.is_walk(x, y)) return false;
             break;
         }
 
         return true;
-    }
-
-    static std::vector<pt> get_walkables(const neighbors::Neighbors& neigh, const grid::Map& grid,
-                                         const Species& s, const pt& xy) {
-
-        std::vector<pt> ret;
-
-        for (const pt& v : neigh(xy)) {
-            if (is_walkable(grid, s, v)) {
-                ret.push_back(v);
-            }
-        }
-
-        return ret;
     }
     
     template <typename T, typename FUNC, typename FUNCP>

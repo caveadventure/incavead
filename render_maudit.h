@@ -1250,20 +1250,13 @@ public:
         return m;
     }
 
+    template <typename FUNC>
     bool path_walk(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1,
-                   unsigned int n, unsigned int cutoff, 
+                   unsigned int n, unsigned int cutoff, FUNC cost,
                    unsigned int& xo, unsigned int& yo) {
 
 
-        bool tmp = path.compute(x0, y0, x1, y1, 1.41, cutoff, 
-                                [&](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-
-                                    if (is_walkblock(c, d)) return 0.0f;
-
-                                    if (is_viewblock(c, d)) return 3.0f;
-
-                                    return 1.0f;
-                                });
+        bool tmp = path.compute(x0, y0, x1, y1, 1.41, cutoff, cost);
 
         if (!tmp) return false;
 

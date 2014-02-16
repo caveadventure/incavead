@@ -173,6 +173,27 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
     return false;
 }
 
+inline float monster_move_cost(GameState& state, const Species& s, unsigned int x, unsigned int y) {
+
+    if (!monsters::Monsters::is_walkable(state.grid, s, x, y))
+        return 0.0f;
+    
+    features::Feature feat;
+    if (state.features.get(x, y, feat)) {
+
+        const Terrain& t = terrain().get(feat.tag);
+
+        if (t.walkblock)
+            return 0.0f;
+
+        if (t.viewblock)
+            return 3.0f;
+    }
+
+    return 1.0f;
+}
+
+
 
 inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
@@ -272,8 +293,11 @@ inline bool move_monster(Player& p, GameState& state,
         do_random = true;
 
     } else if (do_seek && !do_random &&
-               state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, 
-                                      range, nxy.first, nxy.second)) {
+               state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, range, 
+                                      [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
+                                          return monster_move_cost(state, s, c, d);
+                                      },
+                                      nxy.first, nxy.second)) {
 
         // Nothing, nxy is good.
 
@@ -295,7 +319,13 @@ inline bool move_monster(Player& p, GameState& state,
     }
 
     if (do_random) {
-        std::vector<monsters::pt> tmp = monsters::Monsters::get_walkables(state.neigh, state.grid, s, m.xy);
+        std::vector<monsters::pt> tmp;
+
+        for (const neighbors::pt& v : state.neigh(m.xy)) {
+            if (monster_move_cost(state, s, v.first, v.second) != 0.0f) {
+                tmp.push_back(v);
+            }
+        }
 
         if (tmp.empty())
             return false;
@@ -303,17 +333,8 @@ inline bool move_monster(Player& p, GameState& state,
         nxy = tmp[state.rng.n(tmp.size())];
     }
 
-
-    if (state.features.get(nxy.first, nxy.second, feat)) {
-        const Terrain& t = terrain().get(feat.tag);
-
-        if (t.walkblock)
-            return false;
-    }
-
-
-    if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
-        return false;
+    //if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
+    //    return false;
 
     if (nxy.first == p.px && nxy.second == p.py) {
 
