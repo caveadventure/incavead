@@ -47,7 +47,7 @@ struct shielded_b_stat_t : stat_t {
 
     double buff(double v) {
 
-        _v = ::fabs(v);
+        double _v = ::fabs(v);
 
         if (_v < shield) {
             shield -= _v;
