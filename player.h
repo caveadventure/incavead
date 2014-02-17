@@ -47,16 +47,20 @@ struct shielded_b_stat_t : stat_t {
 
     double buff(double v) {
 
-        v = ::fabs(v);
+        _v = ::fabs(v);
 
-        if (v < shield) {
-            shield -= v;
+        if (_v < shield) {
+            shield -= _v;
             return 0;
 
         } else {
-            v = v - shield;
+            _v = _v - shield;
             shield = 0;
-            return v;
+
+            if (v < 0)
+                _v = -_v;
+
+            return _v;
         }
     }
 
