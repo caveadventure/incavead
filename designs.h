@@ -77,8 +77,9 @@ struct Design {
     struct cloud_t {
         tag_t terraintag;
         unsigned int radius;
+        unsigned int range;
 
-        cloud_t() : radius(0) {}
+        cloud_t() : radius(0), range(0) {}
     };
 
     cloud_t cast_cloud;

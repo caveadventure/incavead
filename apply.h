@@ -280,8 +280,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
     }
 }
 
-inline bool end_blast_item(Player& p, tag_t slot, unsigned int lx, unsigned int ly, 
-                           GameState& state) {
+inline bool end_blast_item(Player& p, tag_t slot, unsigned int lx, unsigned int ly, GameState& state) {
 
     items::Item tmp;
         
@@ -339,6 +338,23 @@ inline bool start_blast_item(Player& p, tag_t slot, GameState& state) {
     return true;
 }
 
+inline bool end_cloud_item(Player& p, tag_t slot, unsigned int lx, unsigned int ly, GameState& state) {
+
+    items::Item tmp;
+
+    if (!p.inv.take(slot, tmp, 1))
+        return false;
+
+    const Design& d = designs().get(tmp.tag);
+
+    if (distance(p.px, p.py, lx, ly) > d.cast_cloud.range) {
+        return false;
+    }
+
+    cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
+
+    return true;
+}
 
 inline bool start_cloud_item(Player& p, tag_t slot, GameState& state) {
 
@@ -349,16 +365,22 @@ inline bool start_cloud_item(Player& p, tag_t slot, GameState& state) {
 
     const Design& d = designs().get(tmp.tag);
 
-    if (d.cast_cloud.radius == 0) {
+    if (d.cast_cloud.radius == 0 && d.cast_cloud.range == 0) {
         return false;
     }
 
-    if (!p.inv.take(slot, tmp, 1))
-        return false;
+    if (d.cast_cloud.range > 0) {
+        
+        start_look_target(p.state, p.look, p.px, p.py, state, 0, d.cast_cloud.range);
+        p.state |= Player::CLOUDING;
 
-    cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
+    } else {
 
-    ++(state.ticks);
+        if (!end_cloud_item(p, slot, p.px, p.py, state))
+            return false;
+
+        ++(state.ticks);
+    }
 
     return true;
 }

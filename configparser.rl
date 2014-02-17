@@ -420,6 +420,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_cast_cloud = 'cast_cloud' 
             ws1 tag    %{ des.cast_cloud.terraintag = tag_t(state.match, tagmem); }
             ws1 number %{ des.cast_cloud.radius = toint(state.match); }
+            ws1 number %{ des.cast_cloud.range = toint(state.match); }
             ;
 
         design_gencount = 'gencount' 

@@ -963,6 +963,9 @@ void Game::handle_input(GameState& state,
 
             } else if (p.state & Player::BLASTING) {
                 end_blast_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+
+            } else if (p.state & Player::CLOUDING) {
+                end_cloud_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
             }
 
             ++(state.ticks);
