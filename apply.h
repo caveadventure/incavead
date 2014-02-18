@@ -351,7 +351,7 @@ inline bool end_cloud_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
         return false;
     }
 
-    cast_cloud(state, p.px, p.py, d.cast_cloud.radius, d.cast_cloud.terraintag);
+    cast_cloud(state, lx, ly, d.cast_cloud.radius, d.cast_cloud.terraintag);
 
     return true;
 }

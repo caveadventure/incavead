@@ -126,10 +126,11 @@ struct Grid {
     struct message {
         std::string text;
         bool important;
+        bool temporary;
         unsigned int timestamp;
 
-        message(const std::string& t = "", bool i = false, unsigned int ts = 0) :
-            text(t), important(i), timestamp(ts) {}
+        message(const std::string& t = "", bool i = false, unsigned int ts = 0, bool temp = false) :
+            text(t), important(i), temporary(temp), timestamp(ts) {}
     };
 
     struct hud_line {
@@ -1215,17 +1216,24 @@ public:
         }
     }
 
-    void do_message(const std::string& msg, bool important = false) {
+    void do_message(const std::string& msg, bool important = false, bool temporary = false) {
         if (!messages.empty()) {
             message& m = messages.front();
 
-            if (m.text == msg) {
+            if (m.temporary) {
+                m.text = msg;
+                m.important = important;
+                m.temporary = temporary;
+                m.timestamp = 0;
+                return;
+
+            } else if (m.text == msg) {
                 m.timestamp = 0;
                 return;
             }
         }
 
-        messages.emplace_front(msg, important, 0);
+        messages.emplace_front(msg, important, 0, temporary);
     }
 
 
@@ -1310,6 +1318,7 @@ struct reader<grender::Grid> {
             grender::Grid::message& m = g.messages.back();
             serialize::read(s, m.text);
             serialize::read(s, m.important);
+            serialize::read(s, m.temporary);
             serialize::read(s, m.timestamp);
         }
     }
@@ -1337,6 +1346,7 @@ struct writer<grender::Grid> {
         for (const auto& m : g.messages) {
             serialize::write(s, m.text);
             serialize::write(s, m.important);
+            serialize::write(s, m.temporary);
             serialize::write(s, m.timestamp);
         }
     }

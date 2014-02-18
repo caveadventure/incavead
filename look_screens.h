@@ -274,7 +274,7 @@ inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, 
     //center_draw_text(state.render, px, py-3, state.fullwidth,
     //                 "Use <TAB> or arrow keys to select target, '.' to fire");
 
-    state.render.do_message("Use <TAB> or arrow keys to select target, '.' to fire");
+    state.render.do_message("Use <TAB> or arrow keys to select target, '.' to fire", false, true);
 
     handle_input_looking(pstate, look, px, py, state, '\t');
 }
@@ -288,7 +288,7 @@ inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, u
     //center_draw_text(state.render, px, py-3, state.fullwidth,
     //                 "Use arrow keys to look around; <TAB> to cycle targets");
 
-    state.render.do_message("Use arrow keys to look around; <TAB> to cycle targets");
+    state.render.do_message("Use arrow keys to look around; <TAB> to cycle targets", false, true);
 }
 
 inline void start_look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,

@@ -5,16 +5,19 @@
 namespace fov {
 
 template <typename T>
-void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid, 
-                unsigned int cx, unsigned int cy,
-                int row, float start, float end, 
-                unsigned int radius, unsigned int origradius, unsigned int r2,
-                int xx, int xy, int yx, int yy) {
+int cast_light(unsigned int w, unsigned int h, std::vector<T>& grid, 
+               unsigned int cx, unsigned int cy,
+               int row, float start, float end, 
+               unsigned int radius, unsigned int r2,
+               int xx, int xy, int yx, int yy) {
+
+    int light_extend = 0;
 
     float new_start = 0.0;
 
     if (start < end) 
-        return;
+        return light_extend;
+    
 
     for (int j = row; j < (int)radius + 1; j++) {
 
@@ -63,7 +66,7 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
             if (blocked) {
 
-                if (thispoint.is_viewblock /*|| thispoint.is_lightsource*/) {
+                if (thispoint.is_viewblock) {
 
                     new_start = r_slope;
                     continue;
@@ -79,27 +82,18 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                     blocked = true;
 
-                    cast_light(w, h, grid,
-                               cx, cy, 
-                               j+1, start, l_slope, radius, origradius, r2, 
-                               xx, xy, yx, yy);
+                    int ret = cast_light(w, h, grid,
+                                         cx, cy, 
+                                         j+1, start, l_slope, radius, r2, 
+                                         xx, xy, yx, yy);
+
+                    light_extend = std::max(light_extend, ret);
 
                     new_start = r_slope;
 
                 } else if (thispoint.is_lightsource && j < (int)radius) {
 
-                    //blocked = true;
-
-                    thispoint.in_fov = 1;
-
-                    unsigned int newrad = origradius * 2 + j + 1;
-
-                    cast_light(w, h, grid, 
-                               cx, cy,
-                               j+1, start, l_slope, newrad, origradius, newrad * newrad,
-                               xx, xy, yx, yy);
-
-                    //new_start = r_slope;
+                    light_extend = std::max(light_extend, j);
                 }
             }
         }
@@ -107,12 +101,18 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
         if (blocked) 
             break;
     }
+
+    return light_extend;
 }
 
 
 template <typename T>
 void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid, 
                        unsigned int x, unsigned int y, unsigned int radius) {
+
+    for (auto& i : grid) {
+        i.in_fov = 0;
+    }
 
     static int mult[4][8] = {
 	{1, 0,  0, -1, -1,  0,  0,  1},
@@ -121,21 +121,32 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
 	{1, 0,  0,  1, -1,  0,  0, -1},
     };
 
-    for (auto& i : grid) {
-        i.in_fov = 0;
-    }
 
-    unsigned int r2 = radius * radius;
+    int row[8] = { 0, };
 
-    for (unsigned int oct = 0; oct < 8; ++oct) {
+    while (1) {
 
-        cast_light(w, h, grid, x, y, 
+        bool done = true;
 
-                   1, 1.0, 0.0, radius, radius, r2,
-                   mult[0][oct],
-                   mult[1][oct],
-                   mult[2][oct],
-                   mult[3][oct]);
+        for (unsigned int oct = 0; oct < 8; ++oct) {
+
+            int startrow = row[oct];
+            unsigned int rad = startrow + radius;
+            unsigned int r2 = rad * rad;
+
+            row[oct] = cast_light(w, h, grid, x, y, 
+                                  startrow + 1, 1.0, 0.0, rad, r2,
+                                  mult[0][oct],
+                                  mult[1][oct],
+                                  mult[2][oct],
+                                  mult[3][oct]);
+
+            if (row[oct] > 0)
+                done = false;
+        }
+
+        if (done)
+            break;
     }
 
     grid[x+w*y].in_fov = 1;
