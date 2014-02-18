@@ -5,18 +5,18 @@
 namespace fov {
 
 template <typename T>
-int cast_light(unsigned int w, unsigned int h, std::vector<T>& grid, 
-               unsigned int cx, unsigned int cy,
-               int row, float start, float end, 
-               unsigned int radius, unsigned int r2,
-               int xx, int xy, int yx, int yy) {
-
-    int light_extend = 0;
+void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid, 
+                unsigned int cx, unsigned int cy,
+                unsigned int cx2, unsigned int cy2,
+                int row, float start, float end, 
+                unsigned int radius, unsigned int r2,
+                int xx, int xy, int yx, int yy,
+                std::set< std::pair<unsigned int, unsigned int> >& ret) {
 
     float new_start = 0.0;
 
     if (start < end) 
-        return light_extend;
+        return;
     
 
     for (int j = row; j < (int)radius + 1; j++) {
@@ -55,9 +55,21 @@ int cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
             unsigned int dist = dx*dx + dy*dy;
 
+            if (cx2 != cx || cy2 != cy) {
+                unsigned int dx2 = (X - cx2) * (X - cx2);
+                unsigned int dy2 = (Y - cy2) * (Y - cy2);
+
+                dist += dx2 + dy2;
+                dist += 2.0 * ::sqrt((dx2 + dx * dx) * (dx*dx + dy2));
+            }
+
             if (dist <= r2) {
 
                 uint8_t newfov = ::sqrt((double)dist / (double)r2) * 100 + 1;
+
+                if (thispoint.is_lightsource && thispoint.in_fov == 0) {
+                    ret.insert(std::make_pair(X, Y));
+                }
 
                 if (thispoint.in_fov == 0 || thispoint.in_fov > newfov) {
                     thispoint.in_fov = newfov;
@@ -82,18 +94,15 @@ int cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
 
                     blocked = true;
 
-                    int ret = cast_light(w, h, grid,
-                                         cx, cy, 
-                                         j+1, start, l_slope, radius, r2, 
-                                         xx, xy, yx, yy);
-
-                    light_extend = std::max(light_extend, ret);
+                    cast_light(w, h, grid,
+                               cx, cy, 
+                               cx2, cy2,
+                               j+1, start, l_slope, radius, r2, 
+                               xx, xy, yx, yy,
+                               ret);
 
                     new_start = r_slope;
 
-                } else if (thispoint.is_lightsource && j < (int)radius) {
-
-                    light_extend = std::max(light_extend, j);
                 }
             }
         }
@@ -101,8 +110,6 @@ int cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
         if (blocked) 
             break;
     }
-
-    return light_extend;
 }
 
 
@@ -122,34 +129,43 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
     };
 
 
-    int row[8] = { 0, };
+    std::set< std::pair<unsigned int, unsigned int> > lights;
 
-    while (1) {
+    for (unsigned int oct = 0; oct < 8; ++oct) {
 
-        bool done = true;
-
-        for (unsigned int oct = 0; oct < 8; ++oct) {
-
-            int startrow = row[oct];
-            unsigned int rad = startrow + radius;
-            unsigned int r2 = rad * rad;
-
-            row[oct] = cast_light(w, h, grid, x, y, 
-                                  startrow + 1, 1.0, 0.0, rad, r2,
-                                  mult[0][oct],
-                                  mult[1][oct],
-                                  mult[2][oct],
-                                  mult[3][oct]);
-
-            if (row[oct] > 0)
-                done = false;
-        }
-
-        if (done)
-            break;
+        cast_light(w, h, grid, x, y, x, y,
+                   1, 1.0, 0.0, radius, radius * radius,
+                   mult[0][oct],
+                   mult[1][oct],
+                   mult[2][oct],
+                   mult[3][oct],
+                       lights);
     }
 
     grid[x+w*y].in_fov = 1;
+
+    while (lights.size() > 0) {
+
+        std::pair<unsigned int, unsigned int> pt = *(lights.begin());
+        lights.erase(lights.begin());
+
+        int _x = (x - pt.first);
+        int _y = (y - pt.second);
+        unsigned int rad = ::sqrt(_x*_x + _y+_y) + radius;
+        unsigned int r2 = (rad + radius) * (rad + radius) / 4;
+
+        for (unsigned int oct = 0; oct < 8; ++oct) {
+
+            cast_light(w, h, grid, x, y, pt.first, pt.second,
+                       1, 1.0, 0.0, rad, r2,
+                       mult[0][oct],
+                       mult[1][oct],
+                       mult[2][oct],
+                       mult[3][oct],
+                       lights);
+        }
+
+    }
 }
 
 
