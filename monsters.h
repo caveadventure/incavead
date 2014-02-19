@@ -298,7 +298,7 @@ struct Monsters {
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
                         const std::unordered_set<pt>& places, const unsigned int* px, const unsigned int* py,
-                        tag_t tag, unsigned int count) {
+                        tag_t tag, unsigned int count, bool counts_taken) {
 
         std::unordered_set<pt> placed;
 
@@ -314,7 +314,9 @@ struct Monsters {
 
             if (count > 0) {
 
-                count = counts.take(s.level, tag, count);
+                if (!counts_taken) {
+                    count = counts.take(s.level, tag, count);
+                }
 
                 if (count == 0) {
                     return 0;
@@ -339,7 +341,7 @@ struct Monsters {
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
                         unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
-                        tag_t tag, unsigned int count) {
+                        tag_t tag, unsigned int count, bool counts_taken) {
 
 
         std::unordered_set<pt> n;
@@ -348,7 +350,7 @@ struct Monsters {
             n.insert(xy);
         }
 
-        return summon(neigh, rng, grid, counts, render, n, px, py, tag, count);
+        return summon(neigh, rng, grid, counts, render, n, px, py, tag, count, counts_taken);
     }
 
 
@@ -357,14 +359,13 @@ struct Monsters {
                             unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
                             unsigned int level, unsigned int count) {
 
-        std::map<tag_t, unsigned int> q = counts.take(rng, level, count);
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, count, true);
 
         unsigned int ret = 0;
 
         for (auto& i : q) {
 
-            ret += summon(neigh, rng, grid, counts, render, 
-                          x, y, px, py, i.first, i.second);
+            ret += summon(neigh, rng, grid, counts, render, x, y, px, py, i.first, i.second, true);
         }
 
         return ret;
@@ -396,7 +397,7 @@ struct Monsters {
         if (maxlev.empty())
             return 0;
 
-        return summon(neigh, rng, grid, counts, render, x, y, px, py, maxlev[rng.n(maxlev.size())], count);
+        return summon(neigh, rng, grid, counts, render, x, y, px, py, maxlev[rng.n(maxlev.size())], count, false);
     }
 
 

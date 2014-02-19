@@ -170,7 +170,7 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
 
     unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
                                              state.species_counts, state.render, 
-                                             range, &p.px, &p.py, monster, count);
+                                             range, &p.px, &p.py, monster, count, false);
 
     return res;
 }
@@ -445,7 +445,7 @@ void Game::process_world(GameState& state,
 
         } else {
             nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                       i.x, i.y, &p.px, &p.py, i.summontag, 1);
+                                       i.x, i.y, &p.px, &p.py, i.summontag, 1, false);
         }
 
         if (nm > 0 && state.render.is_in_fov(i.x, i.y)) {
