@@ -56,11 +56,21 @@ void cast_light(unsigned int w, unsigned int h, std::vector<T>& grid,
             unsigned int dist = dx*dx + dy*dy;
 
             if (cx2 != cx || cy2 != cy) {
+
                 unsigned int dx2 = (X - cx2) * (X - cx2);
                 unsigned int dy2 = (Y - cy2) * (Y - cy2);
 
-                dist += dx2 + dy2;
-                dist += 2.0 * ::sqrt((dx2 + dx * dx) * (dx*dx + dy2));
+                unsigned int dist2 = dx2 + dy2;
+
+                dist = dist + dist2 + 2.0 * ::sqrt(dist * dist2);
+                
+                /*
+                unsigned int dx2 = (X - cx2) * (X - cx2);
+                unsigned int dy2 = (Y - cy2) * (Y - cy2);
+
+                double z = ::sqrt(dx2 + dy2) + ::sqrt(dist);
+                dist = z * z;
+                */
             }
 
             if (dist <= r2) {
@@ -139,7 +149,7 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
                    mult[1][oct],
                    mult[2][oct],
                    mult[3][oct],
-                       lights);
+                   lights);
     }
 
     grid[x+w*y].in_fov = 1;
@@ -151,8 +161,8 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
 
         int _x = (x - pt.first);
         int _y = (y - pt.second);
-        unsigned int rad = ::sqrt(_x*_x + _y+_y) + radius;
-        unsigned int r2 = (rad + radius) * (rad + radius) / 4;
+        unsigned int rad = ::sqrt(_x*_x + _y*_y) + radius;
+        unsigned int r2 = ((rad + radius) * (rad + radius)) / 4;
 
         for (unsigned int oct = 0; oct < 8; ++oct) {
 
