@@ -162,7 +162,7 @@ void fov_shadowcasting(unsigned int w, unsigned int h, std::vector<T>& grid,
         int _x = (x - pt.first);
         int _y = (y - pt.second);
         unsigned int rad = ::sqrt(_x*_x + _y*_y) + radius;
-        unsigned int r2 = ((rad + radius) * (rad + radius)) / 4;
+        unsigned int r2 = ((rad + radius) * (rad + radius));
 
         for (unsigned int oct = 0; oct < 8; ++oct) {
 
