@@ -100,12 +100,12 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
     if (state.items.get(x, y, 0, item)) {
 
         const Design& d = designs().get(item.tag);
-        state.render.set_skin(x, y, 2, d.skin[n_skin]);
-        state.render.set_is_lit(x, y, 2, d.is_lit);
+        state.render.set_skin(x, y, 4, d.skin[n_skin]);
+        state.render.set_is_lit(x, y, 4, d.is_lit);
 
     } else {
-        state.render.unset_skin(x, y, 2);
-        state.render.set_is_lit(x, y, 2, false);
+        state.render.unset_skin(x, y, 4);
+        state.render.set_is_lit(x, y, 4, false);
     }
 
     // //

@@ -198,7 +198,11 @@ struct Grid {
 
 private:
 
-    color_t color_fade(color_t c, double v) {
+    color_t color_fade(color_t c, double v, uint8_t mask) {
+
+        if (v > 10 && (mask & 0xF0)) {
+            v -= 10;
+        }
 
         if (v <= 30) {
             return c;
@@ -792,36 +796,35 @@ public:
                         const std::vector<skin>& skins = gp.skins;
 
                         color_t back = black_color;
-                        
-                        auto skin_i = skins.rbegin();
-                        auto skin_c = skin_i;
-                        bool found_s = false;
-                        bool found_b = false;
 
-                        while (skin_c != skins.rend()) {
+                        const skin* skin_c = nullptr;
+                        uint8_t found_s = 0;
+                        uint8_t found_b = 0;
 
-                            if (!found_s && skin_c->fore != no_color) {
-                                found_s = true;
-                                skin_i = skin_c;
+                        for (int skin_i = skincount - 1; skin_i >= 0; --skin_i) {
+
+                            const skin& sk = skins[skin_i];
+
+                            if (!found_s && sk.fore != no_color) {
+                                found_s |= (1 << skin_i);
+                                skin_c = &sk;
                             }
 
-                            if (!found_b && skin_c->back != black_color) {
-                                found_b = true;
-                                back = skin_c->back;
+                            if (!found_b && sk.back != black_color) {
+                                found_b |= (1 << skin_i);
+                                back = sk.back;
                             }
 
                             if (found_s && found_b) break;
-
-                            ++skin_c;
                         }
 
 
-                        if (!found_s) {
+                        if (skin_c == nullptr) {
                             ret = skin(one_space, black_color, black_color);
                             continue;
                         }
 
-                        const skin& sk = *skin_i;
+                        const skin& sk = *skin_c;
 
                         color_t fore = sk.fore;
                         std::string text = sk.text;
@@ -843,7 +846,7 @@ public:
 
                                 } else {
 
-                                    fore = color_fade(fore, in_fov);
+                                    fore = color_fade(fore, in_fov, found_s);
                                 }
                             }
                         }
