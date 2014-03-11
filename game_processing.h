@@ -95,7 +95,7 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
             unsigned int newcount = std::max(1.0, mult * count);
 
-            std::cout << designs().get(tag).name << " ~~> " << count << " - " << newcount;
+            std::cout << designs().get(tag).name << " ~~> " << count << " - " << newcount << std::endl;
 
             return newcount;
         });
