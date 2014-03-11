@@ -101,6 +101,8 @@ struct ConstantsBank {
 
     std::map<tag_t, ailment_t> ailments;
 
+    unsigned int max_ailments;
+
     struct mean_deviation_t {
         double mean;
         double deviation;
@@ -115,6 +117,17 @@ struct ConstantsBank {
     mean_deviation_t bonus_a_items;
     mean_deviation_t bonus_b_items;
 
+    struct flavor_moon_frequency_t {
+        double height;
+        double mean;
+        double deviation;
+
+        flavor_moon_frequency_t() : height(0), mean(0), deviation(1) {}
+    };
+
+    std::map<tag_t,flavor_moon_frequency_t> flavor_moon_frequency;
+
+
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), min_money_value(0.01), max_celauto_cells(1000),
@@ -123,6 +136,7 @@ struct ConstantsBank {
                       damage_to_scareturns(30, 20),
                       damage_to_blindturns(10, 0),
                       blindturns_to_radius(10),
+                      max_ailments(6u),
                       monetary_supply_base(1e6) {}
 
 };

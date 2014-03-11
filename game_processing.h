@@ -3,11 +3,7 @@
 
 #include <valarray>
 
-void Game::init(GameState& state, unsigned int address, unsigned int seed) {
-
-    game_seed = seed;
-
-    p.num_replay_codes = bones::bones().get_replay_code_count(address, seed);
+void add_ailments(Player& p, GameState& state) {
 
     const auto& ailments = constants().ailments;
 
@@ -16,7 +12,7 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     unsigned int num_ails = p.num_replay_codes / 2;
 
-    num_ails = std::min(num_ails, 6u);
+    num_ails = std::min(num_ails, constants().max_ailments);
 
     for (unsigned int i = 0; i < num_ails; ++i) {
 
@@ -62,6 +58,47 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
             break;
         }
     }
+}
+
+void Game::init(GameState& state, unsigned int address, unsigned int seed) {
+
+    game_seed = seed;
+
+    // Figure out how many replay codes were used.
+
+    p.num_replay_codes = bones::bones().get_replay_code_count(address, seed);
+
+    // Add some ailments.
+
+    add_ailments(p, state);
+
+    // Change item counts based on moon phase and item flavor.
+
+    const auto& fmf = constants().flavor_moon_frequency;
+    double phase = state.moon.pi.phase_n;
+
+    state.designs_counts.change_counts(
+        [&](tag_t tag, unsigned int count) {
+
+            tag_t flavor = designs().get(tag).flavor;
+
+            auto i = fmf.find(flavor);
+
+            if (i == fmf.end())
+                return count;
+            
+            const auto& f = i->second;
+            
+            double mult = 
+                gaussian_function(f.height, f.mean, f.deviation, phase) +
+                gaussian_function(f.height, f.mean, f.deviation, 1.0 - phase);
+
+            unsigned int newcount = std::max(1.0, mult * count);
+
+            std::cout << designs().get(tag).name << " ~~> " << count << " - " << newcount;
+
+            return newcount;
+        });
 
 }
 
@@ -553,8 +590,14 @@ void Game::process_world(GameState& state,
 
 void genocide(GameState& state, tag_t genus) {
 
-    state.species_counts.wipe([genus](tag_t sp) { return (species().get(sp).genus == genus); });
-
+    state.species_counts.change_counts(
+        [genus](tag_t sp, unsigned int count) { 
+            if (species().get(sp).genus == genus) {
+                return 0u;
+            } else {
+                return count;
+            }
+        });
 }
 
 inline size_t longest_common_subsequence(const std::string& a, const std::string& b) {

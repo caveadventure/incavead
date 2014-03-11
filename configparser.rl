@@ -109,6 +109,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     unsigned char shortcut_key;
     tag_t genus_tag;
+    tag_t flavor_tag;
     tag_t ach_tag;
     tag_t ail_tag;
 
@@ -482,6 +483,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
 
+        design_flavor = 'flavor' ws1 tag %{ des.flavor = tag_t(state.match, tagmem); };
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -492,7 +495,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_other_hunger_multiplier | design_dowsing |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
-            design_heal_blind | design_heal_unluck | design_action_name |
+            design_heal_blind | design_heal_unluck | design_action_name | design_flavor |
             '}'
             ${ fret; })
             ;
@@ -884,6 +887,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             )+
             ;
 
+        constant_flavor = 'flavor' (
+            ws1 tag %{ flavor_tag = tag_t(state.match, tagmem); }
+            ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].height = toreal(state.match); }
+            ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].mean = toreal(state.match); }
+            ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].deviation = toreal(state.match); }
+            )+
+            ;
+
         constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
 
         constant_tombstone_text = 'tombstone_text' ws1 string %{ __constants__().tombstone_text = state.match; };
@@ -903,12 +914,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 snumber %{ __constants__().damage_to_blindturns.scale = toint(state.match); }
             ws1 snumber %{ __constants__().damage_to_blindturns.offset = toint(state.match); } ;
 
-        constant_blindturns_to_radius = 'blindturns_to_radius' ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
+        constant_blindturns_to_radius = 'blindturns_to_radius' 
+            ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
 
         constant_treasure_chance = 'treasure_chance' 
             ws1 real %{ __constants__().treasure_chance.mean = toreal(state.match); } 
             ws1 real %{ __constants__().treasure_chance.deviation = toreal(state.match); } 
         ;
+
+        constant_max_ailments = 'max_ailments' ws1 number %{ __constants__().max_ailments = toint(state.match); };
 
         constant_monetary_supply_base = 'monetary_supply_base'
             ws1 real %{ __constants__().monetary_supply_base = toreal(state.match); }
@@ -930,13 +944,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_bad_grave | constant_ghost |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
-                       constant_genus | constant_unique_item | constant_uniques_timeout |
+                       constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot |
-                       constant_bonus_a_items | constant_bonus_b_items
+                       constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

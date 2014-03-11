@@ -8,6 +8,7 @@ struct Design {
     tag_t tag;
     std::string name;
     skins skin;
+    tag_t flavor;
     
     unsigned int level;
     unsigned int count;

@@ -144,15 +144,18 @@ struct Counts {
     }
 
     template <typename FUNC>
-    void wipe(FUNC f) {
+    void change_counts(FUNC f) {
 
         for (auto i = data.begin(); i != data.end(); ) {
 
             for (auto j = i->second.begin(); j != i->second.end(); ) {
 
-                if (f(j->first)) {
+                unsigned int newcount = f(j->first, j->second);
+
+                if (newcount == 0) {
                     j = i->second.erase(j);
                 } else {
+                    j->second = newcount;
                     ++j;
                 }
             }
