@@ -21,7 +21,7 @@ private:
 
     std::mutex mutex;
 
-    void check_valid() {
+    bool check_valid() {
 
         // Oops, the markets crashed. Lol.
         if (base < min_base) {
@@ -31,7 +31,10 @@ private:
             base = max_base;
             purchases.clear();
             accounts.clear();
+            return false;
         }
+
+        return true;
     }
 
     enum OP_t {
@@ -146,7 +149,7 @@ public:
         return scarcity * price;
     }
 
-    void purchase(tag_t d, double cost, unsigned int count = 1) {
+    void purchase(tag_t d, double cost, bool& valid, unsigned int count = 1) {
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -161,10 +164,10 @@ public:
             serialize::write(sink, count);
         }
 
-        check_valid();
+        valid = check_valid();
     }
 
-    double deposit(unsigned int account, double amount) {
+    double deposit(unsigned int account, double amount, bool& valid) {
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -179,12 +182,12 @@ public:
             serialize::write(sink, account);
         }
 
-        check_valid();
+        valid = check_valid();
 
         return balance;
     }
 
-    double withdraw(unsigned int account) {
+    double withdraw(unsigned int account, bool& valid) {
 
         std::unique_lock<std::mutex> l(mutex);
 
@@ -204,7 +207,7 @@ public:
             serialize::write(sink, account);
         }
 
-        check_valid();
+        valid = check_valid();
 
         return ret;
     }

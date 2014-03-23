@@ -2,7 +2,7 @@
 #define __BANK_SCREENS_H
 
 
-inline void purchase_protection(Player& p, GameState& state, double cost) {
+inline bool purchase_protection(Player& p, GameState& state, double cost) {
 
     double deflation = finance::supply().get_rate();
 
@@ -10,11 +10,11 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
     double money_curse = p.banking.money_curse * cost;
 
     if (shield_bonus <= 0 || p.health.shield >= constants().health_shield_max)
-        return;
+        return true;
 
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
-        return;
+        return true;
 
     double xcost = cost;
 
@@ -40,19 +40,27 @@ inline void purchase_protection(Player& p, GameState& state, double cost) {
         state.render.do_message("Please keep the change.");
     }
 
-    finance::supply().purchase(tag_t(), xcost);
+    bool valid = true;
+
+    finance::supply().purchase(tag_t(), xcost, valid);
+
+    if (!valid) {
+        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+    }
+    
+    return valid;
 }
 
-inline void purchase_item(Player& p, GameState& state) {
+inline bool purchase_item(Player& p, GameState& state) {
 
     tag_t pitem = p.banking.item;
 
     if (p.banking.assets < p.banking.item_price || pitem.null())
-        return;
+        return true;
 
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
-        return;
+        return true;
 
     items::Item made(pitem, items::pt(p.px, p.py), 1);
     state.items.place(p.px, p.py, made, state.render);
@@ -63,40 +71,63 @@ inline void purchase_item(Player& p, GameState& state) {
         state.render.do_message("Please keep the change.");
     }
 
+    bool valid = true;
+
     if (constants().money.count(money.tag) == 0) {
 
         const Design& md = designs().get(money.tag);
 
         unsigned int count = (md.count_is_only_one ? 1 : money.count);
 
-        finance::supply().purchase(money.tag, 0, count);
+        finance::supply().purchase(money.tag, 0, valid, count);
     }
 
-    finance::supply().purchase(pitem, p.banking.item_price);
+    if (valid) {
+        finance::supply().purchase(pitem, p.banking.item_price, valid);
+    }
+
+    if (!valid) {
+        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+    }
+
+    return valid;
 }
 
-inline void account_deposit(Player& p, GameState& state, unsigned int account) {
+inline bool account_deposit(Player& p, GameState& state, unsigned int account) {
 
     if (p.banking.assets < constants().min_money_value) {
-        return;
+        return true;
     }
 
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
-        return;
+        return true;
 
-    double b = finance::supply().deposit(account, p.banking.assets);
+    bool valid = true;
 
-    state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM.", b));
+    double b = finance::supply().deposit(account, p.banking.assets, valid);
+
+    if (!valid) {
+
+        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+
+    } else {
+
+        state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM.", b));
+    }
 
     ++(state.ticks);
+
+    return valid;
 }
 
-inline void account_withdraw(Player& p, GameState& state, unsigned int account) {
+inline bool account_withdraw(Player& p, GameState& state, unsigned int account) {
 
-    double sum = finance::supply().withdraw(account);
+    bool valid = true;
 
-    if (give_change(state, p.px, p.py, sum)) {
+    double sum = finance::supply().withdraw(account, valid);
+
+    if (give_change(state, p.px, p.py, sum) && valid) {
         state.render.do_message(nlp::message("%f $ZM withdrawn. Enjoy your newfound wealth.", sum));
 
     } else {
@@ -104,6 +135,8 @@ inline void account_withdraw(Player& p, GameState& state, unsigned int account) 
     }
 
     ++(state.ticks);
+
+    return valid;
 }
 
 inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k) {
@@ -202,7 +235,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
     }
 }
 
-inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypress k) {
+inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypress k) {
 
     switch (k.letter) {
     case 'w':
@@ -222,9 +255,8 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         break;
 
     case 'p':
-        purchase_protection(p, state, p.banking.assets);
         state.window_stack.pop_back();
-        break;
+        return true;
 
     case 'i':
         if (p.banking.assets < constants().min_money_value) {
@@ -239,6 +271,8 @@ inline void handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         state.window_stack.pop_back();
         break;
     }
+
+    return false;
 }
 
 inline std::string show_banking_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
@@ -317,23 +351,27 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 }
 
 inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k) {
+
+    bool valid = true;
     
     switch ((screens_t)state.window_stack.back().type) {
 
     case screens_t::bank_main:
-        handle_input_banking_main(p, state, k);
+        if (handle_input_banking_main(p, state, k)) {
+            valid = purchase_protection(p, state, p.banking.assets);
+        }
         break;
 
     case screens_t::bank_withdrawal:
         if (handle_input_pincode(p, state, k)) {
-            account_withdraw(p, state, std::stoul(p.input.s));
+            valid = account_withdraw(p, state, std::stoul(p.input.s));
             state.window_stack.clear();
         }
         break;
             
     case screens_t::bank_deposit:
         if (handle_input_pincode(p, state, k)) {
-            account_deposit(p, state, std::stoul(p.input.s));
+            valid = account_deposit(p, state, std::stoul(p.input.s));
             state.window_stack.clear();
         }
         break;
@@ -346,13 +384,27 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
 
     case screens_t::bank_buy_confirm:
         if (k.letter == 'y') {
-            purchase_item(p, state);
+            valid = purchase_item(p, state);
         }
         state.window_stack.clear();
         break;
 
     default:
         break;
+    }
+
+    // HACK
+    if (!valid) {
+
+        features::Feature feat;
+        if (state.features.get(p.px, p.py, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+            if (t.banking.sell_margin > 0 || t.banking.shield_bonus > 0) {
+
+                state.features.x_unset(p.px, p.py, feat.tag, state.render);
+            }
+        }
     }
 }
 
