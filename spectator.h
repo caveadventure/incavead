@@ -444,6 +444,10 @@ void choose_and_watch(SCREEN& screen) {
             return;
         }
 
+        if (k.key == maudit::keycode::esc) {
+            return;
+        }
+
         auto i = games_c.find(k.letter);
         
         if (i == games_c.end())
