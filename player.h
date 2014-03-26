@@ -172,9 +172,11 @@ struct Player {
         double shield_bonus;
         double money_curse;
         tag_t item;
+        unsigned int item_count;
         double item_price;
 
-        banking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), item_price(0) {}
+        banking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), 
+                            item_count(0), item_price(0) {}
     };
 
     banking_state_t banking;
@@ -329,6 +331,8 @@ struct reader<Player> {
         serialize::read(s, p.banking.shield_bonus);
         serialize::read(s, p.banking.money_curse);
         serialize::read(s, p.banking.item);
+        p.banking.item_price = 0;
+        //serialize::read(s, p.banking.item_count);
         serialize::read(s, p.banking.item_price);
         serialize::read(s, p.spells);
         serialize::read(s, p.uniques_disabled);
@@ -376,6 +380,7 @@ struct writer<Player> {
         serialize::write(s, p.banking.shield_bonus);
         serialize::write(s, p.banking.money_curse);
         serialize::write(s, p.banking.item);
+        //serialize::write(s, p.banking.item_count);
         serialize::write(s, p.banking.item_price);
         serialize::write(s, p.spells);
         serialize::write(s, p.uniques_disabled);

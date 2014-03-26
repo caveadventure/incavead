@@ -62,7 +62,7 @@ inline bool purchase_item(Player& p, GameState& state) {
     if (!p.inv.take(constants().money_slot, money))
         return true;
 
-    items::Item made(pitem, items::pt(p.px, p.py), 1);
+    items::Item made(pitem, items::pt(p.px, p.py), p.banking.item_count);
     state.items.place(p.px, p.py, made, state.render);
 
     ++(state.ticks);
@@ -197,7 +197,22 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
     const Design& d = designs().get(item);
 
-    unsigned int count = 1;
+    std::string nums;
+
+    for (unsigned char c : p.input.s) {
+
+        if (c >= '0' && c <= '9') {
+            nums += c;
+
+        } else if (nums.size() > 0) {
+            break;
+        }
+    }
+
+    unsigned int count = std::max(1u, std::min((unsigned int)std::stoul(nums), d.stackrange));
+
+    std::cout << "||| " << count << " " << nums << " " << d.stackrange << " , " 
+              << (unsigned int)std::stoul(nums) << std::endl;
 
     double price = finance::supply().get_price(d) * p.banking.sell_margin;
 
@@ -230,6 +245,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
         p.banking.item = item;
         p.banking.item_price = price;
+        p.banking.item_count = count;
 
         state.push_window(msg, screens_t::bank_buy_confirm);
     }
