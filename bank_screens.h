@@ -58,6 +58,13 @@ inline bool purchase_item(Player& p, GameState& state) {
     if (p.banking.assets < p.banking.item_price || pitem.null())
         return true;
 
+    unsigned int trucount = state.designs_counts.take(pitem);
+
+    if (trucount == 0) {
+        state.render.do_message("Strange. Nothing happened.");
+        return true;
+    }
+
     items::Item money;
     if (!p.inv.take(constants().money_slot, money))
         return true;
@@ -190,7 +197,8 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
 
     if (item.null()) {
 
-        state.window_stack.clear();
+        //state.window_stack.clear();
+        state.window_stack.pop_back();
         state.push_window("No such item exists. Please try again.", screens_t::messages);
         return;
     }
@@ -209,12 +217,17 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
         }
     }
 
-    unsigned int count = std::max(1u, std::min((unsigned int)std::stoul(nums), d.stackrange));
+    unsigned int count = 1;
+
+    if (nums.size() > 0) {
+        std::cout << "trying stoul: [" << nums << "]" << std::endl;
+        count = std::max(count, std::min((unsigned int)std::stoul(nums), d.stackrange));
+    }
 
     std::cout << "||| " << count << " " << nums << " " << d.stackrange << " , " 
-              << (unsigned int)std::stoul(nums) << std::endl;
+              << nums << std::endl;
 
-    double price = finance::supply().get_price(d) * p.banking.sell_margin;
+    double price = finance::supply().get_price(d) * count * p.banking.sell_margin;
 
     std::string msg;
 
@@ -223,7 +236,8 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
                            "Sorry, but \3%s\1 is not currently for sale.",
                            nlp::count(), d, count);
 
-        state.window_stack.clear();
+        //state.window_stack.clear();
+        state.window_stack.pop_back();
         state.push_window(msg, screens_t::messages);
         return;
         
@@ -237,7 +251,8 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
     if (p.banking.assets < price) {
         msg += "You cannot afford this item, sorry.";
 
-        state.window_stack.clear();
+        //state.window_stack.clear();
+        state.window_stack.pop_back();
         state.push_window(msg, screens_t::messages);
 
     } else {
@@ -247,6 +262,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
         p.banking.item_price = price;
         p.banking.item_count = count;
 
+        state.window_stack.pop_back();
         state.push_window(msg, screens_t::bank_buy_confirm);
     }
 }
@@ -275,6 +291,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         return true;
 
     case 'i':
+    case 'b':
         if (p.banking.assets < constants().min_money_value) {
             state.window_stack.pop_back(); 
         } else {
@@ -359,7 +376,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
         }
 
         if (bank.sell_margin > 0) {
-            msg += "  \2i\1) Purchase an item.\n";
+            msg += "  \2i\1) Buy an item.\n";
         }
     }
 
@@ -401,8 +418,10 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
     case screens_t::bank_buy_confirm:
         if (k.letter == 'y') {
             valid = purchase_item(p, state);
+            state.window_stack.clear();
+        } else {
+            state.window_stack.pop_back();
         }
-        state.window_stack.clear();
         break;
 
     default:

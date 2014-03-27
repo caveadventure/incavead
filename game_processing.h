@@ -646,6 +646,8 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
 
             size_t lcs = longest_common_subsequence(_design.name, name);
 
+            std::cout << ": " << _design.name << " " << name << " : " << lcs << " ~ " << maxlcs << std::endl;
+
             if (lcs < maxlcs)
                 continue;
 
@@ -671,20 +673,19 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
 
         tag_t design = desgns[ntag];
 
-        unsigned int trucount = state.designs_counts.take(design);
-
-        if (trucount == 0) {
-            counts.erase(counts.begin() + ntag);
-            desgns.erase(desgns.begin() + ntag);
-            continue;
-        }
-
         return design;
     }
 }
 
 
 inline void find_existing_item_make(GameState& state, unsigned int px, unsigned int py, tag_t design) {
+
+    unsigned int trucount = state.designs_counts.take(design);
+
+    if (trucount == 0) {
+        state.render.do_message("Strange. Nothing happened.");
+        return;
+    }
 
     const Design& _design = designs().get(design);
 
