@@ -928,6 +928,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().monetary_supply_base = toreal(state.match); }
         ;
 
+        constant_player_level_cap = 'player_level_cap' 
+            ws1 number %{ __constants__().player_level_cap = toint(state.match); }
+        ;
+
         constant_bonus_a_items = 'bonus_a_items' 
             ws1 real %{ __constants__().bonus_a_items.mean = toreal(state.match); } 
             ws1 real %{ __constants__().bonus_a_items.deviation = toreal(state.match); } 
@@ -949,7 +953,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |
-                       constant_monetary_supply_base | constant_money_slot |
+                       constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments
                        ;
 

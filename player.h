@@ -239,8 +239,10 @@ struct Player {
     
     unsigned int get_computed_level(rnd::Generator& rng) {
 
+        unsigned int _lev = std::min(level, constants().player_level_cap);
+
         if (luck.val == 0)
-            return level;
+            return _lev;
 
         bool neg = (luck.val < 0);
         double l = ::fabs(luck.val);
@@ -249,7 +251,7 @@ struct Player {
         double p = (0.9 / l);
 
         if (p > 1.0)
-            return level;
+            return _lev;
 
         int fudge = rng.geometric(p);
 
@@ -259,10 +261,10 @@ struct Player {
 
             luck.dec(fudge);
 
-            if (fudge > (int)level)
+            if (fudge > (int)_lev)
                 return 0;
 
-            return level - fudge;
+            return _lev - fudge;
 
         } else {
 
@@ -270,7 +272,7 @@ struct Player {
 
             luck.dec(fudge);
 
-            return level + fudge;
+            return _lev + fudge;
         }
     }
 };
@@ -331,8 +333,7 @@ struct reader<Player> {
         serialize::read(s, p.banking.shield_bonus);
         serialize::read(s, p.banking.money_curse);
         serialize::read(s, p.banking.item);
-        p.banking.item_price = 0;
-        //serialize::read(s, p.banking.item_count);
+        serialize::read(s, p.banking.item_count);
         serialize::read(s, p.banking.item_price);
         serialize::read(s, p.spells);
         serialize::read(s, p.uniques_disabled);
@@ -380,7 +381,7 @@ struct writer<Player> {
         serialize::write(s, p.banking.shield_bonus);
         serialize::write(s, p.banking.money_curse);
         serialize::write(s, p.banking.item);
-        //serialize::write(s, p.banking.item_count);
+        serialize::write(s, p.banking.item_count);
         serialize::write(s, p.banking.item_price);
         serialize::write(s, p.spells);
         serialize::write(s, p.uniques_disabled);

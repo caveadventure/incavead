@@ -127,6 +127,8 @@ struct ConstantsBank {
 
     std::map<tag_t,flavor_moon_frequency_t> flavor_moon_frequency;
 
+    unsigned int player_level_cap;
+
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
@@ -137,7 +139,8 @@ struct ConstantsBank {
                       damage_to_blindturns(10, 0),
                       blindturns_to_radius(10),
                       max_ailments(6u),
-                      monetary_supply_base(1e6) {}
+                      monetary_supply_base(1e6),
+                      player_level_cap(12) {}
 
 };
 
