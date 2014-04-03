@@ -235,7 +235,11 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         return true;
     }
 
-    ++(state.ticks);
+    if (!d.use_for_free) {
+
+        ++(state.ticks);
+    }
+
     return true;
 }
 

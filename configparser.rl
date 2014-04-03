@@ -402,6 +402,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
         design_descend    = 'descend' ws1 snumber       %{ des.descend = toint(state.match); };
 
+        design_use_for_free = 'use_for_free' %{ des.use_for_free = true; };
         design_destructible = 'destructible' %{ des.destructible = true; };
 
         design_count_is_only_one = 'count_is_only_one' %{ des.count_is_only_one = true; };
@@ -492,7 +493,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_karma | design_luck | design_lightradius | design_digging | design_descend | design_blink | 
             design_cast_cloud | design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_place_permafloor | design_consume_luck | design_hunger | 
-            design_other_hunger_multiplier | design_dowsing |
+            design_other_hunger_multiplier | design_dowsing | design_use_for_free |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor |
