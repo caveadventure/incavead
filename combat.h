@@ -149,7 +149,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         
     } else if (v.type == damage::type_t::cancellation) {
 
-        if (s.flags.magic) {
+        if (s.flags.magic && m.magic > -3) {
             state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
             totmagic += dmg;
         }

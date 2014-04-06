@@ -726,6 +726,8 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
 
         size_t lcs = longest_common_subsequence(_design.name, name);
 
+        std::cout << "| " << _design.name << " " << name << " : " << lcs << " ~ " << maxlcs << std::endl;
+
         if (lcs < maxlcs)
             continue;
 
@@ -741,6 +743,8 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
         state.render.do_message("Strange. Nothing happened.");
         return false;
     }
+
+    std::cout << "? " << desgns.size() << std::endl;
 
     tag_t design = desgns[state.rng.n(desgns.size())];
     const Design& _design = designs().get(design);
