@@ -220,12 +220,8 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
     unsigned int count = 1;
 
     if (nums.size() > 0) {
-        std::cout << "trying stoul: [" << nums << "]" << std::endl;
         count = std::max(count, std::min((unsigned int)std::stoul(nums), d.stackrange));
     }
-
-    std::cout << "||| " << count << " " << nums << " " << d.stackrange << " , " 
-              << nums << std::endl;
 
     double price = finance::supply().get_price(d) * count * p.banking.sell_margin;
 

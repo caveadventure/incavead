@@ -95,8 +95,6 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
             unsigned int newcount = std::max(1.0, mult * count);
 
-            std::cout << designs().get(tag).name << " ~~> " << count << " - " << newcount << std::endl;
-
             return newcount;
         });
 
@@ -646,8 +644,6 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
 
             size_t lcs = longest_common_subsequence(_design.name, name);
 
-            std::cout << ": " << _design.name << " " << name << " : " << lcs << " ~ " << maxlcs << std::endl;
-
             if (lcs < maxlcs)
                 continue;
 
@@ -726,8 +722,6 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
 
         size_t lcs = longest_common_subsequence(_design.name, name);
 
-        std::cout << "| " << _design.name << " " << name << " : " << lcs << " ~ " << maxlcs << std::endl;
-
         if (lcs < maxlcs)
             continue;
 
@@ -743,8 +737,6 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
         state.render.do_message("Strange. Nothing happened.");
         return false;
     }
-
-    std::cout << "? " << desgns.size() << std::endl;
 
     tag_t design = desgns[state.rng.n(desgns.size())];
     const Design& _design = designs().get(design);
