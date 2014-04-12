@@ -748,7 +748,7 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
         p.uniques_disabled = true;
 
         // TODO Really this is just a way to hardcode a value.
-        made.count = 0.1/_design.hunger;
+        made.count = 0.5/_design.hunger;
     }
 
     state.items.place(px, py, made, state.render);
