@@ -351,6 +351,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ spe.trail.cost.deviation = toreal(state.match); }
             ;
 
+        species_steal = 'steal' ws1 tag %{ spe.steal = tag_t(state.match, tagmem); } ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
@@ -358,7 +360,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_cast_cloud | species_summon | species_death_summon | species_spawn | 
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
-            species_karma | species_blast | species_true_level | species_trail |
+            species_karma | species_blast | species_true_level | species_trail | species_steal |
             '}'
             ${ fret; })
             ;
@@ -486,6 +488,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_flavor = 'flavor' ws1 tag %{ des.flavor = tag_t(state.match, tagmem); };
 
+        design_take_summon = 'take_summon' 
+            ws1 tag %{ des.take_summon.species = tag_t(state.match, tagmem); }
+            ws1 number %{ des.take_summon.needs_count = toint(state.match); }
+            ;
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -496,7 +503,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_other_hunger_multiplier | design_dowsing | design_use_for_free |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
-            design_heal_blind | design_heal_unluck | design_action_name | design_flavor |
+            design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
             '}'
             ${ fret; })
             ;

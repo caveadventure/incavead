@@ -346,6 +346,18 @@ inline bool move_monster(Player& p, GameState& state,
             return true;
         }
 
+        if (!s.steal.null()) {
+
+            items::Item tmp;
+            if (p.inv.take(s.steal, tmp)) {
+
+                state.render.do_message(nlp::message("%S disappears in a puff of smoke.", s), true);
+
+                do_die = true;
+                return true;
+            }
+        }
+
         damage::defenses_t defenses;
         p.inv.get_defense(defenses);
 

@@ -137,20 +137,18 @@ struct inventory_t {
     }
 
     bool floor_to_inv(unsigned int x, unsigned int y, unsigned int z, items::Items& items, 
-                      grender::Grid& render, items::Item& itmp) {
+                      grender::Grid& render, items::Item& discarded, items::Item& taken) {
 
-        items::Item ftmp;
-
-        if (!items.take(x, y, z, ftmp, render))
+        if (!items.take(x, y, z, taken, render))
             return false;
 
-        tag_t slot = designs().get(ftmp.tag).slot;
+        tag_t slot = designs().get(taken.tag).slot;
 
         if (slots.count(slot) == 0)
             return false;
 
-        if (place(slot, ftmp, itmp)) {
-            items.place(x, y, itmp, render);
+        if (place(slot, taken, discarded)) {
+            items.place(x, y, discarded, render);
         }
 
         return true;

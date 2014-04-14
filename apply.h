@@ -460,16 +460,29 @@ inline bool start_digging(Player& p, tag_t slot, GameState& state) {
 inline bool take_item(unsigned int x, unsigned int y, unsigned int z, 
                       Player& p, GameState& state) {
 
-    items::Item disc;
+    items::Item discarded_item;
+    items::Item taken_item;
         
-    if (p.inv.floor_to_inv(x, y, z, state.items, state.render, disc)) {
+    if (p.inv.floor_to_inv(x, y, z, state.items, state.render, discarded_item, taken_item)) {
 
-        if (!disc.tag.null()) {
+        if (!discarded_item.tag.null()) {
 
-            const Design& d = designs().get(disc.tag);
+            const Design& d = designs().get(discarded_item.tag);
 
             // HACK
-            state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, disc.count));
+            state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, 
+                                                 discarded_item.count));
+        }
+
+        {
+            const Design& d = designs().get(taken_item.tag);
+
+            if (!d.take_summon.species.null() && 
+                taken_item.count >= d.take_summon.needs_count) {
+
+                state.triggers[state.ticks].summon_out_of_view.monster = d.take_summon.species;
+                state.triggers[state.ticks].summon_out_of_view.count = 0;
+            }
         }
 
         ++(state.ticks);
