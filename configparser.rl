@@ -571,7 +571,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ ter.banking.buy_margin = toreal(state.match); }
             ws1 real   %{ ter.banking.sell_margin = toreal(state.match); } 
             ws1 real   %{ ter.banking.shield_bonus = toreal(state.match); }
-            ws1 real   %{ ter.banking.money_curse = toreal(state.match); } ;
+            ws1 real   %{ ter.banking.money_curse = toreal(state.match); } 
+            ws1 real   %{ ter.banking.gives_change = toreal(state.match); }
+            ;
 
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |

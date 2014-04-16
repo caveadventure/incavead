@@ -146,6 +146,26 @@ inline bool account_withdraw(Player& p, GameState& state, unsigned int account) 
     return valid;
 }
 
+inline void give_small_change(Player& p, GameState& state, double increments) {
+
+    if (increments <= constants().min_money_value) {
+        return;
+    }
+
+    items::Item money;
+    if (!p.inv.take(constants().money_slot, money))
+        return;
+
+    double assets = p.banking.assets;
+
+    while (assets > constants().min_money_value) {
+
+        double x = std::min(increments, assets);
+        give_change(state, p.px, p.py, x);
+        assets -= x;
+    }
+}
+
 inline bool handle_input_pincode(Player& p, GameState& state, maudit::keypress k) {
 
     if (k.letter >= '0' && k.letter <= '9') {
@@ -296,6 +316,11 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         }
         break;
 
+    case 'c':
+        give_small_change(p, state, p.banking.gives_change);
+        state.window_stack.clear();
+        break;
+
     default:
         state.window_stack.pop_back();
         break;
@@ -317,6 +342,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     p.banking.sell_margin = bank.sell_margin;
     p.banking.shield_bonus = bank.shield_bonus;
     p.banking.money_curse = bank.money_curse;
+    p.banking.gives_change = bank.gives_change;
 
     double& assets = p.banking.assets;
     assets = 0;
@@ -373,6 +399,10 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
         if (bank.sell_margin > 0) {
             msg += "  \2i\1) Buy an item.\n";
+        }
+
+        if (bank.gives_change > 0) {
+            msg += "  \2c\1) Exchange assets for coins.\n";
         }
     }
 

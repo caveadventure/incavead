@@ -87,8 +87,9 @@ struct Terrain {
         double sell_margin;
         double shield_bonus;
         double money_curse;
+        double gives_change;
 
-        banking_t() : buy_margin(0), sell_margin(0), shield_bonus(0), money_curse(0) {}
+        banking_t() : buy_margin(0), sell_margin(0), shield_bonus(0), money_curse(0), gives_change(0) {}
     };
 
     banking_t banking;
