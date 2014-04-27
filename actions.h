@@ -81,6 +81,26 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
             ++(state.ticks);
             return;
         }
+
+        if (!t.sensor_toggle.first.null()) {
+            
+            for (const auto& nn : state.neigh(neighbors::pt(nx, ny))) {
+
+                unsigned int nnx = nn.first;
+                unsigned int nny = nn.second;
+
+                features::Feature feat2;
+                if (state.features.get(nnx, nny, feat2)) {
+
+                    if (feat2.tag == t.sensor_toggle.first) {
+                        state.features.set(nnx, nny, t.sensor_toggle.second, state.render);
+
+                    } else if (feat2.tag == t.sensor_toggle.second) {
+                        state.features.set(nnx, nny, t.sensor_toggle.first, state.render);
+                    }
+                }
+            }
+        }
     }
 
     if (state.render.is_walkblock(nx, ny)) {
