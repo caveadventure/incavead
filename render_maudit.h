@@ -610,8 +610,6 @@ public:
         skin& s_ = skins[z];
 
         s_ = s;
-
-        g.valid = true;
     }
 
     void unset_skin(unsigned int x, unsigned int y, unsigned int z) {
@@ -620,8 +618,11 @@ public:
 	std::vector<skin>& skins = g.skins;
 
         skins[z] = skin();
+    }
 
-        g.valid = true;
+    void validate(unsigned int x, unsigned int y) {
+
+        _get(x, y).valid = true;
     }
 
     void invalidate(unsigned int x, unsigned int y) {

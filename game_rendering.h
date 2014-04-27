@@ -32,6 +32,8 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
     const Levelskin& lev = levelskins().get(p.worldz);
 
+    std::cout << "Setting skin! " << x << " " << y << std::endl;
+
     if (walkable) {
         if (water) {
 
@@ -85,6 +87,8 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
         state.render.set_is_lit(x, y, 1, t.is_lit);
         state.render.set_is_lightsource(x, y, 1, t.is_lightsource);
 
+        std::cout << "  Feature: " << t.name << std::endl;
+
     } else {
         state.render.unset_skin(x, y, 1);
         state.render.set_is_viewblock(x, y, 1, false);
@@ -127,6 +131,8 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
         state.render.unset_skin(x, y, 5);
         state.render.set_is_walkblock(x, y, 5, false);
     }
+
+    state.render.validate(x, y);
 }
 
 
