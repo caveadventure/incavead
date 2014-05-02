@@ -93,11 +93,9 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
                 if (state.features.get(nnx, nny, feat2)) {
 
                     if (feat2.tag == t.sensor_toggle.first) {
-                        std::cout << "Toggle on " << nnx << " " << nny << " (" << p.px << " " << p.py << ")" << std::endl;
                         state.features.set(nnx, nny, t.sensor_toggle.second, state.render);
 
                     } else if (feat2.tag == t.sensor_toggle.second) {
-                        std::cout << "Toggle off " << nnx << " " << nny << " (" << p.px << " " << p.py << ")" << std::endl;
                         state.features.set(nnx, nny, t.sensor_toggle.first, state.render);
                     }
                 }
