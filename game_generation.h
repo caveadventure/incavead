@@ -119,13 +119,24 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
         std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults, true);
 
-        for (unsigned int priority = 0; priority <= 1; ++priority) {
+        std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
 
-            for (const auto vi : vc) {
+        for (const auto& vi : vc) {
+            const Vault& v = vaults().get(vi.first);
+
+            s_vc[v.priority].insert(vi);
+        }
+
+        for (const auto& tmp : s_vc) {
+            for (const auto vi : tmp.second) {
+
                 const Vault& v = vaults().get(vi.first);
 
-                if (v.priority != priority)
-                    continue;
+                if (v.placement == Vault::placement_t::packing) {
+                    std::cout << "Packing: " << vi.second << " " << (v.pic.empty() ? std::string("[]") : v.pic.front()) << std::endl;
+                } else {
+                    std::cout << "Other " << vi.second << std::endl;
+                }
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
                     generate_vault(v, state, summons, affected, vault_packing, player_positions);
@@ -261,7 +272,19 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     } else {
 
-        const grid::pt& xy = player_positions[state.rng.n(player_positions.size())];
+        std::vector<grid::pt> pp;
+
+        for (const auto& xy : player_positions) {
+
+            if (state.grid.is_walk(xy.first, xy.second)) {
+                pp.push_back(xy);
+            }
+        }
+
+        if (pp.empty())
+            throw std::runtime_error("Failed to generate grid (placement packed)");
+
+        const grid::pt& xy = pp[state.rng.n(pp.size())];
 
         p.px = xy.first;
         p.py = xy.second;

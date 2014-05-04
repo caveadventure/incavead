@@ -128,6 +128,7 @@ inline void generate_vault(const Vault& vault, GameState& state,
     if (vault.placement == Vault::placement_t::packing) {
 
         if (!packing_placement(state, w, h, packed, xy)) {
+            std::cout << "Failed to pack." << std::endl;
             return;
         }
 

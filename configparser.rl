@@ -651,7 +651,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
 
-        vault_priority = 'priority' %{ vau.priority = 1; };
+        vault_priority = 'priority' ws1 number %{ vau.priority = toint(state.match); };
       
         vault_use_species_counts = 'use_monster_counts' %{ vau.use_species_counts = true; };
 
