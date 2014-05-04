@@ -16,8 +16,7 @@ struct Damage {
 
         damage_to_turns_t(int s = 0, int o = 0) : scale(s), offset(o) {}
 
-        template <typename PARAM>
-        inline unsigned int operator()(double v) {
+        inline unsigned int operator()(double v) const {
             int n = (v * scale) - offset;
             return std::max(0, n);
         }
@@ -45,7 +44,7 @@ struct Damage {
 
             tristate_t() : v(-1) {}
 
-            bool operator()(bool f) {
+            bool operator()(bool f) const {
 
                 if (v < 0) return true;
 

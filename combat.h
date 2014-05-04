@@ -96,12 +96,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     const Damage& dam = damages().get(v.type);
 
-    if (!dam.flags.robot(s.robot) || 
-        !dam.flags.undead(s.undead) ||
-        !dam.flags.animal(s.animal) ||
-        !dam.flags.plant(s.plant) ||
-        !dam.flags.magic(s.magic) ||
-        !dam.flags.eyeless(s.eyeless)) 
+    if (!dam.flags.robot(s.flags.robot) || 
+        !dam.flags.undead(s.flags.undead) ||
+        !dam.flags.animal(s.flags.animal) ||
+        !dam.flags.plant(s.flags.plant) ||
+        !dam.flags.magic(s.flags.magic) ||
+        !dam.flags.eyeless(s.flags.eyeless)) 
         return;
 
     if (dam.heavenly) {
@@ -122,16 +122,16 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     if (sleepturns > 0) {
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += sleepturns; });
+        state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
         totsleep += sleepturns;
 
     } else if (blindturns > 0) {
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.blind += blindturns; });
+        state.monsters.change(mon, [blindturns](monsters::Monster& m) { m.blind += blindturns; });
 
     } else if (scareturns > 0) {
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += scareturns; });
+        state.monsters.change(mon, [scareturns](monsters::Monster& m) { m.fear += scareturns; });
         totfear += dmg;
         
     } else if (dam.cancellation) {
@@ -332,22 +332,22 @@ inline void handle_post_defend(Player& p, GameState& state) {
 }
 
 
-inline void defend_message(const Species& s, const Damage::msg_t& msg) {
+inline void defend_message(GameState& state, const Species& s, const Damage::msg_t& msg) {
 
     state.render.do_message(nlp::message(msg.str, s), msg.important);
 }
 
-inline void defend_message(const Terrain& t, const Damage::msg_t& msg) {
+inline void defend_message(GameState& state, const Terrain& t, const Damage::msg_t& msg) {
 
     state.render.do_message(nlp::message(msg.str, t), msg.important);
 }
 
-inline void defend_message(const Design& d, const Damage::msg_t& msg) {
+inline void defend_message(GameState& state, const Design& d, const Damage::msg_t& msg) {
 
     state.render.do_message(nlp::message(msg.str, d), msg.important);
 }
 
-inline void defend_message(const ConstantsBank::ailment_t& a, const Damage::msg_t& msg) {
+inline void defend_message(GameState& state, const ConstantsBank::ailment_t& a, const Damage::msg_t& msg) {
 
     state.render.do_message(nlp::message(msg.str, a), msg.important);
 }
@@ -373,7 +373,7 @@ inline double defend(Player& p,
 
         if (!env) {
             Damage::msg_t msg("%s attacks but does no damage.");
-            defend_message(s, msg);
+            defend_message(state, s, msg);
         }
 
         return vamp;
@@ -438,9 +438,9 @@ inline double defend(Player& p,
         }
 
         if (env) {
-            defend_message(s, dam.env_msg);
+            defend_message(state, s, dam.env_msg);
         } else {
-            defend_message(s, dam.melee_msg);
+            defend_message(state, s, dam.melee_msg);
         }
     }
 

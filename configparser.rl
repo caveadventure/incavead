@@ -64,7 +64,7 @@ inline void init_levelskin_(const Levelskin& l) {
 }
 
 inline void init_damage(const Damage& d) {
-    init_damage_copy(l);
+    init_damage_copy(d);
 }
 
 inline void add_color(maudit::color& c, unsigned int i) {
@@ -1052,12 +1052,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         damage_make_meat    = 'make_meat'    %{ dam.make_meat = true; } ;
         damage_health       = 'health'       %{ dam.health = true; } ;
 
-        damage_eyeless = 'eyeless' ws (('+' %{ dam.eyeless.v = 1; }) | ('-' %{ dam.eyeless.v = 0; }));
-        damage_undead  = 'undead'  ws (('+' %{ dam.undead.v = 1; })  | ('-' %{ dam.undead.v = 0; }));
-        damage_animal  = 'animal'  ws (('+' %{ dam.animal.v = 1; })  | ('-' %{ dam.animal.v = 0; }));
-        damage_plant   = 'plant'   ws (('+' %{ dam.plant.v = 1; })   | ('-' %{ dam.plant.v = 0; }));
-        damage_robot   = 'robot'   ws (('+' %{ dam.robot.v = 1; })   | ('-' %{ dam.robot.v = 0; }));
-        damage_magic   = 'magic'   ws (('+' %{ dam.magic.v = 1; })   | ('-' %{ dam.magic.v = 0; }));
+        damage_eyeless = 'eyeless' ws (('+' %{ dam.flags.eyeless.v = 1; }) | ('-' %{ dam.flags.eyeless.v = 0; }));
+        damage_undead  = 'undead'  ws (('+' %{ dam.flags.undead.v = 1; })  | ('-' %{ dam.flags.undead.v = 0; }));
+        damage_animal  = 'animal'  ws (('+' %{ dam.flags.animal.v = 1; })  | ('-' %{ dam.flags.animal.v = 0; }));
+        damage_plant   = 'plant'   ws (('+' %{ dam.flags.plant.v = 1; })   | ('-' %{ dam.flags.plant.v = 0; }));
+        damage_robot   = 'robot'   ws (('+' %{ dam.flags.robot.v = 1; })   | ('-' %{ dam.flags.robot.v = 0; }));
+        damage_magic   = 'magic'   ws (('+' %{ dam.flags.magic.v = 1; })   | ('-' %{ dam.flags.magic.v = 0; }));
 
         damage_melee_msg = 
             'melee_msg' ws1 string %{ dam.melee_msg.str = state.match; }

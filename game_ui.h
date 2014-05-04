@@ -196,9 +196,13 @@ std::string show_stats(const Player& p) {
     p.inv.get_attack(att);
 
     for (const auto& i : att.attacks) {
-        std::string s = damage::name(i.type);
+
+        const Damage& dam = damages().get(i.type);
+        std::string s = dam.name;
+
         if (s.size() < 25) 
             s += std::string(25 - s.size(), ' ');
+
         ret += nlp::message("  \1%S\2: %d\n", s, i.val);
     }
 
@@ -208,9 +212,13 @@ std::string show_stats(const Player& p) {
     p.inv.get_defense(def);
 
     for (const auto& i : def.defenses) {
-        std::string s = damage::name(i.first);
+
+        const Damage& dam = damages().get(i.first);
+        std::string s = dam.name;
+
         if (s.size() < 25) 
             s += std::string(25 - s.size(), ' ');
+
         ret += nlp::message("  \1%S\2: %d\n", s, i.second);
     }
 
