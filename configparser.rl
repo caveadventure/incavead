@@ -63,6 +63,10 @@ inline void init_levelskin_(const Levelskin& l) {
     init_levelskin(l);
 }
 
+inline void init_damage(const Damage& d) {
+    init_damage_copy(l);
+}
+
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
 }
@@ -96,6 +100,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     Vault vau;
     CelAuto cel;
     Levelskin lev;
+    Damage dam;
 
     damage::val_t dmgval;
 
@@ -209,32 +214,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        damage_type = 
-            'physical'      %{ dmgval.type = damage::type_t::physical; }      |
-            'sleep'         %{ dmgval.type = damage::type_t::sleep; }         |
-            'poison'        %{ dmgval.type = damage::type_t::poison; }        |
-            'turn_undead'   %{ dmgval.type = damage::type_t::turn_undead; }   |
-            'cancellation'  %{ dmgval.type = damage::type_t::cancellation; }  |
-            'scare_animal'  %{ dmgval.type = damage::type_t::scare_animal; }  |
-            'psi'           %{ dmgval.type = damage::type_t::psi; }           |
-            'eat_brain'     %{ dmgval.type = damage::type_t::eat_brain; }     |
-            'drain'         %{ dmgval.type = damage::type_t::drain; }         |
-            'make_meat'     %{ dmgval.type = damage::type_t::make_meat; }     |
-            'scare'         %{ dmgval.type = damage::type_t::scare; }         |
-            'vampiric'      %{ dmgval.type = damage::type_t::vampiric; }      |
-            'heavenly_fire' %{ dmgval.type = damage::type_t::heavenly_fire; } |
-            'hellish_fire'  %{ dmgval.type = damage::type_t::hellish_fire; }  |
-            'electric'      %{ dmgval.type = damage::type_t::electric; }      |
-            'sonic'         %{ dmgval.type = damage::type_t::sonic; }         |
-            'magic'         %{ dmgval.type = damage::type_t::magic; }         |
-            'hunger'        %{ dmgval.type = damage::type_t::hunger; }        |
-            'unluck'        %{ dmgval.type = damage::type_t::unluck; }        |
-            'blindness'     %{ dmgval.type = damage::type_t::blindness; }     |
-            'voidness'      %{ dmgval.type = damage::type_t::voidness; }      ;
-
-
         damage_val = 
-            damage_type 
+            tag %{ dmgval.type = tag_t(state.match, tagmem); } 
             ws1 real %{ dmgval.val = toreal(state.match); }
             ;
 
@@ -917,18 +898,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_achievement_trigger_rate = 'achievement_trigger_rate' 
             ws1 number %{ __constants__().achievement_trigger_rate = toint(state.match); } ;
 
-        constant_damage_to_sleepturns = 'damage_to_sleepturns' 
-            ws1 snumber %{ __constants__().damage_to_sleepturns.scale = toint(state.match); }
-            ws1 snumber %{ __constants__().damage_to_sleepturns.offset = toint(state.match); } ;
-
-        constant_damage_to_scareturns = 'damage_to_scareturns' 
-            ws1 snumber %{ __constants__().damage_to_scareturns.scale = toint(state.match); }
-            ws1 snumber %{ __constants__().damage_to_scareturns.offset = toint(state.match); } ;
-
-        constant_damage_to_blindturns = 'damage_to_blindturns' 
-            ws1 snumber %{ __constants__().damage_to_blindturns.scale = toint(state.match); }
-            ws1 snumber %{ __constants__().damage_to_blindturns.offset = toint(state.match); } ;
-
         constant_blindturns_to_radius = 'blindturns_to_radius' 
             ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
 
@@ -966,7 +935,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_health_shield_max | constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
-                       constant_damage_to_sleepturns | constant_damage_to_scareturns | constant_damage_to_blindturns |
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments
@@ -1059,8 +1027,64 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
+        damage_name = 'name' ws1 string %{ dam.name = state.match; } ;
+
+        damage_sleepturns = 'sleepturns' 
+            ws1 snumber %{ dam.sleepturns.scale = toint(state.match); }
+            ws1 snumber %{ dam.sleepturns.offset = toint(state.match); } ;
+
+        damage_scareturns = 'scareturns' 
+            ws1 snumber %{ dam.scareturns.scale = toint(state.match); }
+            ws1 snumber %{ dam.scareturns.offset = toint(state.match); } ;
+
+        damage_blindturns = 'blindturns' 
+            ws1 snumber %{ dam.blindturns.scale = toint(state.match); }
+            ws1 snumber %{ dam.blindturns.offset = toint(state.match); } ;
+
+        damage_threshold = 'threshold' ws1 real %{ dam.threshold = toreal(state.match); } ;
+
+        damage_heavenly     = 'heavenly'     %{ dam.heavenly = true; } ;
+        damage_hellish      = 'hellish'      %{ dam.hellish = true; } ;
+        damage_cancellation = 'cancellation' %{ dam.cancellation = true; } ;
+        damage_vampiric     = 'vampiric'     %{ dam.vampiric = true; } ;
+        damage_hunger       = 'hunger'       %{ dam.hunger = true; } ;
+        damage_unluck       = 'unluck'       %{ dam.unluck = true; } ;
+        damage_make_meat    = 'make_meat'    %{ dam.make_meat = true; } ;
+        damage_health       = 'health'       %{ dam.health = true; } ;
+
+        damage_eyeless = 'eyeless' ws (('+' %{ dam.eyeless.v = 1; }) | ('-' %{ dam.eyeless.v = 0; }));
+        damage_undead  = 'undead'  ws (('+' %{ dam.undead.v = 1; })  | ('-' %{ dam.undead.v = 0; }));
+        damage_animal  = 'animal'  ws (('+' %{ dam.animal.v = 1; })  | ('-' %{ dam.animal.v = 0; }));
+        damage_plant   = 'plant'   ws (('+' %{ dam.plant.v = 1; })   | ('-' %{ dam.plant.v = 0; }));
+        damage_robot   = 'robot'   ws (('+' %{ dam.robot.v = 1; })   | ('-' %{ dam.robot.v = 0; }));
+        damage_magic   = 'magic'   ws (('+' %{ dam.magic.v = 1; })   | ('-' %{ dam.magic.v = 0; }));
+
+        damage_one_data =
+            (damage_name | damage_sleepturns | damage_scareturns | damage_blindturns |
+            damage_threshold | damage_heavenly | damage_hellish | damage_cancellation |
+            damage_vampiric | damage_hunger | damage_unluck | damage_make_meat | damage_health | 
+            damage_eyeless | damage_undead | damage_animal | damage_plant |
+            damage_robot | damage_magic |
+            '}' ${ fret; })
+            ;
+
+        one_damage := (ws damage_one_data ws ';')+
+            ;
+
+        damage_tag = tag %{ dam.tag = tag_t(state.match, tagmem); }
+        ;
+
+        damage = 
+            'damage' %{ dam = Damage(); }
+            ws1 damage_tag ws
+            '{' ${fcall one_damage;}
+            %{ init_damage(dam); }
+            ;
+
+        ###
+
         entry = species | design | terrain | vault | celauto | levelskin | constant | 
-                achievement | ailment | ui_syms;
+                achievement | ailment | ui_syms | damage;
             
       main := (ws entry)+ ws ;
         
@@ -1099,6 +1123,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         (void)ConfigParser_en_one_vault;
         (void)ConfigParser_en_one_celauto;
         (void)ConfigParser_en_one_levelskin;
+        (void)ConfigParser_en_one_damage;
         (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {

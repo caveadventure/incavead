@@ -2,67 +2,118 @@
 #define __DAMAGE_H
 
 #include <vector>
+#include <unordered_map>
 #include <map>
 
-namespace damage {
+struct Damage {
 
-enum class type_t : unsigned int {
-    physical,
-    sleep,
-    poison,
-    turn_undead,
-    cancellation,
-    scare_animal,
-    psi,
-    eat_brain,
-    drain,
-    make_meat,
-    scare,
-    vampiric,
-    heavenly_fire,
-    hellish_fire,
-    electric,
-    sonic,
-    magic,
-    hunger,
-    unluck,
-    blindness,
-    voidness
+    tag_t tag;
+    std::string name;
+
+    struct damage_to_turns_t {
+        int scale;
+        int offset;
+
+        damage_to_turns_t(int s = 0, int o = 0) : scale(s), offset(o) {}
+
+        template <typename PARAM>
+        inline unsigned int operator()(double v) {
+            int n = (v * scale) - offset;
+            return std::max(0, n);
+        }
+    };
+
+    damage_to_turns_t sleepturns;
+    damage_to_turns_t scareturns;
+    damage_to_turns_t blindturns;
+
+    double threshold;
+
+    bool heavenly;
+    bool hellish;
+    bool cancellation;
+    bool vampiric;
+    bool hunger;
+    bool unluck;
+    bool make_meat;
+    bool health;
+
+    struct flags_t {
+
+        struct tristate_t {
+            int v;
+
+            tristate_t() : v(-1) {}
+
+            bool operator()(bool f) {
+
+                if (v < 0) return true;
+
+                return ((bool)v == f);
+            }
+        };
+
+        tristate_t eyeless;
+        tristate_t undead;
+        tristate_t animal;
+        tristate_t plant;
+        tristate_t robot;
+        tristate_t magic;
+    };
+
+    flags_t flags;
+
+    Damage() : threshold(0), heavenly(false), hellish(false), cancellation(false), vampiric(false),
+               hunger(false), unluck(false), make_meat(false), health(false) 
+        {}
 };
 
-inline std::string name(type_t d) {
-    switch (d) {
-    case type_t::physical:       return "physical";
-    case type_t::sleep:          return "sleep";
-    case type_t::poison:         return "poison";
-    case type_t::turn_undead:    return "undead cancellation";
-    case type_t::cancellation:   return "magic cancellation";
-    case type_t::scare_animal:   return "scare animal";
-    case type_t::psi:            return "psionic";
-    case type_t::eat_brain:      return "brain eating";
-    case type_t::drain:          return "lifeforce drain";
-    case type_t::make_meat:      return "fog of man-to-meat";
-    case type_t::scare:          return "fear";
-    case type_t::vampiric:       return "vampiric";
-    case type_t::heavenly_fire:  return "heavenly fire";
-    case type_t::hellish_fire:   return "hellfire";
-    case type_t::electric:       return "electric";
-    case type_t::sonic:          return "sonic";
-    case type_t::magic:          return "aetherial";
-    case type_t::hunger:         return "hunger";
-    case type_t::blindness:      return "blinding";
-    case type_t::unluck:         return "unluck";
-    case type_t::voidness:       return "void emanations";
-    default:                     return "oops";
+struct DamageBank {
+
+    std::unordered_map<tag_t, Damage> bank;
+
+    void copy(const Damage& t) {
+
+        if (bank.count(t.tag) != 0) {
+            throw std::runtime_error("Duplicate damage tag: " + t.name);
+        }
+
+        bank[t.tag] = t;
     }
-}        
+
+    const Damage& get(tag_t tag) const {
+        auto i = bank.find(tag);
+
+        if (i == bank.end()) {
+            throw std::runtime_error("Invalid damage tag: " + std::to_string(tag.v));
+        }
+
+        return i->second;
+    }
+};
+
+inline DamageBank& __damage__() {
+    static DamageBank ret;
+    return ret;
+}
+
+inline const DamageBank& damage() {
+    return __damage__();
+}
+
+inline void init_damage_copy(const Damage& t) {
+    __damage__().copy(t);
+}
+
+
+namespace damage {
 
 struct val_t {
 
     double val;
-    type_t type;
+    tag_t type;
 
-    val_t(double v = 0, type_t t = type_t::physical) : val(v), type(t) {} 
+    val_t(double v = 0, tag_t t = tag_t()) : val(v), type(t) {} 
 };
 
 struct attacks_t {
@@ -88,7 +139,7 @@ struct attacks_t {
 };
 
 struct defenses_t {
-    std::map<type_t,double> defenses;
+    std::map<tag_t,double> defenses;
 
     void add(const val_t& d) {
         defenses[d.type] += d.val;
@@ -100,7 +151,7 @@ struct defenses_t {
         }
     }
 
-    double get(const type_t& t) const {
+    double get(const tag_t& t) const {
 
         auto i = defenses.find(t);
 
@@ -111,11 +162,11 @@ struct defenses_t {
         return i->second;
     }
 
-    std::map<type_t,double>::const_iterator begin() const {
+    std::map<tag_t,double>::const_iterator begin() const {
         return defenses.begin();
     }
 
-    std::map<type_t,double>::const_iterator end() const {
+    std::map<tag_t,double>::const_iterator end() const {
         return defenses.end();
     }
 };
