@@ -63,6 +63,16 @@ struct Damage {
 
     flags_t flags;
 
+    struct msg_t {
+        std::string str;
+        bool important;
+
+        msg_t(const std::string& s = "", bool i = false) : str(s), important(i) {}
+    };
+
+    msg_t melee_msg;
+    msg_t env_msg;
+
     Damage() : threshold(0), heavenly(false), hellish(false), cancellation(false), vampiric(false),
                hunger(false), unluck(false), make_meat(false), health(false) 
         {}
@@ -92,17 +102,17 @@ struct DamageBank {
     }
 };
 
-inline DamageBank& __damage__() {
+inline DamageBank& __damages__() {
     static DamageBank ret;
     return ret;
 }
 
-inline const DamageBank& damage() {
-    return __damage__();
+inline const DamageBank& damages() {
+    return __damages__();
 }
 
 inline void init_damage_copy(const Damage& t) {
-    __damage__().copy(t);
+    __damages__().copy(t);
 }
 
 

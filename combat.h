@@ -18,56 +18,36 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
-template <typename PARAM>
-inline unsigned int damage_to_turns(double v, const PARAM& p) {
-    int n = (v * p.scale) - p.offset;
-    return std::max(0, n);
+inline void karmic_damage_scale(bool positive, double karma, double penance, double& dmg) {
+
+    double kk = karma;
+
+    if (!positive) {
+        kk = -kk;
+    }
+
+    kk = std::min(kk, -penance);
+
+    if (kk < 0) {
+        double factor = (kk)/2;
+        factor = factor * factor;
+
+        dmg *= factor;
+
+    } else {
+        dmg = 0;
+    }
 }
+
 
 inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
                         const damage::attacks_t& attacks, unsigned int alevel,
-                        double karma, double penance,
                         damage::attacks_t& out) {
 
 
     for (const auto& v : attacks) {
         double dmg = roll_attack(rng, defenses.get(v.type), dlevel, v.val, alevel);
-
-        if (v.type == damage::type_t::sleep) {
-            dmg = damage_to_turns(dmg, constants().damage_to_sleepturns);
-
-        } else if (v.type == damage::type_t::scare_animal ||
-                   v.type == damage::type_t::scare) {
-            dmg = damage_to_turns(dmg, constants().damage_to_scareturns);
-
-        } else if (v.type == damage::type_t::blindness) {
-            dmg = damage_to_turns(dmg, constants().damage_to_blindturns);
-
-        } else if (v.type == damage::type_t::make_meat && dmg <= 0.5) {
-            dmg = 0;
-
-        } else if (v.type == damage::type_t::heavenly_fire || 
-                   v.type == damage::type_t::hellish_fire) {
-
-            double kk = karma;
-
-            if (v.type == damage::type_t::hellish_fire) {
-                kk = -kk;
-            }
-
-            kk = std::min(kk, -penance);
-
-            if (kk < 0) {
-                double factor = (kk)/2;
-                factor = factor * factor;
-
-                dmg *= factor;
-
-            } else {
-                dmg = 0;
-            }
-        }
 
         if (dmg > 0) {
             out.add(damage::val_t{dmg, v.type});
@@ -109,118 +89,85 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
-                                  double& totdamage, double& totmagic, 
-                                  double& totsleep, double& totfear, double& totvamp, 
+                                  double& totdamage, double& totmagic, double& totsleep, double& totfear, double& totvamp, 
                                   bool& mortal) {
 
     double dmg = v.val;
-    double hurt = 0;
 
-    if (v.type == damage::type_t::sleep) {
+    const Damage& dam = damages().get(v.type);
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += dmg; });
-        totsleep += dmg;
+    if (!dam.flags.robot(s.robot) || 
+        !dam.flags.undead(s.undead) ||
+        !dam.flags.animal(s.animal) ||
+        !dam.flags.plant(s.plant) ||
+        !dam.flags.magic(s.magic) ||
+        !dam.flags.eyeless(s.eyeless)) 
+        return;
 
-    } else if (v.type == damage::type_t::blindness) {
+    if (dam.heavenly) {
 
-        if (!s.flags.eyeless) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.blind += dmg; });
-        }
+        karmic_damage_scale(true, -s.karma, 0, dmg);
 
-    } else if (v.type == damage::type_t::turn_undead) {
+    } else if (dam.hellish) {
 
-        if (s.flags.undead) {
-            hurt = dmg;
-        }
+        karmic_damage_scale(false, -s.karma, 0, dmg);
+    }
 
-    } else if (v.type == damage::type_t::scare_animal) {
+    if (dmg <= dam.threshold)
+        return;
 
-        if (s.flags.animal) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
-            totfear += dmg;
-        }
+    unsigned int sleepturns = dam.sleepturns(dmg);
+    unsigned int scareturns = dam.scareturns(dmg);
+    unsigned int blindturns = dam.blindturns(dmg);
 
-    } else if (v.type == damage::type_t::scare) {
+    if (sleepturns > 0) {
 
-        if (!s.flags.undead && !s.flags.plant) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += dmg; });
-            totfear += dmg;
-        }
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.sleep += sleepturns; });
+        totsleep += sleepturns;
+
+    } else if (blindturns > 0) {
+
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.blind += blindturns; });
+
+    } else if (scareturns > 0) {
+
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.fear += scareturns; });
+        totfear += dmg;
         
-    } else if (v.type == damage::type_t::cancellation) {
+    } else if (dam.cancellation) {
 
-        if (s.flags.magic && mon.magic > -3) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
-            totmagic += dmg;
-        }
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
+        totmagic += dmg;
 
-    } else if (v.type == damage::type_t::make_meat) {
+    } else if (dam.make_meat) {
 
         //
-        if (!s.flags.robot) {
-            if (s.karma < 0 || s.flags.undead) {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
-            } else {
-                state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().meat; });
-            }
-
-            state.render.invalidate(mon.xy.first, mon.xy.second);
+        if (s.karma < 0 || s.flags.undead) {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
+        } else {
+            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().meat; });
         }
 
-    } else if (v.type == damage::type_t::vampiric) {
+        state.render.invalidate(mon.xy.first, mon.xy.second);
 
-        if (!s.flags.robot && !s.flags.undead && !s.flags.plant) {
+    } else if (dam.health || dam.vampiric) {
+
+        if (dam.vampiric) {
 
             p.health.inc(dmg);
             totvamp += dmg;
-
-            hurt = dmg;
         }
 
-    } else if (v.type == damage::type_t::heavenly_fire || v.type == damage::type_t::hellish_fire) {
+        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+        totdamage += dmg;
 
-        hurt = dmg;
-
-    } else if (v.type == damage::type_t::sonic) {
-
-        if (s.flags.robot) {
-            hurt = dmg;
-        }
-
-    } else if (v.type == damage::type_t::poison ||
-               v.type == damage::type_t::psi ||
-               v.type == damage::type_t::eat_brain ||
-               v.type == damage::type_t::drain) {
-
-        if (!s.flags.robot && !s.flags.plant) {
-            hurt = dmg;
-        }
-
-    } else if (v.type == damage::type_t::voidness) {
-
-        if (!s.flags.robot) {
-            hurt = dmg;
-        }
-
-    } else if (v.type == damage::type_t::hunger || v.type == damage::type_t::unluck) {
-        // Monsters don't feel hunger and don't have luck.
-
-    } else {
-        // physical
-        // electric
-        // magic
-        
-        hurt = dmg;
-    }
-
-    if (hurt > 0) {
-        state.monsters.change(mon, [hurt](monsters::Monster& m) { m.health -= hurt; });
-        totdamage += hurt;
-
-        if (hurt >= 2.8) {
+        if (dmg >= 2.8) {
             mortal = true;
         }
     }
+
+    // dam.hunger, dam.unluck:
+    // Monsters don't feel hunger and don't have luck.
 }
 
 
@@ -235,7 +182,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     const Species& s = species().get(mon.tag);
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, 0, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
         return;
@@ -250,7 +197,9 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, p, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
+        attack_damage_monster(v, mon, s, p, state, 
+                              totdamage, totmagic, totsleep, totfear, totvamp, 
+                              mortal);
     }
 
     if (mon.health - totdamage < -3) {
@@ -274,7 +223,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, -s.karma, 0, attack_res);
+    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
 
@@ -293,7 +242,9 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, p, state, totdamage, totmagic, totsleep, totfear, totvamp, mortal);
+        attack_damage_monster(v, mon, s, p, state, 
+                              totdamage, totmagic, totsleep, totfear, totvamp, 
+                              mortal);
     }
 
     p.karma.inc(s.karma * totdamage);
@@ -381,51 +332,121 @@ inline void handle_post_defend(Player& p, GameState& state) {
 }
 
 
-inline void defend(Player& p, 
-                   const damage::defenses_t& defenses, unsigned int plevel, 
-                   const damage::attacks_t& attacks, unsigned int alevel, 
-                   GameState& state, damage::attacks_t& attack_res) {
+inline void defend_message(const Species& s, const Damage::msg_t& msg) {
+
+    state.render.do_message(nlp::message(msg.str, s), msg.important);
+}
+
+inline void defend_message(const Terrain& t, const Damage::msg_t& msg) {
+
+    state.render.do_message(nlp::message(msg.str, t), msg.important);
+}
+
+inline void defend_message(const Design& d, const Damage::msg_t& msg) {
+
+    state.render.do_message(nlp::message(msg.str, d), msg.important);
+}
+
+inline void defend_message(const ConstantsBank::ailment_t& a, const Damage::msg_t& msg) {
+
+    state.render.do_message(nlp::message(msg.str, a), msg.important);
+}
+
+
+template <typename S>
+inline double defend(Player& p, 
+                     const damage::defenses_t& defenses, unsigned int plevel, 
+                     const damage::attacks_t& attacks, unsigned int alevel, 
+                     GameState& state, const std::string& attacker_name, bool env,
+                     const S& s) {
+
+    double vamp = 0;
 
     if (attacks.empty())
-        return;
+        return vamp;
 
-    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, 
-                p.karma.val, p.karma.shield, attack_res);
+    damage::attacks_t attack_res;
+
+    roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, attack_res);
+
+    if (attack_res.empty()) {
+
+        if (!env) {
+            Damage::msg_t msg("%s attacks but does no damage.");
+            defend_message(s, msg);
+        }
+
+        return vamp;
+    }
+
+    p.attacker = attacker_name;
 
     for (const auto& v : attack_res) {
 
-        if (v.type == damage::type_t::sleep) {
-            p.sleep += v.val;
+        double dmg = v.val;
 
-        } else if (v.type == damage::type_t::blindness) {
-            p.blind += v.val;
+        const Damage& dam = damages().get(v.type);
 
-        } else if (v.type == damage::type_t::make_meat) {
+        if (!dam.flags.robot(false) || 
+            !dam.flags.undead(false) ||
+            !dam.flags.animal(false) ||
+            !dam.flags.plant(false) ||
+            !dam.flags.magic(false) ||
+            !dam.flags.eyeless(false)) 
+            continue;
+
+        if (dam.heavenly) {
+
+            karmic_damage_scale(true, p.karma.val, p.karma.shield, dmg);
+
+        } else if (dam.hellish) {
+
+            karmic_damage_scale(false, p.karma.val, p.karma.shield, dmg);
+        }
+
+        if (dmg <= dam.threshold)
+            continue;
+
+        unsigned int sleepturns = dam.sleepturns(dmg);
+        unsigned int blindturns = dam.blindturns(dmg);
+
+        // No fear or cancellation mechanic for the player yet.
+
+        if (sleepturns > 0) {
+
+            p.sleep += dmg;
+
+        } else if (blindturns > 0) {
+
+            p.blind += dmg;
+
+        } else if (dam.make_meat) {
+
             p.health.dec(6.0);
 
-        } else if (v.type == damage::type_t::hunger) {
-            p.food.dec(v.val);
+        } else if (dam.hunger) {
 
-        } else if (v.type == damage::type_t::unluck) {
-            p.luck.dec(v.val);
+            p.food.dec(dmg);
 
-        } else if (v.type == damage::type_t::physical || 
-                   v.type == damage::type_t::poison ||
-                   v.type == damage::type_t::psi ||
-                   v.type == damage::type_t::eat_brain ||
-                   v.type == damage::type_t::drain ||
-                   v.type == damage::type_t::vampiric ||
-                   v.type == damage::type_t::electric ||
-                   v.type == damage::type_t::heavenly_fire || 
-                   v.type == damage::type_t::hellish_fire ||
-                   v.type == damage::type_t::magic ||
-                   v.type == damage::type_t::voidness) {
+        } else if (dam.unluck) {
 
-            // No sonic damage for the player.
+            p.luck.dec(dmg);
 
-            p.health.dec(v.val);
+        } else if (dam.health || dam.vampiric) {
+
+            p.health.dec(dmg);
+        }
+
+        if (env) {
+            defend_message(s, dam.env_msg);
+        } else {
+            defend_message(s, dam.melee_msg);
         }
     }
+
+    handle_post_defend(p, state);
+
+    return vamp;
 }
 
 inline double defend(Player& p, 
@@ -433,72 +454,7 @@ inline double defend(Player& p,
                      const Species& s, const damage::attacks_t& attacks,
                      GameState& state) {
 
-
-    double vamp = 0;
-
-    damage::attacks_t attack_res;
-    defend(p, defenses, plevel, attacks, s.get_computed_level(), state, attack_res);
-
-    if (attack_res.empty()) {
-
-        state.render.do_message(nlp::message("%s attacks but does no damage.", s));
-
-    } else {
-
-        p.attacker = s.name;
-
-        for (const auto& v : attack_res) {
-
-            if (v.type == damage::type_t::sleep) {
-                state.render.do_message(nlp::message("%s casts a sleep charm!", s), true);
-
-            } else if (v.type == damage::type_t::blindness) {
-                state.render.do_message(nlp::message("%s blinds you!", s));
-
-            } else if (v.type == damage::type_t::psi) {
-                state.render.do_message(nlp::message("%s is destroying your mind!", s));
-
-            } else if (v.type == damage::type_t::make_meat) {
-                state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
-
-            } else if (v.type == damage::type_t::eat_brain) {
-                state.render.do_message(nlp::message("%s is eating your brain!", s));
-
-            } else if (v.type == damage::type_t::drain) {
-                state.render.do_message(nlp::message("%s is draining your vital forces!", s));
-
-            } else if (v.type == damage::type_t::electric) {
-                state.render.do_message(nlp::message("%s shocks you with lightning!", s));
-
-            } else if (v.type == damage::type_t::heavenly_fire) {
-                state.render.do_message(nlp::message("%s blasts you with heavenly fire.", s));
-
-            } else if (v.type == damage::type_t::hellish_fire) {
-                state.render.do_message(nlp::message("%s blasts you with hellfire.", s));
-
-            } else if (v.type == damage::type_t::hunger) {
-                state.render.do_message(nlp::message("%s casts a hunger charm.", s));
-
-            } else if (v.type == damage::type_t::unluck) {
-                state.render.do_message(nlp::message("%s casts the evil eye.", s));
-
-            } else if (v.type == damage::type_t::vampiric) {
-
-                vamp += v.val;
-                state.render.do_message(nlp::message("%s is sucking your blood.", s));
-
-            } else if (v.type == damage::type_t::physical || 
-                       v.type == damage::type_t::poison ||
-                       v.type == damage::type_t::magic) {
-
-                state.render.do_message(nlp::message("%s hits!", s));
-            }
-        }
-
-        handle_post_defend(p, state);
-    }
-
-    return vamp;
+    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, false, s);
 }
 
 inline double defend(Player& p, 
@@ -510,91 +466,13 @@ inline double defend(Player& p,
 }
 
 
-inline bool defend_env_message(Player& p, GameState& state, const damage::attacks_t& attack_res) {
-
-    bool ret = true;
-
-    std::set<damage::type_t> damages;
-
-    for (const auto& v : attack_res) {
-
-        damages.insert(v.type);
-    }
-
-    for (const auto& v : damages) {
-        switch (v) {
-
-        case damage::type_t::sleep:
-            state.render.do_message("You fall asleep.");
-            break;
-
-        case damage::type_t::blindness:
-            state.render.do_message("You feel your eyesight fail you!");
-            ret = false;
-            break;
-
-        case damage::type_t::poison:
-            state.render.do_message("You feel sick.");
-            break;
-
-        case damage::type_t::psi:
-            state.render.do_message("You feel a cosmic existential madness.");
-            break;
-
-        case damage::type_t::make_meat:
-            state.render.do_message("You feel yourself turning into a slab of brainless meat!", true);
-            break;
-
-        case damage::type_t::heavenly_fire:
-            state.render.do_message("You are blasted with heavenly fire.");
-            break;
-
-        case damage::type_t::hellish_fire:
-            state.render.do_message("You are blasted with hellfire.");
-            break;
-
-        case damage::type_t::hunger:
-            state.render.do_message("You feel an unnatural hunger.");
-            ret = false;
-            break;
-
-        case damage::type_t::unluck:
-            state.render.do_message("You feel unlucky.");
-            ret = false;
-            break;
-
-        case damage::type_t::physical:
-        case damage::type_t::eat_brain:
-        case damage::type_t::drain:
-        case damage::type_t::vampiric:
-        case damage::type_t::electric:
-        case damage::type_t::magic:
-            state.render.do_message("Ouch, that hurts.");
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    return ret;
-}
 
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Terrain& t, 
                    GameState& state) {
 
-    damage::attacks_t attack_res;
-    defend(p, defenses, plevel, t.attacks, t.attack_level, state, attack_res);
-
-    p.attacker = t.name;
-
-    defend_env_message(p, state, attack_res);
-
-    if (!attack_res.empty()) {
-        handle_post_defend(p, state);
-    }
+    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t);
 }
 
 inline void defend(Player& p, 
@@ -602,16 +480,7 @@ inline void defend(Player& p,
                    const Design& d, 
                    GameState& state) {
 
-    damage::attacks_t attack_res;
-    defend(p, defenses, plevel, d.attacks, d.level, state, attack_res);
-
-    p.attacker = d.name;
-
-    defend_env_message(p, state, attack_res);
-
-    if (!attack_res.empty()) {
-        handle_post_defend(p, state);
-    }
+    defend(p, defenses, plevel, d.attacks, d.level, state, d.name, true, d);
 }
 
 inline void defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
@@ -620,15 +489,9 @@ inline void defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState
     p.inv.get_defense(defenses);
 
     damage::attacks_t attack_res;
-    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, attack_res);
+    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, 
+           ailment.name, true, ailment);
 
-    p.attacker = ailment.name;
-
-    bool stop = defend_env_message(p, state, attack_res);
-
-    if (!attack_res.empty() && stop) {
-        handle_post_defend(p, state);
-    }
 }
 
 

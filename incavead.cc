@@ -105,6 +105,8 @@ void init_statics() {
 
     configparser::parse_config("constants.cfg", tagmem);
 
+    configparser::parse_config("damage.cfg", tagmem);
+
     configparser::parse_config("howto.cfg", tagmem);
 
     ////
