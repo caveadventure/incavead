@@ -251,7 +251,7 @@ inline bool move_monster(Player& p, GameState& state,
     }
 
 
-    if (m.health < -3) {
+    if (m.health <= -3) {
 
         if (!s.death_summon.null()) {
             summons.push_back(summons_t{m.xy.first, m.xy.second, s.death_summon, 1, m.tag});
@@ -381,12 +381,14 @@ inline bool move_monster(Player& p, GameState& state,
 
         if (vamp != 0) {
 
-            state.monsters.change(m, [vamp, &do_die](monsters::Monster& m) { 
+            if (m.health + vamp <= -3.0) {
+                do_die = true;
+                return true;
+            }
+            
+            state.monsters.change(m, [vamp](monsters::Monster& m) { 
                     m.health += vamp; 
                     m.health = std::min(3.0, m.health);
-
-                    if (m.health <= -3.0)
-                        do_die = true;
                 });
         }
 

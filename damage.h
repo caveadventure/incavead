@@ -147,6 +147,8 @@ struct attacks_t {
     }
 
     bool empty() const { return attacks.empty(); }
+
+    size_t size() const { return attacks.size(); }
 };
 
 struct defenses_t {

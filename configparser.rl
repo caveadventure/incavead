@@ -1018,8 +1018,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         ailment_triggers = 'triggers' ws1 number 
                            %{ __constants__().ailments[ail_tag].triggers = toint(state.match); } ;
 
+        ailment_oneshot = 'oneshot' %{ __constants__().ailments[ail_tag].oneshot = true; } ;
+
         ailment_line = 
-            ailment_attack | ailment_attack_level | ailment_name | ailment_triggers 
+            ailment_attack | ailment_attack_level | ailment_name | ailment_triggers | ailment_oneshot
             ;
 
         ailment = 'ailment' 

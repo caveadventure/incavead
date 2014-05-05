@@ -354,7 +354,11 @@ void Game::process_world(GameState& state,
 
             if (b != constants().ailments.end()) {
 
-                defend(p, b->second, state);
+                size_t n = defend(p, b->second, state);
+
+                if (b->second.oneshot && n > 0) {
+                    p.ailments.erase(a);
+                }
             }
         }
     }

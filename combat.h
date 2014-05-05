@@ -206,7 +206,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
                               mortal);
     }
 
-    if (mon.health - totdamage < -3) {
+    if (mon.health - totdamage <= -3) {
 
         monster_kill(p, state, mon, s, track_kills);
     }
@@ -262,7 +262,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         state.render.do_message(nlp::message("%s flees in terror.", s));
     }
 
-    if (mon.health - totdamage < -3) {
+    if (mon.health - totdamage <= -3) {
 
         if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You destroyed %s.", s));
@@ -309,7 +309,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     if (totmagic > 0.5) {
 
-        if (mon.magic - totmagic < -3) {
+        if (mon.magic - totmagic <= -3) {
             state.render.do_message(nlp::message("%s is magically cancelled.", s));
 
         } else {
@@ -362,7 +362,7 @@ inline double defend(Player& p,
                      const damage::defenses_t& defenses, unsigned int plevel, 
                      const damage::attacks_t& attacks, unsigned int alevel, 
                      GameState& state, const std::string& attacker_name, bool env,
-                     const S& s) {
+                     const S& s, size_t& n) {
 
     double vamp = 0;
 
@@ -372,6 +372,8 @@ inline double defend(Player& p,
     damage::attacks_t attack_res;
 
     roll_attack(state.rng, defenses, plevel+1, attacks, alevel+1, attack_res);
+
+    n = 0;
 
     if (attack_res.empty()) {
 
@@ -410,6 +412,8 @@ inline double defend(Player& p,
 
         if (dmg <= dam.threshold)
             continue;
+
+        n++;
 
         unsigned int sleepturns = dam.sleepturns(dmg);
         unsigned int blindturns = dam.blindturns(dmg);
@@ -459,7 +463,9 @@ inline double defend(Player& p,
         }
     }
 
-    handle_post_defend(p, state);
+    if (n > 0) {
+        handle_post_defend(p, state);
+    }
 
     return vamp;
 }
@@ -469,14 +475,15 @@ inline double defend(Player& p,
                      const Species& s, const damage::attacks_t& attacks,
                      GameState& state) {
 
-    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, false, s);
+    size_t tmp;
+    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, false, s, tmp);
 }
 
 inline double defend(Player& p, 
                      const damage::defenses_t& defenses, unsigned int plevel, 
                      const Species& s,
                      GameState& state) {
-
+    
     return defend(p, defenses, plevel, s, s.attacks, state);
 }
 
@@ -487,7 +494,8 @@ inline void defend(Player& p,
                    const Terrain& t, 
                    GameState& state) {
 
-    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t);
+    size_t tmp;
+    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t, tmp);
 }
 
 inline void defend(Player& p, 
@@ -495,18 +503,21 @@ inline void defend(Player& p,
                    const Design& d, 
                    GameState& state) {
 
-    defend(p, defenses, plevel, d.attacks, d.level, state, d.name, true, d);
+    size_t tmp;
+    defend(p, defenses, plevel, d.attacks, d.level, state, d.name, true, d, tmp);
 }
 
-inline void defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
+inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
 
     damage::defenses_t defenses;
     p.inv.get_defense(defenses);
 
-    damage::attacks_t attack_res;
-    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, 
-           ailment.name, true, ailment);
+    size_t tmp = 0;
 
+    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, 
+           ailment.name, true, ailment, tmp);
+
+    return tmp;
 }
 
 

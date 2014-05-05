@@ -93,8 +93,9 @@ struct ConstantsBank {
         unsigned int level;
         std::string name;
         unsigned int triggers;
+        bool oneshot;
 
-        ailment_t() : level(0), triggers(1) {}
+        ailment_t() : level(0), triggers(1), oneshot(false) {}
     };
 
     std::map<tag_t, ailment_t> ailments;
