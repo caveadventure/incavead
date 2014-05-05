@@ -128,15 +128,11 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
 
         for (const auto& tmp : s_vc) {
+            std::cout << "-----  Priority " << tmp.first << std::endl;
+
             for (const auto vi : tmp.second) {
 
                 const Vault& v = vaults().get(vi.first);
-
-                if (v.placement == Vault::placement_t::packing) {
-                    std::cout << "Packing: " << vi.second << " " << (v.pic.empty() ? std::string("[]") : v.pic.front()) << std::endl;
-                } else {
-                    std::cout << "Other " << vi.second << std::endl;
-                }
 
                 for (unsigned int ci = 0; ci < vi.second; ++ci) {
                     generate_vault(v, state, summons, affected, vault_packing, player_positions);

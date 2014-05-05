@@ -104,8 +104,10 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
     bool reachd = false;
 
-    if (dist < range && 
-        (s.blast.size() > 0 || s.cast_cloud.size() > 0)) {
+    if (dist >= range)
+        return false;
+
+    if (s.blast.size() > 0 || s.cast_cloud.size() > 0) {
 
         reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
     }
@@ -140,7 +142,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
         }
     }
 
-    if (s.summon.size() > 0 && dist < range) {
+    if (s.summon.size() > 0) {
 
         for (const auto& c : s.summon) {
 
@@ -157,7 +159,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
         }
     }
 
-    if (s.spawns.size() > 0 && dist < range) {
+    if (s.spawns.size() > 0) {
 
         for (const auto& c : s.spawns) {
 
@@ -168,6 +170,20 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
             summons.push_back(summons_t{m.xy.first, m.xy.second, tag_t(), c.level, m.tag});
         }        
+    }
+
+    if (!s.morph.species.null()) {
+
+        double v = state.rng.gauss(0.0, 1.0);
+
+        if (v > s.morph.chance) {
+
+            tag_t news = s.morph.species;
+            state.monsters.change(m, [news](monsters::Monster& m) { m.tag = news; });
+
+            state.render.invalidate(m.xy.first, m.xy.second);
+            return true;
+        }
     }
 
     return false;

@@ -334,6 +334,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_steal = 'steal' ws1 tag %{ spe.steal = tag_t(state.match, tagmem); } ;
 
+        species_morph = 'morph' 
+            ws1 tag  %{ spe.morph.species = tag_t(state.match, tagmem); }
+            ws1 real %{ spe.morph.chance = toreal(state.match); }
+            ;
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
@@ -342,6 +347,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
+            species_morph |
             '}'
             ${ fret; })
             ;

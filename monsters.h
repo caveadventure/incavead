@@ -350,6 +350,8 @@ struct Monsters {
             n.insert(xy);
         }
 
+        n.insert(pt(x, y));
+
         return summon(neigh, rng, grid, counts, render, n, px, py, tag, count, counts_taken);
     }
 

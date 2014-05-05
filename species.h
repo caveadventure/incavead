@@ -158,6 +158,15 @@ struct Species {
 
     tag_t steal;
 
+    struct morph_t {
+        tag_t species;
+        double chance;
+
+        morph_t() : chance(0) {}
+    };
+
+    morph_t morph;
+
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::walk), range(0), clumpsize(), flags(), karma(0) {}
 
