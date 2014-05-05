@@ -837,8 +837,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().starvation_damage = toreal(state.match); };
 
         constant_grave     = 'grave'     ws1 tag  %{ __constants__().grave = tag_t(state.match, tagmem); };
-        constant_meat      = 'meat'      ws1 tag  %{ __constants__().meat = tag_t(state.match, tagmem); };
-        constant_bad_meat  = 'bad_meat'  ws1 tag  %{ __constants__().bad_meat = tag_t(state.match, tagmem); };
         constant_pit       = 'pit'       ws1 tag  %{ __constants__().pit = tag_t(state.match, tagmem); };
         constant_bad_grave = 'bad_grave' ws1 tag  %{ __constants__().bad_grave = tag_t(state.match, tagmem); };
         constant_ghost     = 'ghost'     ws1 tag  %{ __constants__().ghost = tag_t(state.match, tagmem); };
@@ -934,7 +932,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
-                       constant_grave | constant_meat | constant_bad_meat | constant_money | constant_pit | 
+                       constant_grave | constant_money | constant_pit | 
                        constant_bad_grave | constant_ghost |
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
@@ -1055,8 +1053,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         damage_vampiric     = 'vampiric'     %{ dam.vampiric = true; } ;
         damage_hunger       = 'hunger'       %{ dam.hunger = true; } ;
         damage_unluck       = 'unluck'       %{ dam.unluck = true; } ;
-        damage_make_meat    = 'make_meat'    %{ dam.make_meat = true; } ;
         damage_health       = 'health'       %{ dam.health = true; } ;
+
+        damage_polymorph    = 'polymorph'
+            ws1 tag %{ dam.polymorph.first = tag_t(state.match, tagmem); }
+            ws1 tag %{ dam.polymorph.second = tag_t(state.match, tagmem); }
+            ;
+
+        damage_infect = 'infect' ws1 tag %{ dam.infect = tag_t(state.match, tagmem); };
 
         damage_eyeless = 'eyeless' ws (('+' %{ dam.flags.eyeless.v = 1; }) | ('-' %{ dam.flags.eyeless.v = 0; }));
         damage_undead  = 'undead'  ws (('+' %{ dam.flags.undead.v = 1; })  | ('-' %{ dam.flags.undead.v = 0; }));
@@ -1078,8 +1082,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         damage_one_data =
             (damage_name | damage_sleepturns | damage_scareturns | damage_blindturns |
             damage_threshold | damage_heavenly | damage_hellish | damage_cancellation |
-            damage_vampiric | damage_hunger | damage_unluck | damage_make_meat | damage_health | 
-            damage_eyeless | damage_undead | damage_animal | damage_plant |
+            damage_vampiric | damage_hunger | damage_unluck | damage_polymorph | damage_health | 
+            damage_infect | damage_eyeless | damage_undead | damage_animal | damage_plant |
             damage_robot | damage_magic | damage_melee_msg | damage_env_msg |
             '}' ${ fret; })
             ;

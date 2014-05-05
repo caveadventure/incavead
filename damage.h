@@ -34,7 +34,7 @@ struct Damage {
     bool vampiric;
     bool hunger;
     bool unluck;
-    bool make_meat;
+    std::pair<tag_t,tag_t> polymorph;
     bool health;
 
     struct flags_t {
@@ -72,8 +72,10 @@ struct Damage {
     msg_t melee_msg;
     msg_t env_msg;
 
+    tag_t infect;
+
     Damage() : threshold(0), heavenly(false), hellish(false), cancellation(false), vampiric(false),
-               hunger(false), unluck(false), make_meat(false), health(false) 
+               hunger(false), unluck(false), health(false) 
         {}
 };
 

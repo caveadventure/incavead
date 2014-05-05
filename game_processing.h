@@ -3,6 +3,7 @@
 
 #include <valarray>
 
+
 void add_ailments(Player& p, GameState& state) {
 
     const auto& ailments = constants().ailments;
@@ -26,16 +27,7 @@ void add_ailments(Player& p, GameState& state) {
 
         const auto& ailment = a->second;
 
-        for (size_t z = 0; z < ailment.triggers; ++z) {
-            for (size_t j = 0; j < 3; ++j) {
-                unsigned int t = state.rng.range(0u, 99u);
-
-                if (p.ailments.count(t) == 0) {
-                    p.ailments[t] = a->first;
-                    break;
-                }
-            }
-        }
+        p.add_ailment(state.rng, a->first, ailment.triggers);
     }
 
     if (num_ails > 0) {

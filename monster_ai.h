@@ -379,10 +379,16 @@ inline bool move_monster(Player& p, GameState& state,
 
         double vamp = defend(p, defenses, p.get_computed_level(state.rng), s, state);
 
-        state.monsters.change(m, [vamp](monsters::Monster& m) { 
-                m.health += vamp; 
-                m.health = std::min(3.0, m.health);
-            });
+        if (vamp != 0) {
+
+            state.monsters.change(m, [vamp, &do_die](monsters::Monster& m) { 
+                    m.health += vamp; 
+                    m.health = std::min(3.0, m.health);
+
+                    if (m.health <= -3.0)
+                        do_die = true;
+                });
+        }
 
         return false;
     }

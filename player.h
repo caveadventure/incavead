@@ -276,6 +276,22 @@ struct Player {
             return _lev + fudge;
         }
     }
+
+    template <typename RNG>
+    void add_ailment(RNG& rng, tag_t ailment, size_t triggers) {
+
+        for (size_t z = 0; z < triggers; ++z) {
+            for (size_t j = 0; j < 3; ++j) {
+                unsigned int t = rng.range(0u, 99u);
+
+                if (ailments.count(t) == 0) {
+                    ailments[t] = ailment;
+                    break;
+                }
+            }
+        }
+    }
+
 };
 
 

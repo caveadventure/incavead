@@ -14,8 +14,6 @@ struct ConstantsBank {
     double starvation_damage;
 
     tag_t grave;
-    tag_t meat;
-    tag_t bad_meat;
     tag_t pit;
     tag_t bad_grave;
     tag_t ghost;

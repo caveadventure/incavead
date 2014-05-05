@@ -121,36 +121,39 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     unsigned int blindturns = dam.blindturns(dmg);
 
     if (sleepturns > 0) {
-
         state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
         totsleep += sleepturns;
+    }
 
-    } else if (blindturns > 0) {
-
+    if (blindturns > 0) {
         state.monsters.change(mon, [blindturns](monsters::Monster& m) { m.blind += blindturns; });
+    }
 
-    } else if (scareturns > 0) {
-
+    if (scareturns > 0) {
         state.monsters.change(mon, [scareturns](monsters::Monster& m) { m.fear += scareturns; });
         totfear += dmg;
-        
-    } else if (dam.cancellation) {
+    }
 
+    if (dam.cancellation) {
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
         totmagic += dmg;
+    }
 
-    } else if (dam.make_meat) {
+    if (!dam.polymorph.first.null()) {
 
         //
+        auto tmp = dam.polymorph;
+
         if (s.karma < 0 || s.flags.undead) {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().bad_meat; });
+            state.monsters.change(mon, [tmp](monsters::Monster& m) { m.tag = tmp.second; });
         } else {
-            state.monsters.change(mon, [dmg](monsters::Monster& m) { m.tag = constants().meat; });
+            state.monsters.change(mon, [tmp](monsters::Monster& m) { m.tag = tmp.first; });
         }
 
         state.render.invalidate(mon.xy.first, mon.xy.second);
+    }
 
-    } else if (dam.health || dam.vampiric) {
+    if (dam.health || dam.vampiric) {
 
         if (dam.vampiric) {
 
@@ -168,6 +171,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     // dam.hunger, dam.unluck:
     // Monsters don't feel hunger and don't have luck.
+    // They also cannot be infected.
 }
 
 
@@ -413,28 +417,39 @@ inline double defend(Player& p,
         // No fear or cancellation mechanic for the player yet.
 
         if (sleepturns > 0) {
-
             p.sleep += dmg;
+        }
 
-        } else if (blindturns > 0) {
-
+        if (blindturns > 0) {
             p.blind += dmg;
+        }
 
-        } else if (dam.make_meat) {
-
+        if (!dam.polymorph.first.null()) {
             p.health.dec(6.0);
+        }
 
-        } else if (dam.hunger) {
-
+        if (dam.hunger) {
             p.food.dec(dmg);
+        } 
 
-        } else if (dam.unluck) {
-
+        if (dam.unluck) {
             p.luck.dec(dmg);
+        }
 
-        } else if (dam.health || dam.vampiric) {
-
+        if (dam.health || dam.vampiric) {
             p.health.dec(dmg);
+        }
+
+        if (!dam.infect.null()) {
+
+            auto i = constants().ailments.find(dam.infect);
+
+            if (i == constants().ailments.end())
+                throw std::runtime_error("Sanity error: unknown ailment in damage " + dam.name);
+
+            p.add_ailment(state.rng, dam.infect, i->second.triggers);
+
+            vamp = -6.0;
         }
 
         if (env) {
