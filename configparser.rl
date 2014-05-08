@@ -468,8 +468,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_magic_mapping = 'magic_mapping' %{ des.magic_mapping = true; };
 
-        design_heal_blind  = 'heal_blind'  %{ des.heal_blind = true; };
-        design_heal_unluck = 'heal_unluck' %{ des.heal_unluck = true; };
+        design_heal_blind    = 'heal_blind'    %{ des.heal_blind = true; };
+        design_heal_unluck   = 'heal_unluck'   %{ des.heal_unluck = true; };
+        design_heal_ailments = 'heal_ailments' %{ des.heal_ailments = true; };
 
         design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
 
@@ -491,6 +492,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
+            design_heal_ailments | 
             '}'
             ${ fret; })
             ;

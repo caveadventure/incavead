@@ -67,6 +67,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         return false;
 
     bool ret = false;
+    
+    if (!d.attacks.empty()) {
+
+        damage::defenses_t defenses;
+        p.inv.get_defense(defenses);
+
+        defend(p, defenses, p.get_computed_level(state.rng), d, state);
+    }
 
     if (d.heal > 0) {
 
@@ -99,6 +107,13 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
             state.render.do_message("You lucky stiff.");
         }
         
+        ret = true;
+    }
+
+    if (d.heal_ailments && p.ailments.size() > 0) {
+
+        p.ailments.clear();
+        state.render.do_message("You feel cured.");
         ret = true;
     }
 

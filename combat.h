@@ -503,8 +503,10 @@ inline void defend(Player& p,
                    const Design& d, 
                    GameState& state) {
 
+    unsigned int level = (d.attack_level >= 0 ? d.attack_level : d.level);
+
     size_t tmp;
-    defend(p, defenses, plevel, d.attacks, d.level, state, d.name, true, d, tmp);
+    defend(p, defenses, plevel, d.attacks, level, state, d.name, true, d, tmp);
 }
 
 inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
