@@ -292,8 +292,11 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     } else if (!quiet && totdamage > 0) {
 
-        if (s.flags.plant || s.flags.robot) {
+        if (s.flags.plant) {
             state.render.do_message(nlp::message("You smash %s.", s));
+
+        } else if (s.flags.robot) {
+            state.render.do_message(nlp::message("You damage %s.", s));
 
         } else if (totdamage < 0.1) {
             state.render.do_message(nlp::message("You almost miss %s.", s));
