@@ -100,6 +100,7 @@ struct Species {
         double chance;
         tag_t speciestag;
         unsigned int turns;
+        std::string msg;
 
         summon_t() : chance(0), turns(0) {}
     };
@@ -112,6 +113,7 @@ struct Species {
         double chance;
         unsigned int level;
         unsigned int turns;
+        std::string msg;
 
         spawn_t() : chance(0), turns(0) {}
     };

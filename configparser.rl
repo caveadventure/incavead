@@ -295,6 +295,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ spe.summon.back().chance = toreal(state.match); }
             ws1 tag    %{ spe.summon.back().speciestag = tag_t(state.match, tagmem); }
             ws1 number %{ spe.summon.back().turns = toint(state.match); }
+            ws1 string %{ spe.summon.back().msg = state.match; }
             ;
 
         species_death_summon = 'death_summon' ws1 tag %{ spe.death_summon = tag_t(state.match, tagmem); } ;
@@ -303,6 +304,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ spe.spawns.back().chance = toreal(state.match); }
             ws1 number %{ spe.spawns.back().level = toint(state.match); }
             ws1 number %{ spe.spawns.back().turns = toint(state.match); }
+            ws1 string %{ spe.spawns.back().msg = state.match; }
             ;
 
         species_blast = 'blast' %{ spe.blast.push_back(Species::blast_t()); }

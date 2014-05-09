@@ -89,7 +89,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
-                                  double& totdamage, double& totmagic, double& totsleep, double& totfear, double& totvamp, 
+                                  double& totdamage, double& totmagic, double& totsleep, double& totfear, 
+                                  double& totblind, double& totvamp, 
                                   bool& mortal) {
 
     double dmg = v.val;
@@ -127,11 +128,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     if (blindturns > 0) {
         state.monsters.change(mon, [blindturns](monsters::Monster& m) { m.blind += blindturns; });
+        totblind += blindturns;
     }
 
     if (scareturns > 0) {
         state.monsters.change(mon, [scareturns](monsters::Monster& m) { m.fear += scareturns; });
-        totfear += dmg;
+        totfear += scareturns;
     }
 
     if (dam.cancellation) {
@@ -196,13 +198,14 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     double totmagic = 0.0;
     double totsleep = 0.0;
     double totfear = 0.0;
+    double totblind = 0.0;
     double totvamp = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totvamp, 
+                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, 
                               mortal);
     }
 
@@ -241,13 +244,14 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     double totmagic = 0.0;
     double totsleep = 0.0;
     double totfear = 0.0;
+    double totblind = 0.0;
     double totvamp = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totvamp, 
+                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, 
                               mortal);
     }
 
@@ -260,6 +264,10 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     } else if (totfear > 0) {
 
         state.render.do_message(nlp::message("%s flees in terror.", s));
+
+    } else if (totblind > 0) {
+
+        state.render.do_message(nlp::message("%s is blinded.", s));
     }
 
     if (mon.health - totdamage <= -3) {
@@ -282,7 +290,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
 
-    } else if (!quiet) {
+    } else if (!quiet && totdamage > 0) {
 
         if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You smash %s.", s));

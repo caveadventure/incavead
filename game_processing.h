@@ -479,13 +479,13 @@ void Game::process_world(GameState& state,
                                        i.x, i.y, &p.px, &p.py, i.summontag, 1, false);
         }
 
-        if (nm > 0 && state.render.is_in_fov(i.x, i.y)) {
+        if (nm > 0 && state.render.is_in_fov(i.x, i.y) && i.msg.size() > 0) {
 
             if (i.summontag.null()) {
-                state.render.do_message(nlp::message("%s summons monsters!", species().get(i.summonertag)));
+                state.render.do_message(nlp::message(i.msg, species().get(i.summonertag)));
 
-            } else if (i.arg == 0) {
-                state.render.do_message(nlp::message("%s summons %s!", species().get(i.summonertag), 
+            } else {
+                state.render.do_message(nlp::message(i.msg, species().get(i.summonertag), 
                                                      nlp::count(), species().get(i.summontag), nm));
             }
         }
