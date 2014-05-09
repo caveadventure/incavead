@@ -128,7 +128,6 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
 
         for (const auto& tmp : s_vc) {
-            std::cout << "-----  Priority " << tmp.first << std::endl;
 
             for (const auto vi : tmp.second) {
 

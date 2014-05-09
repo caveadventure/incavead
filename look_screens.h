@@ -34,33 +34,27 @@ inline void look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigne
 
     (look.target)++;
 
-    int n = 0;
+    std::vector<monsters::pt> points;
+    size_t mons;
+    size_t items;
 
     for (const auto& i : state.monsters.mons) {
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;
 
-        if (n == look.target) {
-            look.x = i.first.first;
-            look.y = i.first.second;
-            return;
-        }
-
-        ++n;
+        points.push_back(i.first);
     }
+
+    mons = points.size();
 
     for (const auto& i : state.items.stuff) {
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;
 
-        if (n == look.target) {
-            look.x = i.first.first;
-            look.y = i.first.second;
-            return;
-        }
-
-        ++n;
+        points.push_back(i.first);
     }
+
+    items = points.size();
 
     for (const auto& i : state.features.feats) {
         if (!state.render.is_in_fov(i.first.first, i.first.second))
@@ -71,22 +65,34 @@ inline void look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigne
         if (!t.important)
             continue;
 
-        if (n == look.target) {
-            look.x = i.first.first;
-            look.y = i.first.second;
-            return;
+        points.push_back(i.first);
+    }
+
+    auto distcmp = [px, py](const monsters::pt& a, const monsters::pt& b) {
+        return distance(px, py, a.first, a.second) < distance(px, py, b.first, b.second);
+    };
+
+    if ((size_t)look.target >= points.size()) {
+
+        look.target = -1;
+        look.x = px;
+        look.y = py;
+        
+        if (points.size() > 0) {
+            look_cycle(pstate, look, px, py, state);
         }
 
-        ++n;
+        return;
     }
 
-    look.target = -1;
-    look.x = px;
-    look.y = py;
+    std::sort(points.begin(), points.begin() + mons, distcmp);
+    std::sort(points.begin() + mons, points.begin() + items, distcmp);
+    std::sort(points.begin() + items, points.end(), distcmp);
 
-    if (n > 0) {
-        look_cycle(pstate, look, px, py, state);
-    }
+    const auto& xy = points[look.target];
+
+    look.x = xy.first;
+    look.y = xy.second;
 }
 
 inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
