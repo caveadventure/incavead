@@ -201,6 +201,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
     unsigned int y = look.y;
     size_t n = state.items.stack_size(x, y);
 
+    bool ok = true;
+
     if (!state.render.is_in_fov(x, y)) {
 
     } else if (state.monsters.get(x, y, mon)) {
@@ -237,8 +239,12 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
         const Terrain& ter = terrain().get(feat.tag);
 
-        if (ter.descr.empty()) {
+        if (ter.name.empty()) {
+            ok = false;
+
+        } else if (ter.descr.empty()) {
             msg = nlp::message(" %s", ter);
+
         } else {
             msg = nlp::message(" %s (%s)", ter, ter.descr);
         }            
@@ -247,6 +253,10 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         msg = " This is you";
 
     } else {
+        ok = false;
+    }
+
+    if (!ok) {
 
         bool walk = state.grid.is_walk(x, y);
         bool water = state.grid.is_water(x, y);
