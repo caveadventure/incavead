@@ -221,7 +221,7 @@ inline std::string compress(const std::string& s, size_t maxskips = 128, size_t 
         uint32_t packed = pack_4bytes(i);
         offsets1(packed, i0, i, e, maxrun, maxoffset, maxgain);
 
-        if (maxrun == 0) {
+        if (maxrun < 4) {
             unc += c;
             ++i;
             continue;
@@ -230,7 +230,10 @@ inline std::string compress(const std::string& s, size_t maxskips = 128, size_t 
         if (unc.size() > 0) {
             //std::cout << " ==> " << unc.size() << " " << unc << std::endl;
 
-            push_vlq_uint(0, ret);
+            if (unc.size() >= 4) {
+                push_vlq_uint(0, ret);
+            }
+
             push_vlq_uint(unc.size(), ret);
             ret += unc;
             unc.clear();
@@ -317,13 +320,17 @@ struct decompress_t {
             if (i == e) 
                 return false;
 
-            if (run == 0) {
+            if (run < 4) {
 
-                size_t len;
-                if (!pop_vlq_uint(i, e, len))
-                    return false;
+                size_t len = run;
 
-                ++i;
+                if (run == 0) {
+
+                    if (!pop_vlq_uint(i, e, len))
+                        return false;
+
+                    ++i;
+                }
 
                 //std::cout << ": " << run << " " << len << std::endl;
 
