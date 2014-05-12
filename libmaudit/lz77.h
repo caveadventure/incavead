@@ -57,8 +57,11 @@
 
   std::string extra = decompress.remaining();
 
-  'extra' holds any data that was tacked onto the buffer but wasn't
+  'extra' will hold any data that was tacked onto the buffer but wasn't
   part of the compressed stream.
+
+  NOTE: calling start(), more(), result() out of order is underfined
+  behaviour and will result in crashes.
 
 */
 
@@ -530,7 +533,7 @@ struct decompress_t {
      * Returns the uncompressed result.
      */
 
-    const std::string& result() const {
+    std::string& result() {
         return ret;
     }
 

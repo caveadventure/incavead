@@ -196,7 +196,9 @@ struct screen {
         }
 
         if (compressed) {
+            std::cout << "Before size: " << data.size() << std::endl;
             data = lz77::compress(data);
+            std::cout << "After size: " << data.size() << std::endl;
         }
 
         return io.write(data);
