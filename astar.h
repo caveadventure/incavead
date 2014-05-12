@@ -135,7 +135,7 @@ private:
                 int cx = x + idirx[i];
                 int cy = y + idiry[i];
 
-                if (cx >= 0 && cy >= 0 && cx < w && cy < h) {
+                if (cx >= 0 && cy >= 0 && (unsigned int)cx < w && (unsigned int)cy < h) {
 
                     float walk_cost = _walk_cost(x, y, cx, cy);
 

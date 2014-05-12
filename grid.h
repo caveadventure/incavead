@@ -537,12 +537,15 @@ struct Map {
     template <typename PARAMS, typename FUNC>
     void flatten(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar) {
 
-        for (unsigned int i = 0; i < genparams.nflatten; ++i) {
+        // genparams.nflatten and genparams.nunflow must be greater than zero!
+        // (Guaranteed elsewhere in the code.)
+
+        for (unsigned int i = 0; i < (unsigned int)genparams.nflatten; ++i) {
             progressbar("Aging rock, " + std::to_string((int)((double)i/genparams.nflatten*100)) + "%...");
             flatten_pass(neigh, genparams);
         }
 
-        for (unsigned int i = 0; i < genparams.nunflow; ++i) {
+        for (unsigned int i = 0; i < (unsigned int)genparams.nunflow; ++i) {
             progressbar("Flowing water, " + std::to_string((int)((double)i/genparams.nunflow*100)) + "%...");
             unflow(neigh, genparams);
         }
