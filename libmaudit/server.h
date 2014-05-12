@@ -11,6 +11,9 @@
 
 #include "network.h"
 
+#include "lz77.h"
+
+
 namespace maudit {
 
 
@@ -25,6 +28,8 @@ private:
     buff_t::const_iterator buffi;
     buff_t::const_iterator buffe;
 
+    bool compression;
+
 public:
 
     int fd;
@@ -36,14 +41,18 @@ public:
         }
     }
 
-    client_socket(int _fd) : fd(_fd) {
+    client_socket(int _fd) : compression(false), fd(_fd) {
 
         buff.resize(buffsize);
         buffi = buff.end();
         buffe = buff.end();
     }
 
-    bool write(const std::string& s) {
+    void set_compression(bool c) {
+        compression = c;
+    }
+
+    bool write_(const std::string& s) {
 
         ssize_t tmp = ::send(fd, s.data(), s.size(), MSG_NOSIGNAL);
 
@@ -52,6 +61,20 @@ public:
         }
 
         return true;
+    }
+
+    bool write(const std::string& s) {
+
+        if (compression) {
+            std::cout << "Before size: " << s.size() << std::endl;
+            std::string data = lz77::compress(s);
+            std::cout << "After size: " << data.size() << std::endl;
+
+            return write_(data);
+
+        } else {
+            return write_(s);
+        }
     }
 
     bool read(unsigned char& c) {

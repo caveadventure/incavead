@@ -6,8 +6,6 @@
 
 #include <functional>
 
-#include "lz77.h"
-
 namespace maudit {
 
 #define CSI "\033["
@@ -16,8 +14,6 @@ template <typename IO>
 struct screen {
     
     IO& io;
-
-    bool compressed;
 
     unsigned int w;
     unsigned int h;
@@ -28,7 +24,7 @@ struct screen {
     std::function<void (screen<IO>*, std::vector<glyph>&)> callback;
 
 
-    screen(IO& _io) : io(_io), compressed(false), w(0), h(0), is_cr(false), address(io.peer_ip()) {
+    screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
 
         // Turn off echo in the client.
         io.write("\xFF\xFB\x01"); 
@@ -195,12 +191,6 @@ struct screen {
             }
         }
 
-        if (compressed) {
-            std::cout << "Before size: " << data.size() << std::endl;
-            data = lz77::compress(data);
-            std::cout << "After size: " << data.size() << std::endl;
-        }
-
         return io.write(data);
     }
 
@@ -250,8 +240,8 @@ struct screen {
 
                 if (c == 0x57) {
                     // Enable compression.
-                    compressed = true;
                     io.write("\xFF\xFA\x57\xFF\xF0");
+                    io.set_compression(true);
                 }
                 goto again;
 
