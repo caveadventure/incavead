@@ -17,6 +17,7 @@
  *   - Fast decompression.
  *   - Pretty good compression
  *   - Simple 'one-button' API for realistic use-cases.
+ *   - No penalty even when compressing very short strings.
  *
  * Compression performance and quality should be _roughly_ on par with LZO 
  * at highest quality setting.
