@@ -6,6 +6,8 @@
 
 #include <functional>
 
+#include "lz77.h"
+
 namespace maudit {
 
 #define CSI "\033["
@@ -14,6 +16,8 @@ template <typename IO>
 struct screen {
     
     IO& io;
+
+    bool compressed;
 
     unsigned int w;
     unsigned int h;
@@ -24,13 +28,16 @@ struct screen {
     std::function<void (screen<IO>*, std::vector<glyph>&)> callback;
 
 
-    screen(IO& _io) : io(_io), w(0), h(0), is_cr(false), address(io.peer_ip()) {
+    screen(IO& _io) : io(_io), compressed(false), w(0), h(0), is_cr(false), address(io.peer_ip()) {
 
         // Turn off echo in the client.
         io.write("\xFF\xFB\x01"); 
 
         // Turn off line buffering in the client.
         io.write("\xFF\xFB\x03");
+
+        // Turn on compression.
+        io.write("\xFF\xFB\x57");
     }
 
     void reset_color() {
@@ -188,6 +195,10 @@ struct screen {
             }
         }
 
+        if (compressed) {
+            data = lz77::compress(data);
+        }
+
         return io.write(data);
     }
 
@@ -224,11 +235,22 @@ struct screen {
 
             case 0xFB:
             case 0xFC:
-            case 0xFD:
             case 0xFE:
-                // Will/won't/do/don't silliness, ignore it.
+                // Will/won't/don't silliness, ignore it.
                 ok = io.read(c);
                 if (!ok) return false;
+                goto again;
+
+            case 0xFD:
+                // 'Do' silliness.
+                ok = io.read(c);
+                if (!ok) return false;
+
+                if (c == 0x57) {
+                    // Enable compression.
+                    compressed = true;
+                    io.write("\xFF\xFA\x57\xFF\xF0");
+                }
                 goto again;
 
             case 0xFA:

@@ -11,7 +11,6 @@
 
 #include "network.h"
 
-
 namespace maudit {
 
 
