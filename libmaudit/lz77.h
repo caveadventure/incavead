@@ -1,20 +1,82 @@
 #ifndef __X_LZ77_H
 #define __X_LZ77_H
 
+/*
+ * This code is in the public domain, see: http://unlicense.org/
+ *
+ * Feel free to steal it.
+ */
+
+/*
+ * This is a variation on the LZ77 compression algorithm.
+ * 
+ * Highlights:
+ *
+ *   - Portable, self-contained, tiny implementation in readable C++. 
+ *     (Header-only, no ifdefs or CPU dependencies or other stupid tricks.)
+ *   - Fast decompression.
+ *   - Pretty good compression
+ *   - Simple 'one-button' API for realistic use-cases.
+ *
+ * Compression performance and quality should be _roughly_ on par with LZO 
+ * at highest quality setting.
+ * (Note that your mileage will vary depending on input data; This code will 
+ * degrade less gracefully compared to LZO when compressing uncompressable 
+ * data.)
+ *
+ */
+
+/* 
+ * Usage:
+
+  #include "lz77.h"
+
+  std::string input = ...;
+  std::string compressed = lz77::compress(input);
+
+  lz77::decompress_t decompress;
+
+  decompress.start(compressed);
+
+  const std::string& uncompressed = decompress.result();
+
+  --------
+
+  Use decompress.more(...) for feeding input data step-by-step in chunks.
+  For example, if you're trying to decompress a network byte stream:
+
+  lz77::decompress_t decompress;
+
+  bool done = decompress.start(buffer);
+
+  while (!done) {
+    done = decompress.more(buffer);
+  }
+
+  std::string result = decompress.result();
+
+  std::string extra = decompress.remaining();
+
+  'extra' holds any data that was tacked onto the buffer but wasn't
+  part of the compressed stream.
+
+*/
+
+ 
+
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 #include <vector>
-#include <set>
-#include <algorithm>
+#include <unordered_map>
 
 #include <string.h>
 #include <stdint.h>
 
-#include <iostream>
-
 
 namespace lz77 {
+
+// Utility function: encode a size_t as a variable-sized stream of octets with 7 bits of useful data. 
+// (One bit is used to signal an end of stream.)
 
 inline void push_vlq_uint(size_t n, std::string& out) {
 
@@ -32,6 +94,7 @@ inline void push_vlq_uint(size_t n, std::string& out) {
     }
 }
 
+// Utility function: corresponding decode function. 
 
 inline bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& ret) {
 
@@ -58,6 +121,8 @@ inline bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t
     return true;
 }
 
+// Utility function: return common prefix length of two strings.
+
 inline size_t substr_run(const unsigned char* ai, const unsigned char* ae,
                          const unsigned char* bi, const unsigned char* be) {
 
@@ -79,6 +144,9 @@ inline size_t substr_run(const unsigned char* ai, const unsigned char* ae,
     return n;
 }
 
+// Utility function: Hash the first 4 and 7 bytes of a string into 32-bit ints.
+// (4 and 7 are magic constants.)
+
 inline void pack_bytes(const unsigned char* i, uint32_t& packed4, uint32_t& packed7, size_t blocksize) {
 
     packed4 = (*i | (*(i+1) << 8) | (*(i+2) << 16) | (*(i+3) << 24));
@@ -87,6 +155,11 @@ inline void pack_bytes(const unsigned char* i, uint32_t& packed4, uint32_t& pack
     packed4 = packed4 % blocksize;
     packed7 = packed7 % blocksize;
 }
+
+
+// Compute the profit from compression; 'run' is the length of a string at position 'offset'.
+// 'run' and 'offset' are numbers encoded as variable-length bitstreams; the sum length of 
+// encoded 'run' and 'offset' must be less than 'run'.
 
 inline size_t gains(size_t run, size_t offset) {
 
@@ -122,6 +195,8 @@ inline size_t gains(size_t run, size_t offset) {
 
     return gain - loss;
 }
+
+// Utility function: hack a circular buffer from an std::vector.
 
 template <typename T>
 struct circular_buffer_t {
@@ -159,6 +234,10 @@ struct circular_buffer_t {
         return buff.end();
     }
 };
+
+// Hash table already seen strings; it maps from a hash of a string prefix to
+// a list of offsets. (At each offset there is a string with a prefix that hashes
+// to the key.)
 
 struct offsets_dict_t {
 
@@ -207,6 +286,24 @@ struct offsets_dict_t {
     }
 };
 
+/*
+ * 
+ * Entry point for compression.
+ * 
+ * Inputs: std::string of data to be compressed.
+ *
+ * Also optionally parameters for tuning speed and quality.
+ *
+ * There are two parameters: 'searchlen' and 'blocksize'.
+ *
+ * 'blocksize' is the upper bound for hash table sizes.
+ * 'searchlen' is the upper bound for lists of offsets at each hash value.
+ *
+ * A larger 'blocksize' increases memory consumption and compression quality.
+ * A larger 'searchlen' increases running time, memory consumption and compression quality.
+ *
+ * Output: the compressed data as a string.
+ */
 
 inline std::string compress(const std::string& s, size_t searchlen = 32, size_t blocksize = 64*1024) {
 
@@ -227,6 +324,9 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
 
         unsigned char c = *i;
 
+        // The last 7 bytes are uncompressable. (At least 7 bytes
+        // are needed to calculate a prefix hash.)
+
         if (i > e - 7) {
 
             unc +=c;
@@ -241,10 +341,23 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
         uint32_t packed7;
         uint32_t packed4;
 
+        // Prefix lengths of 4 and 7 were chosen empirically, based on a series
+        // of unscientific tests.
+
+        // NOTE:
+        // An additional hash map for prefixes of size 11 would increase quality
+        // further, at the cost of longer running time. I decided against implementing
+        // it here.
+
         pack_bytes(i, packed7, packed4, blocksize);
 
         offsets2(packed7, i0, i, e, maxrun, maxoffset, maxgain);
         offsets1(packed4, i0, i, e, maxrun, maxoffset, maxgain);
+
+        // A substring of length less than 4 is useless for us.
+        // (Theoretically a substring of length 3 can be compressed
+        // to two bytes, but I found that this decreases quality in
+        // practice.)
 
         if (maxrun < 4) {
             unc += c;
@@ -253,7 +366,11 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
         }
 
         if (unc.size() > 0) {
-            //std::cout << " ==> " << unc.size() << " " << unc << std::endl;
+
+            // Uncompressed strings of length 3 and less are encoded
+            // with one extra byte: the length. Longer uncompressed strings 
+            // are encoded with at least two extra bytes: a 0 flag and a 
+            // length.
 
             if (unc.size() >= 4) {
                 push_vlq_uint(0, ret);
@@ -264,7 +381,8 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
             unc.clear();
         }
 
-        //std::cout << "  => " << maxrun << " " << maxoffset << std::endl;
+        // Compressed strings are encoded with at least two bytes:
+        // a length and an offset.
 
         push_vlq_uint(maxrun, ret);
         push_vlq_uint(maxoffset, ret);
@@ -281,6 +399,10 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
     return ret;
 }
 
+/*
+ * Entry point for decompression.
+ */
+
 struct decompress_t {
 
     std::string ret;
@@ -288,8 +410,13 @@ struct decompress_t {
     unsigned char* outb;
     unsigned char* oute;
 
-
     decompress_t() : out(NULL), outb(NULL), oute(NULL) {}
+
+    /*
+     * Input: the compressed string, as output from 'compress()'.
+     * Output: true if all of the data was decompressed
+     *         false if more input data needs to be fed via 'more()'.
+     */
 
     bool start(const std::string& s) {
 
@@ -313,6 +440,11 @@ struct decompress_t {
         return more(i, e);
     }
 
+    /*
+     * Feed more input data.
+     * Inputs and outputs same as for 'start()'.
+     */
+
     bool more(const std::string& s) {
 
         const unsigned char* i = (const unsigned char*)s.data();
@@ -323,12 +455,10 @@ struct decompress_t {
 
     bool more(const unsigned char* i, const unsigned char* e) {
 
-        size_t nunc = 0;
-        size_t ncom = 0;
-
         while (i != e) {
 
-            const unsigned char* zzz = i;
+            if (out == oute)
+                return true;
 
             size_t run;
             if (!pop_vlq_uint(i, e, run))
@@ -351,8 +481,6 @@ struct decompress_t {
                     ++i;
                 }
 
-                //std::cout << ": " << run << " " << len << std::endl;
-
                 if (i == e || i + len > e)
                     return false;
                 
@@ -363,8 +491,6 @@ struct decompress_t {
                 out += len;
                 i += len;
 
-                nunc += (i - zzz);
-
             } else {
 
                 size_t offset;
@@ -372,8 +498,6 @@ struct decompress_t {
                     return false;
 
                 ++i;
-
-                //std::cout << "| " << run << " " << offset << std::endl;
 
                 unsigned char* outi = out - offset;
 
@@ -393,12 +517,8 @@ struct decompress_t {
                         --run;
                     }
                 }
-
-                ncom += (i - zzz);
             }
         }
-
-        std::cout << " %unc " << nunc << " %com " << ncom << std::endl;
 
         if (out == oute)
             return true;
@@ -406,8 +526,20 @@ struct decompress_t {
         return false;
     }
 
+    /*
+     * Returns the uncompressed result.
+     */
+
     const std::string& result() const {
         return ret;
+    }
+
+    /*
+     * Returns any extra unused data that was in the input stream.
+     */
+
+    std::string remaining() const {
+        return std::string(out, oute);
     }
 };
 
