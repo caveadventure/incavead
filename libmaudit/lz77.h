@@ -126,9 +126,46 @@ inline size_t gains(size_t run, size_t offset) {
     return gain - loss;
 }
 
+template <typename T>
+struct circular_buffer_t {
+
+    typedef typename std::vector<T> holder_t;
+    typedef typename holder_t::iterator iterator;
+    typedef typename holder_t::const_iterator const_iterator;
+    holder_t buff;
+    iterator head;
+
+    circular_buffer_t() : head(buff.end()) {}
+
+    void push_back(const T& t, size_t maxsize) {
+
+        if (buff.size() < maxsize) {
+            buff.push_back(t);
+            head = buff.end() - 1;
+
+        } else {
+
+            ++head;
+
+            if (head == buff.end())
+                head = buff.begin();
+
+            *head = t;
+        }
+    }
+
+    const_iterator begin() {
+        return buff.begin();
+    }
+
+    const_iterator end() {
+        return buff.end();
+    }
+};
+
 struct offsets_dict_t {
 
-    typedef std::unordered_map< uint32_t, std::vector<size_t> > offsets_t;
+    typedef std::unordered_map< uint32_t, circular_buffer_t<size_t> > offsets_t;
     offsets_t offsets;
 
     size_t maxwindow;
@@ -136,31 +173,28 @@ struct offsets_dict_t {
     offsets_dict_t(size_t mw) : maxwindow(mw) {
     }
 
-    void clean() {
-        for (offsets_t::iterator i = offsets.begin(); i != offsets.end();) {
-
-            if (i->second.size() == 1) {
-                i = offsets.erase(i);
-            } else {
-                ++i;
-            }
-        }
-    }
-
     void operator()(uint32_t packed, const unsigned char* i0, const unsigned char* i, const unsigned char* e,
                     size_t& maxrun, size_t& maxoffset, size_t& maxgain) {
 
-        std::vector<size_t>& voffs = offsets[packed];
-        voffs.push_back(i - i0);
+        circular_buffer_t<size_t>& voffs = offsets[packed];
+        voffs.push_back(i - i0, maxwindow);
 
         if (maxrun > 0)
             return;
 
-        std::vector<size_t>::const_reverse_iterator z = voffs.rbegin();
-        ++z;
+        circular_buffer_t<size_t>::const_iterator z = voffs.head;
 
-        size_t nnn = 0;
-        while (z != voffs.rend() && nnn < maxwindow) {
+        while (1) {
+
+            if (z == voffs.begin()) {
+                z = voffs.end() - 1;
+
+            } else {
+                --z;
+            }
+
+            if (z == voffs.head)
+                break;
 
             int offset = i - i0 - *z;
 
@@ -172,9 +206,6 @@ struct offsets_dict_t {
                 maxoffset = offset;
                 maxgain = gain;
             }
-
-            ++z;
-            ++nnn;
         }
     }
 };
