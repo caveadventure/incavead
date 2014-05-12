@@ -20,9 +20,9 @@
  *
  * Compression performance and quality should be _roughly_ on par with LZO 
  * at highest quality setting.
- * (Note that your mileage will vary depending on input data; This code will 
- * degrade less gracefully compared to LZO when compressing uncompressable 
- * data.)
+ * (Note that your mileage will vary depending on input data; for example, 
+ * this code will degrade less gracefully compared to LZO when trying to 
+ * compress uncompressable data.)
  *
  */
 
@@ -46,19 +46,29 @@
   For example, if you're trying to decompress a network byte stream:
 
   lz77::decompress_t decompress;
+  std::string extra;
 
-  bool done = decompress.start(buffer);
+  bool done = decompress.start(buffer, extra);
 
   while (!done) {
-    done = decompress.more(buffer);
+    done = decompress.more(buffer, extra);
   }
 
   std::string result = decompress.result();
 
-  std::string extra = decompress.remaining();
+  'start' will start decoding a packet of compressed data.
+  If it returns true, then all of the message was decompressed.
+  If it returns false, then 'more' needs to be called with more
+  compressed data until it returns 'true'.
 
   'extra' will hold any data that was tacked onto the buffer but wasn't
-  part of the compressed stream.
+  part of this packet of compressed data. (Useful when decoding a message
+  stream that doesn't have clearly delineated message boundaries; the 
+  decompressor will detect message boundaries properly for you.)
+
+  'extra' will be assigned to only when 'start' or 'more' returns true.
+
+  'result' is the decompressed message.
 
   NOTE: calling start(), more(), result() out of order is underfined
   behaviour and will result in crashes.
@@ -404,6 +414,8 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
 
 /*
  * Entry point for decompression.
+ * Calling 'start', 'more', 'result' out of order is undefined behaviour 
+ * and will crash your program.
  */
 
 struct decompress_t {
@@ -416,12 +428,16 @@ struct decompress_t {
     decompress_t() : out(NULL), outb(NULL), oute(NULL) {}
 
     /*
-     * Input: the compressed string, as output from 'compress()'.
-     * Output: true if all of the data was decompressed
-     *         false if more input data needs to be fed via 'more()'.
+     * Inputs: the compressed string, as output from 'compress()'.
+     * Outputs: 
+     *    true if all of the data was decompressed.
+     *    false if more input data needs to be fed via 'more()'.
+     *    'remaining' will hold input data that wasn't part of
+     *    the compressed message. (Only assigned to when all of
+     *    the data was decompressed.)
      */
 
-    bool start(const std::string& s) {
+    bool start(const std::string& s, std::string& remaining) {
 
         const unsigned char* i = (const unsigned char*)s.data();
         const unsigned char* e = i + s.size();
@@ -434,34 +450,39 @@ struct decompress_t {
 
         ++i;
 
+        std::cout << "Start frame size: " << size << std::endl;
+
         ret.resize(size);
 
         outb = (unsigned char*)ret.data();
         oute = outb + size;
         out = outb;
 
-        return more(i, e);
+        return more(i, e, remaining);
     }
 
     /*
-     * Feed more input data.
+     * Feed more input data, in case a previous call of 'start' 
+     * or 'more' returned false.
      * Inputs and outputs same as for 'start()'.
      */
 
-    bool more(const std::string& s) {
+    bool more(const std::string& s, std::string& remaining) {
 
         const unsigned char* i = (const unsigned char*)s.data();
         const unsigned char* e = i + s.size();
 
-        return more(i, e);
+        return more(i, e, remaining);
     }
 
-    bool more(const unsigned char* i, const unsigned char* e) {
+    bool more(const unsigned char* i, const unsigned char* e, std::string& remaining) {
 
         while (i != e) {
 
-            if (out == oute)
+            if (out == oute) {
+                remaining.assign(i, e);
                 return true;
+            }
 
             size_t run;
             if (!pop_vlq_uint(i, e, run))
@@ -523,8 +544,10 @@ struct decompress_t {
             }
         }
 
-        if (out == oute)
+        if (out == oute) {
+            remaining.assign(i, e);
             return true;
+        }
 
         return false;
     }
@@ -537,13 +560,6 @@ struct decompress_t {
         return ret;
     }
 
-    /*
-     * Returns any extra unused data that was in the input stream.
-     */
-
-    std::string remaining() const {
-        return std::string(out, oute);
-    }
 };
 
 }
