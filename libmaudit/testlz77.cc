@@ -77,8 +77,9 @@ int main(int argc, char** argv) {
 
     {
         bm _x2("decompressing");
+        std::string extra;
 
-        if (!decompress.start(out)) {
+        if (!decompress.start(out, extra) || extra.size() > 0) {
             std::cout << "Sanity error: failed to decompress whole buffer." << std::endl;
             return 1;
         }
