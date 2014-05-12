@@ -79,15 +79,13 @@ inline size_t substr_run(const unsigned char* ai, const unsigned char* ae,
     return n;
 }
 
-inline uint32_t pack_4bytes(const unsigned char* i) {
+inline void pack_bytes(const unsigned char* i, uint32_t& packed4, uint32_t& packed7, size_t blocksize) {
 
-    return (*i | (*(i+1) << 8) | (*(i+2) << 16) | (*(i+3) << 24));
-}
+    packed4 = (*i | (*(i+1) << 8) | (*(i+2) << 16) | (*(i+3) << 24));
+    packed7 = packed4 + ((*(i+4) << 8) | (*(i+5) << 16) | (*(i+6) << 24));
 
-inline uint32_t pack_7bytes(const unsigned char* i) {
-
-    return ((*i | (*(i+1) << 8) | (*(i+2) << 16) | (*(i+3) << 24)) +
-            (     (*(i+4) << 8) | (*(i+5) << 16) | (*(i+6) << 24)));
+    packed4 = packed4 % blocksize;
+    packed7 = packed7 % blocksize;
 }
 
 inline size_t gains(size_t run, size_t offset) {
@@ -118,7 +116,6 @@ inline size_t gains(size_t run, size_t offset) {
     if (offset > 0x1fffff) {
         loss++;
     }
-    
 
     if (loss > gain)
         return 0;
@@ -168,16 +165,16 @@ struct offsets_dict_t {
     typedef std::unordered_map< uint32_t, circular_buffer_t<size_t> > offsets_t;
     offsets_t offsets;
 
-    size_t maxwindow;
+    size_t searchlen;
 
-    offsets_dict_t(size_t mw) : maxwindow(mw) {
+    offsets_dict_t(size_t sl) : searchlen(sl) {
     }
 
     void operator()(uint32_t packed, const unsigned char* i0, const unsigned char* i, const unsigned char* e,
                     size_t& maxrun, size_t& maxoffset, size_t& maxgain) {
 
         circular_buffer_t<size_t>& voffs = offsets[packed];
-        voffs.push_back(i - i0, maxwindow);
+        voffs.push_back(i - i0, searchlen);
 
         if (maxrun > 0)
             return;
@@ -211,7 +208,7 @@ struct offsets_dict_t {
 };
 
 
-inline std::string compress(const std::string& s, size_t maxskips = 128, size_t blocksize = 100*1024*1024) {
+inline std::string compress(const std::string& s, size_t searchlen = 32, size_t blocksize = 64*1024) {
 
     const unsigned char* i0 = (const unsigned char*)s.data();
     const unsigned char* i = i0;
@@ -223,16 +220,14 @@ inline std::string compress(const std::string& s, size_t maxskips = 128, size_t 
 
     push_vlq_uint(s.size(), ret);
 
-    offsets_dict_t offsets1(maxskips);
-    offsets_dict_t offsets2(maxskips);
-
-    size_t checkpoint = 0;
+    offsets_dict_t offsets1(searchlen);
+    offsets_dict_t offsets2(searchlen);
 
     while (i != e) {
 
         unsigned char c = *i;
 
-        if (i > e - 4) {
+        if (i > e - 7) {
 
             unc +=c;
             ++i;
@@ -243,14 +238,13 @@ inline std::string compress(const std::string& s, size_t maxskips = 128, size_t 
         size_t maxoffset = 0;
         size_t maxgain = 0;
 
-        if (i <= e - 7) {
+        uint32_t packed7;
+        uint32_t packed4;
 
-            uint32_t huge_packed = pack_7bytes(i);
-            offsets2(huge_packed, i0, i, e, maxrun, maxoffset, maxgain);
-        }
+        pack_bytes(i, packed7, packed4, blocksize);
 
-        uint32_t packed = pack_4bytes(i);
-        offsets1(packed, i0, i, e, maxrun, maxoffset, maxgain);
+        offsets2(packed7, i0, i, e, maxrun, maxoffset, maxgain);
+        offsets1(packed4, i0, i, e, maxrun, maxoffset, maxgain);
 
         if (maxrun < 4) {
             unc += c;
@@ -275,12 +269,6 @@ inline std::string compress(const std::string& s, size_t maxskips = 128, size_t 
         push_vlq_uint(maxrun, ret);
         push_vlq_uint(maxoffset, ret);
         i += maxrun;
-
-        if (ret.size() - checkpoint > blocksize) {
-            offsets1.offsets.clear();
-            offsets2.offsets.clear();
-            checkpoint = ret.size();
-        }
     }
 
     if (unc.size() > 0) {
