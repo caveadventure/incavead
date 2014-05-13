@@ -591,6 +591,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ ter.sensor_toggle.second = tag_t(state.match, tagmem); }
             ;
 
+        terrain_preserve = 'preserve' %{ ter.preserve = true; } ;
+
         terrain_one_data =
             (terrain_count | terrain_name | terrain_skin | terrain_placement | terrain_descr |
             terrain_stairs | terrain_tunnel | terrain_viewblock | terrain_walkblock |
@@ -598,7 +600,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_is_lightsource | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_banking |
             terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
-            terrain_view_radius | terrain_sensor_toggle |
+            terrain_view_radius | terrain_sensor_toggle | terrain_preserve |
             '}' 
             ${ fret; })
             ;

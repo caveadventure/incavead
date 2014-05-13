@@ -218,6 +218,15 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
             const bones::pt& xy = marks.first;
 
+            features::Feature feat;
+            if (state.features.get(xy.first, xy.second, feat)) {
+
+                const Terrain& t = terrain().get(feat.tag);
+
+                if (t.preserve)
+                    continue;
+            }
+
             state.features.set(xy.first, xy.second, grave, state.render);
         }
     }
@@ -232,6 +241,15 @@ void Game::generate(GameState& state, FUNC progressbar) {
             tag_t tag = i.second.feat;
             bool walk = i.second.walk;
             bool water = i.second.water;
+
+            features::Feature feat;
+            if (state.features.get(x, y, feat)) {
+
+                const Terrain& t = terrain().get(feat.tag);
+
+                if (t.preserve)
+                    continue;
+            }
 
             if (tag.null()) {
                 state.grid.set_walk_water(state.neigh, x, y, walk, water);

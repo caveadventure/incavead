@@ -67,7 +67,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         return false;
 
     bool ret = false;
-    
+
     if (!d.attacks.empty()) {
 
         damage::defenses_t defenses;
@@ -149,25 +149,8 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         const Levelskin& ls = levelskins().get(p.worldz);
         const Terrain& t = terrain().get(d.place_permafeat.feat);
 
-        bool bad = false;
-
         if (ls.no_phase_level && t.stairs > 0) {
-            bad = true;
 
-        } else {
-
-            features::Feature feat;
-            if (state.features.get(p.px, p.py, feat)) {
-
-                const Terrain& to = terrain().get(feat.tag);
-
-                if (!to.victory_item.null()) {
-                    bad = true;
-                }
-            }
-        }
-
-        if (bad) {
             state.render.do_message("Nothing happened. Strange.", true);
             ret = false;
 
@@ -211,7 +194,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     if (!d.genocide.null()) {
 
-        state.render.do_message("You sense a great disturbance in the force.");
+        state.render.do_message("You sense a great disturbance in the force.", true);
 
         genocide(state, d.genocide);
         ret = true;
