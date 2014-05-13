@@ -23,7 +23,8 @@ struct Levelskin {
 
     int level;
 
-    bool exclusive;
+    bool exclusive_monsters;
+    bool exclusive_items;
 
     bool no_phase_level;
 
@@ -92,7 +93,8 @@ struct Levelskin {
 
     mapgen_params_t genparams;
 
-    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive(false), no_phase_level(false), 
+    Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive_monsters(false), 
+                  exclusive_items(false), no_phase_level(false), 
                   species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),

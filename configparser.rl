@@ -749,7 +749,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
         levelskin_damage_terrain  = 'damage_terrain'  ws1 tag    %{ lev.damage_terrain = tag_t(state.match, tagmem); };
-        levelskin_exclusive     = 'exclusive'     %{ lev.exclusive = true; };
+
+        levelskin_exclusive_monsters = 'exclusive_monsters' %{ lev.exclusive_monsters = true; };
+        levelskin_exclusive_items    = 'exclusive_items'    %{ lev.exclusive_items = true; };
 
         levelskin_no_phase_level = 'no_phase_level' %{ lev.no_phase_level = true; };
 
@@ -802,7 +804,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage_terrain |
-            levelskin_exclusive | levelskin_no_phase_level |
+            levelskin_exclusive_monsters | levelskin_exclusive_items | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |
             levelskin_number_features | levelskin_name | levelskin_treasure_level |

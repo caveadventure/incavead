@@ -98,11 +98,11 @@ struct Items {
 
     template <typename T>
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
-                  counters::Counts& counts, unsigned int level, unsigned int n) {
+                  counters::Counts& counts, unsigned int level, unsigned int n, bool exclusive) {
 
         std::cout << "++ " << level << " : " << n << std::endl;
 
-        std::map<tag_t, unsigned int> q = counts.take(rng, level, n);
+        std::map<tag_t, unsigned int> q = counts.take(rng, level, n, exclusive);
 
         for (const auto& i : q) {
 

@@ -331,7 +331,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         unsigned int items = std::max(0.0, state.rng.gauss(lev.number_items.mean, lev.number_items.deviation));
 
         state.items.generate(state.neigh, state.rng, state.grid, maps,
-                             state.designs_counts, designs_level, items);
+                             state.designs_counts, designs_level, items, lev.exclusive_items);
 
 
         if (p.worldx != 0 || p.worldy != 0) {
@@ -343,7 +343,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                 unsigned int bonusa = std::max(0.0, state.rng.gauss(bac.mean, bac.deviation));
 
                 state.items.generate(state.neigh, state.rng, state.grid, maps,
-                                     state.bonus_designs_a_counts, designs_level, bonusa);
+                                     state.bonus_designs_a_counts, designs_level, bonusa, lev.exclusive_items);
 
             } else {
 
@@ -352,7 +352,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                 unsigned int bonusb = std::max(0.0, state.rng.gauss(bbc.mean, bbc.deviation));
 
                 state.items.generate(state.neigh, state.rng, state.grid, maps,
-                                     state.bonus_designs_b_counts, designs_level, bonusb);
+                                     state.bonus_designs_b_counts, designs_level, bonusb, lev.exclusive_items);
             }
         }
     }
@@ -372,7 +372,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         for (unsigned int i = 0; i < mongroups; ++i) {
 
             state.monsters.generate(state.neigh, state.rng, state.grid, maps,
-                                    state.species_counts, species_level, lev.exclusive);
+                                    state.species_counts, species_level, lev.exclusive_monsters);
         }
     }
 
