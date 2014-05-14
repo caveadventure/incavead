@@ -451,8 +451,6 @@ struct decompress_t {
 
         ++i;
 
-        std::cout << "Start frame size: " << size << std::endl;
-
         ret.resize(size);
 
         outb = (unsigned char*)ret.data();

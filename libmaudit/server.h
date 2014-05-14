@@ -66,9 +66,7 @@ public:
     bool write(const std::string& s) {
 
         if (compression) {
-            std::cout << "Before size: " << s.size() << std::endl;
             std::string data = lz77::compress(s);
-            std::cout << "After size: " << data.size() << std::endl;
 
             return write_(data);
 
