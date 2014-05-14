@@ -635,7 +635,7 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
             if (forbid_luck && (_design.luck.size() > 0 || _design.consume_luck > 0))
                 continue;
 
-            if (_design.slot == constants().money_slot)
+            if (_design.forbid_wish)
                 continue;
 
             size_t lcs = longest_common_subsequence(_design.name, name);

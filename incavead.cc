@@ -185,7 +185,7 @@ void do_genmaps() {
     state.neigh.init(Game::GRID_W, Game::GRID_H);
     state.grid.init(Game::GRID_W, Game::GRID_H);
 
-    for (int worldz = -7; worldz <= 21; ++worldz) {
+    for (int worldz = -10; worldz <= 28; ++worldz) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
 

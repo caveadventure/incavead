@@ -90,8 +90,6 @@ struct Items {
                 _c = 1;
         }
 
-        std::cout << d.name << " " << _c << std::endl;
-
         return Item(tag, xy, _c);
     }
 
@@ -100,13 +98,9 @@ struct Items {
     void generate(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                   counters::Counts& counts, unsigned int level, unsigned int n, bool exclusive) {
 
-        std::cout << "++ " << level << " : " << n << std::endl;
-
         std::map<tag_t, unsigned int> q = counts.take(rng, level, n, exclusive);
 
         for (const auto& i : q) {
-
-            std::cout << "  ~ " << i.second << std::endl;
 
             for (unsigned int j = 0; j < i.second; ++j) {
 
