@@ -78,6 +78,9 @@ Ask for 'tiletel' if you want the bundled built-in client. (Built with SDL, so i
 By default the game will launch the built-in client with square-tile graphics.
 
 (Note: the game does not require Internet access. Everything is purely offline, telnet is used only as a convenient text-mode rendering client.)
+
+If you want to play online with the built-in client, just do 'cd tiletel; ./tiletel'
+
 EOF
 
 mv dist incavead

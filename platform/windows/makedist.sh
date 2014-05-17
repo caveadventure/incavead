@@ -50,6 +50,8 @@ Run 'incavead_tiles.bat' to launch the game with 'square tiles' graphics.
   P.S. 'incavead.bat' is the same thing as 'incavead_tiles.bat'.
 
 (Note: the game does not require Internet access. Everything is purely offline, telnet is used only as a convenient text-mode rendering client.)
+
+If you want to play online, go into the 'tiletel' directory and lauch tiletel.exe
 EOF
 
 mv dist incavead
