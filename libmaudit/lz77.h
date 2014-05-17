@@ -459,8 +459,6 @@ struct decompress_t {
 
         ++i;
 
-        std::cout << ":: " << s.size() << " -> " << size << std::endl;
-
         ret.resize(size);
 
         outb = (unsigned char*)ret.data();
