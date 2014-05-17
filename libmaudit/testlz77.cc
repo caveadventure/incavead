@@ -79,6 +79,19 @@ int main(int argc, char** argv) {
         bm _x2("decompressing");
         std::string extra;
 
+        /*
+        size_t nb = 0;
+        size_t ne = std::max(out.size(), (size_t)256);
+        bool done = decompress.start(std::string(out.begin() + nb, out.begin() + ne), extra);
+
+        while (!done) {
+            size_t tmp = ne;
+            ne = std::max(out.size(), ne + 256);
+            nb = tmp;
+            done = decompress.more(std::string(out.begin() + nb, out.begin() + ne), extra);
+        }
+        */
+
         if (!decompress.start(out, extra) || extra.size() > 0) {
             std::cout << "Sanity error: failed to decompress whole buffer." << std::endl;
             return 1;

@@ -17,7 +17,7 @@
  *   - Fast decompression.
  *   - Pretty good compression
  *   - Simple 'one-button' API for realistic use-cases.
- *   - No penalty even when compressing very short strings.
+ *   - No penalty (only 3 bytes) even when compressing very short strings.
  *
  * Compression performance and quality should be _roughly_ on par with LZO 
  * at highest quality setting.
@@ -106,33 +106,6 @@ inline void push_vlq_uint(size_t n, std::string& out) {
         out += (c | 0x80);
         n = q;
     }
-}
-
-// Utility function: corresponding decode function. 
-
-inline bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& ret) {
-
-    ret = 0;
-    size_t off = 0;
-
-    while (1) {
-
-        if (i == e)
-            return false;
-
-        unsigned char c = *i;
-
-        if ((c & 0x80) == 0) {
-            ret |= (c << off);
-            break;
-        }
-
-        ret |= ((c & 0x7F) << off);
-        off += 7;
-        ++i;
-    }
-
-    return true;
 }
 
 // Utility function: return common prefix length of two strings.
@@ -426,7 +399,39 @@ struct decompress_t {
     unsigned char* outb;
     unsigned char* oute;
 
-    decompress_t() : out(NULL), outb(NULL), oute(NULL) {}
+    // Utility function: decode variable-length-coded unsigned integers.
+
+    size_t vlq_num;
+    size_t vlq_off;
+
+    bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& ret) {
+
+        while (1) {
+
+            if (i == e)
+                return false;
+
+            unsigned char c = *i;
+
+            if ((c & 0x80) == 0) {
+                vlq_num |= (c << vlq_off);
+                break;
+            }
+
+            vlq_num |= ((c & 0x7F) << vlq_off);
+            vlq_off += 7;
+            ++i;
+        }
+
+        ret = vlq_num;
+        vlq_num = 0;
+        vlq_off = 0;
+
+        return true;
+    }
+
+
+    decompress_t() : out(NULL), outb(NULL), oute(NULL), vlq_num(0), vlq_off(0) {}
 
     /*
      * Inputs: the compressed string, as output from 'compress()'.
@@ -445,11 +450,16 @@ struct decompress_t {
 
         ret.clear();
 
+        vlq_num = 0;
+        vlq_off = 0;
+
         size_t size;
         if (!pop_vlq_uint(i, e, size))
             return true;
 
         ++i;
+
+        std::cout << ":: " << s.size() << " -> " << size << std::endl;
 
         ret.resize(size);
 
