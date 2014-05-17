@@ -399,10 +399,19 @@ struct decompress_t {
     unsigned char* outb;
     unsigned char* oute;
 
-    // Utility function: decode variable-length-coded unsigned integers.
+    struct state_t {
+        size_t run;
+        size_t off_or_len;
+        size_t vlq_num;
+        size_t vlq_off;
+        int state;
 
-    size_t vlq_num;
-    size_t vlq_off;
+        state_t() : run(0), off_or_len(0), vlq_num(0), vlq_off(0), state(0) {}
+    };
+
+    state_t state;
+
+    // Utility function: decode variable-length-coded unsigned integers.
 
     bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& ret) {
 
@@ -414,24 +423,24 @@ struct decompress_t {
             unsigned char c = *i;
 
             if ((c & 0x80) == 0) {
-                vlq_num |= (c << vlq_off);
+                state.vlq_num |= (c << state.vlq_off);
                 break;
             }
 
-            vlq_num |= ((c & 0x7F) << vlq_off);
-            vlq_off += 7;
+            state.vlq_num |= ((c & 0x7F) << state.vlq_off);
+            state.vlq_off += 7;
             ++i;
         }
 
-        ret = vlq_num;
-        vlq_num = 0;
-        vlq_off = 0;
+        ret = state.vlq_num;
+        state.vlq_num = 0;
+        state.vlq_off = 0;
 
         return true;
     }
 
 
-    decompress_t() : out(NULL), outb(NULL), oute(NULL), vlq_num(0), vlq_off(0) {}
+    decompress_t() : out(NULL), outb(NULL), oute(NULL) {}
 
     /*
      * Inputs: the compressed string, as output from 'compress()'.
@@ -450,8 +459,7 @@ struct decompress_t {
 
         ret.clear();
 
-        vlq_num = 0;
-        vlq_off = 0;
+        state = state_t();
 
         size_t size;
         if (!pop_vlq_uint(i, e, size))
@@ -491,61 +499,87 @@ struct decompress_t {
                 return true;
             }
 
-            size_t run;
-            if (!pop_vlq_uint(i, e, run))
+            if (state.state == 0) {
+
+                if (!pop_vlq_uint(i, e, state.run))
+                    return false;
+
+                ++i;
+
+                state.state = 1;
+            }
+
+            if (i == e) {
                 return false;
+            }
 
-            ++i;
+            if (state.run < 4) {
 
-            if (i == e) 
-                return false;
+                if (state.state == 1) {
 
-            if (run < 4) {
+                    state.off_or_len = state.run;
 
-                size_t len = run;
+                    if (state.run == 0) {
 
-                if (run == 0) {
+                        if (!pop_vlq_uint(i, e, state.off_or_len))
+                            return false;
 
-                    if (!pop_vlq_uint(i, e, len))
+                        ++i;
+                    }
+
+                    state.state = 2;
+                }
+
+                if (out + state.off_or_len > oute)
+                    throw std::runtime_error("Malformed data while uncompressing");
+
+                if (i == e)
+                    return false;
+
+                if (i + state.off_or_len > e) {
+
+                    size_t len = e - i;
+                    ::memcpy(out, &(*i), len);
+                    out += len;
+                    state.off_or_len -= len;
+
+                    return false;
+                }
+
+                ::memcpy(out, &(*i), state.off_or_len);
+                out += state.off_or_len;
+                i += state.off_or_len;
+
+                state.state = 0;
+
+            } else {
+
+                if (state.state == 1) {
+
+                    if (!pop_vlq_uint(i, e, state.off_or_len))
                         return false;
 
                     ++i;
                 }
 
-                if (i == e || i + len > e)
-                    return false;
-                
-                if (out + len > oute)
+                state.state = 0;
+
+                unsigned char* outi = out - state.off_or_len;
+
+                if (outi < outb || out + state.run > oute)
                     throw std::runtime_error("Malformed data while uncompressing");
 
-                ::memcpy(out, &(*i), len);
-                out += len;
-                i += len;
-
-            } else {
-
-                size_t offset;
-                if (!pop_vlq_uint(i, e, offset))
-                    return false;
-
-                ++i;
-
-                unsigned char* outi = out - offset;
-
-                if (outi < outb || out + run > oute)
-                    throw std::runtime_error("Malformed data while uncompressing");
-
-                if (outi + run < out) {
-                    ::memcpy(out, outi, run);
-                    out += run;
+                if (outi + state.run < out) {
+                    ::memcpy(out, outi, state.run);
+                    out += state.run;
 
                 } else {
 
-                    while (run > 0) {
+                    while (state.run > 0) {
                         *out = *outi;
                         ++out;
                         ++outi;
-                        --run;
+                        --state.run;
                     }
                 }
             }
