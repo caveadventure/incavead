@@ -432,11 +432,11 @@ inline double defend(Player& p,
         // No fear or cancellation mechanic for the player yet.
 
         if (sleepturns > 0) {
-            p.sleep += dmg;
+            p.sleep += sleepturns;
         }
 
         if (blindturns > 0) {
-            p.blind += dmg;
+            p.blind += blindturns;
         }
 
         if (!dam.polymorph.first.null()) {
