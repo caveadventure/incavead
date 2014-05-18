@@ -42,7 +42,8 @@ void _process(size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t:
 struct other_stats_t {
 
     std::pair<std::string,size_t> cause_raw;
-    std::pair<std::string,size_t> cause_weighed;
+    std::pair<std::string,size_t> cause_plev;
+    std::pair<std::string,size_t> cause_worth;
 
     double gdp1;
     double gdp2;
@@ -70,7 +71,7 @@ struct other_stats_t {
 
         ngames = v.size();
 
-        typedef std::map< std::string, std::pair<unsigned int, double> > by_cause_t;
+        typedef std::map< std::string, std::pair<unsigned int, std::pair<double,double> > > by_cause_t;
         by_cause_t by_cause;
 
         typedef std::map< std::string, std::pair<unsigned int, size_t> > by_players_t;
@@ -80,7 +81,8 @@ struct other_stats_t {
 
             auto& tmp = by_cause[i.bone.cause.name];
             tmp.first++;
-            tmp.second += ::log(i.plev+1);
+            tmp.second.first += ::log(i.plev+1);
+            tmp.second.second += ::log(i.worth+1);
 
             gdp1 += i.worth;
             gdp2 += i.bone.worth;
@@ -124,10 +126,17 @@ struct other_stats_t {
 
         i = std::max_element(by_cause.begin(), by_cause.end(),
                              [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
-                                 return (a.second.second < b.second.second); });
+                                 return (a.second.second.first < b.second.second.first); });
 
-        cause_weighed.first = i->first;
-        cause_weighed.second = i->second.first;
+        cause_plev.first = i->first;
+        cause_plev.second = i->second.first;
+
+        i = std::max_element(by_cause.begin(), by_cause.end(),
+                             [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
+                                 return (a.second.second.second < b.second.second.second); });
+
+        cause_worth.first = i->first;
+        cause_worth.second = i->second.first;
 
         players = by_players.size();
 
@@ -149,12 +158,17 @@ struct other_stats_t {
     void print() {
 
         cause_raw.first = quote(cause_raw.first);
-        cause_weighed.first = quote(cause_weighed.first);
+        cause_plev.first = quote(cause_plev.first);
+
+        most_active_player.first = quote(most_active_player.first);
+        scummer.first = quote(scummer.first);
+        got_rich_quick.first = quote(got_rich_quick.first);
 
         std::cout << nlp::message("\n{\n"
                                   "\"games\": %d,\n"
                                   "\"kills_raw\": { \"cause\": \"%s\", \"kills\": %d },\n"
-                                  "\"kills_weighed\": { \"cause\": \"%s\", \"kills\": %d },\n"
+                                  "\"kills_plev\": { \"cause\": \"%s\", \"kills\": %d },\n"
+                                  "\"kills_worth\": { \"cause\": \"%s\", \"kills\": %d },\n"
                                   "\"gdp\": { \"a\": %d, \"b\": %d },\n"
                                   "\"plev\": { \"avg\": %d, \"median\": %d },\n"
                                   "\"dlev\": { \"avg\": %d, \"median\": %d },\n"
@@ -165,7 +179,8 @@ struct other_stats_t {
                                   "}\n",
                                   ngames,
                                   cause_raw.first, cause_raw.second, 
-                                  cause_weighed.first, cause_weighed.second,
+                                  cause_plev.first, cause_plev.second,
+                                  cause_worth.first, cause_worth.second,
                                   gdp1, gdp2,
                                   avg_plev+1, median_plev+1,
                                   avg_dlev, median_dlev,
