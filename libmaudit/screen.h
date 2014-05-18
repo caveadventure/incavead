@@ -33,7 +33,7 @@ struct screen {
         io.write("\xFF\xFB\x03");
 
         // Turn on compression.
-        io.write("\xFF\xFB\x57");
+        io.write("\xFF\xFB\x54");
     }
 
     void reset_color() {
@@ -238,9 +238,9 @@ struct screen {
                 ok = io.read(c);
                 if (!ok) return false;
 
-                if (c == 0x57) {
+                if (c == 0x54) {
                     // Enable compression.
-                    io.write("\xFF\xFA\x57\xFF\xF0");
+                    io.write("\xFF\xFA\x54\xFF\xF0");
                     io.set_compression(true);
                 }
                 goto again;
