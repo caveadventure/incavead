@@ -59,6 +59,51 @@ int main(int argc, char** argv) {
         in.close();
 
         inp.swap(data);
+
+    } else if (inp == "-d") {
+
+        std::ifstream in(argv[4], std::ios::in | std::ios::binary);
+
+        if (!in)
+            return 1;
+
+        std::string data;
+        in.seekg(0, std::ios::end);
+        data.resize(in.tellg());
+        in.seekg(0, std::ios::beg);
+        in.read(&data[0], data.size());
+        in.close();
+
+        inp.swap(data);
+
+        lz77::decompress_t decompress;
+        std::string extra;
+
+        for (unsigned char cc : inp) { 
+            decompress.feed(std::string(1, cc), extra);
+        }
+
+        std::ifstream in2(argv[5], std::ios::in | std::ios::binary);
+
+        if (!in2)
+            return 1;
+
+        data.clear();
+        in2.seekg(0, std::ios::end);
+        data.resize(in2.tellg());
+        in2.seekg(0, std::ios::beg);
+        in2.read(&data[0], data.size());
+        in2.close();
+
+        inp.swap(data);
+
+        for (unsigned char cc : inp) { 
+            decompress.feed(std::string(1, cc), extra);
+        }
+
+        std::cout << std::string(decompress.outb, decompress.out) << std::endl;
+
+        return 0;
     }
 
     size_t a = ::atoi(argv[1]);
@@ -92,7 +137,7 @@ int main(int argc, char** argv) {
         }
         */
 
-        if (!decompress.start(out, extra) || extra.size() > 0) {
+        if (!decompress.feed(out, extra) || extra.size() > 0) {
             std::cout << "Sanity error: failed to decompress whole buffer." << std::endl;
             return 1;
         }

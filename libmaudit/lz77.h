@@ -406,7 +406,7 @@ struct decompress_t {
         size_t vlq_off;
         int state;
 
-        state_t() : run(0), off_or_len(0), vlq_num(0), vlq_off(0), state(0) {}
+        state_t() : run(0), off_or_len(0), vlq_num(0), vlq_off(0), state(-1) {}
     };
 
     state_t state;
@@ -452,50 +452,42 @@ struct decompress_t {
      *    the data was decompressed.)
      */
 
-    bool start(const std::string& s, std::string& remaining) {
+    bool feed(const std::string& s, std::string& remaining) {
 
         const unsigned char* i = (const unsigned char*)s.data();
         const unsigned char* e = i + s.size();
 
-        ret.clear();
-
-        state = state_t();
-
-        size_t size;
-        if (!pop_vlq_uint(i, e, size))
-            return true;
-
-        ++i;
-
-        ret.resize(size);
-
-        outb = (unsigned char*)ret.data();
-        oute = outb + size;
-        out = outb;
-
-        return more(i, e, remaining);
+        return feed(i, e, remaining);
     }
 
-    /*
-     * Feed more input data, in case a previous call of 'start' 
-     * or 'more' returned false.
-     * Inputs and outputs same as for 'start()'.
-     */
+    bool feed(const unsigned char* i, const unsigned char* e, std::string& remaining) {
 
-    bool more(const std::string& s, std::string& remaining) {
+        if (state.state == -1) {
 
-        const unsigned char* i = (const unsigned char*)s.data();
-        const unsigned char* e = i + s.size();
+            size_t size;
+            if (!pop_vlq_uint(i, e, size))
+                return true;
 
-        return more(i, e, remaining);
-    }
+            ++i;
 
-    bool more(const unsigned char* i, const unsigned char* e, std::string& remaining) {
+            ret.clear();
+
+            state = state_t();
+
+            ret.resize(size);
+
+            outb = (unsigned char*)ret.data();
+            oute = outb + size;
+            out = outb;
+
+            state.state = 0;
+        }
 
         while (i != e) {
 
             if (out == oute) {
                 remaining.assign(i, e);
+                state.state = -1;
                 return true;
             }
 
@@ -587,6 +579,7 @@ struct decompress_t {
 
         if (out == oute) {
             remaining.assign(i, e);
+            state.state = -1;
             return true;
         }
 
