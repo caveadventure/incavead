@@ -82,7 +82,7 @@ struct other_stats_t {
             auto& tmp = by_cause[i.bone.cause.name];
             tmp.first++;
             tmp.second.first += ::log(i.plev+1);
-            tmp.second.second += ::log(i.worth+1);
+            tmp.second.second += ::log(i.worth+0.01);
 
             gdp1 += i.worth;
             gdp2 += i.bone.worth;
