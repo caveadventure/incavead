@@ -37,29 +37,30 @@
 
   lz77::decompress_t decompress;
 
-  decompress.start(compressed);
+  std::string temp;
+  decompress.feed(compressed, temp);
 
   const std::string& uncompressed = decompress.result();
 
   --------
 
-  Use decompress.more(...) for feeding input data step-by-step in chunks.
+  Use decompress.feed(...) for feeding input data step-by-step in chunks.
   For example, if you're trying to decompress a network byte stream:
 
   lz77::decompress_t decompress;
   std::string extra;
 
-  bool done = decompress.start(buffer, extra);
+  bool done = decompress.feed(buffer, extra);
 
   while (!done) {
-    done = decompress.more(buffer, extra);
+    done = decompress.feed(buffer, extra);
   }
 
   std::string result = decompress.result();
 
-  'start' will start decoding a packet of compressed data.
+  'feed' will start (or continue) decoding a packet of compressed data.
   If it returns true, then all of the message was decompressed.
-  If it returns false, then 'more' needs to be called with more
+  If it returns false, then 'feed' needs to be called with more
   compressed data until it returns 'true'.
 
   'extra' will hold any data that was tacked onto the buffer but wasn't
@@ -67,11 +68,11 @@
   stream that doesn't have clearly delineated message boundaries; the 
   decompressor will detect message boundaries properly for you.)
 
-  'extra' will be assigned to only when 'start' or 'more' returns true.
+  'extra' will be assigned to only when 'feed' returns true.
 
   'result' is the decompressed message.
 
-  NOTE: calling start(), more(), result() out of order is underfined
+  NOTE: calling feed() and result() out of order is undefined
   behaviour and will result in crashes.
 
 */
@@ -388,7 +389,7 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
 
 /*
  * Entry point for decompression.
- * Calling 'start', 'more', 'result' out of order is undefined behaviour 
+ * Calling 'feed' and 'result' out of order is undefined behaviour 
  * and will crash your program.
  */
 
@@ -446,7 +447,7 @@ struct decompress_t {
      * Inputs: the compressed string, as output from 'compress()'.
      * Outputs: 
      *    true if all of the data was decompressed.
-     *    false if more input data needs to be fed via 'more()'.
+     *    false if more input data needs to be fed via 'feed()'.
      *    'remaining' will hold input data that wasn't part of
      *    the compressed message. (Only assigned to when all of
      *    the data was decompressed.)
