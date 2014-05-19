@@ -118,6 +118,10 @@
             <ol id="highscore_ts"></ol>
           </div>
 
+          <div class="expander" onclick="$('#panel_stats').toggle();">▶ Some game statistics</div>
+          <div class="highscore" id="panel_stats">
+          </div>
+
           <p>(The previous highscore table before it was wiped is <a href="highscore.html?hs=hs-1.json">here</a>.)</p>
           
         </div>
@@ -228,6 +232,11 @@
             <li>To keep things fair, highscores have been wiped, due to a change in replay code mechanics. See the archived old highscores <a href="highscore.html?hs=hs-1.json">here</a>.</li>
             <li>Bugfixes, of course.</li>
           </ul>
+
+          <p class="expander">
+            <b onclick="$('#oldnews').toggle();">[ Click to see older news ]</b>
+          </p><div id="oldnews">
+
           <p><b>2014-01-05</b>:</p><ul>
             <li>Added an overmap. (Press '#' in-game.)</li>
             <li>Replay code use is now tracked in the highscore table. (Sadly, this is not retroactive; current higscore entries will not show replay code use.)</li>
@@ -250,11 +259,6 @@
             <li>Highscore and victory status are now accessible from within the game itself.</li>
             <li>Bugfixes and small usability enhancements.</li>
           </ul>
-
-          <p class="expander">
-            <b onclick="$('#oldnews').toggle();">[ Click to see older news ]</b>
-          </p><div id="oldnews">
-
           <p><b>2013-11-02</b>:</p><ul>
             <li>Added new magic mechanics and new spells.</li>
             <li>The twig is now actually useful. (Under certain specific conditions.)</li>

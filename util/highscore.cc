@@ -169,13 +169,15 @@ struct other_stats_t {
 
     void print() {
 
-        cause_raw.first = quote(cause_raw.first);
-        cause_plev.first = quote(cause_plev.first);
+        bones::bone_t::fakeobj cause_raw_name(quote(cause_raw.first));
+        bones::bone_t::fakeobj cause_plev_name(quote(cause_plev.first));
+        bones::bone_t::fakeobj cause_worth_name(quote(cause_worth.first));
 
         most_active_player.first = quote(most_active_player.first);
         scummer.first = quote(scummer.first);
         got_rich_quick.first = quote(got_rich_quick.first);
-        got_rich_quick.second.second = quote(got_rich_quick.second.second);
+
+        bones::bone_t::fakeobj cause_g_r_q(quote(got_rich_quick.second.second));
 
         std::cout << nlp::message("\n{\n"
                                   "\"games\": %d,\n"
@@ -191,16 +193,16 @@ struct other_stats_t {
                                   "\"got_rich_quick\": { \"name\": \"%S\", \"worth\": %d, \"cause\": \"%s\" }\n"
                                   "}\n",
                                   ngames,
-                                  cause_raw.first, cause_raw.second, 
-                                  cause_plev.first, cause_plev.second,
-                                  cause_worth.first, cause_worth.second,
+                                  cause_raw_name, cause_raw.second, 
+                                  cause_plev_name, cause_plev.second,
+                                  cause_worth_name, cause_worth.second,
                                   gdp1, gdp2, gdp3,
                                   avg_plev+1, median_plev+1,
                                   avg_dlev, median_dlev,
                                   players,
                                   most_active_player.first, most_active_player.second,
                                   scummer.first, scummer.second,
-                                  got_rich_quick.first, got_rich_quick.second.first, got_rich_quick.second.second);
+                                  got_rich_quick.first, got_rich_quick.second.first, cause_g_r_q);
     }
 };
 

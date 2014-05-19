@@ -73,6 +73,11 @@ function format_ringstatus(data) {
 }
 
 
+function format_gamestats(data) {
+    return "<p>" +
+        "Leading cause of death: <em>" + data.kills_raw.cause
+}
+
 function do_highscore() {
 
     var jsonfile = "hs.json";
@@ -105,6 +110,8 @@ function do_highscore() {
                   });
 
                   $("<span/>").html(data["num_games"]).appendTo("#num_games");
+
+                  $("<p/>").html(format_gamestats(data["stats"]).appendTo("#panel_stats");
               }
              );
 
