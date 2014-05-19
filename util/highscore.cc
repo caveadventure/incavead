@@ -234,7 +234,7 @@ struct other_stats_t {
                                   cause_worth_name, cause_worth.second,
                                   gdp1, gdp2, gdp3,
                                   avg_plev+1, median_plev+1,
-                                  avg_dlev, median_dlev,
+                                  avg_dlev+1, median_dlev+1,
                                   players,
                                   most_active_player.first, most_active_player.second,
                                   scummer.first, scummer.second,
