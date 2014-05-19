@@ -75,19 +75,20 @@ function format_ringstatus(data) {
 
 function format_gamestats(data) {
     return "<p>" +
-        "Leading cause of death: <em>" + data.kills_raw.cause + "</em>, with " + data.kills_raw.kills + " kills.<br/>" +
-        "Leading cause of death, weighed for player level: <em>" + data.kills_plev.cause + "</em>, with " + data.kills_plev.kills + " kills.<br/>" +
-        "Leading cause of death, weighed for player net worth: <em>" + data.kills_worth.cause + "</em>, with " + data.kills_worth.kills + " kills.<br/>" +
-        "World GDP: <em>" + data.gdp.c + "</em> $ZM.<br/>" + 
-        "Average player level: " + data.plev.avg + "<br/>" +
-        "Median player level: " + data.plev.median + "<br/>" +
-        "Average dungeon level at time of death: " + data.dlev.avg + "<br/>" +
-        "Median dungeon level at time of death: " + data.dlev.median + "<br/>" +
-        "Number of unique players: " + data.players + 
-        "Most active player: <em>" + data.most_active.name + "</em>, with " + data.most_active.games + " games played.<br/>" +
-        "Most active replay code user: <em>" + data.scummer.name + "</em>, who used a replay code " + scummer.streak + " times.<br/>" +
-        "And the <em>Get Rich Quick Award</em> goes to <em>" + got_rich_quick.name + "</em>, who got rich quick with " + 
-        got_rich_quick.cause + " $ZM and was killed by " + got_rich_quick.cause +
+        "Leading cause of death: <b>" + data.kills_raw.cause + "</b>, with <b>" + data.kills_raw.kills + "</b> kills.<br/>" +
+        "Leading cause of death, weighed for player level: <b>" + data.kills_plev.cause + "</b>, with <b>" + data.kills_plev.kills + "</b> kills.<br/>" +
+        "Leading cause of death, weighed for player net worth: <b>" + data.kills_worth.cause + "</b>, with <b>" + data.kills_worth.kills + "</b> kills.<br/>" +
+        "World GDP: <b>" + data.gdp.c + "</b> $ZM.<br/>" + 
+        "Average player level: <b>" + data.plev.avg + "</b><br/>" +
+        "Median player level: <b>" + data.plev.median + "</b><br/>" +
+        "Average dungeon level at time of death: <b>" + data.dlev.avg + "</b><br/>" +
+        "Median dungeon level at time of death: <b>" + data.dlev.median + "</b><br/>" +
+        "Number of unique player names: <b>" + data.players + "</b><br/>" +
+        "Most active player: <b>" + data.most_active.name + "</b>, with <b>" + data.most_active.games + "</b> games played.<br/>" +
+        "Most active replay code user: <b>" + data.scummer.name + "</b>, who used a replay code <b>" + data.scummer.streak + "</b> times.<br/>" +
+        "Most achievements achieved: <b>" + data.most_achievements.name + "</b> with <b>" + data.most_achievements.number + "</b><br/>" +
+        "And the <em>Get Rich Quick Award</em> goes to <b>" + data.got_rich_quick.name + "</b>, who got rich quick with <b>" + 
+        data.got_rich_quick.worth + "</b> $ZM and was killed by <b>" + data.got_rich_quick.cause + "</b>" +
         "</p>";
 }
 
@@ -124,7 +125,7 @@ function do_highscore() {
 
                   $("<span/>").html(data["num_games"]).appendTo("#num_games");
 
-                  $("<p/>").html(format_gamestats(data["stats"]).appendTo("#panel_stats");
+                  $("<p/>").html(format_gamestats(data["stats"])).appendTo("#panel_stats");
               }
              );
 

@@ -40,6 +40,9 @@
     margin: 1.25rem 0 1.1875rem;
     height: 0; 
   }
+  b {
+    color: #222272;
+  }
   .label {
     padding: 0.15rem 0.15rem 0.15rem 0.15rem;
     font-weight: bold;
