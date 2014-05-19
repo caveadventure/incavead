@@ -89,10 +89,12 @@ struct other_stats_t {
     other_stats_t() : gdp1(0), gdp2(0), gdp3(0), avg_plev(0), avg_dlev(0), 
                       median_plev(0), median_dlev(0), players(0), ngames(0) {}
 
-    void operator()(const std::vector<highscore::Scores::order_t>& v) {
+    void operator()(std::vector<highscore::Scores::order_t>& v) {
 
         if (v.size() == 0)
             return;
+
+        std::reverse(v.begin(), v.end());
 
         ngames = v.size();
 
@@ -149,16 +151,14 @@ struct other_stats_t {
         avg_plev /= v.size();
         avg_dlev /= v.size();
 
-        auto v_copy = v;
-
-        std::sort(v_copy.begin(), v_copy.end(), [](const highscore::Scores::order_t& a,
-                                                   const highscore::Scores::order_t& b) {
+        std::sort(v.begin(), v.end(), [](const highscore::Scores::order_t& a,
+                                         const highscore::Scores::order_t& b) {
                       return a.plev < b.plev; });
 
         median_plev = v[v.size() / 2].plev;
 
-        std::sort(v_copy.begin(), v_copy.end(), [](const highscore::Scores::order_t& a,
-                                                   const highscore::Scores::order_t& b) {
+        std::sort(v.begin(), v.end(), [](const highscore::Scores::order_t& a,
+                                         const highscore::Scores::order_t& b) {
                       return a.dlev < b.dlev; });
 
         median_dlev = v[v.size() / 2].dlev;
@@ -250,6 +250,8 @@ int main(int argc, char** argv) {
 
         highscore::Scores scores;
 
+        auto scores_saved = scores.scores;
+        
         std::cout << nlp::message("{\"num_games\": %d,\n", scores.scores.size());
         std::cout << "\"highscores\": {";
 
@@ -276,7 +278,7 @@ int main(int argc, char** argv) {
         std::cout << "}," << std::endl; 
 
         other_stats_t other;
-        other(scores.scores);
+        other(scores_saved);
 
         std::cout << "\"stats\": ";
         other.print();
