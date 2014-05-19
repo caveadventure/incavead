@@ -39,6 +39,28 @@ void _process(size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t:
                               std::string(victory ? "true" : "false"), rcodes);
 }
 
+void split_name(const std::string& in, std::string& out, size_t& nach) {
+
+    std::string::size_type achpos = in.find(" (");
+
+    if (achpos == std::string::npos) {
+        out = in;
+        nach = 0;
+        return;
+    }
+
+    out = in.substr(0, achpos);
+    nach = 1;
+
+    std::string tmp = in.substr(achpos);
+
+    for (unsigned char cc : tmp) {
+        if (cc == ',') {
+            nach++;
+        }
+    }
+}
+
 struct other_stats_t {
 
     std::pair<std::string,size_t> cause_raw;
@@ -62,6 +84,8 @@ struct other_stats_t {
 
     std::pair< std::string, std::pair<double, std::string> > got_rich_quick;
 
+    std::pair<std::string, size_t> most_achievements;
+
     other_stats_t() : gdp1(0), gdp2(0), gdp3(0), avg_plev(0), avg_dlev(0), 
                       median_plev(0), median_dlev(0), players(0), ngames(0) {}
 
@@ -80,6 +104,9 @@ struct other_stats_t {
 
         std::map<int, double> gdp_lev;
 
+        std::string real_name;
+        size_t num_aches;
+
         for (const auto& i : v) {
 
             auto& tmp = by_cause[i.bone.cause.name];
@@ -93,7 +120,9 @@ struct other_stats_t {
             avg_plev += i.plev;
             avg_dlev += i.dlev;
 
-            auto& tmb = by_players[i.bone.name.name];
+            split_name(i.bone.name.name, real_name, num_aches);
+
+            auto& tmb = by_players[real_name];
             tmb.first++;
             tmb.second = std::max(tmb.second, i.scum_streak);
 
@@ -104,6 +133,11 @@ struct other_stats_t {
             }
 
             gdp_lev[i.dlev] += i.bone.worth;
+
+            if (num_aches >= most_achievements.second) {
+                most_achievements.first = i.bone.name.name;
+                most_achievements.second = num_aches;
+            }
         }
 
         for (const auto& i : gdp_lev) {
@@ -175,6 +209,7 @@ struct other_stats_t {
 
         most_active_player.first = quote(most_active_player.first);
         scummer.first = quote(scummer.first);
+        most_achievements.first = quote(most_achievements.first);
         got_rich_quick.first = quote(got_rich_quick.first);
 
         bones::bone_t::fakeobj cause_g_r_q(quote(got_rich_quick.second.second));
@@ -190,6 +225,7 @@ struct other_stats_t {
                                   "\"players\": %d,\n"
                                   "\"most_active\": { \"name\": \"%S\", \"games\": %d },\n"
                                   "\"scummer\": { \"name\": \"%S\", \"streak\": %d },\n"
+                                  "\"most_achievements\": { \"name\": \"%S\", \"number\": %d },\n"
                                   "\"got_rich_quick\": { \"name\": \"%S\", \"worth\": %d, \"cause\": \"%s\" }\n"
                                   "}\n",
                                   ngames,
@@ -202,6 +238,7 @@ struct other_stats_t {
                                   players,
                                   most_active_player.first, most_active_player.second,
                                   scummer.first, scummer.second,
+                                  most_achievements.first, most_achievements.second,
                                   got_rich_quick.first, got_rich_quick.second.first, cause_g_r_q);
     }
 };
