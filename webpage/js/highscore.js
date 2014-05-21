@@ -12,34 +12,6 @@ function getparams() {
 
 var GET = getparams();
 
-function format_scoreline(item) {
-
-    var l;
-    if (item["victory"]) {
-        l = '<span class="success label">' + item["name"] +
-            "</span>, a glorious victor of level " + item["plev"] +
-            ". <small>Last seen on level <b>" + item["dlev"] +
-            "</b>. Net worth: <b>" + item["worth"] + "</b> $ZM.</small>";
-    } else {
-        l = '<span class="success label">' + item["name"] +
-            "</span>, level " + item["plev"] + 
-            ". <small>Killed on dungeon level <b>" + item["dlev"] + 
-            "</b> by " + item["cause"] + 
-            ". Net worth: <b>" + item["worth"] + 
-            "</b> $ZM.</small>";
-    }
-
-    var rcodes = item["rcodes"];
-    if (rcodes == 1) {
-        l = l + " <small>(Replay codes were used <b>once</b>.)</small>";
-
-    } else if (rcodes > 1) {
-        l = l + " <small>(Replay codes were used <b>" + rcodes + "</b> times.)</small>";
-    }
-
-    return l;
-}
-
 
 function do_highscore() {
 
