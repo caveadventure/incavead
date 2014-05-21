@@ -18,42 +18,107 @@
 
       <div id="highscore">
         <h3>Highscore table</h3>
-        <p>From a total of <b><span id="num_games"></span></b> games logged so far.
+
+        <script id="num_games_tmpl" type="text/html">
+          <b>{{num_games}}</b>
+        </script>
+
+        <p>From a total of <span id="num_games"></span> games logged so far.
         </p>
+
+        <script id="scoreline_tmpl" type="text/html">
+          <span>
+            <span class="success label">{{name}}</span>,
+            {{#victory}}
+            a glorious victor of
+            {{/victory}}
+            level {{plev}}. <small>
+              {{#victory}}
+              Last seen
+              {{/victory}}
+              {{^victory}}
+              Killed on
+              {{/victory}}
+              dungeon level <b>{{dlev}}</b>. Net worth: <b>{{worth}}</b> $ZM.</small>
+            {{#rcodes}}
+            <small>(Replay codes were used <b>{{rcodes}}</b> times.)</small>
+            {{/rcodes}}
+          </span>
+        </script>
+          
+        <script id="plev_tmpl" type="text/html">
+          <ol>
+            {{#plev}}
+            <li>{{> scoreline_tmpl}}</li>
+            {{/plev}}
+          </ol>
+        </script>
+
+        <script id="dlev_d_tmpl" type="text/html">
+          <ol>
+            {{#dlev_d}}
+            <li>{{> scoreline_tmpl}}</li>
+            {{/dlev_d}}
+          </ol>
+        </script>
+
+        <script id="dlev_a_tmpl" type="text/html">
+          <ol>
+            {{#dlev_a}}
+            <li>{{> scoreline_tmpl}}</li>
+            {{/dlev_a}}
+          </ol>
+        </script>
+
+        <script id="worth_tmpl" type="text/html">
+          <ol>
+            {{#worth}}
+            <li>{{> scoreline_tmpl}}</li>
+            {{/worth}}
+          </ol>
+        </script>
+
+        <script id="ts_tmpl" type="text/html">
+          <ol>
+            {{#ts}}
+            <li>{{> scoreline_tmpl}}</li>
+            {{/ts}}
+          </ol>
+        </script>
 
         <div class="expander" onclick="$('#panel_plev').toggle();">▶ ... by player level</div>
         <div class="highscores" id="panel_plev">
-          <ol id="highscore_plev"></ol>
         </div>
 
         <div class="expander" onclick="$('#panel_dlev_d').toggle();">▶ ... by lowest dungeon level</div>
         <div class="highscores" id="panel_dlev_d">
-          <ol id="highscore_dlev_d"></ol>
         </div>
 
         <div class="expander" onclick="$('#panel_dlev_a').toggle();">▶ ... by highest dungeon level</div>
         <div class="highscores" id="panel_dlev_a">
-          <ol id="highscore_dlev_a"></ol>
         </div>
 
         <div class="expander" onclick="$('#panel_worth').toggle();">▶ ... by net worth</div>
         <div class="highscores" id="panel_worth">
-          <ol id="highscore_worth"></ol>
         </div>
 
         <div class="expander" onclick="$('#panel_ts').toggle();">▶ last 10 games</div>
         <div class="highscores" id="panel_ts">
-          <ol id="highscore_ts"></ol>
         </div>
+
+        <script id="stats_tmpl" type="text/html">
+        </script>
+
       </div>
       <p/>
     </div>
 
     <script src="/js/jquery.js"></script>
+    <script src="/js/ICanHaz.min.js"></script>
     <script src="/js/highscore.js"></script>
 
     <script>
-      do_highscore();
+      $(document).ready(do_highscore);
     </script>
 
 

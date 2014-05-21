@@ -57,6 +57,13 @@
     padding: 0.2rem 0.2rem 0.2rem 0.2rem;
     background-color: rgb(240, 240, 250);
   }
+  .popup {
+    margin-left: 1rem;
+    padding: 0.5rem;
+    border: solid #dddddd;
+    border-width: 1px;
+    font-size: 65%;
+  }
   body {
     margin: 0px;
     padding: 0px;

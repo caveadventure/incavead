@@ -53,7 +53,6 @@
           <li><a href="#winning">Winning the game</a></li>
           <li><a href="#developer">Developer info</a></li>
           <li><a href="#news">News</a></li>
-          <li><a href="#comments">Leave a comment</a></li>
         </ul>
       
         <p><hr/></p>
@@ -89,34 +88,112 @@
 
         <div id="highscore">
           <h3>Highscore table</h3>
+
+          <script id="num_games_tmpl" type="text/html">
+            <b>{{num_games}}</b>
+          </script>
+
           <p>Here's a list of top-10 best players from the public server, 
-             from a total of <b><span id="num_games"></span></b> games logged so far.
+             from a total of <span id="num_games"></span> games logged so far.
           </p>
+
+          <script id="scoreline_tmpl" type="text/html">
+            <span>
+              <span class="success label">{{name}}</span>,
+              {{#victory}}
+              a glorious victor of
+              {{/victory}}
+              level {{plev}}. <small>
+                {{#victory}}
+                Last seen
+                {{/victory}}
+                {{^victory}}
+                Killed on
+                {{/victory}}
+                dungeon level <b>{{dlev}}</b>. Net worth: <b>{{worth}}</b> $ZM.</small>
+              {{#rcodes}}
+              <small>(Replay codes were used <b>{{rcodes}}</b> times.)</small>
+              {{/rcodes}}
+            </span>
+          </script>
+          
+          <script id="plev_tmpl" type="text/html">
+            <ol>
+              {{#plev}}
+              <li>{{> scoreline_tmpl}}</li>
+              {{/plev}}
+            </ol>
+          </script>
+
+          <script id="dlev_d_tmpl" type="text/html">
+            <ol>
+              {{#dlev_d}}
+              <li>{{> scoreline_tmpl}}</li>
+              {{/dlev_d}}
+            </ol>
+          </script>
+
+          <script id="dlev_a_tmpl" type="text/html">
+            <ol>
+              {{#dlev_a}}
+              <li>{{> scoreline_tmpl}}</li>
+              {{/dlev_a}}
+            </ol>
+          </script>
+
+          <script id="worth_tmpl" type="text/html">
+            <ol>
+              {{#worth}}
+              <li>{{> scoreline_tmpl}}</li>
+              {{/worth}}
+            </ol>
+          </script>
+
+          <script id="ts_tmpl" type="text/html">
+            <ol>
+              {{#ts}}
+              <li>{{> scoreline_tmpl}}</li>
+              {{/ts}}
+            </ol>
+          </script>
 
           <div class="expander" onclick="$('#panel_plev').toggle();">▶ ... by player level</div>
           <div class="highscores" id="panel_plev">
-            <ol id="highscore_plev"></ol>
           </div>
 
           <div class="expander" onclick="$('#panel_dlev_d').toggle();">▶ ... by lowest dungeon level</div>
           <div class="highscores" id="panel_dlev_d">
-            <ol id="highscore_dlev_d"></ol>
           </div>
 
           <div class="expander" onclick="$('#panel_dlev_a').toggle();">▶ ... by highest dungeon level</div>
           <div class="highscores" id="panel_dlev_a">
-            <ol id="highscore_dlev_a"></ol>
           </div>
 
           <div class="expander" onclick="$('#panel_worth').toggle();">▶ ... by net worth</div>
           <div class="highscores" id="panel_worth">
-            <ol id="highscore_worth"></ol>
           </div>
 
           <div class="expander" onclick="$('#panel_ts').toggle();">▶ last 10 games</div>
           <div class="highscores" id="panel_ts">
-            <ol id="highscore_ts"></ol>
           </div>
+
+          <script id="stats_tmpl" type="text/html">
+            <div class="popup">
+              Leading cause of death: <b>{{kills_raw.cause}}</b>, with <b>{{kills_raw.kills}}</b> kills.<br/>
+              Leading cause of death, weighed for player level: <b>{{kills_plev.cause}}</b>, with <b>{{kills_plev.kills}}</b> kills.<br/>
+              Leading cause of death, weighed for player net worth: <b>{{kills_worth.cause}}</b>, with <b>{{kills_worth.kills}}</b> kills.<br/>
+              World GDP: <b>{{gdp.c}}</b> $ZM.<br/>
+              Average player level: <b>{{plev.avg}}</b><br/>
+              Median player level: <b>{{plev.median}}</b><br/>
+              Average dungeon level at time of death: <b>{{dlev.avg}}</b><br/>
+              Median dungeon level at time of death: <b>{{dlev.median}}</b><br/>
+              Number of unique player names: <b>{{players}}</b><br/>
+              Most active player: <b>{{most_active.name}}</b>, with <b>{{most_active.games}}</b> games played.<br/>
+              Most active replay code user: <b>{{scummer.name}}</b>, who used a replay code <b>{{scummer.streak}}</b> times.<br/>
+              Most achievements achieved: <b>{{most_achievements.name}}</b> with <b>{{most_achievements.number}}</b><br/>
+              And the <em>Get Rich Quick Award</em> goes to <b>{{got_rich_quick.name}}</b>, who got rich quick with <b>{{got_rich_quick.worth}}</b> $ZM and was killed by <b>{{got_rich_quick.cause}}</b>
+            </div>
+          </script>
 
           <div class="expander" onclick="$('#panel_stats').toggle();">▶ some game statistics</div>
           <div class="highscore" id="panel_stats">
@@ -152,7 +229,23 @@
           <p></p>
           <p>The Ring's current status, monitored online:</p>
 
-          <p> <span class="label" id="ringstatus"></span> </p>
+          <script id="ringstatus_tmpl" type="text/html">
+            {{#regenerate}}
+            <p><span class="label">Ready to regenerate on dungeon level 1.</span></p>
+            {{/regenerate}}
+            {{#destroyed}}
+            <p><span class="label">Destroyed or in possession since {{ts}}.</span> 
+              <span class="label">({{minutes}} minutes left until regeneration.)</span></p>
+            {{/destroyed}}
+            {{#found}}
+            <p><span class="label">Found somewhere on dungeon level {{dlev}} ({{branch}}).</span>
+              <span class="label">It has been there since {{ts}}.</span></p>
+            {{/found}}
+            </span>
+          </script>
+
+          <div id="ringstatus"></div>
+
         </div>
 
         <div id="developer">
@@ -302,32 +395,17 @@
         </div>
 
         <script src="/js/jquery.js"></script>
+        <script src="/js/ICanHaz.min.js"></script>
         <script src="/js/highscore.js"></script>
 
         <script>
-          do_highscore();
-          do_ringstatus();
+          $(document).ready(function () {
+             do_highscore();
+             do_ringstatus();
 
-          $("#oldnews").toggle();
+             $("#oldnews").toggle();
+          });
         </script>
-
-        <div id="comments">
-          <h3>Leave a comment</h3>
-          <div id="disqus_thread"></div>
-          <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'incavead'; // required: replace example with your forum shortname
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-          </script>
-          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-        </div>
 
       </div>
     </div>
