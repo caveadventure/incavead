@@ -26,8 +26,16 @@
         <p>From a total of <span id="num_games"></span> games logged so far.
         </p>
 
-        <script id="scoreline_tmpl" type="text/html">
-          <span>
+        <script>
+          function qqpp() {
+              return function (x, render) { return "!!"+render(x)+"!!"; }
+          }
+        </script>
+
+        <script id="scorelines_tmpl" type="text/html">
+          <ol>
+            {{#.}}
+            <li>
             <span class="success label">{{name}}</span>,
             {{#victory}}
             a glorious victor of
@@ -43,46 +51,8 @@
             {{#rcodes}}
             <small>(Replay codes were used <b>{{rcodes}}</b> times.)</small>
             {{/rcodes}}
-          </span>
-        </script>
-          
-        <script id="plev_tmpl" type="text/html">
-          <ol>
-            {{#plev}}
-            <li>{{> scoreline_tmpl}}</li>
-            {{/plev}}
-          </ol>
-        </script>
-
-        <script id="dlev_d_tmpl" type="text/html">
-          <ol>
-            {{#dlev_d}}
-            <li>{{> scoreline_tmpl}}</li>
-            {{/dlev_d}}
-          </ol>
-        </script>
-
-        <script id="dlev_a_tmpl" type="text/html">
-          <ol>
-            {{#dlev_a}}
-            <li>{{> scoreline_tmpl}}</li>
-            {{/dlev_a}}
-          </ol>
-        </script>
-
-        <script id="worth_tmpl" type="text/html">
-          <ol>
-            {{#worth}}
-            <li>{{> scoreline_tmpl}}</li>
-            {{/worth}}
-          </ol>
-        </script>
-
-        <script id="ts_tmpl" type="text/html">
-          <ol>
-            {{#ts}}
-            <li>{{> scoreline_tmpl}}</li>
-            {{/ts}}
+            </li>
+            {{/.}}
           </ol>
         </script>
 
@@ -114,7 +84,7 @@
     </div>
 
     <script src="/js/jquery.js"></script>
-    <script src="/js/ICanHaz.min.js"></script>
+    <script src="/js/mustache.js"></script>
     <script src="/js/highscore.js"></script>
 
     <script>

@@ -12,6 +12,9 @@ function getparams() {
 
 var GET = getparams();
 
+function apply_template(element, tmpl, data) {
+    $(element).append(Mustache.render($(tmpl).html(), data));
+}
 
 function do_highscore() {
 
@@ -24,15 +27,15 @@ function do_highscore() {
     $.getJSON(jsonfile, {}, 
               function(data) {
 
-                  $("#panel_plev").append(ich.plev_tmpl(data.highscores));
-                  $("#panel_dlev_d").append(ich.dlev_d_tmpl(data.highscores));
-                  $("#panel_dlev_a").append(ich.dlev_a_tmpl(data.highscores));
-                  $("#panel_worth").append(ich.worth_tmpl(data.highscores));
-                  $("#panel_ts").append(ich.ts_tmpl(data.highscores));
+                  apply_template("#panel_plev", "#scorelines_tmpl", data.highscores.plev);
+                  apply_template("#panel_dlev_d", "#scorelines_tmpl", data.highscores.dlev_d);
+                  apply_template("#panel_dlev_a", "#scorelines_tmpl", data.highscores.dlev_a);
+                  apply_template("#panel_worth", "#scorelines_tmpl", data.highscores.worth);
+                  apply_template("#panel_ts", "#scorelines_tmpl", data.highscores.ts);
 
-                  $("#num_games").append(ich.num_games_tmpl(data));
+                  apply_template("#num_games", "#num_games_tmpl", data);
 
-                  $("#panel_stats").append(ich.stats_tmpl(data.stats));
+                  apply_template("#panel_stats", "#stats_tmpl", data.stats);
               }
              );
 
@@ -90,7 +93,7 @@ function do_ringstatus() {
                   var obj = { 'regenerate':regenerate, 'destroyed':destroyed, 'found':found,
                               'ts':ts_loc, 'minutes':minutes, 'dlev':dlev, 'branch':branch };
 
-                  $("#ringstatus").append(ich.ringstatus_tmpl(obj));
+                  apply_template("#ringstatus", "#ringstatus_tmpl", obj);
               }
              );
 }
