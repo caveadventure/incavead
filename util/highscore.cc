@@ -86,6 +86,8 @@ struct other_stats_t {
 
     std::pair<std::string, size_t> most_achievements;
 
+    std::string rare_cause;
+
     other_stats_t() : gdp1(0), gdp2(0), gdp3(0), avg_plev(0), avg_dlev(0), 
                       median_plev(0), median_dlev(0), players(0), ngames(0) {}
 
@@ -184,6 +186,18 @@ struct other_stats_t {
         cause_worth.first = i->first;
         cause_worth.second = i->second.first;
 
+        i = std::min_element(by_cause.begin(), by_cause.end(),
+                             [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
+                                 if (a.second.first < b.second.first) 
+                                     return true;
+                                 if (a.second.first == b.second.first && 
+                                     a.second.second.second > b.second.second.second)
+                                     return true;
+                                 return false;
+                             });
+
+        rare_cause = i->first;
+
         players = by_players.size();
 
         auto j = std::max_element(by_players.begin(), by_players.end(),
@@ -206,6 +220,7 @@ struct other_stats_t {
         bones::bone_t::fakeobj cause_raw_name(quote(cause_raw.first));
         bones::bone_t::fakeobj cause_plev_name(quote(cause_plev.first));
         bones::bone_t::fakeobj cause_worth_name(quote(cause_worth.first));
+        bones::bone_t::fakeobj rare_cause_name(quote(rare_cause));
 
         most_active_player.first = quote(most_active_player.first);
         scummer.first = quote(scummer.first);
@@ -219,6 +234,7 @@ struct other_stats_t {
                                   "\"kills_raw\": { \"cause\": \"%s\", \"kills\": %d },\n"
                                   "\"kills_plev\": { \"cause\": \"%s\", \"kills\": %d },\n"
                                   "\"kills_worth\": { \"cause\": \"%s\", \"kills\": %d },\n"
+                                  "\"kills_rare\": \"%s\",\n"
                                   "\"gdp\": { \"a\": %d, \"b\": %d, \"c\": %d },\n"
                                   "\"plev\": { \"avg\": %d, \"median\": %d },\n"
                                   "\"dlev\": { \"avg\": %d, \"median\": %d },\n"
@@ -232,6 +248,7 @@ struct other_stats_t {
                                   cause_raw_name, cause_raw.second, 
                                   cause_plev_name, cause_plev.second,
                                   cause_worth_name, cause_worth.second,
+                                  rare_cause_name,
                                   gdp1, gdp2, gdp3,
                                   avg_plev+1, median_plev+1,
                                   avg_dlev+1, median_dlev+1,
