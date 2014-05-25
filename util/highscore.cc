@@ -61,6 +61,101 @@ void split_name(const std::string& in, std::string& out, size_t& nach) {
     }
 }
 
+struct bank_stats_t {
+
+    enum OP_t {
+        PURCHASE = 0,
+        DEPOSIT = 1,
+        WITHDRAWAL = 2
+    };
+
+    double base;
+
+    std::set<tag_t> item_kinds_bought;
+    size_t items_bought;
+    double items_prices;
+
+    std::map<unsigned int, double> accounts;
+    double deposits;
+
+    void load() {
+
+        base = 0;
+        item_kinds_bought.clear();
+        items_bought = 0;
+        items_prices = 0;
+        accounts.clear();
+        deposits = 0;
+
+        try {
+            serialize::Source source("finance.dat");
+
+            while (1) {
+                try {
+                    int type;
+                    double amount;
+                    tag_t purchase;
+                    unsigned int count;
+                    unsigned int account;
+
+                    serialize::read(source, type);
+
+                    switch (type) {
+                    case PURCHASE:
+                        // Purchases.
+                        serialize::read(source, amount);
+                        serialize::read(source, purchase);
+                        serialize::read(source, count);
+
+                        base += amount;
+                        item_kinds_bought.insert(purchase);
+                        items_bought += count;
+                        items_prices += amount;
+                        break;
+
+                    case DEPOSIT:
+                        // Deposits.
+                        serialize::read(source, amount);
+                        serialize::read(source, account);
+
+                        base += amount;
+                        accounts[account] += amount;
+                        break;
+
+                    case WITHDRAWAL:
+                        // Withdrawals.
+                        serialize::read(source, account);
+                        
+                        base -= accounts[account];
+                        accounts.erase(account);
+                        break;
+                    }
+
+                } catch (...) {
+                    break;
+                }
+            }
+
+        } catch (...) {
+        }
+
+        for (const auto& i : accounts) {
+            deposits += i.second;
+        }
+    }
+
+    void print() {
+
+        std::cout << nlp::message("\n{\n"
+                                  "\"base\": %d,\n"
+                                  "\"purchases\": { \"num\": %d, \"kinds\": %d, \"cost\": %d },\n"
+                                  "\"accounts\": { \"num\": %d, \"val\": %d }\n"
+                                  "}\n",
+                                  base, items_bought, item_kinds_bought.size(), items_prices,
+                                  accounts.size(), deposits);
+    }
+};
+
 struct other_stats_t {
 
     std::pair<std::string,size_t> cause_raw;
@@ -299,6 +394,12 @@ int main(int argc, char** argv) {
 
         std::cout << "\"stats\": ";
         other.print();
+
+        bank_stats_t money;
+        money.load();
+
+        std::cout << ",\"money\": ";
+        money.print();
 
         std::cout << "}" << std::endl;
 

@@ -144,26 +144,35 @@
           </div>
 
           <script id="stats_tmpl" type="text/html">
-            <div class="popup">
+            <div>
               Leading cause of death: <b>{{kills_raw.cause}}</b>, with <b>{{kills_raw.kills}}</b> kills.<br/>
               Leading cause of death, weighed for player level: <b>{{kills_plev.cause}}</b>, with <b>{{kills_plev.kills}}</b> kills.<br/>
               Leading cause of death, weighed for player net worth: <b>{{kills_worth.cause}}</b>, with <b>{{kills_worth.kills}}</b> kills.<br/>
-              Rarest cause of death: <b>{{kills_rare}}</b>.<br/>
+              Rarest cause of death: <b>{{kills_rare}}</b>.<br/><br/>
               World GDP: <b>{{gdp.c}}</b> $ZM.<br/>
               Average player level: <b>{{plev.avg}}</b><br/>
               Median player level: <b>{{plev.median}}</b><br/>
               Average dungeon level at time of death: <b>{{dlev.avg}}</b><br/>
-              Median dungeon level at time of death: <b>{{dlev.median}}</b><br/>
+              Median dungeon level at time of death: <b>{{dlev.median}}</b><br/><br/>
               Number of unique player names: <b>{{players}}</b><br/>
               Most active player: <b>{{most_active.name}}</b>, with <b>{{most_active.games}}</b> games played.<br/>
               Most active replay code user: <b>{{scummer.name}}</b>, who used a replay code <b>{{scummer.streak}}</b> times.<br/>
-              Most achievements achieved: <b>{{most_achievements.name}}</b> with <b>{{most_achievements.number}}</b><br/>
-              And the <em>Get Rich Quick Award</em> goes to <b>{{got_rich_quick.name}}</b>, who got rich quick with <b>{{got_rich_quick.worth}}</b> $ZM and was killed by <b>{{got_rich_quick.cause}}</b>
+              Most achievements achieved: <b>{{most_achievements.name}}</b> with <b>{{most_achievements.number}}</b>.<br/>
+              And the <em>Get Rich Quick Award</em> goes to <b>{{got_rich_quick.name}}</b>, who got rich quick with <b>{{got_rich_quick.worth}}</b> $ZM and was killed by <b>{{got_rich_quick.cause}}</b>.<br/><br/>
+            </div>
+          </script>
+
+          <script id="money_tmpl" type="text/html">
+            <div>
+              Cash on hold in bank vaults: <b>{{base}}</b> $ZM.<br/>
+              <b>{{purchases.cost}}</b> $ZM of purchased items. (<b>{{purchases.num}}</b> purchases 
+              of <b>{{purchases.kinds}}</b> different item kinds.)<br/>
+              <b>{{accounts.val}}</b> $ZM in <b>{{accounts.num}}</b> bank accounts.
             </div>
           </script>
 
           <div class="expander" onclick="$('#panel_stats').toggle();">▶ some game statistics</div>
-          <div class="highscore" id="panel_stats">
+          <div class="highscore popup" id="panel_stats">
           </div>
 
           <p>(The previous highscore table before it was wiped is <a href="highscore.html?hs=hs-1.json">here</a>.)</p>

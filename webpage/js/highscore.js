@@ -36,6 +36,7 @@ function do_highscore() {
                   apply_template("#num_games", "#num_games_tmpl", data);
 
                   apply_template("#panel_stats", "#stats_tmpl", data.stats);
+                  apply_template("#panel_stats", "#money_tmpl", data.money);
               }
              );
 
