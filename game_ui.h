@@ -684,6 +684,10 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
         state.render.do_message(dowsing_message(p, state));
         break;
 
+    case 'k':
+        state.render.do_message(nlp::message("%d %d | %d", p.px, p.py, state.grid.get_karma(p.px, p.py)));
+        break;
+
     case '+':
         p.level++;
         state.render.do_message("Level gained.");
