@@ -75,7 +75,7 @@ struct bone_t {
                     label += ", ";
                 }
 
-                label += "in the form of ";
+                label += "in the form of";
                 label += polyform;
             }
 

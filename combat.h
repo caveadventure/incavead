@@ -290,7 +290,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     if (totpoly > 0) {
-        state.render.do_message(nlp::message("You polymorph into %s!", s));
+        state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
     bool allow_gain_level = (!s.flags.plant && p.polymorph_species.null());

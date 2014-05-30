@@ -96,7 +96,7 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level: %d%s\n"
-                     "  Dungeon level:   %d   (%s)    (phase of the moon: %s)\n"
+                     "  Dungeon level:   %d  (%s)    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
                      p.get_level()+1, 

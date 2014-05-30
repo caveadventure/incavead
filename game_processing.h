@@ -149,7 +149,7 @@ void Game::endgame(GameState& state, const std::string& name, unsigned int addre
         std::string polyform;
 
         if (!p.polymorph_species.null()) {
-            polyform = nlp::message("%s", species().get(p.polymorph_species));
+            polyform = nlp::message(" %s", species().get(p.polymorph_species));
         }
 
         bones::bones().add(name, p, constants().achievements, polyform, address, seed);
