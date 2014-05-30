@@ -29,7 +29,7 @@ struct bone_t {
         {}
 
     template <typename PLAYER, typename ACHI>
-    bone_t(const std::string& _name, const PLAYER& p, const ACHI& achievements) :
+    bone_t(const std::string& _name, const PLAYER& p, const ACHI& achievements, const std::string& polyform) :
         name(_name), 
         level(p.level), 
         cause(p.attacker), 
@@ -67,6 +67,16 @@ struct bone_t {
                     label += ", ";
 
                 label += a.label;
+            }
+
+            if (polyform.size() > 0) {
+
+                if (label.size() > 0) {
+                    label += ", ";
+                }
+
+                label += "in the form of ";
+                label += polyform;
             }
 
             if (!label.empty()) {
@@ -164,12 +174,12 @@ struct Bones {
     Bones() : max_bones(NUMBER) {}
 
     template <typename PLAYER, typename ACHI>
-    void add(const std::string& name, const PLAYER& p, const ACHI& achievements, 
+    void add(const std::string& name, const PLAYER& p, const ACHI& achievements, const std::string& polyform,
              unsigned int addr, unsigned int seed) {
 
         key_t key(p);
         pt xy(p.px, p.py);
-        bone_t bone(name, p, achievements);
+        bone_t bone(name, p, achievements, polyform);
         session_t sess(addr, seed);
 
         std::unique_lock<std::mutex> l(mutex);

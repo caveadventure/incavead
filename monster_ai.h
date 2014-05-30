@@ -66,7 +66,7 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
     if (_x == p.px && _y == p.py) {
 
         damage::defenses_t defenses;
-        p.inv.get_defense(defenses);
+        p.get_defense(defenses);
 
         defend(p, defenses, p.get_computed_level(state.rng), s, attacks, state);
 
@@ -376,7 +376,7 @@ inline bool move_monster(Player& p, GameState& state,
         }
 
         damage::defenses_t defenses;
-        p.inv.get_defense(defenses);
+        p.get_defense(defenses);
 
         double vamp = defend(p, defenses, p.get_computed_level(state.rng), s, state);
 

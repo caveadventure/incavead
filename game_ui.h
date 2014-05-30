@@ -188,12 +188,23 @@ std::string show_victory(const Player& p, const GameState& state) {
 
 std::string show_stats(const Player& p) {
 
-    std::string ret = nlp::message("\n\2Character level:\1 %d\n", p.level+1);
+    std::string ret;
+
+    tag_t polytag = p.polymorph_species;
+
+    if (!polytag.null()) {
+
+        ret = nlp::message("\n\2Character level:\1 %d    (in the form of \2%s\1)\n", p.get_level()+1,
+                           species().get(polytag));
+
+    } else {
+        ret = nlp::message("\n\2Character level:\1 %d\n", p.get_level()+1);
+    }
 
     ret += "\n\2Your attack capabilities:\1\n\n";
 
     damage::attacks_t att;
-    p.inv.get_attack(att);
+    p.get_attack(att);
 
     for (const auto& i : att.attacks) {
 
@@ -209,7 +220,7 @@ std::string show_stats(const Player& p) {
     ret += "\n\2Your defense capabilities:\1\n\n";
 
     damage::defenses_t def;
-    p.inv.get_defense(def);
+    p.get_defense(def);
 
     for (const auto& i : def.defenses) {
 

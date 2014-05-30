@@ -1057,6 +1057,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 snumber %{ dam.blindturns.scale = toint(state.match); }
             ws1 snumber %{ dam.blindturns.offset = toint(state.match); } ;
 
+        damage_player_poly = 'player_poly' 
+            ws1 snumber %{ dam.player_poly.scale = toint(state.match); }
+            ws1 snumber %{ dam.player_poly.offset = toint(state.match); } ;
+
         damage_threshold = 'threshold' ws1 real %{ dam.threshold = toreal(state.match); } ;
 
         damage_heavenly     = 'heavenly'     %{ dam.heavenly = true; } ;
@@ -1096,7 +1100,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             damage_threshold | damage_heavenly | damage_hellish | damage_cancellation |
             damage_vampiric | damage_hunger | damage_unluck | damage_polymorph | damage_health | 
             damage_infect | damage_eyeless | damage_undead | damage_animal | damage_plant |
-            damage_robot | damage_magic | damage_melee_msg | damage_env_msg |
+            damage_robot | damage_magic | damage_melee_msg | damage_env_msg | damage_player_poly |
             '}' ${ fret; })
             ;
 

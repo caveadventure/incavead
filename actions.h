@@ -62,7 +62,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     if (state.monsters.get(nx, ny, mon)) {
 
         damage::attacks_t attacks;
-        p.inv.get_attack(attacks);
+        p.get_attack(attacks);
 
         if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, mon, false)) {
             ++(state.ticks);
@@ -124,12 +124,14 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
         }
     }
 
-    state.render.unset_skin(p.px, p.py, 5);
+    //state.render.unset_skin(p.px, p.py, 5);
+    state.render.invalidate(p.px, p.py);
 
     p.px = nx;
     p.py = ny;
 
-    state.render.set_skin(p.px, p.py, 5, constants().player_skin[n_skin]);
+    //state.render.set_skin(p.px, p.py, 5, constants().player_skin[n_skin]);
+    state.render.invalidate(p.px, p.py);
 
     move_player(p, state);
 }

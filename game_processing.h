@@ -146,7 +146,13 @@ void Game::endgame(GameState& state, const std::string& name, unsigned int addre
     // The special player name of '_' will not leave highscores or bones.
 
     if (name != "_") {
-        bones::bones().add(name, p, constants().achievements, address, seed);
+        std::string polyform;
+
+        if (!p.polymorph_species.null()) {
+            polyform = nlp::message("%s", species().get(p.polymorph_species));
+        }
+
+        bones::bones().add(name, p, constants().achievements, polyform, address, seed);
     }
 
     const Design& d_victory = designs().get(constants().unique_item);
@@ -413,7 +419,7 @@ void Game::process_world(GameState& state,
         if (!t.attacks.empty()) {
 
             damage::defenses_t defenses;
-            p.inv.get_defense(defenses);
+            p.get_defense(defenses);
 
             defend(p, defenses, p.get_computed_level(state.rng), t, state);
 
@@ -539,7 +545,7 @@ void Game::process_world(GameState& state,
             // the environment itself.
 
             damage::defenses_t defenses;
-            p.inv.get_defense(defenses);
+            p.get_defense(defenses);
 
             defend(p, defenses, 0, terrain().get(ls.damage_terrain), state);
         }
@@ -547,6 +553,15 @@ void Game::process_world(GameState& state,
 
     if (p.blind > 0) {
         --(p.blind);
+    }
+
+    if (p.polymorph_turns > 0) {
+        --(p.polymorph_turns);
+
+        if (p.polymorph_turns == 0) {
+            p.polymorph_species = tag_t();
+            state.render.invalidate(p.px, p.py);
+        }
     }
 
     if (p.food.val <= -3.0 && p.health.val > -3.0) {

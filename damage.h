@@ -37,6 +37,8 @@ struct Damage {
     std::pair<tag_t,tag_t> polymorph;
     bool health;
 
+    damage_to_turns_t player_poly;
+
     struct flags_t {
 
         struct tristate_t {

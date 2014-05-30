@@ -90,7 +90,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   double& totdamage, double& totmagic, double& totsleep, double& totfear, 
-                                  double& totblind, double& totvamp, 
+                                  double& totblind, double& totvamp, double& totpoly,
                                   bool& mortal) {
 
     double dmg = v.val;
@@ -120,6 +120,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     unsigned int sleepturns = dam.sleepturns(dmg);
     unsigned int scareturns = dam.scareturns(dmg);
     unsigned int blindturns = dam.blindturns(dmg);
+    unsigned int polyturns = dam.player_poly(dmg);
 
     if (sleepturns > 0) {
         state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
@@ -134,6 +135,19 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     if (scareturns > 0) {
         state.monsters.change(mon, [scareturns](monsters::Monster& m) { m.fear += scareturns; });
         totfear += scareturns;
+    }
+
+    if (polyturns > 0) {
+
+        p.polymorph_species = mon.tag;
+        p.polymorph_turns = polyturns;
+        p.sleep = mon.sleep;
+        p.blind = mon.blind;
+        p.health.val = mon.health;
+
+        state.render.invalidate(p.px, p.py);
+
+        totpoly += polyturns;
     }
 
     if (dam.cancellation) {
@@ -200,13 +214,18 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     double totfear = 0.0;
     double totblind = 0.0;
     double totvamp = 0.0;
+    double totpoly = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, 
+                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, totpoly,
                               mortal);
+    }
+
+    if (totpoly > 0) {
+        state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
     if (mon.health - totdamage <= -3) {
@@ -246,29 +265,35 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     double totfear = 0.0;
     double totblind = 0.0;
     double totvamp = 0.0;
+    double totpoly = 0.0;
     bool mortal = false;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, 
+                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, totpoly,
                               mortal);
     }
 
     p.karma.inc(s.karma * totdamage);
 
     if (totsleep > 0) {
-
         state.render.do_message(nlp::message("%s falls asleep.", s));
+    }
 
-    } else if (totfear > 0) {
-
+    if (totfear > 0) {
         state.render.do_message(nlp::message("%s flees in terror.", s));
+    }
 
-    } else if (totblind > 0) {
-
+    if (totblind > 0) {
         state.render.do_message(nlp::message("%s is blinded.", s));
     }
+
+    if (totpoly > 0) {
+        state.render.do_message(nlp::message("You polymorph into %s!", s));
+    }
+
+    bool allow_gain_level = (!s.flags.plant && p.polymorph_species.null());
 
     if (mon.health - totdamage <= -3) {
 
@@ -280,7 +305,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
         monster_kill(p, state, mon, s, true);
 
-        if (!s.flags.plant && species_level > p.level) {
+        if (allow_gain_level && species_level > p.level) {
 
             p.level = species_level;
 
@@ -328,7 +353,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         }
     }
 
-    if (species_level >= p.level && mortal && !s.flags.plant) {
+    if (species_level >= p.level && mortal && allow_gain_level) {
 
         p.level = species_level+1;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
@@ -523,7 +548,7 @@ inline void defend(Player& p,
 inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
 
     damage::defenses_t defenses;
-    p.inv.get_defense(defenses);
+    p.get_defense(defenses);
 
     size_t tmp = 0;
 

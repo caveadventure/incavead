@@ -71,7 +71,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (!d.attacks.empty()) {
 
         damage::defenses_t defenses;
-        p.inv.get_defense(defenses);
+        p.get_defense(defenses);
 
         defend(p, defenses, p.get_computed_level(state.rng), d, state);
     }
@@ -266,7 +266,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
     if (_x == p.px && _y == p.py) {
 
         damage::defenses_t defenses;
-        p.inv.get_defense(defenses);
+        p.get_defense(defenses);
 
         defend(p, defenses, p.get_computed_level(state.rng), d, state);
 

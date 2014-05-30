@@ -95,11 +95,14 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
     }
 
     m = nlp::message("\2Player stats:\n"
-                     "  Character level: %d\n"
-                     "  Dungeon level:   %d (%s)    (phase of the moon: %s)\n"
+                     "  Character level: %d%s\n"
+                     "  Dungeon level:   %d   (%s)    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
-                     p.level+1, 
+                     p.get_level()+1, 
+                     (p.polymorph_species.null() ? 
+                      std::string() : 
+                      nlp::message("  (in the form of \2%s\1)", species().get(p.polymorph_species))),
                      p.worldz+1, level_name,
                      moon_phase);
 

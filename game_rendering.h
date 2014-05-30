@@ -114,7 +114,15 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
     if (x == p.px && y == p.py) {
 
-        s = constants().player_skin[n_skin];
+        tag_t polytag = p.polymorph_species;
+
+        if (!polytag.null()) {
+            s = species().get(polytag).skin[n_skin];
+
+        } else {
+            s = constants().player_skin[n_skin];
+        }
+
         state.render.set_skin(x, y, 5, s);
 
     } else if (state.monsters.get(x, y, mon)) {
@@ -166,7 +174,7 @@ unsigned int get_lightradius(const Player& p, const GameState& state) {
     if (r < 0) {
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        r = std::min(ls.lightradius_max, ls.lightradius + p.inv.get_lightradius());
+        r = std::min(ls.lightradius_max, ls.lightradius + p.get_lightradius());
     }
 
     if (p.blind > 0) {
