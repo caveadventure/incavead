@@ -429,13 +429,30 @@ inline double defend(Player& p,
 
         const Damage& dam = damages().get(v.type);
 
-        if (!dam.flags.robot(false) || 
-            !dam.flags.undead(false) ||
-            !dam.flags.animal(false) ||
-            !dam.flags.plant(false) ||
-            !dam.flags.magic(false) ||
-            !dam.flags.eyeless(false)) 
-            continue;
+        if (p.polymorph_species.null()) {
+
+            if (!dam.flags.robot(false) || 
+                !dam.flags.undead(false) ||
+                !dam.flags.animal(false) ||
+                !dam.flags.plant(false) ||
+                !dam.flags.magic(false) ||
+                !dam.flags.eyeless(false)) 
+                continue;
+
+        } else {
+
+            const Species& sp = species().get(p.polymorph_species);
+
+            if (!dam.flags.robot(sp.flags.robot) || 
+                !dam.flags.undead(sp.flags.undead) ||
+                !dam.flags.animal(sp.flags.animal) ||
+                !dam.flags.plant(sp.flags.plant) ||
+                !dam.flags.magic(sp.flags.magic) ||
+                !dam.flags.eyeless(sp.flags.eyeless)) 
+                continue;
+        }
+
+
 
         if (dam.heavenly) {
 
