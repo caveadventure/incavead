@@ -439,17 +439,29 @@ void Game::process_world(GameState& state,
 
             if (!trig.summon_out_of_view.monster.null()) {
 
-                summon_out_of_view(p, state, trig.summon_out_of_view.monster, trig.summon_out_of_view.count);
+                unsigned int n = summon_out_of_view(p, state, 
+                                                    trig.summon_out_of_view.monster, 
+                                                    trig.summon_out_of_view.count);
+
+                if (n == 0) {
+                    ++i;
+                    continue;
+                }
             }
 
             if (trig.summon_genus.count > 0) {
 
                 const auto& sg = trig.summon_genus;
 
-                state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts,
-                                            state.render, 
-                                            sg.x, sg.y, &p.px, &p.py, 
-                                            sg.genus, sg.level, sg.count);
+                unsigned int n = state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts,
+                                                             state.render, 
+                                                             sg.x, sg.y, &p.px, &p.py, 
+                                                             sg.genus, sg.level, sg.count);
+
+                if (n == 0) {
+                    ++i;
+                    continue;
+                }
             }
 
             if (trig.message.message.size() > 0) {
