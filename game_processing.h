@@ -329,22 +329,6 @@ void do_digging_step(Player& p, GameState& state) {
 void Game::process_world(GameState& state, 
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
-    // Handle victory items.
-    {
-        tag_t unique_item = constants().unique_item;
-
-        const Design& d_victory = designs().get(unique_item);
-
-        items::Item vi;
-        items::Item tmp;
-
-        if (p.inv.take(d_victory.slot, vi)) {
-
-            ++vi.count;
-
-            p.inv.place(d_victory.slot, vi, tmp);
-        }
-    }
 
     // Ailments.
 
@@ -537,7 +521,7 @@ void Game::process_world(GameState& state,
     double inc_hunger;
     double inc_shield;
         
-    p.inv.get_turn_coeffs(state.moon.pi.phase_n, inc_luck, inc_hunger, inc_shield);
+    p.inv.process_inventory(state.moon.pi.phase_n, inc_luck, inc_hunger, inc_shield);
 
     p.luck.inc(inc_luck);
 

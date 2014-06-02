@@ -261,7 +261,7 @@ struct inventory_t {
         return ret;
     }
 
-    void get_turn_coeffs(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) const {
+    void process_inventory(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) {
 
         inc_luck = 0;
         inc_hunger = 0;
@@ -269,19 +269,36 @@ struct inventory_t {
 
         double hunger_coeff = 0;
 
-        for (const auto& i : stuff) {
-            const Design& dp = designs().get(i.second.tag);
+        auto i = stuff.begin();
+
+        while (i != stuff.end()) {
+
+            Item& it = *(i->second);
+
+            const Design& dp = designs().get(it.tag);
+
+            if (dp.change_count != 0) {
+
+                if (-dp.change_count >= it.count) {
+                    i = stuff.erase(i);
+                    continue;
+                }
+
+                it.count += dp.change_count;
+            }
 
             for (const auto& l : dp.luck) {
                 inc_luck = std::max(inc_luck, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
             }
 
             // Hack, 'count_is_only_one' does not apply.
-            inc_hunger += (dp.hunger * i.second.count);
+            inc_hunger += (dp.hunger * it.count);
 
             hunger_coeff = std::max(hunger_coeff, dp.other_hunger_multiplier);
 
             inc_shield += dp.shield;
+
+            ++i;
         }
 
         if (hunger_coeff > 1) {
