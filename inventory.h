@@ -273,13 +273,13 @@ struct inventory_t {
 
         while (i != stuff.end()) {
 
-            Item& it = *(i->second);
+            items::Item& it = i->second;
 
             const Design& dp = designs().get(it.tag);
 
             if (dp.change_count != 0) {
 
-                if (-dp.change_count >= it.count) {
+                if (-dp.change_count >= (int)it.count) {
                     i = stuff.erase(i);
                     continue;
                 }
