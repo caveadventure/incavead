@@ -395,8 +395,16 @@ void Game::process_world(GameState& state,
         );
 
 
+    bool terrain_immune = false;
+
+    if (!p.polymorph_species.null()) {
+
+        terrain_immune = species().get(p.polymorph_species).flags.terrain_immune;
+    }
+
+
     features::Feature feat;
-    if (state.features.get(p.px, p.py, feat)) {
+    if (!terrain_immune && state.features.get(p.px, p.py, feat)) {
 
         const Terrain& t = terrain().get(feat.tag);
 

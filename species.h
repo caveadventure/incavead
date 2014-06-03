@@ -145,6 +145,7 @@ struct Species {
         unsigned int range;
         unsigned int turns;
         damage::attacks_t attacks;
+        std::string msg;
 
         blast_t() : chance(0), radius(0), range(0), turns(0) {}
     }; 

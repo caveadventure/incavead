@@ -53,8 +53,38 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     if (nx < 0 || ny < 0) 
         return;
 
+    tag_t poly = p.polymorph_species;
+
     if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
         !state.grid.is_walk(nx, ny)) {
+
+        if (!poly.null()) {
+
+            const Species& s = species().get(poly);
+
+            switch (s.move) {
+
+            case Species::move_t::floor:
+                if (!state.grid.is_floor(nx, ny)) return;
+                break;
+
+            case Species::move_t::water:
+                if (!state.grid.is_water(nx, ny)) return;
+                break;
+
+            case Species::move_t::corner:
+                if (!state.grid.is_corner(nx, ny)) return;
+                break;
+
+            case Species::move_t::shoreline:
+                if (!state.grid.is_shore(nx, ny)) return;
+                break;
+
+            default:
+                break;
+            }
+        }
+
         return;
     }
 
@@ -71,8 +101,16 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
         return;
     }
 
+    bool terrain_immune = false;
+
+    if (!poly.null()) {
+
+        terrain_immune = species().get(poly).flags.terrain_immune;
+    }
+
+
     features::Feature feat;
-    if (state.features.get(nx, ny, feat)) {
+    if (!terrain_immune && state.features.get(nx, ny, feat)) {
 
         const Terrain& t = terrain().get(feat.tag);
 
@@ -109,7 +147,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
 
     ++(state.ticks);
 
-    if (state.features.get(p.px, p.py, feat)) {
+    if (!terrain_immune && state.features.get(p.px, p.py, feat)) {
 
         const Terrain& t = terrain().get(feat.tag);
 

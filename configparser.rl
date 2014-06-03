@@ -312,6 +312,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ spe.blast.back().radius = toint(state.match); }
             ws1 number %{ spe.blast.back().range = toint(state.match); }
             ws1 number %{ spe.blast.back().turns = toint(state.match); }
+            ws1 string %{ spe.blast.back().msg = state.match; }
             (ws1 'attack' 
              ws1 damage_val 
              %{ spe.blast.back().attacks.add(dmgval); })+

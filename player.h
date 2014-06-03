@@ -138,6 +138,8 @@ struct Player {
     static const unsigned int QUITTING       = 0x800;
     static const unsigned int SELFNOTE       = 0x1000;
     static const unsigned int CLOUDING       = 0x2000;
+    static const unsigned int P_CLOUDING     = 0x4000;
+    static const unsigned int P_BLASTING     = 0x8000;
 
     unsigned int state;
 
