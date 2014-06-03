@@ -500,7 +500,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
-            design_heal_ailments | design_forbid_wish | design_change_count |
+            design_heal_ailments | design_heal_polymorph | design_forbid_wish | design_change_count |
             '}'
             ${ fret; })
             ;
