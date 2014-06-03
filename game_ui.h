@@ -297,16 +297,15 @@ std::string show_spells(const Player& p, const GameState& state) {
 
     for (const auto& pb : s.blast) {
 
-        m += nlp::message("   \2%c\1) %S%s\n", z, pb.name, ((state.ticks % pb.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) %S%s\n", z, pb.name, 
+                          ((state.ticks % pb.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
         ++z;
     }
 
     for (const auto& pc : s.cast_cloud) {
 
-        if ((state.ticks % pc.turns) != 0)
-            continue;
-
-        m += nlp::message("   \2%c\1) %S%s\n", z, pc.name, ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) %S%s\n", z, pc.name, 
+                          ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
         ++z;
     }
         

@@ -122,6 +122,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         p.polymorph_species = tag_t();
         p.polymorph_turns = 0;
         state.render.do_message("You return to your original form.", true);
+        state.render.invalidate(p.px, p.py);
         ret = true;
     }
 

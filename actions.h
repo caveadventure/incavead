@@ -56,36 +56,34 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     tag_t poly = p.polymorph_species;
 
     if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
-        !state.grid.is_walk(nx, ny)) {
-
-        if (!poly.null()) {
-
-            const Species& s = species().get(poly);
-
-            switch (s.move) {
-
-            case Species::move_t::floor:
-                if (!state.grid.is_floor(nx, ny)) return;
-                break;
-
-            case Species::move_t::water:
-                if (!state.grid.is_water(nx, ny)) return;
-                break;
-
-            case Species::move_t::corner:
-                if (!state.grid.is_corner(nx, ny)) return;
-                break;
-
-            case Species::move_t::shoreline:
-                if (!state.grid.is_shore(nx, ny)) return;
-                break;
-
-            default:
-                break;
-            }
-        }
-
+        !state.grid.is_walk(nx, ny))
         return;
+
+    if (!poly.null()) {
+
+        const Species& s = species().get(poly);
+
+        switch (s.move) {
+
+        case Species::move_t::floor:
+            if (!state.grid.is_floor(nx, ny)) return;
+            break;
+                
+        case Species::move_t::water:
+            if (!state.grid.is_water(nx, ny)) return;
+            break;
+
+        case Species::move_t::corner:
+            if (!state.grid.is_corner(nx, ny)) return;
+            break;
+
+        case Species::move_t::shoreline:
+            if (!state.grid.is_shore(nx, ny)) return;
+            break;
+
+        default:
+            break;
+        }
     }
 
     monsters::Monster mon;
