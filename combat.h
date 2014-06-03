@@ -55,13 +55,17 @@ inline void roll_attack(rnd::Generator& rng,
     }
 }
 
+
 inline void monster_kill(Player& p, GameState& state, const monsters::Monster& mon, 
-                         const Species& s, bool do_track) {
+                         const Species& s, bool do_track, const std::set<tag_t>& types) {
 
     for (const auto& drop : s.drop) {
         double v = state.rng.gauss(0.0, 1.0);
 
         if (v <= drop.chance)
+            continue;
+
+        if (!drop.damage_type.null() && types.count(drop.damage_type) == 0) 
             continue;
 
         tag_t item = drop.tag;
@@ -90,7 +94,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   double& totdamage, double& totmagic, double& totsleep, double& totfear, 
-                                  double& totblind, double& totvamp, double& totpoly,
+                                  double& totblind, double& totpoly,
+                                  std::set<tag_t>& types,
                                   bool& mortal) {
 
     double dmg = v.val;
@@ -174,7 +179,6 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         if (dam.vampiric) {
 
             p.health.inc(dmg);
-            totvamp += dmg;
         }
 
         state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
@@ -183,6 +187,8 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         if (dmg >= 2.8) {
             mortal = true;
         }
+
+        types.insert(v.type);
     }
 
     // dam.hunger, dam.unluck:
@@ -213,15 +219,16 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     double totsleep = 0.0;
     double totfear = 0.0;
     double totblind = 0.0;
-    double totvamp = 0.0;
     double totpoly = 0.0;
     bool mortal = false;
+
+    std::set<tag_t> types;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, totpoly,
-                              mortal);
+                              totdamage, totmagic, totsleep, totfear, totblind, totpoly,
+                              types, mortal);
     }
 
     if (totpoly > 0) {
@@ -230,7 +237,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     if (mon.health - totdamage <= -3) {
 
-        monster_kill(p, state, mon, s, track_kills);
+        monster_kill(p, state, mon, s, track_kills, types);
     }
 }
 
@@ -264,15 +271,16 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     double totsleep = 0.0;
     double totfear = 0.0;
     double totblind = 0.0;
-    double totvamp = 0.0;
     double totpoly = 0.0;
     bool mortal = false;
+
+    std::set<tag_t> types;
 
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totvamp, totpoly,
-                              mortal);
+                              totdamage, totmagic, totsleep, totfear, totblind, totpoly,
+                              types, mortal);
     }
 
     p.karma.inc(s.karma * totdamage);
@@ -303,7 +311,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             state.render.do_message(nlp::message("You killed %s.", s));
         }
 
-        monster_kill(p, state, mon, s, true);
+        monster_kill(p, state, mon, s, true, types);
 
         if (allow_gain_level && species_level > p.level) {
 

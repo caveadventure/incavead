@@ -75,6 +75,7 @@ struct Species {
         tag_t tag;
         double chance;
         unsigned int level;
+        tag_t damage_type;
 
         drop_t(tag_t t = tag_t(), double c = 0.0, unsigned int l = 0) : tag(t), chance(c), level(0) {}
     };

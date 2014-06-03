@@ -276,11 +276,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_drop = 'drop' %{ spe.drop.push_back(Species::drop_t()); }
             ws1 tag    %{ spe.drop.back().tag = tag_t(state.match, tagmem); }
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
+            ( ws1 tag  %{ spe.drop.back().damage_type = tag_t(state.match, tagmem); } )?
             ;
 
         species_drop_random = 'drop_random' %{ spe.drop.push_back(Species::drop_t()); }
             ws1 number %{ spe.drop.back().level = toint(state.match); }
             ws1 real   %{ spe.drop.back().chance = toreal(state.match); }
+            ( ws1 tag  %{ spe.drop.back().damage_type = tag_t(state.match, tagmem); } )?
             ;
 
         species_cast_cloud = 'cast_cloud' %{ spe.cast_cloud.push_back(Species::cloud_t()); }

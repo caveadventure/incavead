@@ -77,7 +77,7 @@ struct Damage {
     tag_t infect;
 
     Damage() : threshold(0), heavenly(false), hellish(false), cancellation(false), vampiric(false),
-               hunger(false), unluck(false), health(false) 
+               hunger(false), unluck(false), health(false)
         {}
 };
 
