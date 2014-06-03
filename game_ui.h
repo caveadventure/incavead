@@ -261,9 +261,11 @@ std::string show_stats(const Player& p) {
     return ret;
 }
 
-std::string show_spells(const std::vector<Terrain::spell_t>& p_spells, 
-                        const std::vector<Design::spell_t>& i_spells,
-                        const std::vector<uint32_t>& r_spells) {
+std::string show_spells(const Player& p, const GameState& state) {
+
+    const std::vector<Terrain::spell_t>& p_spells = p.spells;
+    const std::vector<Design::spell_t>& i_spells = p.inv.spells();
+    const std::vector<uint32_t>& r_spells = p.inv.random_spells();
 
     std::string m;
 
@@ -287,11 +289,31 @@ std::string show_spells(const std::vector<Terrain::spell_t>& p_spells,
         m += nlp::message("   \2%c\1) Labeled '%s'\n", z, rcode::magick_encode(rp));
         ++z;
     }
+
+    if (p.polymorph_species.null())
+        return m;
+
+    const Species& s = species().get(p.polymorph_species);
+
+    for (const auto& pb : s.blast) {
+
+        m += nlp::message("   \2%c\1) %S%s\n", z, pb.name, ((state.ticks % pb.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        ++z;
+    }
+
+    for (const auto& pc : s.cast_cloud) {
+
+        if ((state.ticks % pc.turns) != 0)
+            continue;
+
+        m += nlp::message("   \2%c\1) %S%s\n", z, pc.name, ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        ++z;
+    }
         
     return m;
 }
 
-void handle_input_spells(const Player& p, GameState& state, maudit::keypress k) {
+void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
 
     int _z = k.letter - 'a';
 
@@ -306,27 +328,48 @@ void handle_input_spells(const Player& p, GameState& state, maudit::keypress k) 
     const auto& i_spells = p.inv.spells();
     const auto& r_spells = p.inv.random_spells();
 
-    if (z < p_spells.size()) {
+    size_t size1 = p_spells.size();
+    size_t size2 = size1 + i_spells.size();
+    size_t size3 = size2 + r_spells.size();
+
+    if (z < size1) {
 
         const auto& sp = p_spells[z];
 
         seed_celauto(state, p.px, p.py, sp.ca_tag);        
         ++(state.ticks);
 
-    } else if (z < p_spells.size() + i_spells.size()) {
+    } else if (z < size2) {
 
-        const auto& sp = i_spells[z - p_spells.size()];
+        const auto& sp = i_spells[z - size1];
 
         seed_celauto(state, p.px, p.py, sp.ca_tag);
         ++(state.ticks);
 
-    } else if (z < p_spells.size() + i_spells.size() + r_spells.size()) {
+    } else if (z < size3) {
 
-        uint32_t rspell = r_spells[z - p_spells.size() - i_spells.size()];
+        uint32_t rspell = r_spells[z - size2];
 
         cast_random_spell(p, rspell, state);
         ++(state.ticks);
     }
+
+    if (!p.polymorph_species.null()) {
+
+        const Species& s = species().get(p.polymorph_species);
+
+        size_t x = z - size3;
+
+        if (x < s.blast.size()) {
+
+            start_poly_blast(p, x, state);
+        }
+
+        if (x < s.blast.size() + s.cast_cloud.size()) {
+
+            start_poly_cloud(p, x - s.blast.size(), state);
+        }
+    }            
 
     state.window_stack.pop_back();
 }
@@ -531,7 +574,7 @@ void handle_input_main(Player& p, GameState& state,
         break;
 
     case 'z':
-        state.push_window(show_spells(p.spells, p.inv.spells(), p.inv.random_spells()), screens_t::spells);
+        state.push_window(show_spells(p, state), screens_t::spells);
         break;
 
     case 'P':
@@ -989,6 +1032,12 @@ void Game::handle_input(GameState& state,
 
             } else if (p.state & Player::CLOUDING) {
                 end_cloud_item(p, p.inv.selected_slot, p.look.x, p.look.y, state);
+
+            } else if (p.state & Player::P_BLASTING) {
+                end_poly_blast(p, p.polymorph_ability, p.look.x, p.look.y, state);
+
+            } else if (p.state & Player::P_CLOUDING) {
+                end_poly_cloud(p, p.polymorph_ability, p.look.x, p.look.y, state);
             }
 
             ++(state.ticks);

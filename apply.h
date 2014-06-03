@@ -117,6 +117,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (d.heal_polymorph && !p.polymorph_species.null()) {
+        
+        p.polymorph_species = tag_t();
+        p.polymorph_turns = 0;
+        state.render.do_message("You return to your original form.", true);
+        ret = true;
+    }
+
     if (d.karma != 0) {
         p.karma.inc(d.karma);
         ret = true;
@@ -437,6 +445,117 @@ inline bool start_throw_item(Player& p, tag_t slot, GameState& state) {
 
     return true;
 }
+
+inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
+
+    if (p.polymorph_species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph_species);
+
+    if (i >= s.blast.size())
+        return false;
+
+    const auto& b = s.blast[i];
+
+    do_monster_blast(p, state, s, x, y, b.radius, b.attacks);
+
+    return true;
+}
+
+inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
+
+    if (p.polymorph_species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph_species);
+
+    if (i >= s.blast.size())
+        return false;
+
+    const auto& b = s.blast[i];
+
+    if ((state.ticks % b.turns) != 0) {
+
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+    
+    double v = state.rng.gauss(0.0, 1.0);
+
+    if (v <= b.chance) {
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+
+    p.polymorph_ability = i;
+
+    if (b.range > 0) {
+        
+        start_look_target(p.state, p.look, p.px, p.py, state, 0, b.range);
+        p.state |= Player::P_BLASTING;
+
+    } else {
+
+        if (!end_poly_blast(p, i, p.px, p.py, state)) 
+            return false;
+
+        ++(state.ticks);
+    }
+
+    return true;
+}
+
+inline bool end_poly_cloud(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
+
+    if (p.polymorph_species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph_species);
+
+    if (i >= s.cast_cloud.size())
+        return false;
+
+    const auto& c = s.cast_cloud[i];
+
+    cast_cloud(state, x, y, c.radius, c.terraintag);
+
+    return true;
+}
+
+inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
+
+    if (p.polymorph_species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph_species);
+
+    if (i >= s.cast_cloud.size())
+        return false;
+
+    const auto& c = s.cast_cloud[i];
+
+    if ((state.ticks % c.turns) != 0) {
+
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+    
+    double v = state.rng.gauss(0.0, 1.0);
+
+    if (v <= c.chance) {
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+
+    p.polymorph_ability = i;
+
+    start_look_target(p.state, p.look, p.px, p.py, state, 0, s.range);
+    p.state |= Player::P_CLOUDING;
+
+    return true;
+}
+
 
 inline bool start_digging(Player& p, tag_t slot, GameState& state) {
 

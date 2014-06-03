@@ -122,6 +122,8 @@ struct Player {
     tag_t polymorph_species;
     unsigned int polymorph_turns;
 
+    size_t polymorph_ability;
+
     inventory_t inv;
 
     static const unsigned int MAIN           = 0x0;
@@ -207,7 +209,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), blind(0), digging(false), polymorph_turns(0), state(MAIN), 
+               sleep(0), blind(0), digging(false), polymorph_turns(0), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -397,6 +399,7 @@ struct reader<Player> {
         serialize::read(s, p.digging);
         serialize::read(s, p.polymorph_species);
         serialize::read(s, p.polymorph_turns);
+        serialize::read(s, p.polymorph_ability);
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -448,6 +451,7 @@ struct writer<Player> {
         serialize::write(s, p.digging);
         serialize::write(s, p.polymorph_species);
         serialize::write(s, p.polymorph_turns);
+        serialize::write(s, p.polymorph_ability);
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);

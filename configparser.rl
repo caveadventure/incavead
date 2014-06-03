@@ -312,7 +312,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ spe.blast.back().radius = toint(state.match); }
             ws1 number %{ spe.blast.back().range = toint(state.match); }
             ws1 number %{ spe.blast.back().turns = toint(state.match); }
-            ws1 string %{ spe.blast.back().msg = state.match; }
+            ws1 string %{ spe.blast.back().name = state.match; }
             (ws1 'attack' 
              ws1 damage_val 
              %{ spe.blast.back().attacks.add(dmgval); })+
@@ -471,9 +471,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_magic_mapping = 'magic_mapping' %{ des.magic_mapping = true; };
 
-        design_heal_blind    = 'heal_blind'    %{ des.heal_blind = true; };
-        design_heal_unluck   = 'heal_unluck'   %{ des.heal_unluck = true; };
-        design_heal_ailments = 'heal_ailments' %{ des.heal_ailments = true; };
+        design_heal_blind     = 'heal_blind'     %{ des.heal_blind = true; };
+        design_heal_unluck    = 'heal_unluck'    %{ des.heal_unluck = true; };
+        design_heal_ailments  = 'heal_ailments'  %{ des.heal_ailments = true; };
+        design_heal_polymorph = 'heal_polymorph' %{ des.heal_polymorph = true; };
 
         design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
 
