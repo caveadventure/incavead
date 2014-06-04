@@ -373,11 +373,17 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
                 vi = state.items.make_item(c.to, items::pt(p.px, p.py), state.rng);
 
-                p.inv.place(cto.slot, vi, tmp);
+                bool leftover = p.inv.place(cto.slot, vi, tmp);
 
                 state.render.do_message(nlp::message("You now have %s!", nlp::count(), cto, vi.count));
 
                 ++(state.ticks);
+
+                // HACK
+                if (leftover && tmp.tag != c.to) {
+                    state.items.place(p.px, p.py, tmp, state.grid);
+                }
+
                 return;
             }
         }
