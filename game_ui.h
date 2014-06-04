@@ -208,6 +208,10 @@ std::string show_stats(const Player& p) {
 
     for (const auto& i : att.attacks) {
 
+        // HACK
+        if (i.val < 0.01)
+            continue;
+
         const Damage& dam = damages().get(i.type);
         std::string s = dam.name;
 
@@ -223,6 +227,10 @@ std::string show_stats(const Player& p) {
     p.get_defense(def);
 
     for (const auto& i : def.defenses) {
+
+        // HACK
+        if (i.second < 0.01)
+            continue;
 
         const Damage& dam = damages().get(i.first);
         std::string s = dam.name;
