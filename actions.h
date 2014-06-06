@@ -381,7 +381,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
                 // HACK
                 if (leftover && tmp.tag != c.to) {
-                    state.items.place(p.px, p.py, tmp, state.grid);
+                    state.items.place(p.px, p.py, tmp, state.render);
                 }
 
                 return;
