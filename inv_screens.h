@@ -94,17 +94,25 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
         level_name += tunnels[p.worldx+1][p.worldy+1];
     }
 
+    unsigned int plevel = p.get_level() + 1;
+
+    std::string pad1(plevel < 10 ? "  " : " ");
+
+    int dlevel = p.worldz + 1;
+
+    std::string pad2(dlevel >= 10 ? " "  :
+                     dlevel >=  0 ? "  " :
+                     dlevel >= -9 ? " " : "");
+
+    std::string poly = (p.polymorph_species.null() ? std::string() :
+                        nlp::message("(in the form of \2%s\1)", species().get(p.polymorph_species)));
+
     m = nlp::message("\2Player stats:\n"
-                     "  Character level: %d%s\n"
-                     "  Dungeon level:   %d  (%s)    (phase of the moon: %s)\n"
+                     "  Character level:%s%d  %s\n"
+                     "  Dungeon level:  %s%d  (%s)    (phase of the moon: %s)\n"
                      "\n"
                      "\2Inventory:\n",
-                     p.get_level()+1, 
-                     (p.polymorph_species.null() ? 
-                      std::string() : 
-                      nlp::message("  (in the form of \2%s\1)", species().get(p.polymorph_species))),
-                     p.worldz+1, level_name,
-                     moon_phase);
+                     pad1, plevel, poly, pad2, dlevel, level_name, moon_phase);
 
     for (const auto& slotk : p.inv.slot_keys) {
 

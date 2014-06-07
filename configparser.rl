@@ -582,8 +582,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
         terrain_crafting = 'crafting' %{ ter.crafting.push_back(Terrain::craft_t()); }
-            ws1 tag %{ ter.crafting.back().from = tag_t(state.match, tagmem); }
-            ws1 tag %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
+            ws1 tag     %{ ter.crafting.back().from = tag_t(state.match, tagmem); }
+            ws1 tag     %{ ter.crafting.back().to = tag_t(state.match, tagmem); }
+            ws1 string  %{ ter.crafting.back().msg = state.match; }
             ;
 
         terrain_wish = 'wish' ws1 ('simple'  %{ ter.wishing = Terrain::SIMPLE_WISH;  } |

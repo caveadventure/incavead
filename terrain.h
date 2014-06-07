@@ -68,6 +68,7 @@ struct Terrain {
     struct craft_t {
         tag_t from;
         tag_t to;
+        std::string msg;
     };
 
     std::vector<craft_t> crafting;

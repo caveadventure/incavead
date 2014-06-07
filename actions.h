@@ -375,20 +375,26 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
                 bool leftover = p.inv.place(cto.slot, vi, tmp);
 
-                state.render.do_message(nlp::message("You now have %s!", nlp::count(), cto, vi.count));
-
                 ++(state.ticks);
 
-                // HACK
-                if (leftover && tmp.tag != c.to) {
-                    state.items.place(p.px, p.py, tmp, state.render);
+                if (leftover && tmp.tag == c.to) {
+
+                    state.render.do_message("Nothing happens...");
+
+                } else {
+
+                    state.render.do_message(nlp::message(c.msg, nlp::count(), cto, vi.count), true);
+
+                    if (leftover) {
+                        state.items.place(p.px, p.py, tmp, state.render);
+                    }
                 }
 
                 return;
             }
         }
 
-        state.render.do_message("You need a specific kind of item to use this.");
+        state.render.do_message(nlp::message("You need a specific kind of item for %s.", t));
         return;
     }
 
