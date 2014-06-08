@@ -94,7 +94,7 @@
             <b>{{num_games}}</b>
           </script>
 
-          <p>Here's a list of top-10 best players from the public server, 
+          <p>Here are the highscore lists from games played on the public server, 
              from a total of <span id="num_games"></span> games logged so far.
           </p>
 
@@ -122,6 +122,10 @@
               {{/.}}
             </ol>
           </script>
+
+          <div class="expander" onclick="$('#panel_plev').toggle();">▶ Glorious victors</div>
+          <div class="highscores" id="panel_victors">
+          </div>
 
           <div class="expander" onclick="$('#panel_plev').toggle();">▶ ... by player level</div>
           <div class="highscores" id="panel_plev">

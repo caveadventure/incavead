@@ -363,28 +363,37 @@ int main(int argc, char** argv) {
         highscore::Scores scores;
 
         auto scores_saved = scores.scores;
-        
+
         std::cout << nlp::message("{\"num_games\": %d,\n", scores.scores.size());
         std::cout << "\"highscores\": {";
 
+        scores.by_ts();
+        std::cout << "\"victors\": [";
+        scores.process(_process, 1, 5);
+        std::cout << "]," << std::endl;
+
         std::cout << "\"ts\": [";
-        scores.by_ts(_process);
+        scores.process(_process, 0);
         std::cout << "]," << std::endl;
 
+        scores.by_plev();
         std::cout << "\"plev\": [";
-        scores.by_plev(_process);
+        scores.process(_process, 0);
         std::cout << "]," << std::endl;
 
+        scores.by_dlev_d();
         std::cout << "\"dlev_d\": [";
-        scores.by_dlev_d(_process);
+        scores.process(_process, 0);
         std::cout << "]," << std::endl;
 
+        scores.by_dlev_a();
         std::cout << "\"dlev_a\": [";
-        scores.by_dlev_a(_process);
+        scores.process(_process, 0);
         std::cout << "]," << std::endl;
 
+        scores.by_worth();
         std::cout << "\"worth\": [";
-        scores.by_worth(_process);
+        scores.process(_process, 0);
         std::cout << "]" << std::endl;
 
         std::cout << "}," << std::endl; 

@@ -113,11 +113,14 @@ struct Scores {
 
 
     template <typename FUNC>
-    void _process(FUNC f) {
+    void process(FUNC f, int vfilt = -1, size_t limit = 10) {
 
         size_t n = 0;
 
-        for (auto i = scores.begin(); i != scores.end() && n < 10; ++i, ++n) {
+        for (auto i = scores.begin(); i != scores.end() && n < limit; ++i) {
+
+            if (vfilt >= 0 && vfilt != (int)i->victory)
+                continue;
 
             bones::bone_t& bone = i->bone;
 
@@ -128,37 +131,29 @@ struct Scores {
                 bone.name.name = "anonymous";
 
             f(n, bone.name, bone.cause, i->plev, i->dlev, i->worth, i->victory, i->scum_streak);
+
+            ++n;
         }
     }
 
-    template <typename FUNC>
-    void by_ts(FUNC f) {
+    void by_ts() {
         std::reverse(scores.begin(), scores.end());
-        _process(f);
     }
 
-    template <typename FUNC>
-    void by_plev(FUNC f) {
+    void by_plev() {
         std::sort(scores.begin(), scores.end(), sort_plev);
-        _process(f);
     }
 
-    template <typename FUNC>
-    void by_dlev_d(FUNC f) {
+    void by_dlev_d() {
         std::sort(scores.begin(), scores.end(), sort_dlev_d);
-        _process(f);
     }
 
-    template <typename FUNC>
-    void by_dlev_a(FUNC f) {
+    void by_dlev_a() {
         std::sort(scores.begin(), scores.end(), sort_dlev_a);
-        _process(f);
     }
 
-    template <typename FUNC>
-    void by_worth(FUNC f) {
+    void by_worth() {
         std::sort(scores.begin(), scores.end(), sort_worth);
-        _process(f);
     }
 };
 

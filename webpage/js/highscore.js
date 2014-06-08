@@ -27,6 +27,7 @@ function do_highscore() {
     $.getJSON(jsonfile, {}, 
               function(data) {
 
+                  apply_template("#panel_victors", "#scorelines_tmpl", data.highscores.victors);
                   apply_template("#panel_plev", "#scorelines_tmpl", data.highscores.plev);
                   apply_template("#panel_dlev_d", "#scorelines_tmpl", data.highscores.dlev_d);
                   apply_template("#panel_dlev_a", "#scorelines_tmpl", data.highscores.dlev_a);
@@ -41,7 +42,8 @@ function do_highscore() {
              );
 
     $(".highscores").toggle();
-    $("#panel_plev").toggle();
+    $("#panel_victors").toggle();
+    $("#panel_ts").toggle();
 }
 
 function do_ringstatus() {

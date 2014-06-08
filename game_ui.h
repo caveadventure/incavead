@@ -1166,7 +1166,8 @@ void Game::goodbye_message(GameState& state, FUNC println) {
     println("Highscore table:");
     println("");
 
-    scores.by_plev([println](size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t::fakeobj& cause,
+    scores.by_plev();
+    scores.process([println](size_t n, const bones::bone_t::fakeobj& name, const bones::bone_t::fakeobj& cause,
                              unsigned int plev, int dlev, double worth, bool victory, size_t rcodes) {
 
                        std::string line1;
