@@ -90,6 +90,27 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
             return newcount;
         });
 
+    // Calculate the player's starsign.
+    // The zero date of July 30 2012 is the mythological date of first git commit in this repo. :)
+
+    const auto& starsigns = constants().starsigns;
+
+    long diff = seed - starsigns.zero;
+
+    int day = diff % starsigns.nday;
+    int sign = diff % starsigns.nsign;
+
+    if (day < 0) {
+        day = starsigns.nday + day;
+    }
+
+    if (sign < 0) {
+        sign = starsigns.nsign + sign;
+    }
+
+    p.starsign.day = day + 1;
+    p.starsign.sign = sign + 1;
+
 }
 
 void Game::dispose(GameState& state) {

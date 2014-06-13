@@ -60,7 +60,7 @@ struct Main {
 
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 18;
+    static const unsigned int SAVEFILE_VERSION = 19;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 

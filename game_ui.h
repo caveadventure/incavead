@@ -201,45 +201,66 @@ std::string show_stats(const Player& p) {
         ret = nlp::message("\n\2Character level:\1 %d\n", p.get_level()+1);
     }
 
-    ret += "\n\2Your attack capabilities:\1\n\n";
-
     damage::attacks_t att;
     p.get_attack(att);
 
-    for (const auto& i : att.attacks) {
+    if (att.attacks.empty()) {
 
-        // HACK
-        if (i.val < 0.01)
-            continue;
+        ret += "\n\2You have no attack capabilities.\1\n\n";
 
-        const Damage& dam = damages().get(i.type);
-        std::string s = dam.name;
+    } else {
 
-        if (s.size() < 25) 
-            s += std::string(25 - s.size(), ' ');
+        ret += "\n\2Your attack capabilities:\1\n\n";
 
-        ret += nlp::message("  \1%S\2: %d\n", s, i.val);
+        for (const auto& i : att.attacks) {
+
+            // HACK
+            if (i.val < 0.01)
+                continue;
+
+            const Damage& dam = damages().get(i.type);
+            std::string s = dam.name;
+
+            if (s.size() < 25) 
+                s += std::string(25 - s.size(), ' ');
+
+            ret += nlp::message("  \1%S\2: %d\n", s, i.val);
+        }
     }
-
-    ret += "\n\2Your defense capabilities:\1\n\n";
 
     damage::defenses_t def;
     p.get_defense(def);
 
-    for (const auto& i : def.defenses) {
+    if (def.defenses.empty()) {
 
-        // HACK
-        if (i.second < 0.01)
-            continue;
+        ret += "\n\2You have no defense capabilities.\1\n\n";
 
-        const Damage& dam = damages().get(i.first);
-        std::string s = dam.name;
+    } else {
 
-        if (s.size() < 25) 
-            s += std::string(25 - s.size(), ' ');
+        ret += "\n\2Your defense capabilities:\1\n\n";
 
-        ret += nlp::message("  \1%S\2: %d\n", s, i.second);
+        for (const auto& i : def.defenses) {
+
+            // HACK
+            if (i.second < 0.01)
+                continue;
+
+            const Damage& dam = damages().get(i.first);
+            std::string s = dam.name;
+
+            if (s.size() < 25) 
+                s += std::string(25 - s.size(), ' ');
+
+            ret += nlp::message("  \1%S\2: %d\n", s, i.second);
+        }
     }
+
+    auto j = constants().starsigns.names.find(p.starsign.sign);
+
+    std::string sign(j == constants().starsigns.names.end() ? "Unnamed" : j->second);
+
+    ret += nlp::message("\n\2Your starsign:\1 %d-%S\n\n", p.starsign.day, sign);
+
 
     if (p.ailments.size() > 0) {
         ret += "\n\nYour degenerative ailments:\n\n";

@@ -206,6 +206,15 @@ struct Player {
 
     std::map<unsigned int, tag_t> ailments;
 
+    struct starsign_t {
+        unsigned int day;
+        unsigned int sign;
+
+        starsign_t() : day(0), sign(0) {}
+    };
+
+    starsign_t starsign;
+
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
@@ -425,6 +434,8 @@ struct reader<Player> {
         serialize::read(s, p.overmap.scale);
         serialize::read(s, p.num_replay_codes);
         serialize::read(s, p.ailments);
+        serialize::read(s, p.starsign.day);
+        serialize::read(s, p.starsign.sign);
     }
 };
 
@@ -477,6 +488,8 @@ struct writer<Player> {
         serialize::write(s, p.overmap.scale);
         serialize::write(s, p.num_replay_codes);
         serialize::write(s, p.ailments);
+        serialize::write(s, p.starsign.day);
+        serialize::write(s, p.starsign.sign);
     }
 };
 

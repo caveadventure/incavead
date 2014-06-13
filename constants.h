@@ -128,6 +128,16 @@ struct ConstantsBank {
 
     unsigned int player_level_cap;
 
+    struct starsigns_t {
+        time_t zero;
+        unsigned int nday;
+        unsigned int nsign;
+        std::map<unsigned int, std::string> names;
+
+        starsigns_t() : zero(0), nday(13), nsign(20) {}
+    };
+
+    starsigns_t starsigns;
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
