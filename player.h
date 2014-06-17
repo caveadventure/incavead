@@ -211,6 +211,25 @@ struct Player {
         unsigned int sign;
 
         starsign_t() : day(0), sign(0) {}
+
+        void init(time_t now, time_t zero, unsigned int nday, unsigned int nsign) {
+
+            long diff = now - zero;
+
+            int day = diff % nday;
+            int sign = diff % nsign;
+
+            if (day < 0) {
+                day = nday + day;
+            }
+
+            if (sign < 0) {
+                sign = nsign + sign;
+            }
+
+            day = day + 1;
+            sign = sign + 1;
+        }
     };
 
     starsign_t starsign;

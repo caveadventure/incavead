@@ -64,53 +64,59 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     add_ailments(p, state);
 
-    // Change item counts based on moon phase and item flavor.
-
-    const auto& fmf = constants().flavor_moon_frequency;
-    double phase = state.moon.pi.phase_n;
-
-    state.designs_counts.change_counts(
-        [&](tag_t tag, unsigned int count) {
-
-            tag_t flavor = designs().get(tag).flavor;
-
-            auto i = fmf.find(flavor);
-
-            if (i == fmf.end())
-                return count;
-            
-            const auto& f = i->second;
-            
-            double mult = 
-                gaussian_function(f.height, f.mean, f.deviation, phase) +
-                gaussian_function(f.height, f.mean, f.deviation, 1.0 - phase);
-
-            unsigned int newcount = std::max(1.0, mult * count);
-
-            return newcount;
-        });
-
     // Calculate the player's starsign.
     // The zero date of July 30 2012 is the mythological date of first git commit in this repo. :)
 
     const auto& starsigns = constants().starsigns;
 
-    long diff = seed - starsigns.zero;
+    p.starsign.init(seed, starsigns.zero, starsigns.nday, starsigns.nsign);
 
-    int day = diff % starsigns.nday;
-    int sign = diff % starsigns.nsign;
+    // Change item counts based on moon phase, item flavor and starsign.
 
-    if (day < 0) {
-        day = starsigns.nday + day;
-    }
+    const auto& fmf = constants().flavor_moon_frequency;
+    double phase = state.moon.pi.phase_n;
 
-    if (sign < 0) {
-        sign = starsigns.nsign + sign;
-    }
+    const auto& starsign = p.starsign;
 
-    p.starsign.day = day + 1;
-    p.starsign.sign = sign + 1;
+    state.designs_counts.change_counts(
+        [&](tag_t tag, unsigned int count) {
 
+            const Design& d = designs().get(tag);
+
+            tag_t flavor = d.flavor;
+
+            auto i = fmf.find(flavor);
+
+            double mult = 1.0;
+
+            if (i != fmf.end()) {
+            
+                const auto& f = i->second;
+            
+                mult = 
+                    gaussian_function(f.height, f.mean, f.deviation, phase) +
+                    gaussian_function(f.height, f.mean, f.deviation, 1.0 - phase);
+            }
+
+            if (d.starsign.sign > 0 && d.starsign.sign != starsign.sign) {
+                count = -1;
+
+            } else if (d.starsign.day > 0) {
+
+                count -= std::abs(d.starsign.day - starsign.day);
+            }
+
+            count = mult * count;
+
+            if (count == 0) {
+                count = 1;
+
+            } else if (count < 0) {
+                count = 0;
+            }
+
+            return count;
+        });
 }
 
 void Game::dispose(GameState& state) {

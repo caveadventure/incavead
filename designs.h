@@ -154,6 +154,15 @@ struct Design {
 
     int change_count;
 
+    struct starsign_t {
+        unsigned int day;
+        unsigned int sign;
+        
+        starsign_t() : day(0), sign(0) {}
+    };
+
+    starsign_t starsign;
+
     Design() : level(0), count(0), bonus_a_count(0), bonus_b_count(0), count_is_only_one(false), stackrange(0), 
                heal(0), feed(0), karma(0), consume_luck(0), usable(false), use_for_free(false), destructible(false), 
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 
