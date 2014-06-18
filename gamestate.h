@@ -65,6 +65,15 @@ struct GameState {
 
         summon_genus_t summon_genus;
 
+        struct summon_t {
+            tag_t species;
+            unsigned int count;
+
+            summon_t() : count(0) {}
+        };
+
+        summon_t summon;
+
         struct message_t {
             std::string message;
             bool important;
@@ -115,6 +124,8 @@ struct reader<GameState::trigger_t> {
         serialize::read(s, t.summon_genus.count);
         serialize::read(s, t.summon_genus.x);
         serialize::read(s, t.summon_genus.y);
+        serialize::read(s, t.summon.species);
+        serialize::read(s, t.summon.count);
         serialize::read(s, t.message.message);
         serialize::read(s, t.message.important);
     }
@@ -167,6 +178,8 @@ struct writer<GameState::trigger_t> {
         serialize::write(s, t.summon_genus.count);
         serialize::write(s, t.summon_genus.x);
         serialize::write(s, t.summon_genus.y);
+        serialize::write(s, t.summon.species);
+        serialize::write(s, t.summon.count);
         serialize::write(s, t.message.message);
         serialize::write(s, t.message.important);
     }

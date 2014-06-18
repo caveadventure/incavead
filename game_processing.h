@@ -448,6 +448,9 @@ void Game::process_world(GameState& state,
         }
     }
 
+
+    std::vector<summons_t> summons;
+
     if (state.triggers.size() > 0) {
         
         auto i = state.triggers.begin();
@@ -483,6 +486,11 @@ void Game::process_world(GameState& state,
                 }
             }
 
+            if (!trig.summon.species.null()) {
+
+                summons.push_back(summons_t{p.px, p.py, trig.summon.species, trig.summon.count, tag_t(), ""});
+            }
+
             if (trig.message.message.size() > 0) {
 
                 state.render.do_message(trig.message.message, trig.message.important);
@@ -491,8 +499,6 @@ void Game::process_world(GameState& state,
             i = state.triggers.erase(i);
         }
     }
-
-    std::vector<summons_t> summons;
 
     state.monsters.process(state.render, 
                            std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),

@@ -239,6 +239,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (!d.summon.species.null()) {
+        
+        state.triggers[state.ticks].summon.species = d.summon.species;
+        state.triggers[state.ticks].summon.count = d.summon.count;
+
+        ret = true;
+    }
+
     if (!ret) {
         items::Item tmp2;
         p.inv.place(slot, tmp, tmp2);
