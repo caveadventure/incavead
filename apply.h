@@ -68,6 +68,10 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     bool ret = false;
 
+    if (d.action_name.size() > 0) {
+        state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
+    }
+
     if (!d.attacks.empty()) {
 
         damage::defenses_t defenses;
@@ -86,7 +90,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (d.feed > 0) {
 
         p.food.inc(d.feed);
-        state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
+
         ret = true;
     } 
 
