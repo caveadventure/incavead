@@ -156,7 +156,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, 0, m.tag, c.msg});
+            summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, 1, m.tag, c.msg});
         }
     }
 

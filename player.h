@@ -214,10 +214,10 @@ struct Player {
 
         void init(time_t now, time_t zero, unsigned int nday, unsigned int nsign) {
 
-            long diff = now - zero;
+            long diff = (now - zero) / (3600 * 24);
 
-            int day = diff % nday;
-            int sign = diff % nsign;
+            day = diff % nday;
+            sign = diff % nsign;
 
             if (day < 0) {
                 day = nday + day;
@@ -229,6 +229,7 @@ struct Player {
 
             day = day + 1;
             sign = sign + 1;
+            
         }
     };
 

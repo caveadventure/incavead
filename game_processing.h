@@ -79,7 +79,7 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
     const auto& starsign = p.starsign;
 
     state.designs_counts.change_counts(
-        [&](tag_t tag, unsigned int count) {
+        [&](tag_t tag, unsigned int _count) {
 
             const Design& d = designs().get(tag);
 
@@ -97,6 +97,8 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
                     gaussian_function(f.height, f.mean, f.deviation, phase) +
                     gaussian_function(f.height, f.mean, f.deviation, 1.0 - phase);
             }
+
+            int count = _count;
 
             if (d.starsign.sign > 0 && d.starsign.sign != starsign.sign) {
                 count = -1;
@@ -519,7 +521,7 @@ void Game::process_world(GameState& state,
 
         } else {
             nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                       i.x, i.y, &p.px, &p.py, i.summontag, 1, false);
+                                       i.x, i.y, &p.px, &p.py, i.summontag, i.arg, false);
         }
 
         if (nm > 0 && state.render.is_in_fov(i.x, i.y) && i.msg.size() > 0) {
