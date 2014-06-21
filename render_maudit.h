@@ -1,16 +1,10 @@
 #ifndef __RENDER_H
 #define __RENDER_H
 
-#include <math.h>
-#include <stdlib.h>
-
 #include <list>
 #include <stdexcept>
 
 #include "libmaudit/maudit.h"
-
-//#include <iostream>
-//#include <sys/time.h>
 
 #include "fov.h"
 #include "bresenham.h"

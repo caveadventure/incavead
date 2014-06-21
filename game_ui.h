@@ -190,7 +190,7 @@ std::string show_stats(const Player& p) {
 
     std::string ret;
 
-    tag_t polytag = p.polymorph_species;
+    tag_t polytag = p.polymorph.species;
 
     if (!polytag.null()) {
 
@@ -319,10 +319,10 @@ std::string show_spells(const Player& p, const GameState& state) {
         ++z;
     }
 
-    if (p.polymorph_species.null())
+    if (p.polymorph.species.null())
         return m;
 
-    const Species& s = species().get(p.polymorph_species);
+    const Species& s = species().get(p.polymorph.species);
 
     for (const auto& pb : s.blast) {
 
@@ -382,9 +382,9 @@ void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
         ++(state.ticks);
     }
 
-    if (!p.polymorph_species.null()) {
+    if (!p.polymorph.species.null()) {
 
-        const Species& s = species().get(p.polymorph_species);
+        const Species& s = species().get(p.polymorph.species);
 
         size_t x = z - size3;
 

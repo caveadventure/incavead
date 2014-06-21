@@ -53,7 +53,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     if (nx < 0 || ny < 0) 
         return;
 
-    tag_t poly = p.polymorph_species;
+    tag_t poly = p.polymorph.species;
 
     if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
         !state.grid.is_walk(nx, ny))
@@ -143,7 +143,12 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
         return;
     }
 
-    ++(state.ticks);
+    if (p.fast.turns > 0 && (p.fast.turns % p.fast.slice) == 0) {
+        --(p.fast.turns);
+
+    } else {
+        ++(state.ticks);
+    }
 
     if (!terrain_immune && state.features.get(p.px, p.py, feat)) {
 
@@ -160,13 +165,11 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
         }
     }
 
-    //state.render.unset_skin(p.px, p.py, 5);
     state.render.invalidate(p.px, p.py);
 
     p.px = nx;
     p.py = ny;
 
-    //state.render.set_skin(p.px, p.py, 5, constants().player_skin[n_skin]);
     state.render.invalidate(p.px, p.py);
 
     move_player(p, state);

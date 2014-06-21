@@ -1,9 +1,6 @@
 #ifndef __GRID_H
 #define __GRID_H
 
-#include <math.h>
-#include <stdlib.h>
-
 #include "neighbors.h"
 #include "random.h"
 

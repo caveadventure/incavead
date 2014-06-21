@@ -121,10 +121,10 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
-    if (d.heal_polymorph && !p.polymorph_species.null()) {
+    if (d.heal_polymorph && !p.polymorph.species.null()) {
         
-        p.polymorph_species = tag_t();
-        p.polymorph_turns = 0;
+        p.polymorph.species = tag_t();
+        p.polymorph.turns = 0;
         state.render.do_message("You return to your original form.", true);
         state.render.invalidate(p.px, p.py);
         ret = true;
@@ -249,12 +249,22 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     if (!d.polymorph.species.null()) {
 
-        p.polymorph_species = d.polymorph.species;
-        p.polymorph_turns = std::max(state.rng.gauss(d.polymorph.turns.mean, d.polymorph.turns.deviation), 1.0);
+        p.polymorph.species = d.polymorph.species;
+        p.polymorph.turns = std::max(state.rng.gauss(d.polymorph.turns.mean, d.polymorph.turns.deviation), 1.0);
 
         state.render.invalidate(p.px, p.py);
         state.render.do_message(d.polymorph.msg, true);
 
+        ret = true;
+    }
+
+    if (d.fast.slice > 0) {
+        
+        p.fast.slice = d.fast.slice;
+        p.fast.turns = std::max(state.rng.gauss(d.fast.turns.mean, d.fast.turns.deviation), 1.0);
+
+        state.render.do_message("You feel your movements speed up unnaturally.", true);
+        
         ret = true;
     }
 
@@ -472,10 +482,10 @@ inline bool start_throw_item(Player& p, tag_t slot, GameState& state) {
 
 inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
 
-    if (p.polymorph_species.null())
+    if (p.polymorph.species.null())
         return false;
 
-    const Species& s = species().get(p.polymorph_species);
+    const Species& s = species().get(p.polymorph.species);
 
     if (i >= s.blast.size())
         return false;
@@ -489,10 +499,10 @@ inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, 
 
 inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph_species.null())
+    if (p.polymorph.species.null())
         return false;
 
-    const Species& s = species().get(p.polymorph_species);
+    const Species& s = species().get(p.polymorph.species);
 
     if (i >= s.blast.size())
         return false;
@@ -532,10 +542,10 @@ inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
 
 inline bool end_poly_cloud(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
 
-    if (p.polymorph_species.null())
+    if (p.polymorph.species.null())
         return false;
 
-    const Species& s = species().get(p.polymorph_species);
+    const Species& s = species().get(p.polymorph.species);
 
     if (i >= s.cast_cloud.size())
         return false;
@@ -549,10 +559,10 @@ inline bool end_poly_cloud(Player& p, size_t i, unsigned int x, unsigned int y, 
 
 inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph_species.null())
+    if (p.polymorph.species.null())
         return false;
 
-    const Species& s = species().get(p.polymorph_species);
+    const Species& s = species().get(p.polymorph.species);
 
     if (i >= s.cast_cloud.size())
         return false;

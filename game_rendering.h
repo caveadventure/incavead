@@ -114,7 +114,7 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
     if (x == p.px && y == p.py) {
 
-        tag_t polytag = p.polymorph_species;
+        tag_t polytag = p.polymorph.species;
 
         if (!polytag.null()) {
             s = species().get(polytag).skin[n_skin];

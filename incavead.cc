@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+#include <math.h>
+//#include <stdlib.h>
+
 #include "libmaudit/maudit.h"
 
 #include "debug_benchmark.h"

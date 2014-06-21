@@ -119,10 +119,25 @@ struct Player {
     dig_state_t dig;
     bool digging;
 
-    tag_t polymorph_species;
-    unsigned int polymorph_turns;
+    struct polymorph_t {
+        tag_t species;
+        unsigned int turns;
+
+        polymorph_t() : turns(0) {}
+    };
+
+    polymorph_t polymorph;
 
     size_t polymorph_ability;
+
+    struct fast_t {
+        unsigned int slice;
+        unsigned int turns;
+        
+        fast_t() : slice(1), turns(0) {}
+    };
+
+    fast_t fast;
 
     inventory_t inv;
 
@@ -238,7 +253,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), blind(0), digging(false), polymorph_turns(0), polymorph_ability(0), state(MAIN), 
+               sleep(0), blind(0), digging(false), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -276,9 +291,9 @@ struct Player {
 
     unsigned int get_level() const {
 
-        if (!polymorph_species.null()) {
+        if (!polymorph.species.null()) {
 
-            return species().get(polymorph_species).get_computed_level();
+            return species().get(polymorph.species).get_computed_level();
         }
 
         return level;
@@ -286,9 +301,9 @@ struct Player {
 
     unsigned int get_computed_level(rnd::Generator& rng) {
 
-        if (!polymorph_species.null()) {
+        if (!polymorph.species.null()) {
 
-            return species().get(polymorph_species).get_computed_level();
+            return species().get(polymorph.species).get_computed_level();
         }
 
         unsigned int _lev = std::min(level, constants().player_level_cap);
@@ -330,9 +345,9 @@ struct Player {
 
     void get_attack(damage::attacks_t& out) const {
 
-        if (!polymorph_species.null()) {
+        if (!polymorph.species.null()) {
             
-            out = species().get(polymorph_species).attacks;
+            out = species().get(polymorph.species).attacks;
 
         } else {
 
@@ -342,9 +357,9 @@ struct Player {
 
     void get_defense(damage::defenses_t& out) const {
 
-        if (!polymorph_species.null()) {
+        if (!polymorph.species.null()) {
             
-            out = species().get(polymorph_species).defenses;
+            out = species().get(polymorph.species).defenses;
 
         } else {
 
@@ -354,9 +369,9 @@ struct Player {
 
     unsigned int get_lightradius() const {
 
-        if (!polymorph_species.null()) {
+        if (!polymorph.species.null()) {
             
-            return species().get(polymorph_species).range;
+            return species().get(polymorph.species).range;
 
         } else {
 
@@ -426,9 +441,11 @@ struct reader<Player> {
         serialize::read(s, p.dig.y);
         serialize::read(s, p.dig.h);
         serialize::read(s, p.digging);
-        serialize::read(s, p.polymorph_species);
-        serialize::read(s, p.polymorph_turns);
+        serialize::read(s, p.polymorph.species);
+        serialize::read(s, p.polymorph.turns);
         serialize::read(s, p.polymorph_ability);
+        serialize::read(s, p.fast.slice);
+        serialize::read(s, p.fast.turns);
         serialize::read(s, p.inv);
         serialize::read(s, p.state);
         serialize::read(s, p.look.x);
@@ -480,9 +497,11 @@ struct writer<Player> {
         serialize::write(s, p.dig.y);
         serialize::write(s, p.dig.h);
         serialize::write(s, p.digging);
-        serialize::write(s, p.polymorph_species);
-        serialize::write(s, p.polymorph_turns);
+        serialize::write(s, p.polymorph.species);
+        serialize::write(s, p.polymorph.turns);
         serialize::write(s, p.polymorph_ability);
+        serialize::write(s, p.fast.slice);
+        serialize::write(s, p.fast.turns);
         serialize::write(s, p.inv);
         serialize::write(s, p.state);
         serialize::write(s, p.look.x);

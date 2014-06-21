@@ -1,4 +1,6 @@
 
+#include <math.h>
+
 #include "libmaudit/types.h"
 
 #include "common_types.h"

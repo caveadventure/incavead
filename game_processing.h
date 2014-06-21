@@ -177,8 +177,8 @@ void Game::endgame(GameState& state, const std::string& name, unsigned int addre
     if (name != "_") {
         std::string polyform;
 
-        if (!p.polymorph_species.null()) {
-            polyform = nlp::message(" %s", species().get(p.polymorph_species));
+        if (!p.polymorph.species.null()) {
+            polyform = nlp::message(" %s", species().get(p.polymorph.species));
         }
 
         bones::bones().add(name, p, constants().achievements, polyform, address, seed);
@@ -431,13 +431,13 @@ void Game::process_world(GameState& state,
     bool terrain_immune = false;
     double hunger_rate = consts.hunger_rate;
 
-    if (!p.polymorph_species.null()) {
+    if (!p.polymorph.species.null()) {
 
-        const Species& s = species().get(p.polymorph_species);
+        const Species& s = species().get(p.polymorph.species);
 
         terrain_immune = s.flags.terrain_immune;
 
-        if (s.hunger_rate >= 0) {
+        if (std::isfinite(s.hunger_rate)) {
             hunger_rate = s.hunger_rate;
         }
     }
@@ -603,13 +603,17 @@ void Game::process_world(GameState& state,
         --(p.blind);
     }
 
-    if (p.polymorph_turns > 0) {
-        --(p.polymorph_turns);
+    if (p.polymorph.turns > 0) {
+        --(p.polymorph.turns);
 
-        if (p.polymorph_turns == 0) {
-            p.polymorph_species = tag_t();
+        if (p.polymorph.turns == 0) {
+            p.polymorph.species = tag_t();
             state.render.invalidate(p.px, p.py);
         }
+    }
+
+    if (p.fast.turns > 0) {
+        --(p.fast.turns);
     }
 
     if (p.food.val <= -3.0 && p.health.val > -3.0) {

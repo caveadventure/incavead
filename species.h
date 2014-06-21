@@ -174,7 +174,7 @@ struct Species {
     double hunger_rate;
 
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), range(0), clumpsize(), flags(), karma(0), hunger_rate(-1) {}
+                move(move_t::walk), range(0), clumpsize(), flags(), karma(0), hunger_rate(NAN) {}
 
 
     unsigned int get_computed_level() const {

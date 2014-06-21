@@ -144,8 +144,8 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
     if (polyturns > 0) {
 
-        p.polymorph_species = mon.tag;
-        p.polymorph_turns = polyturns;
+        p.polymorph.species = mon.tag;
+        p.polymorph.turns = polyturns;
         p.sleep = mon.sleep;
         p.blind = mon.blind;
         p.health.val = mon.health;
@@ -301,7 +301,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
-    bool allow_gain_level = (!s.flags.plant && p.polymorph_species.null());
+    bool allow_gain_level = (!s.flags.plant && p.polymorph.species.null());
 
     if (mon.health - totdamage <= -3) {
 
@@ -437,7 +437,7 @@ inline double defend(Player& p,
 
         const Damage& dam = damages().get(v.type);
 
-        if (p.polymorph_species.null()) {
+        if (p.polymorph.species.null()) {
 
             if (!dam.flags.robot(false) || 
                 !dam.flags.undead(false) ||
@@ -449,7 +449,7 @@ inline double defend(Player& p,
 
         } else {
 
-            const Species& sp = species().get(p.polymorph_species);
+            const Species& sp = species().get(p.polymorph.species);
 
             if (!dam.flags.robot(sp.flags.robot) || 
                 !dam.flags.undead(sp.flags.undead) ||
