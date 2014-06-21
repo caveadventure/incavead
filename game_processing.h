@@ -359,6 +359,10 @@ void Game::process_world(GameState& state,
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
 
+    //
+    const auto& consts = constants();
+
+
     // Ailments.
 
     if (p.ailments.size() > 0) {
@@ -369,9 +373,9 @@ void Game::process_world(GameState& state,
 
         if (a != p.ailments.end()) {
 
-            auto b = constants().ailments.find(a->second);
+            auto b = consts.ailments.find(a->second);
 
-            if (b != constants().ailments.end()) {
+            if (b != consts.ailments.end()) {
 
                 size_t n = defend(p, b->second, state);
 
@@ -420,15 +424,22 @@ void Game::process_world(GameState& state,
         },
 
         // Max number of cells
-        constants().max_celauto_cells
+        consts.max_celauto_cells
         );
 
 
     bool terrain_immune = false;
+    double hunger_rate = consts.hunger_rate;
 
     if (!p.polymorph_species.null()) {
 
-        terrain_immune = species().get(p.polymorph_species).flags.terrain_immune;
+        const Species& s = species().get(p.polymorph_species);
+
+        terrain_immune = s.flags.terrain_immune;
+
+        if (s.hunger_rate >= 0) {
+            hunger_rate = s.hunger_rate;
+        }
     }
 
 
@@ -557,8 +568,6 @@ void Game::process_world(GameState& state,
         }
     }
 
-    //
-    const auto& consts = constants();
 
     double inc_luck;
     double inc_hunger;
@@ -572,7 +581,7 @@ void Game::process_world(GameState& state,
         p.health.shield += inc_shield;
     }
 
-    p.food.dec(consts.hunger_rate + inc_hunger);
+    p.food.dec(hunger_rate + inc_hunger);
 
     {
         const Levelskin& ls = levelskins().get(p.worldz);

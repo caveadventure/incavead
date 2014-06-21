@@ -247,6 +247,17 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (!d.polymorph.species.null()) {
+
+        p.polymorph_species = d.polymorph.species;
+        p.polymorph_turns = std::max(state.rng.gauss(d.polymorph.turns.mean, d.polymorph.turns.deviation), 1.0);
+
+        state.render.invalidate(p.px, p.py);
+        state.render.do_message(d.polymorph.msg, true);
+
+        ret = true;
+    }
+
     if (!ret) {
         items::Item tmp2;
         p.inv.place(slot, tmp, tmp2);

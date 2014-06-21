@@ -345,6 +345,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ spe.morph.chance = toreal(state.match); }
             ;
 
+        species_hunger_rate = 'hunger_rate' ws1 real %{ spe.hunger_rate = toreal(state.match); };
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
@@ -353,7 +355,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
-            species_morph |
+            species_morph | species_hunger_rate |
             '}'
             ${ fret; })
             ;
@@ -443,8 +445,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
             ws1 real %{ des.luck.back().height = toreal(state.match); }
-            ws1 real %{ des.luck.back().mean = toreal(state.match); }
-            ws1 real %{ des.luck.back().deviation = toreal(state.match); }
+            ws1 real %{ des.luck.back().v.mean = toreal(state.match); }
+            ws1 real %{ des.luck.back().v.deviation = toreal(state.match); }
             ;
 
         design_hunger = 'hunger' ws1 real %{ des.hunger = toreal(state.match); };
@@ -502,6 +504,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ des.summon.count = toint(state.match); }
             ;
 
+        design_polymorph = 'polymorph' 
+            ws1 tag    %{ des.polymorph.species = tag_t(state.match, tagmem); }
+            ws1 real   %{ des.polymorph.turns.mean = toreal(state.match); }
+            ws1 real   %{ des.polymorph.turns.deviation = toreal(state.match); }
+            ws1 string %{ des.polymorph.msg = state.match; }
+            ;
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -514,7 +523,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
             design_heal_ailments | design_heal_polymorph | design_forbid_wish | design_change_count |
-            design_starsign | design_summon |
+            design_starsign | design_summon | design_polymorph |
             '}'
             ${ fret; })
             ;

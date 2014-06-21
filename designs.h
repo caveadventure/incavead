@@ -102,10 +102,9 @@ struct Design {
 
     struct luck_t {
         double height;
-        double mean;
-        double deviation;
+        mean_deviation_t v;
 
-        luck_t() : height(0), mean(0), deviation(1) {}
+        luck_t() : height(0), v(0, 1) {}
     };
 
     std::vector<luck_t> luck;
@@ -171,6 +170,14 @@ struct Design {
     };
 
     summon_t summon;
+
+    struct polymorph_t {
+        tag_t species;
+        mean_deviation_t turns;
+        std::string msg;
+    };
+
+    polymorph_t polymorph;
 
     Design() : level(0), count(0), bonus_a_count(0), bonus_b_count(0), count_is_only_one(false), stackrange(0), 
                heal(0), feed(0), karma(0), consume_luck(0), usable(false), use_for_free(false), destructible(false), 

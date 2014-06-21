@@ -288,7 +288,7 @@ struct inventory_t {
             }
 
             for (const auto& l : dp.luck) {
-                inc_luck = std::max(inc_luck, gaussian_function(l.height, l.mean, l.deviation, moon_angle));
+                inc_luck = std::max(inc_luck, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
             }
 
             // Hack, 'count_is_only_one' does not apply.
