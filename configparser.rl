@@ -517,6 +517,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real   %{ des.fast.turns.deviation = toreal(state.match); }
             ;
 
+        design_lucky_free_apply = 'lucky_free_apply' %{ des.lucky_free_apply = true; };
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
@@ -529,7 +531,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
             design_heal_ailments | design_heal_polymorph | design_forbid_wish | design_change_count |
-            design_starsign | design_summon | design_polymorph | design_fast |
+            design_starsign | design_summon | design_polymorph | design_fast | design_lucky_free_apply |
             '}'
             ${ fret; })
             ;

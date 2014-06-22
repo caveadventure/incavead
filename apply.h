@@ -268,16 +268,23 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (ret && !d.use_for_free) {
+
+        ++(state.ticks);
+    }
+
+    if (d.lucky_free_apply && p.luck.val > 1.0) {
+
+        double chance = 1.0 - (1.0 / p.luck.val);
+
+        if (state.rng.uniform(0.0, 1.0) < chance) {
+            ret = false;
+        }
+    }
+
     if (!ret) {
         items::Item tmp2;
         p.inv.place(slot, tmp, tmp2);
-
-        return true;
-    }
-
-    if (!d.use_for_free) {
-
-        ++(state.ticks);
     }
 
     return true;
@@ -492,7 +499,7 @@ inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, 
 
     const auto& b = s.blast[i];
 
-    do_monster_blast(p, state, s, x, y, b.radius, b.attacks);
+    do_monster_blast(p, state, s, x, y, b.radius, b.attacks, true);
 
     return true;
 }

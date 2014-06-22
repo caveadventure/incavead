@@ -61,39 +61,40 @@ inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigne
 }
 
 inline void monster_blast_process_point(Player& p, GameState& state, const Species& s,
-                                        unsigned int _x, unsigned int _y, const damage::attacks_t& attacks) {
+                                        unsigned int _x, unsigned int _y, const damage::attacks_t& attacks,
+                                        bool friendly_fire) {
 
     if (_x == p.px && _y == p.py) {
 
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), s, attacks, state);
+        defend(p, defenses, p.get_computed_level(state.rng), s, attacks, state, friendly_fire);
 
     } else {
 
         monsters::Monster mon;
         if (state.monsters.get(_x, _y, mon)) {
 
-            attack_from_env(p, attacks, s.get_computed_level(), state, mon, false);
+            attack_from_env(p, attacks, s.get_computed_level(), state, mon, friendly_fire);
         }
     }
 }
 
 inline void do_monster_blast(Player& p, GameState& state, const Species& s, 
                              unsigned int tx, unsigned int ty, unsigned int rad, 
-                             const damage::attacks_t& attacks) {
+                             const damage::attacks_t& attacks, bool friendly_fire = false) {
 
     if (rad == 0) {
 
-        monster_blast_process_point(p, state, s, tx, ty, attacks);
+        monster_blast_process_point(p, state, s, tx, ty, attacks, friendly_fire);
 
     } else {
 
         state.render.draw_circle(tx, ty, rad, true, s.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
-                                     monster_blast_process_point(p, state, s, _x, _y, attacks);
+                                     monster_blast_process_point(p, state, s, _x, _y, attacks, friendly_fire);
                                  });
     }
 }

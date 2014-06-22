@@ -534,18 +534,18 @@ inline double defend(Player& p,
 inline double defend(Player& p, 
                      const damage::defenses_t& defenses, unsigned int plevel, 
                      const Species& s, const damage::attacks_t& attacks,
-                     GameState& state) {
+                     GameState& state, bool friendly_fire = false) {
 
     size_t tmp;
-    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, false, s, tmp);
+    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s, tmp);
 }
 
 inline double defend(Player& p, 
                      const damage::defenses_t& defenses, unsigned int plevel, 
                      const Species& s,
-                     GameState& state) {
+                     GameState& state, bool friendly_fire = false) {
     
-    return defend(p, defenses, plevel, s, s.attacks, state);
+    return defend(p, defenses, plevel, s, s.attacks, state, friendly_fire);
 }
 
 
