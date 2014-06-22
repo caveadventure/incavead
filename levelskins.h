@@ -98,7 +98,7 @@ struct Levelskin {
                   species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),
-                  number_features(85.0, 10.0),
+                  number_features(160.0, 30.0),
                   has_treasure(false), treasure_level(0)
         {}
 };
