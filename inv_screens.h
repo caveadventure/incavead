@@ -34,7 +34,7 @@ inline std::string select_inv_item(inventory_t& inv, tag_t slot) {
         window += nlp::message("  \2t)\1 Throw item.\n");
     }
 
-    if (d.blast.radius > 0 || d.blast.range > 0 || d.cast_cloud.radius > 0) {
+    if (d.blast.radius > 0 || d.blast.range > 0 || d.cast_cloud.radius > 0 || d.cast_cloud.range > 0) {
         window += nlp::message("  \2f)\1 Fire.\n");
     }
 

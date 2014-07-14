@@ -16,7 +16,12 @@ struct summons_t {
 inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
-    state.render.draw_circle(x, y, r, maudit::color::bright_black, maudit::color::bright_black,
+    const Terrain& tt = terrain().get(terraintag);
+
+    auto fg = tt.skin[0].fore;
+    auto bg = tt.skin[0].back;
+
+    state.render.draw_circle(x, y, r, fg, bg,
                              [&](unsigned int _x, unsigned int _y) {
 
                                  features::Feature tmp;
