@@ -203,32 +203,47 @@ bool process_feature(GameState& state, features::Feature& f, const Terrain& t) {
     return true;
 }
 
+void out_of_view_points(unsigned int px, unsigned int py, GameState& state, unsigned int radius, std::unordered_set<monsters::pt>& points) {
+
+    unsigned int r2 = radius * radius;
+
+    for (int dx = -radius; dx <= radius; ++dx) {
+
+        unsigned int dy = ::sqrt(r2 - dx*dx);
+
+        int x = px + dx;
+
+        if (x < 0 || x > (int)state.neigh.w)
+            continue;
+
+        int y1 = py + dy;
+
+        if (y1 >= 0 && y1 < (int)state.neigh.h) {
+
+            if (reachable(state, x, y1, px, py)) {
+                range.insert(monsters::pt(x, y));
+            }
+        }
+
+        int y2 = py - dy;
+
+        if (y2 >= 0 && y2 < (int)state.neigh.h) {
+            if (reachable(state, x, y1, px, py)) {
+                range.insert(monsters::pt(x, y));
+            }
+        }
+    }
+
+}
+
+
 unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster, unsigned int count) {
 
     int radius = get_lightradius(p, state) + 1;
 
     std::unordered_set<monsters::pt> range;
 
-    for (int dx = -radius; dx <= radius; ++dx) {
-        for (int dy = -radius; dy <= radius; ++dy) {
-
-            int x = p.px + dx;
-            int y = p.py + dy;
-
-            if (x < 0 || y < 0 || x > (int)state.neigh.w || y > (int)state.neigh.h)
-                continue;
-
-            double dist = distance(x, y, p.px, p.py);
-
-            if (dist >= radius && dist <= radius + 1.5) {
-
-                bool r = reachable(state, x, y, p.px, p.py);
-
-                if (r)
-                    range.insert(monsters::pt(x, y));
-            }
-        }
-    }
+    out_of_view_points(p.px, p.py, state, radius, range);
 
     unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
                                              state.species_counts, state.render, 
