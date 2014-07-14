@@ -692,7 +692,7 @@ public:
                     bool atleft = (ontop || cx > view_w / 2);
 
                     unsigned int hl = 0;
-                    unsigned int hpx = (atleft ? 0 : view_w - 14);
+                    unsigned int hpx = (atleft ? 0 : view_w - 15);
 
                     if (fullwidth && hpx & 1)
                         --hpx;
