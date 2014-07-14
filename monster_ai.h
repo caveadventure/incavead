@@ -286,11 +286,11 @@ inline bool move_monster(Player& p, GameState& state,
         do_random = true;
 
     } else if (do_seek && !do_random &&
-               state.render.path_walk(m.xy.first, m.xy.second, p.px, p.py, 1, range, 
-                                      [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-                                          return monster_move_cost(state, s, c, d);
-                                      },
-                                      nxy.first, nxy.second)) {
+               path_walk(state, m.xy.first, m.xy.second, p.px, p.py, 1, range, 
+                         [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
+                             return monster_move_cost(state, s, c, d);
+                         },
+                         nxy.first, nxy.second)) {
 
         // Nothing, nxy is good.
 

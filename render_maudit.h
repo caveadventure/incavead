@@ -8,7 +8,6 @@
 
 #include "fov.h"
 #include "bresenham.h"
-#include "astar.h"
 
 
 namespace serialize {
@@ -182,9 +181,6 @@ struct Grid {
     // transient, not saved in dump.
     bool keylog_do_replay;
     size_t keylog_index;
-
-    astar::Path path;
-
 
     std::vector<ui_symbol_t> ui_symbol_themes;
     ui_symbol_t ui_symbol;
@@ -502,8 +498,6 @@ public:
             grid.resize(w*h);
 
             overlay.resize(w*h);
-
-            path.init(w, h);
         }
     }
 
@@ -1112,19 +1106,6 @@ public:
     }
 
     template <typename FUNC>
-    void draw_fov_circle(unsigned int x, unsigned int y, unsigned int r, 
-                         color_t fore, color_t back,
-                         FUNC func) {
-
-        fov::fov_shadowcasting(w, h, grid, x, y, r);
-
-        _draw_circle(x, y, r, fore, back, 
-                     [this](unsigned int x, unsigned int y) { return _get(pt(x, y)).in_fov; },
-                     func);
-    }
-
-
-    template <typename FUNC>
     void draw_floodfill(neighbors::Neighbors& neigh,
                         unsigned int x, unsigned int y, 
                         color_t fore, color_t back,
@@ -1244,24 +1225,6 @@ public:
         }
 
         return m;
-    }
-
-    template <typename FUNC>
-    bool path_walk(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1,
-                   unsigned int n, unsigned int cutoff, FUNC cost,
-                   unsigned int& xo, unsigned int& yo) {
-
-
-        bool tmp = path.compute(x0, y0, x1, y1, 1.41, cutoff, cost);
-
-        if (!tmp) return false;
-
-        for (unsigned int i = 0; i < n; ++i) {
-            if (!path.walk(xo, yo))
-                return false;
-        }
-
-        return true;
     }
 
 };

@@ -26,9 +26,13 @@ struct Path {
 
     std::vector< std::pair<unsigned int, unsigned int> > path;
 
-    Path() {}
+    Path() : w(0), h(0) {}
 
     void init(unsigned int _w, unsigned int _h) {
+
+        if (w == _w && h == _h)
+            return;
+
         w = _w;
         h = _h;
         grid.resize(w*h);
@@ -37,7 +41,9 @@ struct Path {
     }
 
     template <typename FUNC>
-    bool compute(unsigned int _ox, unsigned int _oy, unsigned int _dx, unsigned int _dy, float _diagCost, unsigned int cutoff, FUNC walk_cost) {
+    bool compute(unsigned int _ox, unsigned int _oy, unsigned int _dx, unsigned int _dy, 
+                 float _diagCost, unsigned int cutoff, FUNC walk_cost) {
+
         ox = _ox;
         oy = _oy;
         dx = _dx;
@@ -158,7 +164,8 @@ private:
 
                         heap.push_back(coffset);
 
-                        std::push_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
+                        std::push_heap(heap.begin(), heap.end(), 
+                                       [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
 
                     } else if (previousCovered > covered) {
 
@@ -166,7 +173,8 @@ private:
                         heur[coffset] -= (previousCovered - covered);
                         prev[coffset] =  prevdirs[i];
 
-                        std::make_heap(heap.begin(), heap.end(), [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
+                        std::make_heap(heap.begin(), heap.end(), 
+                                       [this](size_t a, size_t b) { return (heur[a] > heur[b]); });
 
                     }
                 }

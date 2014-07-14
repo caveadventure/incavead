@@ -1,6 +1,7 @@
 #ifndef __UTILSTUFF_H
 #define __UTILSTUFF_H
 
+
 double pow2(double a) {
     return a*a;
 }
@@ -19,36 +20,42 @@ inline double distance(double ax, double ay, double bx, double by) {
 }
 
 inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
-    unsigned int _x = ax;
-    unsigned int _y = ay;
 
-    XXX
+    bresenham::Line line(ax, ay, bx, by);
 
-    state.render.draw_line(ax, ay, bx, by, false, 
-                           maudit::color::dim_red, maudit::color::bright_white,
-                           [&](unsigned int x, unsigned int y) {
-                                   
-                               if (x == ax && y == ay)
-                                   return true;
+    unsigned int x = ax;
+    unsigned int y = ay;
 
-                               if (state.render.is_walkblock(x, y) ||
-                                   state.render.is_viewblock(x, y))
-                                   return false;
+    while (1) {
 
-                               _x = x;
-                               _y = y;
-                               return true;
-                           });
+        if (!state.grid.is_walk(x, y))
+            break;
 
-    if (_x == bx && _y == by) return true;
+        features::Feature feat;
+
+        if (state.features.get(x, y, feat)) {
+
+            const Terrain& t = terrain().get(feat.tag);
+
+            if (t.viewblock || t.walkblock)
+                break;
+        }
+
+        bool ret = line.step((int&)x, (int&)y);
+
+        if (!ret)
+            return true;
+    }
+
     return false;
 }
 
-void radial_points(unsigned int px, unsigned int py, GameState& state, unsigned int radius, std::unordered_set< std::pair<unsigned int, unsigned int> >& points) {
+void radial_points(unsigned int px, unsigned int py, GameState& state, unsigned int radius, 
+                   std::unordered_set<neighbors::pt>& points) {
 
     unsigned int r2 = radius * radius;
 
-    for (int dx = -radius; dx <= radius; ++dx) {
+    for (int dx = -radius; dx <= (int)radius; ++dx) {
 
         unsigned int dy = ::sqrt(r2 - dx*dx);
 
@@ -62,19 +69,38 @@ void radial_points(unsigned int px, unsigned int py, GameState& state, unsigned 
         if (y1 >= 0 && y1 < (int)state.neigh.h) {
 
             if (reachable(state, x, y1, px, py)) {
-                range.insert(monsters::pt(x, y));
+                points.insert(neighbors::pt(x, y1));
             }
         }
 
         int y2 = py - dy;
 
         if (y2 >= 0 && y2 < (int)state.neigh.h) {
-            if (reachable(state, x, y1, px, py)) {
-                range.insert(monsters::pt(x, y));
+            if (reachable(state, x, y2, px, py)) {
+                points.insert(neighbors::pt(x, y2));
             }
         }
     }
-
 }
+
+
+template <typename FUNC>
+bool path_walk(GameState& state, 
+               unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1,
+               unsigned int n, unsigned int cutoff, FUNC cost,
+               unsigned int& xo, unsigned int& yo) {
+
+    bool tmp = state.path.compute(x0, y0, x1, y1, 1.41, cutoff, cost);
+
+    if (!tmp) return false;
+
+    for (unsigned int i = 0; i < n; ++i) {
+        if (!state.path.walk(xo, yo))
+            return false;
+    }
+
+    return true;
+}
+
 
 #endif

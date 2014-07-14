@@ -9,6 +9,7 @@
 
 #include "worldkey.h"
 
+#include "astar.h"
 #include "render_maudit.h"
 
 #include "moon.h"
@@ -28,6 +29,7 @@ struct GameState {
     celauto::CaMap camap;
     grid::Map grid;
     grender::Grid render;
+    astar::Path path;
     moon::Moon moon;
 
     counters::Counts designs_counts;
@@ -164,6 +166,8 @@ struct reader<GameState> {
 
         serialize::read(s, state.triggers);
         serialize::read(s, state.window_stack);
+
+        state.path.init(state.grid.w, state.grid.h);
     }
 };
 
