@@ -252,8 +252,8 @@ inline bool move_monster(Player& p, GameState& state,
         return false;
     }
 
-    if (m.fear > 0) {
-        state.monsters.change(m, [](monsters::Monster& m) { --(m.fear); });
+    if (m.stun > 0) {
+        state.monsters.change(m, [](monsters::Monster& m) { --(m.stun); });
     }
 
     double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
@@ -284,7 +284,7 @@ inline bool move_monster(Player& p, GameState& state,
         }
     }
 
-    if (m.fear > 0 || s.ai == Species::ai_t::random) {
+    if (s.ai == Species::ai_t::random) {
         do_random = true;
 
     } else if (s.ai == Species::ai_t::inrange_random && dist <= range) {
@@ -331,8 +331,19 @@ inline bool move_monster(Player& p, GameState& state,
         nxy = tmp[state.rng.n(tmp.size())];
     }
 
-    //if (!monsters::Monsters::is_walkable(state.grid, s, nxy))
-    //    return false;
+    if (m.stun > 0) {
+        
+        if (m.xy.first != nxy.first && state.rng.range(0, 1)) {
+            nxy.first = m.xy.first + m.xy.first - nxy.first;
+        }
+
+        if (m.xy.second != nxy.second && state.rng.range(0, 1)) {
+            nxy.second = m.xy.second + m.xy.second - nxy.second;
+        }
+
+        if (monster_move_cost(state, s, nxy.first, nxy.second) == 0.0f)
+            return false;
+    }
 
     if (nxy.first == p.px && nxy.second == p.py) {
 

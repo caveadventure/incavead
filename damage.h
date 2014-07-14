@@ -23,7 +23,7 @@ struct Damage {
     };
 
     damage_to_turns_t sleepturns;
-    damage_to_turns_t scareturns;
+    damage_to_turns_t stunturns;
     damage_to_turns_t blindturns;
 
     double threshold;

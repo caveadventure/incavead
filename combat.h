@@ -93,7 +93,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 
 inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
-                                  double& totdamage, double& totmagic, double& totsleep, double& totfear, 
+                                  double& totdamage, double& totmagic, double& totsleep, double& totstun, 
                                   double& totblind, double& totpoly,
                                   std::set<tag_t>& types,
                                   bool& mortal) {
@@ -123,7 +123,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         return;
 
     unsigned int sleepturns = dam.sleepturns(dmg);
-    unsigned int scareturns = dam.scareturns(dmg);
+    unsigned int stunturns = dam.stunturns(dmg);
     unsigned int blindturns = dam.blindturns(dmg);
     unsigned int polyturns = dam.player_poly(dmg);
 
@@ -137,9 +137,9 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         totblind += blindturns;
     }
 
-    if (scareturns > 0) {
-        state.monsters.change(mon, [scareturns](monsters::Monster& m) { m.fear += scareturns; });
-        totfear += scareturns;
+    if (stunturns > 0) {
+        state.monsters.change(mon, [stunturns](monsters::Monster& m) { m.stun += stunturns; });
+        totstun += stunturns;
     }
 
     if (polyturns > 0) {
@@ -217,7 +217,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     double totdamage = 0.0;
     double totmagic = 0.0;
     double totsleep = 0.0;
-    double totfear = 0.0;
+    double totstun = 0.0;
     double totblind = 0.0;
     double totpoly = 0.0;
     bool mortal = false;
@@ -227,7 +227,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totpoly,
+                              totdamage, totmagic, totsleep, totstun, totblind, totpoly,
                               types, mortal);
     }
 
@@ -269,7 +269,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     double totdamage = 0.0;
     double totmagic = 0.0;
     double totsleep = 0.0;
-    double totfear = 0.0;
+    double totstun = 0.0;
     double totblind = 0.0;
     double totpoly = 0.0;
     bool mortal = false;
@@ -279,7 +279,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     for (const auto& v : attack_res) {
 
         attack_damage_monster(v, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totfear, totblind, totpoly,
+                              totdamage, totmagic, totsleep, totstun, totblind, totpoly,
                               types, mortal);
     }
 
@@ -289,8 +289,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         state.render.do_message(nlp::message("%s falls asleep.", s));
     }
 
-    if (totfear > 0) {
-        state.render.do_message(nlp::message("%s flees in terror.", s));
+    if (totstun > 0) {
+        state.render.do_message(nlp::message("%s is stunned.", s));
     }
 
     if (totblind > 0) {

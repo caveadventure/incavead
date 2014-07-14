@@ -75,17 +75,6 @@ struct ConstantsBank {
 
     skins player_skin;
 
-    struct damage_to_turns_t {
-        int scale;
-        int offset;
-        
-        damage_to_turns_t(int s = 0, int o = 0) : scale(s), offset(o) {}
-    };
-
-    damage_to_turns_t damage_to_sleepturns;
-    damage_to_turns_t damage_to_scareturns;
-    damage_to_turns_t damage_to_blindturns;
-
     unsigned int blindturns_to_radius;
 
     struct ailment_t {
@@ -143,9 +132,6 @@ struct ConstantsBank {
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), min_money_value(0.01), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
-                      damage_to_sleepturns(20, 15),
-                      damage_to_scareturns(30, 20),
-                      damage_to_blindturns(10, 0),
                       blindturns_to_radius(10),
                       max_ailments(6u),
                       monetary_supply_base(1e6),

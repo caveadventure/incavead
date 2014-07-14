@@ -221,8 +221,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         } else if (mon.blind > 0) {
             state = "blinded";
 
-        } else if (mon.fear > 0) {
-            state = "afraid";
+        } else if (mon.stun > 0) {
+            state = "stunned";
 
         } else if (mon.magic <= -3.0) {
             state = "cancelled";
