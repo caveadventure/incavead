@@ -277,8 +277,7 @@ private:
 
     template <typename FUNC1, typename FUNC2>
     void _draw_circle(unsigned int x, unsigned int y, unsigned int r, 
-                      bool do_draw, color_t fore, color_t back, 
-                      FUNC1 f_chk, FUNC2 f_do) {
+                      color_t fore, color_t back,  FUNC1 f_chk, FUNC2 f_do) {
 
         unsigned int x0 = (x < r ? 0 : x - r);
         unsigned int y0 = (y < r ? 0 : y - r);
@@ -301,12 +300,9 @@ private:
             }
         }
 
-        if (do_draw) {
-        
-            for (const auto& xy : pts) {
+        for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin(ui_symbol.circle.text, fore, back);
-            }
+            _overlay_set(xy) = skin(ui_symbol.circle.text, fore, back);
         }
 
         for (const auto& xy : pts) {
@@ -1106,23 +1102,23 @@ public:
 
     template <typename FUNC>
     void draw_circle(unsigned int x, unsigned int y, unsigned int r, 
-                     bool do_draw, color_t fore, color_t back, 
+                     color_t fore, color_t back, 
                      FUNC func) {
 
         _draw_circle(x, y, r, 
-                     do_draw, fore, back,
+                     fore, back,
                      [](unsigned int, unsigned int) { return true; },
                      func);
     }
 
     template <typename FUNC>
     void draw_fov_circle(unsigned int x, unsigned int y, unsigned int r, 
-                         bool do_draw, color_t fore, color_t back,
+                         color_t fore, color_t back,
                          FUNC func) {
 
         fov::fov_shadowcasting(w, h, grid, x, y, r);
 
-        _draw_circle(x, y, r, do_draw, fore, back, 
+        _draw_circle(x, y, r, fore, back, 
                      [this](unsigned int x, unsigned int y) { return _get(pt(x, y)).in_fov; },
                      func);
     }
@@ -1131,7 +1127,7 @@ public:
     template <typename FUNC>
     void draw_floodfill(neighbors::Neighbors& neigh,
                         unsigned int x, unsigned int y, 
-                        bool do_draw, color_t fore, color_t back,
+                        color_t fore, color_t back,
                         FUNC func) {
 
         std::set<pt> procd;
@@ -1161,19 +1157,15 @@ public:
             }
         }
 
-        if (do_draw) {
+        for (const auto& xy : procd) {
 
-            for (const auto& xy : procd) {
-
-                _overlay_set(xy) = skin(ui_symbol.fill.text, fore, back);
-            }
+            _overlay_set(xy) = skin(ui_symbol.fill.text, fore, back);
         }
     }
 
     template <typename FUNC>
     void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, 
-                   bool do_draw, color_t fore, color_t back,
-                   FUNC func) {
+                   color_t fore, color_t back, FUNC func) {
         
         bresenham::Line line(x0, y0, x1, y1);
 
@@ -1192,11 +1184,9 @@ public:
                 break;
         }
 
-        if (do_draw) {
-            for (const auto& xy : pts) {
+        for (const auto& xy : pts) {
 
-                _overlay_set(xy) = skin(ui_symbol.line.text, fore, back);
-            }
+            _overlay_set(xy) = skin(ui_symbol.line.text, fore, back);
         }
     }
 

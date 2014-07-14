@@ -171,7 +171,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
         unsigned int monc = 0;
 
-        state.render.draw_line(px, py, look.x, look.y, true, 
+        state.render.draw_line(px, py, look.x, look.y, 
                                maudit::color::bright_white, maudit::color::dim_blue,
                                [&](unsigned int x, unsigned int y) {
 

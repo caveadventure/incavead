@@ -350,7 +350,7 @@ inline bool end_blast_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
 
     } else {
 
-        state.render.draw_circle(lx, ly, d.blast.radius, true, d.skin.a.fore, maudit::color::bright_black,
+        state.render.draw_circle(lx, ly, d.blast.radius, d.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
                                      blast_process_point(p, state, d, _x, _y);

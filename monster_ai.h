@@ -13,35 +13,10 @@ struct summons_t {
 };
 
 
-inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
-    unsigned int _x = ax;
-    unsigned int _y = ay;
-
-    state.render.draw_line(ax, ay, bx, by, false, 
-                           maudit::color::dim_red, maudit::color::bright_white,
-                           [&](unsigned int x, unsigned int y) {
-                                   
-                               if (x == ax && y == ay)
-                                   return true;
-
-                               if (state.render.is_walkblock(x, y) ||
-                                   state.render.is_viewblock(x, y))
-                                   return false;
-
-                               _x = x;
-                               _y = y;
-                               return true;
-                           });
-
-    if (_x == bx && _y == by) return true;
-    return false;
-}
-
-
 inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
-    state.render.draw_circle(x, y, r, false, maudit::color::bright_blue, maudit::color::bright_black,
+    state.render.draw_circle(x, y, r, maudit::color::bright_black, maudit::color::bright_black,
                              [&](unsigned int _x, unsigned int _y) {
 
                                  features::Feature tmp;
@@ -91,7 +66,7 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 
     } else {
 
-        state.render.draw_circle(tx, ty, rad, true, s.skin.a.fore, maudit::color::bright_black,
+        state.render.draw_circle(tx, ty, rad, s.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
                                      monster_blast_process_point(p, state, s, _x, _y, attacks, friendly_fire);
