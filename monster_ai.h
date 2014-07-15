@@ -191,6 +191,36 @@ inline float monster_move_cost(GameState& state, const Species& s, unsigned int 
     return 1.0f;
 }
 
+inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py, 
+                             const monsters::Monster& m, const Species& s) {
+
+    unsigned int radius = s.range;
+
+    std::unordered_set<neighbors::pt> ns;
+
+    radial_points(m.xy.first, m.xy.second, state, radius, ns);
+
+    double maxd = 0.0;
+    monsters::pt maxn;
+
+    for (const auto& z : ns) {
+
+        double dist = distance(px, py, i.first, i.second);
+
+        if (dist > maxd) {
+            maxd = thisd;
+            maxn = z;
+        }
+    }
+
+    if (maxd == 0.0) {
+        return false;
+    }
+
+    state.monsters.change(m, [](monsters::Monster& m) { m.target = maxn });
+
+    return true;
+}
 
 
 inline bool move_monster(Player& p, GameState& state, 

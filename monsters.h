@@ -19,6 +19,7 @@ struct Monster {
     unsigned int stun;
     unsigned int blind;
     unsigned int fear;
+    pt target;
 
     Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
 
@@ -44,6 +45,7 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.stun);
         serialize::read(s, m.blind);
         serialize::read(s, m.fear);
+        serialize::read(s, m.target);
     }
 };
 
@@ -58,6 +60,7 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.stun);
         serialize::write(s, m.blind);
         serialize::write(s, m.fear);
+        serialize::write(s, m.target);
     }
 };
 
