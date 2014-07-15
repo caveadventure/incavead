@@ -1102,6 +1102,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 snumber %{ dam.blindturns.scale = toint(state.match); }
             ws1 snumber %{ dam.blindturns.offset = toint(state.match); } ;
 
+        damage_fearturns = 'fearturns' 
+            ws1 snumber %{ dam.fearturns.scale = toint(state.match); }
+            ws1 snumber %{ dam.fearturns.offset = toint(state.match); } ;
+
         damage_player_poly = 'player_poly' 
             ws1 snumber %{ dam.player_poly.scale = toint(state.match); }
             ws1 snumber %{ dam.player_poly.offset = toint(state.match); } ;
@@ -1142,7 +1146,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         damage_one_data =
-            (damage_name | damage_sleepturns | damage_stunturns | damage_blindturns |
+            (damage_name | damage_sleepturns | damage_stunturns | damage_blindturns | damage_fearturns |
             damage_threshold | damage_heavenly | damage_hellish | damage_cancellation |
             damage_vampiric | damage_hunger | damage_unluck | damage_polymorph | damage_health | 
             damage_infect | damage_eyeless | damage_undead | damage_animal | damage_plant | damage_player |

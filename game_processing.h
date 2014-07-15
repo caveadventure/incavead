@@ -588,6 +588,10 @@ void Game::process_world(GameState& state,
         --(p.stun);
     }
 
+    if (p.fear > 0) {
+        --(p.fear);
+    }
+
     if (p.polymorph.turns > 0) {
         --(p.polymorph.turns);
 

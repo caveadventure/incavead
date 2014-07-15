@@ -18,11 +18,12 @@ struct Monster {
     unsigned int sleep;
     unsigned int stun;
     unsigned int blind;
+    unsigned int fear;
 
-    Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0) {}
+    Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
 
     Monster(tag_t _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), stun(0), blind(0)
+        tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
         {}
 };
 
@@ -42,6 +43,7 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.sleep);
         serialize::read(s, m.stun);
         serialize::read(s, m.blind);
+        serialize::read(s, m.fear);
     }
 };
 
@@ -55,6 +57,7 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.sleep);
         serialize::write(s, m.stun);
         serialize::write(s, m.blind);
+        serialize::write(s, m.fear);
     }
 };
 

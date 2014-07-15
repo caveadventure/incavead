@@ -46,7 +46,16 @@ void move_player(const Player& p, GameState& state) {
     }
 }
 
-void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
+
+bool run_away(Player& p, GameState& state, size_t n_skin);
+
+void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fear = true) {
+
+    if (do_fear && p.fear > 0) {
+
+        if (run_away(p, state, n_skin))
+            return;
+    }
 
     if (p.stun > 0) {
 
@@ -188,7 +197,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
 }
 
 
-void run_away(Player& p, GameState& state, size_t n_skin) {
+bool run_away(Player& p, GameState& state, size_t n_skin) {
 
     unsigned int radius = get_lightradius(p, state);
 
@@ -207,7 +216,7 @@ void run_away(Player& p, GameState& state, size_t n_skin) {
     }
 
     if (ms.empty()) {
-        return;
+        return false;
     }
 
     while (!ns.empty()) {
@@ -232,7 +241,7 @@ void run_away(Player& p, GameState& state, size_t n_skin) {
         }
 
         if (maxd == 0.0) {
-            return;
+            return false;
         }
 
         unsigned int nnx;
@@ -246,13 +255,15 @@ void run_away(Player& p, GameState& state, size_t n_skin) {
 
         if (found) {
 
-            move(p, state, nnx - p.px, nny - p.py, n_skin);
-            return;
+            move(p, state, nnx - p.px, nny - p.py, n_skin, false);
+            return true;
 
         } else {
             ns.erase(maxn);
         }
     }
+
+    return false;
 }
 
 std::string tombstone_text(const Player& p) {

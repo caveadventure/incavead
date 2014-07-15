@@ -274,6 +274,13 @@ void Game::draw_hud(GameState& state) {
                                    (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
     }
 
+    if (p.fear > 0) {
+        state.render.push_hud_line("Scared", maudit::color::bright_red,
+                                   std::min(p.fear / 15 + 1, (unsigned int)6), 
+                                   '+', 
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+    }
+
     if (p.digging) {
 
         double q = state.grid._get(p.dig.x, p.dig.y);

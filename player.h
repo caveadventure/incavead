@@ -108,6 +108,7 @@ struct Player {
     unsigned int sleep;
     unsigned int blind;
     unsigned int stun;
+    unsigned int fear;
 
     struct dig_state_t {
         unsigned int x;
@@ -254,7 +255,7 @@ struct Player {
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
-               sleep(0), blind(0), stun(0), digging(false), polymorph_ability(0), state(MAIN), 
+               sleep(0), blind(0), stun(0), fear(0), digging(false), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {
             karma.val = 0;
@@ -439,6 +440,7 @@ struct reader<Player> {
         serialize::read(s, p.sleep);
         serialize::read(s, p.blind);
         serialize::read(s, p.stun);
+        serialize::read(s, p.fear);
         serialize::read(s, p.dig.x);
         serialize::read(s, p.dig.y);
         serialize::read(s, p.dig.h);
@@ -496,6 +498,7 @@ struct writer<Player> {
         serialize::write(s, p.sleep);
         serialize::write(s, p.blind);
         serialize::write(s, p.stun);
+        serialize::write(s, p.fear);
         serialize::write(s, p.dig.x);
         serialize::write(s, p.dig.y);
         serialize::write(s, p.dig.h);
