@@ -481,8 +481,9 @@ inline double defend(Player& p,
 
         unsigned int sleepturns = dam.sleepturns(dmg);
         unsigned int blindturns = dam.blindturns(dmg);
+        unsigned int stunturns = dam.stunturns(dmg);
 
-        // No fear or cancellation mechanic for the player yet.
+        // 
 
         if (sleepturns > 0) {
             p.sleep += sleepturns;
@@ -490,6 +491,10 @@ inline double defend(Player& p,
 
         if (blindturns > 0) {
             p.blind += blindturns;
+        }
+
+        if (stunturns > 0) {
+            p.stun += stunturns;
         }
 
         if (!dam.polymorph.first.null()) {

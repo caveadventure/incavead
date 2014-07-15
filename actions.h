@@ -187,63 +187,72 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
     move_player(p, state);
 }
 
+
 void run_away(Player& p, GameState& state, size_t n_skin) {
 
-    std::vector< std::pair<int, int> > ns;
+    unsigned int radius = get_lightradius(p, state);
 
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
+    std::unordered_set<neighbors::pt> ns;
 
-            unsigned int nx = p.px + dx;
-            unsigned int ny = p.py + dy;
+    radial_points(p.px, p.py, state, radius, ns);
 
-            if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
-                !state.grid.is_walk(nx, ny) ||
-                state.render.is_walkblock(nx, ny)) {
+    std::unordered_set<neighbors::pt> ms;
 
-                continue;
+    for (const auto& i : state.monsters.mons) {
+
+        if (!state.render.is_in_fov(i.first.first, i.first.second))
+            continue;
+
+        ms.insert(neighbors::pt(i.first.first, i.first.second));
+    }
+
+    if (ms.empty()) {
+        return;
+    }
+
+    while (!ns.empty()) {
+
+        double maxd = 0.0;
+        neighbors::pt maxn;
+
+        for (const auto& z : ns) {
+
+            double thisd = 0.0;
+
+            for (const auto& i : ms) {
+                double dist = distance(z.first, z.second, i.first, i.second);
+
+                thisd += dist;
             }
 
-            ns.push_back(std::make_pair(dx, dy));
+            if (thisd > maxd) {
+                maxd = thisd;
+                maxn = z;
+            }
+        }
+
+        if (maxd == 0.0) {
+            return;
+        }
+
+        unsigned int nnx;
+        unsigned int nny;
+
+        bool found = path_walk(state, p.px, p.py, maxn.first, maxn.second, 1, radius, 
+                               [&state](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
+                                   return (reachable(state, c, d) ? 1.0f : 0.0f);
+                               },
+                               nnx, nny);
+
+        if (found) {
+
+            move(p, state, nnx - p.px, nny - p.py, n_skin);
+            return;
+
+        } else {
+            ns.erase(maxn);
         }
     }
-
-    if (ns.empty())
-        return;
-
-    double maxd = 0.0;
-    size_t maxi = 0;
-
-    for (size_t z = 0; z < ns.size(); ++z) {
-
-        double thisd = 0.0;
-        int nn = 0;
-
-        for (const auto& i : state.monsters.mons) {
-
-            if (!state.render.is_in_fov(i.first.first, i.first.second))
-                continue;
-
-            double dist = distance(p.px + ns[z].first, p.py + ns[z].second,
-                                   i.first.first, i.first.second);
-
-            thisd += dist;
-            ++nn;
-        }
-
-        if (thisd > maxd) {
-            maxd = thisd;
-            maxi = z;
-        }
-    }
-
-    if (maxd == 0)
-        return;
-
-    int dx = ns[maxi].first;
-    int dy = ns[maxi].second;
-
-    move(p, state, dx, dy, n_skin);
 }
 
 std::string tombstone_text(const Player& p) {

@@ -19,6 +19,24 @@ inline double distance(double ax, double ay, double bx, double by) {
     return ::sqrt(q*q + p*p);
 }
 
+inline bool reachable(GameState& state, unsigned int x, unsigned int y) {
+
+    if (!state.grid.is_walk(x, y))
+        return false;
+
+    features::Feature feat;
+
+    if (state.features.get(x, y, feat)) {
+
+        const Terrain& t = terrain().get(feat.tag);
+
+        if (t.viewblock || t.walkblock)
+            return false;
+    }
+
+    return true;
+}
+
 inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by) {
 
     bresenham::Line line(ax, ay, bx, by);
@@ -28,18 +46,8 @@ inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsign
 
     while (1) {
 
-        if (!state.grid.is_walk(x, y))
+        if (!reachable(state, x, y))
             break;
-
-        features::Feature feat;
-
-        if (state.features.get(x, y, feat)) {
-
-            const Terrain& t = terrain().get(feat.tag);
-
-            if (t.viewblock || t.walkblock)
-                break;
-        }
 
         bool ret = line.step((int&)x, (int&)y);
 
