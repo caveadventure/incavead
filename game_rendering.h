@@ -267,6 +267,13 @@ void Game::draw_hud(GameState& state) {
                                    (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
     }
 
+    if (p.stun > 0) {
+        state.render.push_hud_line("Stunned", maudit::color::bright_red,
+                                   std::min(p.stun / 15 + 1, (unsigned int)6), 
+                                   '+', 
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+    }
+
     if (p.digging) {
 
         double q = state.grid._get(p.dig.x, p.dig.y);

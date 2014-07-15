@@ -584,6 +584,10 @@ void Game::process_world(GameState& state,
         --(p.blind);
     }
 
+    if (p.stun > 0) {
+        --(p.stun);
+    }
+
     if (p.polymorph.turns > 0) {
         --(p.polymorph.turns);
 

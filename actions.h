@@ -47,6 +47,18 @@ void move_player(const Player& p, GameState& state) {
 }
 
 void move(Player& p, GameState& state, int dx, int dy, size_t n_skin) {
+
+    if (p.stun > 0) {
+
+        if (dx != 0 && state.rng.range(0, 1)) {
+            dx = -dx;
+        }
+
+        if (dy != 0 && state.rng.range(0, 1)) {
+            dy = -dy;
+        }
+    }
+
     int nx = p.px + dx;
     int ny = p.py + dy;
 
