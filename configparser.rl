@@ -1129,6 +1129,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         damage_plant   = 'plant'   ws (('+' %{ dam.flags.plant.v = 1; })   | ('-' %{ dam.flags.plant.v = 0; }));
         damage_robot   = 'robot'   ws (('+' %{ dam.flags.robot.v = 1; })   | ('-' %{ dam.flags.robot.v = 0; }));
         damage_magic   = 'magic'   ws (('+' %{ dam.flags.magic.v = 1; })   | ('-' %{ dam.flags.magic.v = 0; }));
+        damage_player  = 'player'  ws (('+' %{ dam.flags.player.v = 1; })  | ('-' %{ dam.flags.player.v = 0; }));
 
         damage_melee_msg = 
             'melee_msg' ws1 string %{ dam.melee_msg.str = state.match; }

@@ -107,7 +107,8 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         !dam.flags.animal(s.flags.animal) ||
         !dam.flags.plant(s.flags.plant) ||
         !dam.flags.magic(s.flags.magic) ||
-        !dam.flags.eyeless(s.flags.eyeless)) 
+        !dam.flags.eyeless(s.flags.eyeless) ||
+        !dam.flags.player(false)) 
         return;
 
     if (dam.heavenly) {
@@ -444,7 +445,8 @@ inline double defend(Player& p,
                 !dam.flags.animal(false) ||
                 !dam.flags.plant(false) ||
                 !dam.flags.magic(false) ||
-                !dam.flags.eyeless(false)) 
+                !dam.flags.eyeless(false) ||
+                !dam.flags.player(true)) 
                 continue;
 
         } else {
@@ -456,7 +458,8 @@ inline double defend(Player& p,
                 !dam.flags.animal(sp.flags.animal) ||
                 !dam.flags.plant(sp.flags.plant) ||
                 !dam.flags.magic(sp.flags.magic) ||
-                !dam.flags.eyeless(sp.flags.eyeless)) 
+                !dam.flags.eyeless(sp.flags.eyeless) ||
+                !dam.flags.player(false)) 
                 continue;
         }
 

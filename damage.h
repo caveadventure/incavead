@@ -60,6 +60,7 @@ struct Damage {
         tristate_t plant;
         tristate_t robot;
         tristate_t magic;
+        tristate_t player;
     };
 
     flags_t flags;

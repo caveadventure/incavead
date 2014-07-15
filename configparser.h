@@ -124,7 +124,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     ui_symbols_t* ui_syms = NULL;
 
     
-#line 1172 "configparser.rl"
+#line 1173 "configparser.rl"
 
 /*
 
@@ -12292,7 +12292,7 @@ static const int ConfigParser_en_one_damage = 6185;
 static const int ConfigParser_en_main = 1;
 
 
-#line 1178 "configparser.rl"
+#line 1179 "configparser.rl"
     
 #line 12298 "configparser.h"
 	{
@@ -12300,7 +12300,7 @@ static const int ConfigParser_en_main = 1;
 	 state.top = 0;
 	}
 
-#line 1179 "configparser.rl"
+#line 1180 "configparser.rl"
 
     bool done = false;
 
@@ -14282,39 +14282,39 @@ _match:
 	{ dam.flags.magic.v = 0; }
 	break;
 	case 470:
-#line 1134 "configparser.rl"
+#line 1135 "configparser.rl"
 	{ dam.melee_msg.str = state.match; }
 	break;
 	case 471:
-#line 1135 "configparser.rl"
+#line 1136 "configparser.rl"
 	{ dam.melee_msg.important = true; }
 	break;
 	case 472:
-#line 1139 "configparser.rl"
+#line 1140 "configparser.rl"
 	{ dam.env_msg.str = state.match; }
 	break;
 	case 473:
-#line 1140 "configparser.rl"
+#line 1141 "configparser.rl"
 	{ dam.env_msg.important = true; }
 	break;
 	case 474:
-#line 1149 "configparser.rl"
+#line 1150 "configparser.rl"
 	{ { state.cs =  state.stack[-- state.top]; goto _again;} }
 	break;
 	case 475:
-#line 1155 "configparser.rl"
+#line 1156 "configparser.rl"
 	{ dam.tag = tag_t(state.match, tagmem); }
 	break;
 	case 476:
-#line 1159 "configparser.rl"
+#line 1160 "configparser.rl"
 	{ dam = Damage(); }
 	break;
 	case 477:
-#line 1161 "configparser.rl"
+#line 1162 "configparser.rl"
 	{{ state.stack[ state.top++] =  state.cs;  state.cs = 6185; goto _again;}}
 	break;
 	case 478:
-#line 1162 "configparser.rl"
+#line 1163 "configparser.rl"
 	{ init_damage(dam); }
 	break;
 #line 14321 "configparser.h"
@@ -14358,7 +14358,7 @@ _again:
 	{ init_levelskin_(lev); }
 	break;
 	case 478:
-#line 1162 "configparser.rl"
+#line 1163 "configparser.rl"
 	{ init_damage(dam); }
 	break;
 #line 14365 "configparser.h"
@@ -14369,7 +14369,7 @@ _again:
 	_out: {}
 	}
 
-#line 1197 "configparser.rl"
+#line 1198 "configparser.rl"
 
         // Avoid spurious gcc warnings.
         (void)ConfigParser_first_final;
