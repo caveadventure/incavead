@@ -147,6 +147,8 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     if (fearturns > 0) {
         state.monsters.change(mon, [fearturns](monsters::Monster& m) { m.fear += fearturns; });
         totfear += fearturns;
+
+        make_monster_run(state, p.px, p.py, mon, s);
     }
 
     if (polyturns > 0) {

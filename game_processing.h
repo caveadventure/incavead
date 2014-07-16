@@ -209,7 +209,7 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
 
     std::unordered_set<monsters::pt> range;
 
-    radial_points(p.px, p.py, state, radius, range);
+    radial_points(p.px, p.py, state, radius, range, player_walkable);
 
     unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
                                              state.species_counts, state.render, 

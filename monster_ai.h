@@ -91,7 +91,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
     if (s.blast.size() > 0 || s.cast_cloud.size() > 0) {
 
-        reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py);
+        reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py, player_walkable);
     }
 
     if (reachd) {
@@ -171,58 +171,6 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
     return false;
 }
 
-inline float monster_move_cost(GameState& state, const Species& s, unsigned int x, unsigned int y) {
-
-    if (!monsters::Monsters::is_walkable(state.grid, s, x, y))
-        return 0.0f;
-    
-    features::Feature feat;
-    if (state.features.get(x, y, feat)) {
-
-        const Terrain& t = terrain().get(feat.tag);
-
-        if (t.walkblock)
-            return 0.0f;
-
-        if (t.viewblock)
-            return 3.0f;
-    }
-
-    return 1.0f;
-}
-
-inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py, 
-                             const monsters::Monster& m, const Species& s) {
-
-    unsigned int radius = s.range;
-
-    std::unordered_set<neighbors::pt> ns;
-
-    radial_points(m.xy.first, m.xy.second, state, radius, ns);
-
-    double maxd = 0.0;
-    monsters::pt maxn;
-
-    for (const auto& z : ns) {
-
-        double dist = distance(px, py, i.first, i.second);
-
-        if (dist > maxd) {
-            maxd = thisd;
-            maxn = z;
-        }
-    }
-
-    if (maxd == 0.0) {
-        return false;
-    }
-
-    state.monsters.change(m, [](monsters::Monster& m) { m.target = maxn });
-
-    return true;
-}
-
-
 inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
                          const monsters::Monster& m, const Species& s,
@@ -277,6 +225,8 @@ inline bool move_monster(Player& p, GameState& state,
         return false;
     }
 
+    monsters::pt target(p.px, p.py);
+
     if (m.sleep > 0) {
         state.monsters.change(m, [](monsters::Monster& m) { --(m.sleep); });
         return false;
@@ -284,6 +234,18 @@ inline bool move_monster(Player& p, GameState& state,
 
     if (m.stun > 0) {
         state.monsters.change(m, [](monsters::Monster& m) { --(m.stun); });
+    }
+
+    if (m.fear > 0) {
+        state.monsters.change(m, [](monsters::Monster& m) { --(m.fear); });
+
+        if (m.target == m.xy) {
+
+            if (!make_monster_run(state, p.px, p.py, m, s))
+                return false;
+        }
+
+        target = m.target;
     }
 
     double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
@@ -321,7 +283,7 @@ inline bool move_monster(Player& p, GameState& state,
         do_random = true;
 
     } else if (do_seek && !do_random &&
-               path_walk(state, m.xy.first, m.xy.second, p.px, p.py, 1, range, 
+               path_walk(state, m.xy.first, m.xy.second, target.first, target.second, 1, range, 
                          [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
                              return monster_move_cost(state, s, c, d);
                          },

@@ -268,6 +268,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (ret && !d.attacks.empty()) {
+
+        damage::defenses_t defenses;
+        p.get_defense(defenses);
+
+        defend(p, defenses, p.get_computed_level(state.rng), d, state);
+    }
+
     if (ret && !d.use_for_free) {
 
         ++(state.ticks);

@@ -203,7 +203,7 @@ bool run_away(Player& p, GameState& state, size_t n_skin) {
 
     std::unordered_set<neighbors::pt> ns;
 
-    radial_points(p.px, p.py, state, radius, ns);
+    radial_points(p.px, p.py, state, radius, ns, player_walkable);
 
     std::unordered_set<neighbors::pt> ms;
 
@@ -249,7 +249,7 @@ bool run_away(Player& p, GameState& state, size_t n_skin) {
 
         bool found = path_walk(state, p.px, p.py, maxn.first, maxn.second, 1, radius, 
                                [&state](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-                                   return (reachable(state, c, d) ? 1.0f : 0.0f);
+                                   return (player_walkable(state, c, d) ? 1.0f : 0.0f);
                                },
                                nnx, nny);
 
