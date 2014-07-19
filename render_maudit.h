@@ -697,12 +697,12 @@ public:
                     if (ontop) {
                         _draw_messages(ret_glyphs, mx, 0, 
                                        view_w,
-                                       view_w - 17, 3,
+                                       view_w - 17, params.num_messages,
                                        t);
                     } else {
-                        _draw_messages(ret_glyphs, 2, view_h - 3, 
+                        _draw_messages(ret_glyphs, 2, view_h - params.num_messages, 
                                        view_w,
-                                       view_w - 17, 3,
+                                       view_w - 17, params.num_messages,
                                        t);
                     }
                 }

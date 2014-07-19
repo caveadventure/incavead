@@ -27,6 +27,7 @@ struct drawing_context_t {
     unsigned int hly;
     unsigned int rangemin;
     unsigned int rangemax;
+    unsigned int num_messages;
     bool do_hud;
 
     drawing_context_t() :
@@ -36,6 +37,7 @@ struct drawing_context_t {
         hly(hlx),
         rangemin(0),
         rangemax(hlx),
+        num_messages(3),
         do_hud(true)
         {}
 };
@@ -180,7 +182,7 @@ struct Main {
         game.generate(state, [this](const std::string& msg) { screen.io.write(msg + "\r\n"); });
     }
 
-    void draw() {
+    void draw(bool dead) {
 
         if (spectator::screens<SCREEN>().get_messages(screen, messages)) {
 
@@ -199,6 +201,8 @@ struct Main {
         if (ctx.do_hud) {
             game.draw_hud(state);
         }
+
+        ctx.num_messages = (dead ? 7 : 3);
 
         state.render.draw(screen, 
                           state.ticks, 
@@ -360,7 +364,7 @@ struct Main {
         state.render.do_message("Press '?' twice for detailed instructions.");
         state.render.do_message("Press '?' for help on controls.");
 
-        draw();
+        draw(dead);
 
         bool done = false;
         dead = false;
@@ -376,29 +380,29 @@ struct Main {
 
                 if (regen) {
                     regenerate();
-                    draw();
+                    draw(dead);
                     regen = false;
                 }
 
                 if (check_done(done, dead, name, savefile)) {
-                    draw();
+                    draw(dead);
                     goodbye_message(dead);
                     return;
                 }
 
                 if (do_draw) {
-                    draw();
+                    draw(dead);
                 }
 
                 if (!time_passed) break;
             } while (1);
 
-            draw();
+            draw(dead);
 
             pump_event(need_input, done, dead, regen);
 
             if (check_done(done, dead, name, savefile)) {
-                draw();
+                draw(dead);
                 goodbye_message(dead);
                 return;
             }
