@@ -325,11 +325,11 @@ inline bool move_monster(Player& p, GameState& state,
 
     if (m.stun > 0) {
         
-        if (m.xy.first != nxy.first && state.rng.range(0, 1)) {
+        if (m.xy.first != nxy.first && state.rng.range(0, 2) == 0) {
             nxy.first = m.xy.first + m.xy.first - nxy.first;
         }
 
-        if (m.xy.second != nxy.second && state.rng.range(0, 1)) {
+        if (m.xy.second != nxy.second && state.rng.range(0, 2) == 0) {
             nxy.second = m.xy.second + m.xy.second - nxy.second;
         }
 

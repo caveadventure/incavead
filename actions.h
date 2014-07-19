@@ -59,11 +59,11 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
 
     if (p.stun > 0) {
 
-        if (dx != 0 && state.rng.range(0, 1)) {
+        if (dx != 0 && state.rng.range(0, 2) == 0) {
             dx = -dx;
         }
 
-        if (dy != 0 && state.rng.range(0, 1)) {
+        if (dy != 0 && state.rng.range(0, 2) == 0) {
             dy = -dy;
         }
     }
