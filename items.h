@@ -107,7 +107,7 @@ struct Items {
                 pt xy;
                 if (!ptsource.one_of_floor(rng, xy))
                     return;
-                
+
                 stuff[xy].push_back(make_item(i.first, xy, rng));
             }
         }

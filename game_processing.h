@@ -105,7 +105,7 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
             } else if (d.starsign.day > 0) {
 
-                count -= std::abs(d.starsign.day - starsign.day);
+                count -= std::abs((int)d.starsign.day - (int)starsign.day);
             }
 
             count = mult * count;
