@@ -264,7 +264,9 @@ struct Main {
 
             while (state.window_stack.size() > 0) {
 
-                k = state.render.draw_window(screen, state.window_stack.back().message);
+                k = state.render.draw_window(screen, 
+                                             state.window_stack.back().message, 
+                                             state.window_stack.back().allow_tab);
 
                 game.handle_input(state, options, done, dead, regen, k);
             }

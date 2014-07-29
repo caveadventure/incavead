@@ -1070,7 +1070,7 @@ public:
     }
 
     template <typename SCREEN>
-    keypress draw_window(SCREEN& screen, const std::string& msg) {
+    keypress draw_window(SCREEN& screen, const std::string& msg, bool allow_tab = true) {
 
         unsigned int ix = 0;
         unsigned int iy = 0;
@@ -1093,9 +1093,10 @@ public:
                 break;
 
             default:
-                if (k.letter == '\t') {
+
+                if (allow_tab && k.letter == '\t') {
                     set_ui_symbol(1);
-                    k.key = maudit::keycode::nothing_key;
+                    break;
                 }
 
                 return k;

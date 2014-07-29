@@ -645,7 +645,7 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         break;
 
     case '=':
-        state.push_window(show_options(state, options), screens_t::options);
+        state.push_window(show_options(state, options), screens_t::options, false);
         break;
 
     case '/':
@@ -1019,6 +1019,7 @@ void handle_input_options(GameState& state, GameOptions& options, maudit::keypre
         break;
 
     case 'c':
+    case '\t':
         state.render.set_ui_symbol(1);
         break;
 
@@ -1043,9 +1044,6 @@ void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny
 void Game::handle_input(GameState& state, GameOptions& options,
                         bool& done, bool& dead, bool& regen, 
                         maudit::keypress k) {
-
-    if (k.key == maudit::keycode::nothing_key)
-        return;
 
     if (p.state == Player::DEBUG) {
         handle_input_debug(p, state, regen, k);

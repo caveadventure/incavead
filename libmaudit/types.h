@@ -51,8 +51,7 @@ enum class keycode : uint32_t {
     kp_3,
     del,
     esc,
-    resize,
-    nothing_key
+    resize
 };
 
 
