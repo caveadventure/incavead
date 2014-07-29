@@ -341,6 +341,24 @@ std::string show_spells(const Player& p, const GameState& state) {
     return m;
 }
 
+std::string show_options(GameState& state, GameOptions& options) {
+
+    std::string ret;
+
+    ret += "\n";
+
+    ret += "\2a\1) Always center view on player:    \3";
+    ret += (options.center_view ? "Yes\n" : "No\n");
+
+    ret += "\2b\1) Don't fade colors with distance: \3";
+    ret += (options.no_fade_colors ? "Yes\n" : "No\n");
+
+    ret += "\2c\1) Color theme in menus:            \3";
+    ret += (state.render.ui_symbol_index ? "Black\n" : "Blue\n");
+
+    return ret;
+}
+
 void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
 
     int _z = k.letter - 'a';
@@ -503,6 +521,7 @@ std::string help_text() {
         "  \2#\1 :          Show the current map's overview.\n"
         "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
+        "  \2=\1 :          Set game options.\n"
         "  \2\"\1 :          Send a message in spectator mode chat. (Also useful for notes to self.)\n"
         "  \2?\1 :          Show this help message.\n"
         "  \2??\1 :         Show detailed instructions.\n"
@@ -526,7 +545,7 @@ std::string help_text() {
 }
 
 
-void handle_input_main(Player& p, GameState& state,
+void handle_input_main(Player& p, GameState& state, GameOptions& options,
                        bool& done, bool& dead, bool& regen, 
                        maudit::keypress k, bool debug_enabled, size_t n_skin) {
 
@@ -623,6 +642,10 @@ void handle_input_main(Player& p, GameState& state,
 
     case '#':
         state.push_window(show_overmap(p, state), screens_t::overmap);
+        break;
+
+    case '=':
+        state.push_window(show_options(state, options), screens_t::options);
         break;
 
     case '/':
@@ -983,7 +1006,31 @@ bool handle_input_input(GameState& state, std::string& input_string, maudit::key
 }
 
 
-inline void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny) {
+void handle_input_options(GameState& state, GameOptions& options, maudit::keypress k) {
+
+    switch (k.letter) {
+
+    case 'a':
+        options.center_view = !(options.center_view);
+        break;
+
+    case 'b':
+        options.no_fade_colors = !(options.no_fade_colors);
+        break;
+
+    case 'c':
+        state.render.set_ui_symbol(1);
+        break;
+
+    default:
+        state.window_stack.pop_back();
+        return;
+    }
+
+    state.window_stack.back().message = show_options(state, options);
+}
+
+void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny) {
 
     state.render.do_message("You start digging.");
 
@@ -993,9 +1040,12 @@ inline void start_digging(Player& p, GameState& state, unsigned int nx, unsigned
     p.dig.h = state.grid.get(nx, ny);
 }
 
-void Game::handle_input(GameState& state,
+void Game::handle_input(GameState& state, GameOptions& options,
                         bool& done, bool& dead, bool& regen, 
                         maudit::keypress k) {
+
+    if (k.key == maudit::keycode::nothing_key)
+        return;
 
     if (p.state == Player::DEBUG) {
         handle_input_debug(p, state, regen, k);
@@ -1123,7 +1173,7 @@ void Game::handle_input(GameState& state,
     }
 
     if (state.window_stack.empty()) {
-        handle_input_main(p, state, done, dead, regen, k, debug_enabled, n_skin);
+        handle_input_main(p, state, options, done, dead, regen, k, debug_enabled, n_skin);
         return;
     }
 
@@ -1168,6 +1218,10 @@ void Game::handle_input(GameState& state,
     case screens_t::bank_buy:
     case screens_t::bank_buy_confirm:
         handle_input_banking(p, state, k);
+        break;
+
+    case screens_t::options:
+        handle_input_options(state, options, k);
         break;
 
     default:

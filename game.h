@@ -66,7 +66,7 @@ struct Game {
 
     // ui
 
-    void handle_input(GameState& state,
+    void handle_input(GameState& state, GameOptions& options,
                       bool& done, bool& dead, bool& regen, 
                       maudit::keypress k);
 

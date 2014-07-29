@@ -188,10 +188,20 @@ struct Grid {
 
 private:
 
-    color_t color_fade(color_t c, double v, uint8_t mask) {
+    color_t color_fade(color_t c, double v, uint8_t mask, bool true_fade) {
 
         if (v > 10 && (mask & 0xF0)) {
             v -= 10;
+        }
+
+        if (!true_fade) {
+
+            if (v > 90) {
+                return color_t::dim_black;
+
+            } else {
+                return c;
+            }
         }
 
         if (v <= 30) {
@@ -831,7 +841,7 @@ public:
 
                                 } else {
 
-                                    fore = color_fade(fore, in_fov, found_s);
+                                    fore = color_fade(fore, in_fov, found_s, params.do_fade_colors);
                                 }
                             }
                         }
@@ -1085,7 +1095,7 @@ public:
             default:
                 if (k.letter == '\t') {
                     set_ui_symbol(1);
-                    break;
+                    k.key = maudit::keycode::nothing_key;
                 }
 
                 return k;

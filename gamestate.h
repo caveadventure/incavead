@@ -112,6 +112,14 @@ struct GameState {
     GameState() : ticks(1), fullwidth(false) {}
 };
 
+struct GameOptions {
+
+    bool center_view;
+    bool no_fade_colors;
+    size_t menu_theme;
+
+    GameOptions() : center_view(false), no_fade_colors(false), menu_theme(0) {}
+};
 
 namespace serialize {
 
@@ -221,6 +229,26 @@ struct writer<GameState> {
 
         serialize::write(s, state.triggers);
         serialize::write(s, state.window_stack);
+    }
+};
+
+
+template <>
+struct reader<GameOptions> {
+    void read(Source& s, GameOptions& t) {
+
+        serialize::read(s, t.center_view);
+        serialize::read(s, t.no_fade_colors);
+        serialize::read(s, t.menu_theme);
+    }
+};
+
+template <>
+struct writer<GameOptions> {
+    void write(Sink& s, const GameOptions& t) {
+        serialize::write(s, t.center_view);
+        serialize::write(s, t.no_fade_colors);
+        serialize::write(s, t.menu_theme);
     }
 };
 

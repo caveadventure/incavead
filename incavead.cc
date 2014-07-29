@@ -83,7 +83,8 @@ enum class screens_t : unsigned int {
     bank_withdrawal,
     bank_deposit,
     bank_buy,
-    bank_buy_confirm
+    bank_buy_confirm,
+    options
 };
 
 
@@ -126,7 +127,7 @@ void client_mainloop(int client_fd, bool singleplayer, bool debug, size_t n_skin
 
         screen_t screen(client);
 
-        mainloop::Main<Game, GameState, screen_t> main(screen, debug, n_skin, fullwidth);
+        mainloop::Main<Game, GameState, GameOptions, screen_t> main(screen, debug, n_skin, fullwidth);
 
         main.mainloop(singleplayer);
 

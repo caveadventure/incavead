@@ -145,13 +145,13 @@ void drawing_context_center_at(mainloop::drawing_context_t& ctx, unsigned int x,
     unsigned int grid_x = ctx.view_w / 4;
     unsigned int grid_y = ctx.view_h / 4;
 
-    if (grid_x > 1) {
+    if (!ctx.do_center_view && grid_x > 1) {
         ctx.voff_off_x = -(x % grid_x) + (grid_x / 2);
     } else {
         ctx.voff_off_x = 0;
     }
 
-    if (grid_y > 1) {
+    if (!ctx.do_center_view && grid_y > 1) {
         ctx.voff_off_y = -(y % grid_y) + (grid_y / 2);
     } else {
         ctx.voff_off_y = 0;

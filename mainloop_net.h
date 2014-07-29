@@ -30,6 +30,9 @@ struct drawing_context_t {
     unsigned int num_messages;
     bool do_hud;
 
+    bool do_center_view;
+    bool do_fade_colors;
+
     drawing_context_t() :
         view_w(0), view_h(0),
         voff_off_x(0), voff_off_y(0), px(0), py(0), lightradius(1000), 
@@ -38,7 +41,9 @@ struct drawing_context_t {
         rangemin(0),
         rangemax(hlx),
         num_messages(3),
-        do_hud(true)
+        do_hud(true),
+        do_center_view(false),
+        do_fade_colors(true)
         {}
 };
 
@@ -52,7 +57,7 @@ struct screen_params_t {
 };
 
 
-template <typename GAME, typename GAMESTATE, typename SCREEN>
+template <typename GAME, typename GAMESTATE, typename GAMEOPTIONS, typename SCREEN>
 struct Main {
 
     GAME game;
@@ -60,9 +65,10 @@ struct Main {
 
     std::vector<std::string> messages;
 
+    GAMEOPTIONS options;
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 19;
+    static const unsigned int SAVEFILE_VERSION = 20;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
@@ -86,6 +92,11 @@ struct Main {
             if (ver != SAVEFILE_VERSION)
                 return false;
 
+            serialize::read(s, options);
+
+            // HACK!!
+            state.render.set_ui_symbol(options.menu_theme);
+
             serialize::read(s, state);
 
             game.load(s);
@@ -98,16 +109,27 @@ struct Main {
 
     void save(const std::string& filename) {
 
+        // HACK!!
+        options.menu_theme = state.render.ui_symbol_index;
+
         serialize::Sink s(filename);
 
         serialize::write(s, SAVEFILE_VERSION);
+        serialize::write(s, options);
         serialize::write(s, state);
 
         game.save(s);
     }
 
     void clobber_savefile(const std::string& filename) {
+
+        // HACK!!
+        options.menu_theme = state.render.ui_symbol_index;
+
         serialize::Sink s(filename);
+
+        serialize::write(s, SAVEFILE_VERSION);
+        serialize::write(s, options);
     }
 
 
@@ -196,6 +218,8 @@ struct Main {
         drawing_context_t ctx;
         ctx.view_w = screen.w;
         ctx.view_h = screen.h;
+        ctx.do_center_view = options.center_view;
+        ctx.do_fade_colors = !options.no_fade_colors;
         game.drawing_context(ctx, state);
 
         if (ctx.do_hud) {
@@ -210,7 +234,6 @@ struct Main {
                           state.fullwidth,
                           std::bind(&GAME::set_skin, &game, std::ref(state),
                                     std::placeholders::_1, std::placeholders::_2));
-
     }
 
     bool process(size_t& oldticks, bool& done, bool& dead, bool& regen, bool& need_input, bool& draw) {
@@ -237,13 +260,13 @@ struct Main {
 
             grender::Grid::keypress k = state.render.wait_for_key(screen);
 
-            game.handle_input(state, done, dead, regen, k);
+            game.handle_input(state, options, done, dead, regen, k);
 
             while (state.window_stack.size() > 0) {
 
                 k = state.render.draw_window(screen, state.window_stack.back().message);
 
-                game.handle_input(state, done, dead, regen, k);
+                game.handle_input(state, options, done, dead, regen, k);
             }
         }
     }
