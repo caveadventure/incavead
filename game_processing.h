@@ -497,7 +497,8 @@ void Game::process_world(GameState& state,
     state.monsters.process(state.render, 
                            std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),
                                      std::placeholders::_1, std::placeholders::_2, 
-                                     std::placeholders::_3, std::placeholders::_4));
+                                     std::placeholders::_3, std::placeholders::_4,
+                                     std::placeholders::_5));
 
     state.features.process(state.render, 
                            std::bind(process_feature, std::ref(state),

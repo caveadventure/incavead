@@ -107,13 +107,15 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
         }
     }
 
-    monsters::Monster mon;
-    if (state.monsters.get(nx, ny, mon)) {
+    monsters::Monster& mon = state.monsters.get(nx, ny);
+
+    if (!mon.null()) {
 
         damage::attacks_t attacks;
         p.get_attack(attacks);
 
-        if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, mon, false)) {
+        if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, 
+                               monsters::pt(nx, ny), mon, false)) {
             ++(state.ticks);
         }
 
@@ -207,7 +209,7 @@ bool run_away(Player& p, GameState& state, size_t n_skin) {
 
     std::unordered_set<neighbors::pt> ms;
 
-    for (const auto& i : state.monsters.mons) {
+    for (const auto& i : state.monsters.mgrid) {
 
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;

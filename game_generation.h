@@ -171,7 +171,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
             throw std::runtime_error("Sanity error 2.5");
     }
 
-    for (const auto& mv : state.monsters.mons) {
+    for (const auto& mv : state.monsters.mgrid) {
         if (state.grid.walkmap.count(mv.first) == 0)
             throw std::runtime_error("Sanity error 3");
     }
@@ -395,7 +395,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     }
 
     /*
-    for (const auto& mv : state.monsters.mons) {
+    for (const auto& mv : state.monsters.mgrid) {
         if (state.grid.walkmap.count(mv.first) == 0)
             throw std::runtime_error("Sanity error 4");
     }

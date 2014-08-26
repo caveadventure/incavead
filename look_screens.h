@@ -38,7 +38,7 @@ inline void look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigne
     size_t mons;
     size_t items;
 
-    for (const auto& i : state.monsters.mons) {
+    for (const auto& i : state.monsters.mgrid) {
         if (!state.render.is_in_fov(i.first.first, i.first.second))
             continue;
 
@@ -186,8 +186,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
                                        return false;
                                    }
 
-                                   monsters::Monster tmp;
-                                   if (state.monsters.get(x, y, tmp)) {
+                                   monsters::Monster& tmp = state.monsters.get(x, y);
+                                   if (!tmp.null()) {
                                        monc++;
                                    }
 
@@ -199,7 +199,6 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
 
     std::string msg;
-    monsters::Monster mon;
     items::Item itm;
     features::Feature feat;
 
@@ -209,9 +208,11 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
     bool ok = true;
 
+    monsters::Monster& mon = state.monsters.get(x, y);
+
     if (!state.render.is_in_fov(x, y)) {
 
-    } else if (state.monsters.get(x, y, mon)) {
+    } else if (!mon.null()) {
 
         std::string state;
 

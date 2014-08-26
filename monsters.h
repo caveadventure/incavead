@@ -10,8 +10,8 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 
 struct Monster {
+    size_t serial;
     tag_t tag;
-    pt xy;
 
     double health;
     double magic;
@@ -21,11 +21,15 @@ struct Monster {
     unsigned int fear;
     pt target;
 
-    Monster() : xy(0, 0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
+    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
 
-    Monster(tag_t _tag, const pt& _xy) : 
-        tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
+    Monster(tag_t _tag, size_t ser) : 
+        serial(ser), tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
         {}
+
+    bool null() const {
+        return tag.null();
+    }
 };
 
 
@@ -37,8 +41,8 @@ namespace serialize {
 template <>
 struct reader<monsters::Monster> {
     void read(Source& s, monsters::Monster& m) {
+        serialize::read(s, m.serial);
         serialize::read(s, m.tag);
-        serialize::read(s, m.xy);
         serialize::read(s, m.health);
         serialize::read(s, m.magic);
         serialize::read(s, m.sleep);
@@ -52,8 +56,8 @@ struct reader<monsters::Monster> {
 template <>
 struct writer<monsters::Monster> {
     void write(Sink& s, const monsters::Monster& m) {
+        serialize::write(s, m.serial);
         serialize::write(s, m.tag);
-        serialize::write(s, m.xy);
         serialize::write(s, m.health);
         serialize::write(s, m.magic);
         serialize::write(s, m.sleep);
@@ -71,10 +75,15 @@ namespace monsters {
 
 struct Monsters {
 
-    std::unordered_map<pt, Monster> mons;
+    size_t serial;
+    std::unordered_map<size_t, Monster> mons;
+    std::unordered_map<pt, size_t> mgrid;
+
+    Monsters() : serial(0) {}
 
     void init() {
         mons.clear();
+        mgrid.clear();
     }
 
     void clear() {
@@ -139,7 +148,9 @@ struct Monsters {
             pt xy = *clumpi;
             clump.erase(clumpi);
 
-            mons[xy] = Monster(tag, xy);
+            serial++;
+            mons[serial] = Monster(tag, serial);
+            mgrid[xy] = serial;
             placed.insert(xy);
             ++ret;
 
@@ -148,7 +159,7 @@ struct Monsters {
                 if (fp(grid, v.first, v.second) && 
                     !ptsource.is_nogen(v.first, v.second) &&
                     placed.count(v) == 0 &&
-                    mons.count(v) == 0) {
+                    mgrid.count(v) == 0) {
 
                     clump.insert(v);
                 }
@@ -205,7 +216,7 @@ struct Monsters {
             if (f(grid, v.first, v.second) && 
                 !ptsource.is_nogen(v.first, v.second) && 
                 placed.count(v) == 0 &&
-                mons.count(v) == 0) {
+                mgrid.count(v) == 0) {
 
                 out = v;
                 return true;
@@ -423,24 +434,27 @@ struct Monsters {
         }
     }
 
-    bool get(unsigned int x, unsigned int y, Monster& ret) {
-        auto i = mons.find(pt(x, y));
+    Monster& get(size_t serial) {
 
-        if (i == mons.end()) {
-            return false;
-        }
+        auto j = mons.find(serial);
 
-        ret = i->second;
-        return true;
+        if (j == mons.end())
+            throw std::runtime_error("Sanity error: monster lists unsynced.");
+
+        return j->second;
     }
 
-    template <typename FUNC>
-    void change(const Monster& mon, FUNC f) {
-        auto i = mons.find(mon.xy);
+    Monster& get(unsigned int x, unsigned int y) {
 
-        if (i != mons.end()) {
-            f(i->second);
+        static Monster none;
+
+        auto i = mgrid.find(pt(x, y));
+
+        if (i == mgrid.end()) {
+            return none;
         }
+
+        return get(i->second);
     }
 
     void dispose(counters::Counts& counts) {
@@ -455,19 +469,22 @@ struct Monsters {
     template <typename FUNC>
     void process(grender::Grid& grid, FUNC f) {
 
-        size_t sbefore = mons.size();
+        size_t sbefore = mgrid.size();
 
-        std::unordered_map<pt, Monster> neuw;
+        std::unordered_map<pt, size_t> neuw;
         std::unordered_set<pt> wipe;
         unsigned int deadcount = 0;
 
-        for (const auto& i : mons) {
-            const Species& s = species().get(i.second.tag);
+        for (const auto& i : mgrid) {
+
+            Monster& m = get(i.second);
+
+            const Species& s = species().get(m.tag);
 
             pt nxy;
             bool dead = false;
 
-            if (f(i.second, s, nxy, dead)) {
+            if (f(i.first, m, s, nxy, dead)) {
 
                 if (dead) {
                     deadcount++;
@@ -481,12 +498,12 @@ struct Monsters {
         }
 
         for (auto& i : neuw) {
-            if (mons.count(i.first) == 0 || wipe.count(i.first) != 0) {
+            if (mgrid.count(i.first) == 0 || wipe.count(i.first) != 0) {
 
                 wipe.insert(i.second.xy);
 
                 i.second.xy = i.first;
-                mons[i.first] = i.second;
+                mgrid[i.first] = i.second;
 
                 wipe.erase(i.first);
 
@@ -496,17 +513,17 @@ struct Monsters {
         }
 
         for (const pt& i : wipe) {
-            mons.erase(i);
+            mgrid.erase(i);
 
             grid.invalidate(i.first, i.second);
         }
 
-        if (mons.size() != sbefore - deadcount) {
+        if (mgrid.size() != sbefore - deadcount) {
 
-            for (const auto& i : mons) {
+            for (const auto& i : mgrid) {
                 std::cout << "   | " << i.first.first << "," << i.first.second << std::endl;
             }
-            std::cout << mons.size() << " != " << sbefore << " - " << deadcount << std::endl;
+            std::cout << mgrid.size() << " != " << sbefore << " - " << deadcount << std::endl;
             std::cout << "  " << neuw.size() << " " << wipe.size() << std::endl;
             
             throw std::runtime_error("Lost a monster in monster::process()!");
@@ -522,14 +539,18 @@ namespace serialize {
 template <>
 struct reader<monsters::Monsters> {
     void read(Source& s, monsters::Monsters& t) {
+        serialize::read(s, t.serial);
         serialize::read(s, t.mons);
+        serialize::read(s, t.mgrid);
     }
 };
 
 template <>
 struct writer<monsters::Monsters> {
     void write(Sink& s, const monsters::Monsters& t) {
+        serialize::write(s, t.serial);
         serialize::write(s, t.mons);
+        serialize::write(s, t.mgrid);
     }
 };
 

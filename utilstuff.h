@@ -134,13 +134,13 @@ inline float monster_move_cost(GameState& state, const Species& s, unsigned int 
 }
 
 inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py, 
-                             const monsters::Monster& m, const Species& s) {
+                             const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
     unsigned int radius = std::max(1u, s.range / 2);
 
     std::unordered_set<neighbors::pt> ns;
 
-    radial_points(m.xy.first, m.xy.second, state, radius, ns, 
+    radial_points(mxy.first, mxy.second, state, radius, ns, 
                   [&s](GameState& state, unsigned int x, unsigned int y) {
                       return (monster_move_cost(state, s, x, y) != 0.0f);
                   });
@@ -160,11 +160,11 @@ inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py,
 
     if (maxd == 0.0) {
 
-        state.monsters.change(m, [](monsters::Monster& m) { m.target = m.xy; });
+        m.target = mxy;
         return false;
     }
 
-    state.monsters.change(m, [&maxn](monsters::Monster& m) { m.target = maxn; });
+    m.target = maxn;
     return true;
 }
 

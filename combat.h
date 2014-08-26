@@ -56,7 +56,7 @@ inline void roll_attack(rnd::Generator& rng,
 }
 
 
-inline void monster_kill(Player& p, GameState& state, const monsters::Monster& mon, 
+inline void monster_kill(Player& p, GameState& state, const monsters::pt& mxy, monsters::Monster& mon, 
                          const Species& s, bool do_track, const std::set<tag_t>& types) {
 
     for (const auto& drop : s.drop) {
@@ -80,8 +80,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
         }
 
         if (!item.null()) {
-            items::Item idrop = state.items.make_item(item, mon.xy, state.rng);
-            state.items.place(mon.xy.first, mon.xy.second, idrop, state.render);
+            items::Item idrop = state.items.make_item(item, mxy, state.rng);
+            state.items.place(mxy.first, mxy.second, idrop, state.render);
         }
     }
 
@@ -91,7 +91,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::Monster& m
 }
 
 
-inline void attack_damage_monster(const damage::val_t& v, const monsters::Monster& mon, const Species& s,
+inline void attack_damage_monster(const damage::val_t& v, 
+                                  const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   double& totdamage, double& totmagic, double& totsleep, double& totstun, 
                                   double& totfear, double& totblind, double& totpoly,
@@ -130,22 +131,22 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     unsigned int polyturns = dam.player_poly(dmg);
 
     if (sleepturns > 0) {
-        state.monsters.change(mon, [sleepturns](monsters::Monster& m) { m.sleep += sleepturns; });
+        mon.sleep += sleepturns;
         totsleep += sleepturns;
     }
 
     if (blindturns > 0) {
-        state.monsters.change(mon, [blindturns](monsters::Monster& m) { m.blind += blindturns; });
+        mon.blind += blindturns;
         totblind += blindturns;
     }
 
     if (stunturns > 0) {
-        state.monsters.change(mon, [stunturns](monsters::Monster& m) { m.stun += stunturns; });
+        mon.stun += stunturns;
         totstun += stunturns;
     }
 
     if (fearturns > 0) {
-        state.monsters.change(mon, [fearturns](monsters::Monster& m) { m.fear += fearturns; });
+        mon.fear += fearturns;
         totfear += fearturns;
 
         make_monster_run(state, p.px, p.py, mon, s);
@@ -165,7 +166,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
     }
 
     if (dam.cancellation) {
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.magic -= dmg; });
+        mon.magic -= dmg;
         totmagic += dmg;
     }
 
@@ -175,12 +176,12 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
         auto tmp = dam.polymorph;
 
         if (s.karma < 0 || s.flags.undead) {
-            state.monsters.change(mon, [tmp](monsters::Monster& m) { m.tag = tmp.second; });
+            mon.tag = tmp.second;
         } else {
-            state.monsters.change(mon, [tmp](monsters::Monster& m) { m.tag = tmp.first; });
+            mon.tag = tmp.first;
         }
 
-        state.render.invalidate(mon.xy.first, mon.xy.second);
+        state.render.invalidate(mxy.first, mxy.second);
     }
 
     if (dam.health || dam.vampiric) {
@@ -190,7 +191,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
             p.health.inc(dmg);
         }
 
-        state.monsters.change(mon, [dmg](monsters::Monster& m) { m.health -= dmg; });
+        mon.health -= dmg;
         totdamage += dmg;
 
         if (dmg >= 2.8) {
@@ -207,7 +208,7 @@ inline void attack_damage_monster(const damage::val_t& v, const monsters::Monste
 
 
 inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
-                            GameState& state, const monsters::Monster& mon,
+                            GameState& state, const monsters::pt& mxy, monsters::Monster& mon,
                             bool track_kills) {
 
     if (attacks.empty()) {
@@ -236,7 +237,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, p, state, 
+        attack_damage_monster(v, mxy, mon, s, p, state, 
                               totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
                               types, mortal);
     }
@@ -247,13 +248,13 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     if (mon.health - totdamage <= -3) {
 
-        monster_kill(p, state, mon, s, track_kills, types);
+        monster_kill(p, state, mxy, mon, s, track_kills, types);
     }
 }
 
 
 inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                               GameState& state, const monsters::Monster& mon, 
+                               GameState& state, const monsters::py& mxy, monsters::Monster& mon, 
                                bool quiet) {
 
     const Species& s = species().get(mon.tag);
@@ -289,7 +290,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mon, s, p, state, 
+        attack_damage_monster(v, mxy, mon, s, p, state, 
                               totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
                               types, mortal);
     }
@@ -326,7 +327,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             state.render.do_message(nlp::message("You killed %s.", s));
         }
 
-        monster_kill(p, state, mon, s, true, types);
+        monster_kill(p, state, mxy, mon, s, true, types);
 
         if (allow_gain_level && species_level > p.level) {
 

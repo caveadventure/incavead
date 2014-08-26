@@ -329,12 +329,13 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
 
     } else {
 
-        monsters::Monster mon;
-        if (state.monsters.get(_x, _y, mon)) {
+        monsters::Monster& mon = state.monsters.get(_x, _y);
+
+        if (!mon.null()) {
 
             unsigned int lev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level(state.rng));
 
-            attack_from_player(p, d.attacks, lev, state, mon, false);
+            attack_from_player(p, d.attacks, lev, state, monsters::pt(_x, _y), mon, false);
         }
     }
 }
@@ -461,8 +462,9 @@ inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
         return false;
     }
 
-    monsters::Monster mon;
-    if (state.monsters.get(lx, ly, mon)) {
+    monsters::Monster& mon = state.monsters.get(lx, ly);
+
+    if (!mon.null()) {
             
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 
@@ -470,7 +472,7 @@ inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
 
         unsigned int lev = (1 - v2) * ilev;
 
-        attack_from_player(p, d.attacks, lev, state, mon, false);
+        attack_from_player(p, d.attacks, lev, state, monsters::pt(lx, ly), mon, false);
     }
 
     state.items.place(lx, ly, tmp, state.render);

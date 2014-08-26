@@ -53,10 +53,11 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
 
     } else {
 
-        monsters::Monster mon;
-        if (state.monsters.get(_x, _y, mon)) {
+        monsters::Monster& mon = state.monsters.get(_x, _y);
 
-            attack_from_env(p, attacks, s.get_computed_level(), state, mon, friendly_fire);
+        if (!mon.null()) {
+
+            attack_from_env(p, attacks, s.get_computed_level(), state, monsters::pt(_x, _y), mon, friendly_fire);
         }
     }
 }
@@ -82,7 +83,7 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 
 inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned int range,
                              std::vector<summons_t>& summons, 
-                             const monsters::Monster& m, const Species& s) {
+                             const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
     bool reachd = false;
 
@@ -91,7 +92,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
     if (s.blast.size() > 0 || s.cast_cloud.size() > 0) {
 
-        reachd = reachable(state, m.xy.first, m.xy.second, p.px, p.py, player_walkable);
+        reachd = reachable(state, mxy.first, mxy.second, p.px, p.py, player_walkable);
     }
 
     if (reachd) {
@@ -137,7 +138,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{m.xy.first, m.xy.second, c.speciestag, 1, m.tag, c.msg});
+            summons.push_back(summons_t{mxy.first, mxy.second, c.speciestag, 1, m.tag, c.msg});
         }
     }
 
@@ -150,7 +151,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{m.xy.first, m.xy.second, tag_t(), c.level, m.tag, c.msg});
+            summons.push_back(summons_t{mxy.first, mxy.second, tag_t(), c.level, m.tag, c.msg});
         }        
     }
 
@@ -161,9 +162,9 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
         if (v > s.morph.chance) {
 
             tag_t news = s.morph.species;
-            state.monsters.change(m, [news](monsters::Monster& m) { m.tag = news; });
+            m.tag = news;
 
-            state.render.invalidate(m.xy.first, m.xy.second);
+            state.render.invalidate(mxy.first, mxy.second);
             return true;
         }
     }
@@ -173,7 +174,7 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
 inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
-                         const monsters::Monster& m, const Species& s,
+                         const monsters::pt& mxy, monsters::Monster& m, const Species& s,
                          monsters::pt& nxy, bool& do_die) {
 
     bool do_stop = false;
@@ -181,24 +182,24 @@ inline bool move_monster(Player& p, GameState& state,
     unsigned int range = s.range;
 
     features::Feature feat;
-    if (state.features.get(m.xy.first, m.xy.second, feat) && 
+    if (state.features.get(mxy.first, mxy.second, feat) && 
         !s.flags.terrain_immune) {
 
         const Terrain& t = terrain().get(feat.tag);
 
         if (!t.attacks.empty()) {
 
-            attack_from_env(p, t.attacks, t.attack_level, state, m, false);
+            attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, false);
 
             if (t.uncharge.attack) {
-                state.features.uncharge(m.xy.first, m.xy.second, state.render);
+                state.features.uncharge(mxy.first, mxy.second, state.render);
             }
         }
 
         if (t.sticky) {
 
             if (t.uncharge.move) {
-                state.features.uncharge(m.xy.first, m.xy.second, state.render);
+                state.features.uncharge(mxy.first, mxy.second, state.render);
             }
 
             do_stop = true;
@@ -214,7 +215,7 @@ inline bool move_monster(Player& p, GameState& state,
     if (m.health <= -3) {
 
         if (!s.death_summon.null()) {
-            summons.push_back(summons_t{m.xy.first, m.xy.second, s.death_summon, 1, m.tag, ""});
+            summons.push_back(summons_t{mxy.first, mxy.second, s.death_summon, 1, m.tag, ""});
         }
 
         do_die = true;
@@ -228,37 +229,37 @@ inline bool move_monster(Player& p, GameState& state,
     monsters::pt target(p.px, p.py);
 
     if (m.sleep > 0) {
-        state.monsters.change(m, [](monsters::Monster& m) { --(m.sleep); });
+        --(m.sleep);
         return false;
     }
 
     if (m.stun > 0) {
-        state.monsters.change(m, [](monsters::Monster& m) { --(m.stun); });
+        --(m.stun);
     }
 
     if (m.fear > 0) {
-        state.monsters.change(m, [](monsters::Monster& m) { --(m.fear); });
+        --(m.fear);
 
-        if (m.target == m.xy) {
+        if (m.target == mxy) {
 
-            if (!make_monster_run(state, p.px, p.py, m, s))
+            if (!make_monster_run(state, p.px, p.py, mxy, m, s))
                 return false;
         }
 
         target = m.target;
     }
 
-    double dist = distance(m.xy.first, m.xy.second, p.px, p.py);
+    double dist = distance(mxy.first, mxy.second, p.px, p.py);
 
     if (m.blind > 0) {
         range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) - 1);
 
-        state.monsters.change(m, [](monsters::Monster& m) { --(m.blind); });
+        --(m.blind);
     }
 
     if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
 
-        if (do_monster_magic(p, state, dist, range, summons, m, s)) 
+        if (do_monster_magic(p, state, dist, range, summons, mxy, m, s)) 
             return false;
     }
 
@@ -283,7 +284,7 @@ inline bool move_monster(Player& p, GameState& state,
         do_random = true;
 
     } else if (do_seek && !do_random &&
-               path_walk(state, m.xy.first, m.xy.second, target.first, target.second, 1, range, 
+               path_walk(state, mxy.first, mxy.second, target.first, target.second, 1, range, 
                          [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
                              return monster_move_cost(state, s, c, d);
                          },
@@ -311,7 +312,7 @@ inline bool move_monster(Player& p, GameState& state,
     if (do_random) {
         std::vector<monsters::pt> tmp;
 
-        for (const neighbors::pt& v : state.neigh(m.xy)) {
+        for (const neighbors::pt& v : state.neigh(mxy)) {
             if (monster_move_cost(state, s, v.first, v.second) != 0.0f) {
                 tmp.push_back(v);
             }
@@ -325,12 +326,12 @@ inline bool move_monster(Player& p, GameState& state,
 
     if (m.stun > 0) {
         
-        if (m.xy.first != nxy.first && state.rng.range(0, 2) == 0) {
-            nxy.first = m.xy.first + m.xy.first - nxy.first;
+        if (mxy.first != nxy.first && state.rng.range(0, 2) == 0) {
+            nxy.first = mxy.first + mxy.first - nxy.first;
         }
 
-        if (m.xy.second != nxy.second && state.rng.range(0, 2) == 0) {
-            nxy.second = m.xy.second + m.xy.second - nxy.second;
+        if (mxy.second != nxy.second && state.rng.range(0, 2) == 0) {
+            nxy.second = mxy.second + mxy.second - nxy.second;
         }
 
         if (monster_move_cost(state, s, nxy.first, nxy.second) == 0.0f)
@@ -371,10 +372,8 @@ inline bool move_monster(Player& p, GameState& state,
                 return true;
             }
             
-            state.monsters.change(m, [vamp](monsters::Monster& m) { 
-                    m.health += vamp; 
-                    m.health = std::min(3.0, m.health);
-                });
+            m.health += vamp; 
+            m.health = std::min(3.0, m.health);
         }
 
         return false;
@@ -386,7 +385,7 @@ inline bool move_monster(Player& p, GameState& state,
         double c = state.rng.gauss(s.trail.cost.mean, s.trail.cost.deviation);
 
         if (c != 0) {
-            state.monsters.change(m, [c](monsters::Monster& m) { m.health -= c; });
+            m.health -= c;
         }
     }
 

@@ -110,8 +110,6 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
     // //
 
-    monsters::Monster mon;
-
     if (x == p.px && y == p.py) {
 
         tag_t polytag = p.polymorph.species;
@@ -125,15 +123,20 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
         state.render.set_skin(x, y, 5, s);
 
-    } else if (state.monsters.get(x, y, mon)) {
-
-        const Species& s = species().get(mon.tag);
-        state.render.set_skin(x, y, 5, s.skin[n_skin]);
-        state.render.set_is_walkblock(x, y, 5, true);
-
     } else {
-        state.render.unset_skin(x, y, 5);
-        state.render.set_is_walkblock(x, y, 5, false);
+
+        monsters::Monster& mon = state.monsters.get(x, y);
+
+        if (!mon.null()) {
+
+            const Species& s = species().get(mon.tag);
+            state.render.set_skin(x, y, 5, s.skin[n_skin]);
+            state.render.set_is_walkblock(x, y, 5, true);
+
+        } else {
+            state.render.unset_skin(x, y, 5);
+            state.render.set_is_walkblock(x, y, 5, false);
+        }
     }
 
     state.render.validate(x, y);
