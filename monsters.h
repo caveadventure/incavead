@@ -24,7 +24,7 @@ struct Monster {
     Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
 
     Monster(tag_t _tag, size_t ser) : 
-        serial(ser), tag(_tag), xy(_xy), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
+        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
         {}
 
     bool null() const {
@@ -471,7 +471,7 @@ struct Monsters {
 
         size_t sbefore = mgrid.size();
 
-        std::unordered_map<pt, size_t> neuw;
+        std::unordered_map< pt, std::pair<pt,size_t> > neuw;
         std::unordered_set<pt> wipe;
         unsigned int deadcount = 0;
 
@@ -492,7 +492,7 @@ struct Monsters {
 
                 } else if (neuw.count(nxy) == 0) {
 
-                    neuw[nxy] = i.second;
+                    neuw[nxy] = std::make_pair(i.first, i.second);
                 }
             }
         }
@@ -500,10 +500,9 @@ struct Monsters {
         for (auto& i : neuw) {
             if (mgrid.count(i.first) == 0 || wipe.count(i.first) != 0) {
 
-                wipe.insert(i.second.xy);
+                wipe.insert(i.second.first);
 
-                i.second.xy = i.first;
-                mgrid[i.first] = i.second;
+                mgrid[i.first] = i.second.second;
 
                 wipe.erase(i.first);
 

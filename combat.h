@@ -149,7 +149,7 @@ inline void attack_damage_monster(const damage::val_t& v,
         mon.fear += fearturns;
         totfear += fearturns;
 
-        make_monster_run(state, p.px, p.py, mon, s);
+        make_monster_run(state, p.px, p.py, mxy, mon, s);
     }
 
     if (polyturns > 0) {
@@ -254,7 +254,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
 
 inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsigned int plevel, 
-                               GameState& state, const monsters::py& mxy, monsters::Monster& mon, 
+                               GameState& state, const monsters::pt& mxy, monsters::Monster& mon, 
                                bool quiet) {
 
     const Species& s = species().get(mon.tag);

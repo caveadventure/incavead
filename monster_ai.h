@@ -342,7 +342,7 @@ inline bool move_monster(Player& p, GameState& state,
 
         if (s.ai == Species::ai_t::suicide) {
 
-            monster_kill(p, state, m, s, false, std::set<tag_t>());
+            monster_kill(p, state, mxy, m, s, false, std::set<tag_t>());
 
             do_die = true;
             return true;
