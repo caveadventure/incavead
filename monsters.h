@@ -512,9 +512,18 @@ struct Monsters {
         }
 
         for (const pt& i : wipe) {
-            mgrid.erase(i);
+
+            auto z = mgrid.find(i);
+
+            mons.erase(z->second);
+            mgrid.erase(z);
 
             grid.invalidate(i.first, i.second);
+        }
+
+        if (mons.size() != mgrid.size()) {
+
+            throw std::runtime_error("Monster structs unsynced");
         }
 
         if (mgrid.size() != sbefore - deadcount) {
