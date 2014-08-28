@@ -145,8 +145,8 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
             
             for (const auto& nn : state.neigh(neighbors::pt(nx, ny))) {
 
-                unsigned int nnx = nn.first;
-                unsigned int nny = nn.second;
+                unsigned int nnx = nx + nn.first;
+                unsigned int nny = ny + nn.second;
 
                 features::Feature feat2;
                 if (state.features.get(nnx, nny, feat2)) {

@@ -60,7 +60,12 @@ struct Map {
 
             pt xy(x, y);
 
-            std::set<pt> ng(neigh(xy));
+            std::set<pt> ng;
+
+            for (const auto& xy_ : neigh(xy)) {
+                ng.insert(neigh.mk(xy_, xy));
+            }
+
             std::set<pt> proc;
         
             nogens.insert(xy);
@@ -76,8 +81,10 @@ struct Map {
                         continue;
 
                     proc.insert(z);
-                    const auto& tmp = neigh(z);
-                    ngtmp.insert(tmp.begin(), tmp.end());
+
+                    for (const auto& xy_ : neigh(z)) {
+                        ngtmp.insert(neigh.mk(xy_, z));
+                    }
                 }
 
                 ng.insert(ngtmp.begin(), ngtmp.end());
@@ -293,7 +300,9 @@ struct Map {
         std::vector< std::pair<double, pt> > l;
         double vtotal = 0.0;
 
-        for (const auto& xy_ : neigh(xy)) {
+        for (const auto& _xy_ : neigh(xy)) {
+
+            auto xy_ = neigh.mk(_xy_, xy);
 
             double v = _get(xy_);
 
@@ -444,7 +453,9 @@ struct Map {
 
             bool iswater = watermap.count(xy);
 
-            for (const auto& ij : neigh(xy)) {
+            for (const auto& ij_ : neigh(xy)) {
+
+                auto ij = neigh.mk(ij_, xy);
 
                 // For all solid squares neighboring a walkable square, count the number of neighbor walkable squares.
                 if (walkmap.count(ij) == 0)
@@ -517,7 +528,7 @@ struct Map {
 
             for (const auto& xy_ : neigh(xy)) {
 
-                if (watermap.count(xy_) != 0)
+                if (watermap.count(neigh.mk(xy_, xy)) != 0)
                     nwater++;
             }
 
@@ -557,7 +568,7 @@ struct Map {
                 floormap.insert(xy);
 
                 for (const auto& v : neigh(xy)) {
-                    if (watermap.count(v) != 0) {
+                    if (watermap.count(neigh.mk(v, xy)) != 0) {
                         shoremap.insert(xy);
                         break;
                     }
@@ -565,7 +576,7 @@ struct Map {
             }
 
             for (const auto& v : neigh(xy)) {
-                if (walkmap.count(v) == 0) {
+                if (walkmap.count(neigh.mk(v, xy)) == 0) {
                     cornermap.insert(xy);
                     break;
                 }
@@ -730,7 +741,10 @@ struct Map {
                 floormap.insert(xy);
             }
 
-            for (const auto& v : neigh(xy)) {
+            for (const auto& v_ : neigh(xy)) {
+
+                auto v = neigh.mk(v_, xy);
+
                 if (watermap.count(v) != 0 && walkmap.count(v) != 0) {
                     shoremap.insert(xy);
                 }
@@ -761,7 +775,7 @@ struct Map {
         std::set<pt> affected;
 
         for (const auto& v : neigh(tmp)) {
-            affected.insert(v);
+            affected.insert(neigh.mk(v, tmp));
         }
 
         affected.insert(tmp);

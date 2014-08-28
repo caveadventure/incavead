@@ -57,7 +57,7 @@ struct CaMap {
         const CelAuto& rul = celautos().get(tag);
 
         for (const auto& xy_ : neigh(xy)) {
-            count_of_n[xy_][rul.tag]++;
+            count_of_n[neigh.mk(xy_, xy)][rul.tag]++;
         }
     }
     
@@ -73,12 +73,14 @@ struct CaMap {
 
         for (const auto& xy_ : neigh(xy)) {
 
-            size_t qq = count_of_n[xy_][rul.tag];
+            auto nxy = neigh.mk(xy_, xy);
+
+            size_t qq = count_of_n[nxy][rul.tag];
             if (qq == 0) {
                 throw std::runtime_error("Sanity error in camap::clear");
             }
             
-            count_of_n[xy_][rul.tag]--;
+            count_of_n[nxy][rul.tag]--;
         }
 
         funcoff(xy.first, xy.second, rul);

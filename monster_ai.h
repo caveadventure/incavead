@@ -312,7 +312,10 @@ inline bool move_monster(Player& p, GameState& state,
     if (do_random) {
         std::vector<monsters::pt> tmp;
 
-        for (const neighbors::pt& v : state.neigh(mxy)) {
+        for (const neighbors::pt& v_ : state.neigh(mxy)) {
+
+            auto v = state.neigh.mk(v_, mxy);
+
             if (monster_move_cost(state, s, v.first, v.second) != 0.0f) {
                 tmp.push_back(v);
             }

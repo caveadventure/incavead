@@ -1109,7 +1109,9 @@ public:
             pt xy = *(toproc.begin());
             toproc.erase(toproc.begin());
 
-            for (const auto& xyi : neigh(xy)) {
+            for (const auto& xyi_ : neigh(xy)) {
+
+                auto xyi = neigh.mk(xyi_, xy);
 
                 if (procd.count(xyi) != 0) 
                     continue;

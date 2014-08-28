@@ -2,7 +2,7 @@
 #define __NEIGHBORS_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <set>
 
 
@@ -13,8 +13,11 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 struct Neighbors {
     
-    typedef std::map<pt, std::set<pt> > ns_t;
+    typedef std::pair<int, int> p0_t;
+
+    typedef std::unordered_map< pt, std::set<p0_t> > ns_t;
     ns_t nbmap;
+    std::set<p0_t> defaults;
     unsigned int w;
     unsigned int h;
 
@@ -23,10 +26,23 @@ struct Neighbors {
         w = _w;
         h = _h;
 
+        for (int xi = -1; xi <= 1; xi++) {
+            for (int yi = -1; yi <= 1; yi++) { 
+
+                if (xi == 0 && yi == 0) continue;
+
+                defaults.insert(p0_t(xi, yi));
+            }
+        }
+
         nbmap.clear();
 
         for (unsigned int x = 0; x < w; x++) {
             for (unsigned int y = 0; y < h; y++) {
+
+                if (x > 0 && x < w - 1 && 
+                    y > 0 && y < h - 1)
+                    continue;
 
                 auto& v = nbmap[std::make_pair(x, y)];
 
@@ -35,12 +51,12 @@ struct Neighbors {
 
                         if (xi == 0 && yi == 0) continue;
 
-                        pt tmp(x+xi, y+yi);
+                        p0_t tmp(x+xi, y+yi);
 
-                        if (tmp.first < 0 || tmp.first >= w || tmp.second < 0 || tmp.second >= h)
+                        if (tmp.first < 0 || tmp.first >= (int)w || tmp.second < 0 || tmp.second >= (int)h)
                             continue;
 
-                        v.insert(v.end(), tmp);
+                        v.insert(v.end(), p0_t(xi, yi));
                     }
                 }
             }
@@ -51,8 +67,7 @@ struct Neighbors {
         init(w, h);
     }
 
-    const std::set<pt>& operator()(const pt& xy) const {
-        static std::set<pt> empty;
+    const std::set<p0_t>& operator()(const pt& xy) const {
 
         ns_t::const_iterator i = nbmap.find(xy);
 
@@ -60,11 +75,27 @@ struct Neighbors {
             return i->second;
 	}
         
-        return empty;
+        return defaults;
+    }
+
+    static pt mk(const p0_t& off, unsigned int x, unsigned int y) {
+        return pt(off.first + x, off.second + y);
+    }
+
+    static pt mk(const p0_t& off, const pt& xy) {
+        return pt(off.first + xy.first, off.second + xy.second);
     }
 
     bool linked(const pt& xy1, const pt& xy2) const {
-        return operator()(xy1).count(xy2);
+
+        ns_t::const_iterator i = nbmap.find(xy1);
+
+        if (i == nbmap.end())
+            return true;
+
+        p0_t tmp((int)xy2.first - (int)xy1.first, (int)xy2.second - (int)xy1.second);
+
+        return i->second.count(tmp);
     }
 
 };

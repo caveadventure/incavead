@@ -166,7 +166,9 @@ struct Monsters {
             placed.insert(xy);
             ++ret;
 
-            for (const pt& v : neigh(xy)) {
+            for (const pt& v_ : neigh(xy)) {
+
+                auto v = neigh.mk(v_, xy);
 
                 if (fp(grid, v.first, v.second) && 
                     !ptsource.is_nogen(v.first, v.second) &&
@@ -375,8 +377,10 @@ struct Monsters {
 
         std::unordered_set<pt> n;
 
-        for (const pt& xy : neigh(pt(x, y))) {
-            n.insert(xy);
+        pt xy(x, y);
+
+        for (const pt& xy_ : neigh(xy)) {
+            n.insert(neigh.mk(xy_, xy));
         }
 
         n.insert(pt(x, y));
