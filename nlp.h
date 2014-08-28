@@ -378,6 +378,28 @@ void message(_buffer& b, double v, const TAIL&... args) {
 }
 
 template <typename... TAIL>
+void message(_buffer& b, float v, const TAIL&... args) {
+
+    unsigned char c = b.consume();
+
+    if (c == '\0') 
+        return;
+
+    if (c == 'd') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%g", v);
+        b.out += tmp;
+
+    } else if (c == 'f') {
+        char tmp[256];
+        ::snprintf(tmp, 255, "%.2f", v);
+        b.out += tmp;
+    }
+
+    message(b, args...);
+}
+
+template <typename... TAIL>
 void message(_buffer& b, char v, const TAIL&... args) {
 
     unsigned char c = b.consume();

@@ -162,7 +162,6 @@ struct Main {
         state.grid.init(sp.w, sp.h);
         state.path.init(sp.w, sp.h);
         state.render.init(sp.w2, sp.h2);
-        state.render.keylog.clear();
         state.camap.init();
         state.moon.init(seed);
 

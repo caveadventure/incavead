@@ -22,9 +22,9 @@ struct Map {
     unsigned int w;
     unsigned int h;
 
-    std::vector<double> grid;
+    std::vector<float> grid;
 
-    std::vector<double> karma;
+    std::vector<float> karma;
  
     std::unordered_set<pt> walkmap;
     std::unordered_set<pt> watermap;
@@ -171,19 +171,19 @@ struct Map {
         init(w, h);
     }
 
-    double& _get(unsigned int x, unsigned int y) {
+    float& _get(unsigned int x, unsigned int y) {
         return grid[y*w+x];
     }
 
-    double& _get(const pt& xy) {
+    float& _get(const pt& xy) {
         return grid[xy.second*w+xy.first];
     }
 
-    double& get_karma(unsigned int x, unsigned int y) {
+    float& get_karma(unsigned int x, unsigned int y) {
         return karma[y*w+x];
     }
 
-    double get(unsigned int x, unsigned int y) const {
+    float get(unsigned int x, unsigned int y) const {
         return grid[y*w+x];
     }
 
@@ -249,7 +249,7 @@ struct Map {
 
         avg /= (w * h);
 
-        for (double& i : grid) {
+        for (float& i : grid) {
             i -= avg;
             if (i > max) max = i;
             else if (i < min) min = i;
@@ -257,7 +257,7 @@ struct Map {
 
         double scale = (max - min) / 20.0;
 
-        for (double& i : grid) {
+        for (float& i : grid) {
             i = (i / scale);
 
             if (i > 10.0) i = 10.0;
@@ -335,7 +335,7 @@ struct Map {
 
             watr[xy] += 1;
 
-            double& i = _get(xy);
+            float& i = _get(xy);
 
             i -= q;
             if (i < -10.0) i = -10.0;
@@ -586,7 +586,7 @@ struct Map {
         for (unsigned int y = 0; y < h; ++y) {
             for (unsigned int x = 0; x < w; ++x) {
 
-                double& k = get_karma(x, y);
+                float& k = get_karma(x, y);
 
                 if (y > 0 && x > 0) {
                     k = ((get_karma(x-1, y) + get_karma(x, y-1) + get_karma(x-1, y-1)) / 3.0);
@@ -594,7 +594,7 @@ struct Map {
 
                 k += rng.gauss(genparams.karma_mean, genparams.karma_dev);
 
-                k = std::min(std::max(k, -1.0), 1.0);
+                k = std::min(std::max(k, -1.0f), 1.0f);
             }
         }
     }

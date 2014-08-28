@@ -322,7 +322,7 @@ void do_digging_step(Player& p, GameState& state) {
 
     double digspeed = p.inv.get_digging();
 
-    double& height = state.grid._get(p.dig.x, p.dig.y);
+    float& height = state.grid._get(p.dig.x, p.dig.y);
 
     height -= digspeed;
 

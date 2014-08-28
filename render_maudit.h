@@ -153,13 +153,11 @@ struct Grid {
 
     std::vector<gridpoint> grid;
 
-    std::vector<keypress> keylog;
-
     std::list<message> messages;
 
     // transient, not saved in dump.
-    size_t current_draw_n;
-    std::vector< std::pair<size_t, skin> > overlay;
+    uint32_t current_draw_n;
+    std::vector< std::pair<uint32_t, skin> > overlay;
 
     struct textlabel_t {
         std::string label;
@@ -173,14 +171,10 @@ struct Grid {
             label(l), x(_x), y(_y), fg(_fg), bg(_bg) {}
     };
 
-    std::map< size_t, std::vector<textlabel_t> > textlabels;
+    std::map< uint32_t, std::vector<textlabel_t> > textlabels;
 
     // transient, not saved in dump.
     std::vector<hud_line> hud_pips;
-
-    // transient, not saved in dump.
-    bool keylog_do_replay;
-    size_t keylog_index;
 
     std::vector<ui_symbol_t> ui_symbol_themes;
     ui_symbol_t ui_symbol;
@@ -277,7 +271,7 @@ public:
 
 private:
 
-    const std::pair<size_t, skin>& _overlay_get(const pt& xy) {
+    const std::pair<uint32_t, skin>& _overlay_get(const pt& xy) {
         return overlay[xy.second*w+xy.first];
     }
 
@@ -490,7 +484,6 @@ public:
 
     Grid() : w(0), h(0), 
              current_draw_n(0),
-             keylog_do_replay(false), keylog_index(0),
              ui_symbol_index(0)
         {}
 
@@ -912,22 +905,6 @@ public:
         return ret;
     }
 
-    void push_replay_keypress(const keypress& kp) {
-
-        if (!keylog_do_replay) {
-            keylog_do_replay = true;
-            keylog_index = keylog.size();
-        }
-
-        keylog.push_back(kp);
-    }
-
-    void stop_keypress_replay() {
-        if (keylog_index < keylog.size())
-            throw std::runtime_error("Malformed replay file: not all keypresses were consumed.");
-        keylog_do_replay = false;
-    }
-
     /////
 
     template <typename SCREEN>
@@ -1268,8 +1245,6 @@ struct reader<grender::Grid> {
             serialize::read(s, p.is_walkblock);
         }
 
-	serialize::read(s, g.keylog);
-
         size_t messages_size;
         serialize::read(s, messages_size);
 
@@ -1301,8 +1276,6 @@ struct writer<grender::Grid> {
             serialize::write(s, t.is_viewblock);
             serialize::write(s, t.is_walkblock);
         }
-
-	serialize::write(s, g.keylog);
 
         serialize::write(s, g.messages.size());
         for (const auto& m : g.messages) {
