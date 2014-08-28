@@ -1,7 +1,10 @@
 #ifndef __MAUDIT_TYPES_H
 #define __MAUDIT_TYPES_H
 
+#include <string.h>
+#include <cstdint>
 #include <string>
+#include <stdexcept>
 
 namespace maudit {
 
@@ -28,13 +31,28 @@ enum class color : uint32_t {
 };
 
 struct glyph {
-    std::string text;
+    //std::string text;
+    uint64_t text;
     color fore;
     color back;
 
-    glyph() : text(" "), fore(color::none), back(color::bright_black) {}
+    void set_text(const std::string& c) {
 
-    glyph(const std::string& c, color f, color b) : text(c),  fore(f), back(b) {}
+        if (c.size() > 7) 
+            throw std::runtime_error("Glyph character too large: " + c);
+
+        ::memcpy((void*)(&text), (void*)(c.c_str()), c.size() + 1);
+    }
+
+    const char* get_text() const {
+        return (const char*)(&text);
+    }
+
+    glyph() : fore(color::none), back(color::bright_black) { set_text(" "); }
+
+    glyph(const std::string& c, color f, color b) : fore(f), back(b) { set_text(c); }
+
+    glyph(uint64_t t, color f, color b) : text(t), fore(f), back(b) {}
 };
 
 

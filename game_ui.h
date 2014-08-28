@@ -48,7 +48,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                     const auto& gp = state.render._get(xx, yy);
 
                     if (xx == p.px && yy == p.py) {
-                        charz = constants().player_skin[0].text;
+                        charz = constants().player_skin[0].get_text();
                         intensity = 3;
                     }
 
@@ -57,7 +57,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                         const Design& d = designs().get(item.tag);
 
                         if (d.is_lit || gp.is_lit) {
-                            charz = d.skin[0].text;
+                            charz = d.skin[0].get_text();
                             intensity = 2;
                         }
                     }
@@ -67,7 +67,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                         const Terrain& t = terrain().get(feat.tag);
 
                         if (t.is_lit || gp.is_lit) {
-                            charz = t.skin[0].text;
+                            charz = t.skin[0].get_text();
 
                             if (charz == " ")
                                 charz = ".";

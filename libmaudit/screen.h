@@ -97,7 +97,9 @@ struct screen {
 
                 const glyph& g = glyphs[y*w+x];
 
-                if (g.text.empty())
+                const char* gtext = g.get_text();
+
+                if (gtext[0] == '\0')
                     continue;
 
                 bool do_fore = false;
@@ -184,7 +186,7 @@ struct screen {
                     data += 'm';
                 }
 
-                data += g.text;
+                data += gtext;
 
                 fore_prev = g.fore;
                 back_prev = g.back;

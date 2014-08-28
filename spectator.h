@@ -233,14 +233,14 @@ void add_message_line(std::vector<maudit::glyph>& data, unsigned int w, unsigned
     std::string space(" ");
 
     while (x < 3) {
-        data[i].text = gt;
+        data[i].set_text(gt);
         data[i].fore = maudit::color::bright_yellow;
         data[i].back = maudit::color::bright_black;
         ++x;
         ++i;
     }
 
-    data[i].text = space;
+    data[i].set_text(space);
     data[i].fore = maudit::color::bright_yellow;
     data[i].back = maudit::color::bright_black;
     ++x;
@@ -251,7 +251,7 @@ void add_message_line(std::vector<maudit::glyph>& data, unsigned int w, unsigned
         if (x >= w)
             break;
 
-        data[i].text = std::string(1, c);
+        data[i].set_text(std::string(1, c));
         data[i].fore = maudit::color::bright_white;
         data[i].back = maudit::color::bright_black;
         ++x;
@@ -259,7 +259,7 @@ void add_message_line(std::vector<maudit::glyph>& data, unsigned int w, unsigned
     }
 
     while (x < w) {
-        data[i].text = space;
+        data[i].set_text(space);
         data[i].fore = maudit::color::bright_white;
         data[i].back = maudit::color::bright_black;
         ++x;

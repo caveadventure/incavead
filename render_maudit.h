@@ -815,7 +815,7 @@ public:
                         const skin& sk = *skin_c;
 
                         color_t fore = sk.fore;
-                        std::string text = sk.text;
+                        std::string text = sk.get_text();
 
                         if (gp.is_lit == 0) {
 

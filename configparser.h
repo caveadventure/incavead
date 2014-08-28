@@ -12546,7 +12546,7 @@ _match:
 	break;
 	case 28:
 #line 204 "configparser.rl"
-	{ skin.text = state.match; 
+	{ skin.set_text(state.match); 
                          skin.back = maudit::color::bright_black; 
                          skin.fore = maudit::color::bright_white; }
 	break;
@@ -12556,11 +12556,11 @@ _match:
 	break;
 	case 30:
 #line 211 "configparser.rl"
-	{ skin_b.text = state.match; }
+	{ skin_b.set_text(state.match); }
 	break;
 	case 31:
 #line 213 "configparser.rl"
-	{ skin_c.text = state.match; }
+	{ skin_c.set_text(state.match); }
 	break;
 	case 32:
 #line 219 "configparser.rl"
