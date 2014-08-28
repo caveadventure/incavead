@@ -137,16 +137,28 @@ struct Monsters {
                 clump.insert(tmp);
             }
 
-            size_t clumpn = rng.n(clump.size());
-            auto clumpi = clump.begin();
+            std::vector<pt> _clump;
+            _clump.reserve(clump.size());
 
-            while (clumpn > 0) {
-                --clumpn;
-                ++clumpi;
+            for (auto i = clump.begin(); i != clump.end();) {
+
+                if (mgrid.count(*i) == 0) {
+                    _clump.push_back(*i);
+                    ++i;
+                } else {
+                    i = clump.erase(i);
+                }
             }
 
-            pt xy = *clumpi;
-            clump.erase(clumpi);
+            if (_clump.empty()) {
+                continue;
+            }
+
+            pt xy = _clump[rng.n(_clump.size())];
+
+            if (mgrid.count(xy) != 0) {
+                std::cout << "Shit " << xy.first << " " << xy.second << " " << species().get(tag).name << std::endl;
+            }
 
             serial++;
             mons[serial] = Monster(tag, serial);
@@ -469,6 +481,8 @@ struct Monsters {
     template <typename FUNC>
     void process(grender::Grid& grid, FUNC f) {
 
+        std::cout << "/0 " << mons.size() << " " << mgrid.size() << std::endl;
+
         size_t sbefore = mgrid.size();
 
         std::unordered_map< pt, std::pair<pt,size_t> > neuw;
@@ -489,6 +503,8 @@ struct Monsters {
                 if (dead) {
                     deadcount++;
                     wipe.insert(i.first);
+
+                    mons.erase(i.second);
 
                 } else if (neuw.count(nxy) == 0) {
 
@@ -511,15 +527,16 @@ struct Monsters {
             }
         }
 
+        std::cout << "/1 " << mons.size() << " " << mgrid.size() << " {" << wipe.size() << " " << deadcount << "}" << std::endl;
+
         for (const pt& i : wipe) {
 
-            auto z = mgrid.find(i);
-
-            mons.erase(z->second);
-            mgrid.erase(z);
+            mgrid.erase(i);
 
             grid.invalidate(i.first, i.second);
         }
+
+        std::cout << "/2 " << mons.size() << " " << mgrid.size() << std::endl;
 
         if (mons.size() != mgrid.size()) {
 
