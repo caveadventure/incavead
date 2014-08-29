@@ -714,7 +714,7 @@ public:
 
                 _draw_textlabels(ret_glyphs, voff_x, voff_y, view_w, view_h, fullwidth);
 
-                std::string one_space = (fullwidth ? "  " : " ");
+                auto one_space = (fullwidth ? skin::get_sym("  ", 2) : skin::get_sym(" ", 1));
 
                 for (size_t _vy = 0; _vy < view_h; ++_vy) {
 
@@ -812,10 +812,11 @@ public:
                             continue;
                         }
 
+                        bool underline = false;
                         const skin& sk = *skin_c;
 
                         color_t fore = sk.fore;
-                        std::string text = sk.get_text();
+                        auto text = sk.text;
 
                         if (gp.is_lit == 0) {
 
@@ -835,6 +836,8 @@ public:
                                 } else {
 
                                     fore = color_fade(fore, in_fov, found_s, params.do_fade_colors);
+
+                                    underline = sk.underline;
                                 }
                             }
                         }
@@ -843,7 +846,7 @@ public:
                             back = blue_color;
                         }
 
-                        ret = skin(text, fore, back);
+                        ret = skin(text, fore, back, underline);
                     }
                 }
 	    });

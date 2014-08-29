@@ -203,10 +203,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         skin = string %{ skin.set_text(state.match); 
                          skin.back = maudit::color::bright_black; 
-                         skin.fore = maudit::color::bright_white; } 
-               (ws1 color)?
+                         skin.fore = maudit::color::bright_white;
+                         skin.underline = false; } 
                ws
+               (color ws)?
                ('back' ws1 back_color ws)? 
+               ('underline' %{ skin.underline = true; } ws)?
                %{ skin_b = skin; skin_c = skin; }
                (('|' ws string %{ skin_b.set_text(state.match); })
                 ws

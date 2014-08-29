@@ -89,6 +89,7 @@ struct screen {
 
         color fore_prev = color::none;
         color back_prev = color::none;
+        bool ul_prev = false;
 
         bool first = true;
 
@@ -115,10 +116,12 @@ struct screen {
 
                 } else {
 
-                    if (fore_prev != g.fore) {
+                    if (fore_prev != g.fore || ul_prev != g.underline) {
                         do_fore = true;
 
-                        if (fore_prev >= color::bright_black && g.fore < color::bright_black) {
+                        if ((fore_prev >= color::bright_black && g.fore < color::bright_black) ||
+                            (ul_prev != g.underline)) {
+
                             data += CSI;
                             data += "0m";
                             do_fore = true;
@@ -136,6 +139,11 @@ struct screen {
                     data += CSI;
 
                     if (do_fore) {
+
+                        if (g.underline) {
+
+                            data += "4;";
+                        }
 
                         switch (g.fore) {
                         case color::none:        data += "39"; break;
@@ -190,6 +198,7 @@ struct screen {
 
                 fore_prev = g.fore;
                 back_prev = g.back;
+                ul_prev = g.underline;
             }
         }
 
