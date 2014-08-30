@@ -285,8 +285,8 @@ inline bool move_monster(Player& p, GameState& state,
 
     } else if (do_seek && !do_random &&
                path_walk(state, mxy.first, mxy.second, target.first, target.second, 1, range, 
-                         [&state,&s](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-                             return monster_move_cost(state, s, c, d);
+                         [&state,&s,&m](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
+                             return monster_move_cost(state, m, s, c, d);
                          },
                          nxy.first, nxy.second)) {
 
@@ -316,7 +316,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             auto v = state.neigh.mk(v_, mxy);
 
-            if (monster_move_cost(state, s, v.first, v.second) != 0.0f) {
+            if (monster_move_cost(state, m, s, v.first, v.second) != 0.0f) {
                 tmp.push_back(v);
             }
         }
@@ -337,7 +337,7 @@ inline bool move_monster(Player& p, GameState& state,
             nxy.second = mxy.second + mxy.second - nxy.second;
         }
 
-        if (monster_move_cost(state, s, nxy.first, nxy.second) == 0.0f)
+        if (monster_move_cost(state, m, s, nxy.first, nxy.second) == 0.0f)
             return false;
     }
 
@@ -363,7 +363,7 @@ inline bool move_monster(Player& p, GameState& state,
             }
         }
 
-        if (m.ally)
+        if (!m.ally.null())
             return false;
 
         damage::defenses_t defenses;
@@ -405,6 +405,8 @@ inline int conflict_monster(Player& p, GameState& state,
     // 1 means first monster wins and second dies.
     // 2 means second monster wins and first dies.
     // 0 means nobody dies and conflicts are resolved by not moving.
+
+    // No double attacks for monsters!
 
     return 0;
 }

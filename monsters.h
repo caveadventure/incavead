@@ -19,13 +19,14 @@ struct Monster {
     unsigned int stun;
     unsigned int blind;
     unsigned int fear;
-    bool ally;
+    bool did_attack;
+    tag_t ally;
     pt target;
 
-    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), ally(false) {}
+    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false) {}
 
     Monster(tag_t _tag, size_t ser) : 
-        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), ally(false)
+        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false)
         {}
 
     bool null() const {
@@ -50,6 +51,8 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.stun);
         serialize::read(s, m.blind);
         serialize::read(s, m.fear);
+        serialize::read(s, m.did_attack);
+        serialize::read(s, m.ally);
         serialize::read(s, m.target);
     }
 };
@@ -65,6 +68,8 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.stun);
         serialize::write(s, m.blind);
         serialize::write(s, m.fear);
+        serialize::write(s, m.did_attack);
+        serialize::write(s, m.ally);
         serialize::write(s, m.target);
     }
 };
@@ -486,12 +491,15 @@ struct Monsters {
     template <typename FUNC1, typename FUNC2>
     void process(grender::Grid& render, FUNC1 fmove, FUNC2 fconf) {
 
-        std::cout << "/0 " << mons.size() << " " << mgrid.size() << std::endl;
+        bm __("mprocess");
 
         size_t sbefore = mgrid.size();
 
         std::unordered_map< pt, std::vector< std::pair<pt,size_t> > > neuw;
+        std::vector<size_t> trash;
         unsigned int deadcount = 0;
+
+        std::cout << "&0 " << mgrid.size() << " " << mons.size() << std::endl;
 
         for (const auto& i : mgrid) {
 
@@ -499,6 +507,8 @@ struct Monsters {
             size_t m_num = i.second;
 
             Monster& m = get(m_num);
+
+            m.did_attack = false;
 
             const Species& s = species().get(m.tag);
 
@@ -510,7 +520,10 @@ struct Monsters {
                 if (dead) {
 
                     deadcount++;
-                    mons.erase(m_num);
+                    trash.push_back(m_num);
+                    render.invalidate(xy.first, xy.second);
+
+                    std::cout << "&deleting 0" << std::endl;
 
                 } else {
 
@@ -523,7 +536,11 @@ struct Monsters {
             }
         }
 
-        mgrid.clear();
+        std::cout << "&trashing " << trash.size() << std::endl;
+
+        for (size_t m_num : trash) {
+            mons.erase(m_num);
+        }
 
         while (1) {
 
@@ -533,34 +550,32 @@ struct Monsters {
 
                 auto& v = i.second;
 
-                std::cout << "-- " << i.first.first << " " << i.first.second << std::endl;
-
                 while (v.size() > 1) {
-
-                    std::cout << "& " << v.size() << std::endl;
 
                     auto mona = v.end();
                     mona--;
                     auto monb = mona;
                     monb--;
 
-                    std::cout << "&0 " << mona->second << " " << monb->second << std::endl;
-
                     int result = fconf(mona->first, get(mona->second), monb->first, get(monb->second));
-
-                    std::cout << "&1 " << result << std::endl;
 
                     if (result == 1) {
 
                         deadcount++;
                         mons.erase(monb->second);
+                        render.invalidate(monb->first.first, monb->first.second);
                         v.erase(monb);
+
+                        std::cout << "&deleting 1" << std::endl;
 
                     } else if (result == 2) {
                         
                         deadcount++;
                         mons.erase(mona->second);
+                        render.invalidate(mona->first.first, mona->first.second);
                         v.erase(mona);
+
+                        std::cout << "&deleting 2" << std::endl;
 
                     } else {
 
@@ -584,7 +599,9 @@ struct Monsters {
             if (done) break;
         }
 
-        std::cout << "&done" << std::endl;
+        mgrid.clear();
+
+        std::cout << "&adding " << neuw.size() << std::endl;
 
         for (auto& i : neuw) {
 
@@ -603,7 +620,7 @@ struct Monsters {
             }
         }
 
-        std::cout << "/1 " << mons.size() << " " << mgrid.size() << " {" << deadcount << "}" << std::endl;
+        std::cout << "&1 " << mgrid.size() << " " << mons.size() << std::endl;
 
         if (mons.size() != mgrid.size()) {
 

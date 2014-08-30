@@ -340,6 +340,8 @@ void Game::process_world(GameState& state,
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
 
+    bm __("process_world");
+
     //
     const auto& consts = constants();
 

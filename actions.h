@@ -111,6 +111,9 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
 
     if (!mon.null()) {
 
+        if (!mon.ally.null())
+            return;
+
         damage::attacks_t attacks;
         p.get_attack(attacks);
 
@@ -160,11 +163,16 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
                 }
             }
         }
+
+        if (t.walkblock)
+            return;
     }
 
+    /*
     if (state.render.is_walkblock(nx, ny)) {
         return;
     }
+    */
 
     if (p.fast.turns > 0 && (p.fast.turns % p.fast.slice) == 0) {
         --(p.fast.turns);
