@@ -443,7 +443,7 @@ struct Main {
 
         std::string savefile = _mainloop_start(singleplayer, name, seed, new_game);
 
-        bool dead;
+        bool dead = false;
 
         try {
             

@@ -363,6 +363,9 @@ inline bool move_monster(Player& p, GameState& state,
             }
         }
 
+        if (m.ally)
+            return false;
+
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
@@ -395,5 +398,15 @@ inline bool move_monster(Player& p, GameState& state,
     return true;
 }
 
+inline int conflict_monster(Player& p, GameState& state, 
+                            const monsters::pt& mxya, monsters::Monster& ma, 
+                            const monsters::pt& mxyb, monsters::Monster& mb) {
+
+    // 1 means first monster wins and second dies.
+    // 2 means second monster wins and first dies.
+    // 0 means nobody dies and conflicts are resolved by not moving.
+
+    return 0;
+}
 
 #endif

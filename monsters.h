@@ -19,12 +19,13 @@ struct Monster {
     unsigned int stun;
     unsigned int blind;
     unsigned int fear;
+    bool ally;
     pt target;
 
-    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0) {}
+    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), ally(false) {}
 
     Monster(tag_t _tag, size_t ser) : 
-        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0)
+        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), ally(false)
         {}
 
     bool null() const {
@@ -482,65 +483,127 @@ struct Monsters {
     }
 
 
-    template <typename FUNC>
-    void process(grender::Grid& grid, FUNC f) {
+    template <typename FUNC1, typename FUNC2>
+    void process(grender::Grid& render, FUNC1 fmove, FUNC2 fconf) {
 
         std::cout << "/0 " << mons.size() << " " << mgrid.size() << std::endl;
 
         size_t sbefore = mgrid.size();
 
-        std::unordered_map< pt, std::pair<pt,size_t> > neuw;
-        std::unordered_set<pt> wipe;
+        std::unordered_map< pt, std::vector< std::pair<pt,size_t> > > neuw;
         unsigned int deadcount = 0;
 
         for (const auto& i : mgrid) {
 
-            Monster& m = get(i.second);
+            const pt& xy = i.first;
+            size_t m_num = i.second;
+
+            Monster& m = get(m_num);
 
             const Species& s = species().get(m.tag);
 
             pt nxy;
             bool dead = false;
 
-            if (f(i.first, m, s, nxy, dead)) {
+            if (fmove(xy, m, s, nxy, dead)) {
 
                 if (dead) {
+
                     deadcount++;
-                    wipe.insert(i.first);
+                    mons.erase(m_num);
 
-                    mons.erase(i.second);
+                } else {
 
-                } else if (neuw.count(nxy) == 0) {
+                    neuw[nxy].push_back(std::make_pair(xy, m_num));
+                }
 
-                    neuw[nxy] = std::make_pair(i.first, i.second);
+            } else {
+
+                neuw[xy].push_back(std::make_pair(xy, m_num));
+            }
+        }
+
+        mgrid.clear();
+
+        while (1) {
+
+            decltype(neuw)::mapped_type failures;
+
+            for (auto& i : neuw) {
+
+                auto& v = i.second;
+
+                std::cout << "-- " << i.first.first << " " << i.first.second << std::endl;
+
+                while (v.size() > 1) {
+
+                    std::cout << "& " << v.size() << std::endl;
+
+                    auto mona = v.end();
+                    mona--;
+                    auto monb = mona;
+                    monb--;
+
+                    std::cout << "&0 " << mona->second << " " << monb->second << std::endl;
+
+                    int result = fconf(mona->first, get(mona->second), monb->first, get(monb->second));
+
+                    std::cout << "&1 " << result << std::endl;
+
+                    if (result == 1) {
+
+                        deadcount++;
+                        mons.erase(monb->second);
+                        v.erase(monb);
+
+                    } else if (result == 2) {
+                        
+                        deadcount++;
+                        mons.erase(mona->second);
+                        v.erase(mona);
+
+                    } else {
+
+                        failures.push_back(*monb);
+                        v.erase(monb);
+                    }
                 }
             }
+
+            bool done = true;
+
+            for (const auto& i : failures) {
+
+                auto& tmp = neuw[i.first];
+                tmp.push_back(i);
+
+                if (tmp.size() > 1)
+                    done = false;
+            }
+
+            if (done) break;
         }
 
+        std::cout << "&done" << std::endl;
+
         for (auto& i : neuw) {
-            if (mgrid.count(i.first) == 0 || wipe.count(i.first) != 0) {
 
-                wipe.insert(i.second.first);
+            const pt& nxy = i.first;
+            const auto& v = i.second;
 
-                mgrid[i.first] = i.second.second;
+            if (v.size() != 1)
+                throw std::runtime_error("Sanity error: monster conflicts not resolved.");
 
-                wipe.erase(i.first);
+            mgrid[nxy] = v[0].second;
 
-                grid.invalidate(i.first.first, i.first.second);
+            if (nxy != v[0].first) {
 
+                render.invalidate(nxy.first, nxy.second);
+                render.invalidate(v[0].first.first, v[0].first.second);
             }
         }
 
-        std::cout << "/1 " << mons.size() << " " << mgrid.size() << " {" << wipe.size() << " " << deadcount << "}" << std::endl;
-
-        for (const pt& i : wipe) {
-
-            mgrid.erase(i);
-
-            grid.invalidate(i.first, i.second);
-        }
-
-        std::cout << "/2 " << mons.size() << " " << mgrid.size() << std::endl;
+        std::cout << "/1 " << mons.size() << " " << mgrid.size() << " {" << deadcount << "}" << std::endl;
 
         if (mons.size() != mgrid.size()) {
 
@@ -553,7 +616,7 @@ struct Monsters {
                 std::cout << "   | " << i.first.first << "," << i.first.second << std::endl;
             }
             std::cout << mgrid.size() << " != " << sbefore << " - " << deadcount << std::endl;
-            std::cout << "  " << neuw.size() << " " << wipe.size() << std::endl;
+            std::cout << "  " << neuw.size() << std::endl;
             
             throw std::runtime_error("Lost a monster in monster::process()!");
         }
