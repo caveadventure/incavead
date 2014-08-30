@@ -99,6 +99,8 @@ inline void attack_damage_monster(const damage::val_t& v,
                                   std::set<tag_t>& types,
                                   bool& mortal) {
 
+    std::cout << "HLTH before: " << mon.health << std::endl;
+    
     double dmg = v.val;
 
     const Damage& dam = damages().get(v.type);
@@ -201,6 +203,8 @@ inline void attack_damage_monster(const damage::val_t& v,
         types.insert(v.type);
     }
 
+    std::cout << "HLTH after: " << mon.health << std::endl;
+
     // dam.hunger, dam.unluck:
     // Monsters don't feel hunger and don't have luck.
     // They also cannot be infected.
@@ -246,7 +250,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
         state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
-    if (mon.health - totdamage <= -3) {
+    if (mon.health <= -3) {
 
         monster_kill(p, state, mxy, mon, s, track_kills, types);
     }
@@ -319,7 +323,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     bool allow_gain_level = (!s.flags.plant && p.polymorph.species.null());
 
-    if (mon.health - totdamage <= -3) {
+    if (mon.health <= -3) {
 
         if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You destroyed %s.", s));
@@ -369,7 +373,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     if (totmagic > 0.5) {
 
-        if (mon.magic - totmagic <= -3) {
+        if (mon.magic <= -3) {
             state.render.do_message(nlp::message("%s is magically cancelled.", s));
 
         } else {
