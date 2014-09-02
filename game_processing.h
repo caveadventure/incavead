@@ -534,6 +534,8 @@ void Game::process_world(GameState& state,
         }
     }
 
+    state.monsters._make_nn_graph(p.px, p.py);
+
 
     for (std::vector<Terrain::spell_t>::iterator si = p.spells.begin(); si != p.spells.end(); ) {
         double k = p.karma.val;

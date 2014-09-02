@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 
+#include "delaunay.h"
 
 namespace monsters {
 
@@ -85,15 +86,23 @@ struct Monsters {
     std::unordered_map<size_t, Monster> mons;
     std::unordered_map<pt, size_t> mgrid;
 
+    delaunay::Triangulation badguys;
+
+    unsigned int w;
+    unsigned int h;
+
     Monsters() : serial(0) {}
 
-    void init() {
+    void init(unsigned int _w, unsigned int _h) {
+        w = _w;
+        h = _h;
         mons.clear();
         mgrid.clear();
+        badguys.clear();
     }
 
     void clear() {
-        init();
+        init(w, h);
     }
 
     static bool is_walkable(const grid::Map& grid, const Species& s, unsigned int x, unsigned int y) {
@@ -637,6 +646,37 @@ struct Monsters {
             
             throw std::runtime_error("Lost a monster in monster::process()!");
         }
+    }
+
+    void _make_nn_graph(unsigned int px, unsigned int py) {
+
+        std::set<delaunay::pt> tmp;
+
+        for (const auto& i : mgrid) {
+
+            const Monster& m = get(i.second);
+
+            tmp.insert(i.first);
+        }
+
+        tmp.insert(delaunay::pt(px, py));
+
+        std::cout << "[" << tmp.size() << std::endl;
+        badguys.init(w, h, 50*50, tmp);
+    }
+
+    bool get_badguy(const pt& xy, pt& out) {
+
+        auto tmp = badguys.get_neighbors(xy.first, xy.second);
+
+        if (tmp.empty())
+            return false;
+
+        const auto& oxy = *(tmp.begin());
+        out.first = oxy.x;
+        out.second = oxy.y;
+
+        return true;
     }
 
 };

@@ -302,8 +302,17 @@ inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, 
 inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,
                              GameState& state) {
 
+    unsigned int x0 = px;
+    unsigned int y0 = py;
+
+    monsters::pt out;
+    if (state.monsters.get_badguy(monsters::pt(px, py), out)) {
+        x0 = out.first;
+        y0 = out.second;
+    }
+
     pstate = Player::LOOKING;
-    look = Player::look_state_t(px, py);
+    look = Player::look_state_t(x0, y0);
 
     //center_draw_text(state.render, px, py-3, state.fullwidth,
     //                 "Use arrow keys to look around; <TAB> to cycle targets");

@@ -175,7 +175,7 @@ struct Main {
 
         state.features.init();
         state.items.init();
-        state.monsters.init();
+        state.monsters.init(sp.w, sp.h);
 
         state.ticks = 1;
 
