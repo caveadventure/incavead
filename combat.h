@@ -99,8 +99,6 @@ inline void attack_damage_monster(const damage::val_t& v,
                                   std::set<tag_t>& types,
                                   bool& mortal) {
 
-    std::cout << "HLTH before: " << mon.health << std::endl;
-    
     double dmg = v.val;
 
     const Damage& dam = damages().get(v.type);
@@ -202,8 +200,6 @@ inline void attack_damage_monster(const damage::val_t& v,
 
         types.insert(v.type);
     }
-
-    std::cout << "HLTH after: " << mon.health << std::endl;
 
     // dam.hunger, dam.unluck:
     // Monsters don't feel hunger and don't have luck.

@@ -3,19 +3,19 @@
 
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <utility>
 
 #include <math.h>
 
-
 namespace delaunay {
 
 struct pt {
-    unsigned int x;
-    unsigned int y;
+    int x;
+    int y;
 
-    pt(unsigned int _x = 0, unsigned int _y = 0) : x(_x), y(_y) {}
+    pt(int _x = 0, int _y = 0) : x(_x), y(_y) {}
 
     pt(const std::pair<unsigned int, unsigned int>& _pt) : x(_pt.first), y(_pt.second) {}
 
@@ -82,7 +82,7 @@ struct tri {
 
         double q = (a.x * b_c.y + b.x * c_a.y + c.x * a_b.y);
 
-        if (q < 0.00001) {
+        if (::fabs(q) < 0.00001) {
             radius = 0;
             return;
         }
@@ -99,9 +99,9 @@ struct tri {
         return center < a.center;
     }
 
-    bool null(unsigned int maxr) const {
+    bool null() const {
 
-        return (radius == 0 || radius >= maxr);
+        return (radius == 0);
     }
 };
 
@@ -134,52 +134,50 @@ struct edge {
 struct Triangulation {
 
     std::map< pt, std::set<pt> > res;
-
-    std::set<pt> trash;
+    std::set<pt> fakes;
 
     void clear() {
 
         res.clear();
-        trash.clear();
+        fakes.clear();
     }
 
-    void init(unsigned int w, unsigned int h, unsigned int maxr, const std::set<pt>& points) {
+    void init(unsigned int w, unsigned int h, const std::set<pt>& points) {
 
-        bm __("delaunay");
+        //bm __("delaunay");
 
         res.clear();
-        trash.clear();
+        fakes.clear();
 
         if (points.empty())
             return;
 
         std::multiset<tri> queue;
 
-        pt fake1(0, 0);
-        pt fake2(w-1, 0);
-        pt fake3(w-1, h-1);
-        pt fake4(0, h-1);
-
-        trash.insert(fake1);
-        trash.insert(fake2);
-        trash.insert(fake3);
-        trash.insert(fake4);
-
         auto pi = points.begin();
 
         {
-            tri top(fake1, fake2, *pi);
-            tri rig(fake2, fake3, *pi);
-            tri bot(fake3, fake4, *pi);
-            tri lef(fake4, fake1, *pi);
+            pt fake1(0, 0);
+            pt fake2(w-1, 0);
+            pt fake3(w-1, h-1);
+            pt fake4(0, h-1);
 
-            unsigned int maxr2 = (std::max(w, h) * 2);
-            maxr2 = maxr2 * maxr2;
+            pt p = *pi;
+ 
+            tri top(fake1, fake2, p);
+            tri rig(fake2, fake3, p);
+            tri bot(fake3, fake4, p);
+            tri lef(fake4, fake1, p);
 
-            if (!top.null(maxr2)) queue.insert(top);
-            if (!rig.null(maxr2)) queue.insert(rig);
-            if (!bot.null(maxr2)) queue.insert(bot);
-            if (!lef.null(maxr2)) queue.insert(lef);
+            if (!top.null()) queue.insert(top);
+            if (!rig.null()) queue.insert(rig);
+            if (!bot.null()) queue.insert(bot);
+            if (!lef.null()) queue.insert(lef);
+
+            if (points.count(fake1) == 0) fakes.insert(fake1);
+            if (points.count(fake2) == 0) fakes.insert(fake2);
+            if (points.count(fake3) == 0) fakes.insert(fake3);
+            if (points.count(fake4) == 0) fakes.insert(fake4);
         }
 
         ++pi;
@@ -200,6 +198,11 @@ struct Triangulation {
                     auto& ta = res[t.a];
                     auto& tb = res[t.b];
                     auto& tc = res[t.c];
+
+                    std::cout << t.a.x << " " << t.a.y << std::endl;
+                    std::cout << t.b.x << " " << t.b.y << std::endl;
+                    std::cout << t.c.x << " " << t.c.y << std::endl;
+                    std::cout << t.a.x << " " << t.a.y << std::endl << std::endl;
 
                     ta.insert(t.b);
                     ta.insert(t.c);
@@ -235,21 +238,23 @@ struct Triangulation {
                 
                 tri tmp(v.first.a, v.first.b, p);
 
-                if (!tmp.null(maxr))    
+                if (!tmp.null())    
                     queue.insert(tmp);
             }
-
-            if (p == fake1 || p == fake2 || p == fake3 || p == fake4)
-                trash.erase(p);
 
             ++pi;
         }
 
         for (const auto& t : queue) {
-            
+
             auto& ta = res[t.a];
             auto& tb = res[t.b];
             auto& tc = res[t.c];
+
+            std::cout << t.a.x << " " << t.a.y << std::endl;
+            std::cout << t.b.x << " " << t.b.y << std::endl;
+            std::cout << t.c.x << " " << t.c.y << std::endl;
+            std::cout << t.a.x << " " << t.a.y << std::endl << std::endl;
 
             ta.insert(t.b);
             ta.insert(t.c);
@@ -257,12 +262,6 @@ struct Triangulation {
             tb.insert(t.c);
             tc.insert(t.a);
             tc.insert(t.b);
-        }
-
-        for (const auto& i : res) {
-            for (const auto& j : i.second) {
-                std::cout << i.first.x << "," << i.first.y << " " << j.x << "," << j.y << std::endl;
-            }
         }
     }
 
@@ -294,7 +293,7 @@ struct Triangulation {
 
         for (const pt& p : i->second) {
 
-            if (trash.count(p) != 0)
+            if (fakes.count(p) != 0)
                 continue;
 
             ret.insert(neighbor_t(::sqrt((p0 - p).dist2()), p.x, p.y));

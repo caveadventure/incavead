@@ -508,8 +508,6 @@ struct Monsters {
         std::vector<size_t> trash;
         unsigned int deadcount = 0;
 
-        std::cout << "&0 " << mgrid.size() << " " << mons.size() << std::endl;
-
         for (const auto& i : mgrid) {
 
             const pt& xy = i.first;
@@ -532,8 +530,6 @@ struct Monsters {
                     trash.push_back(m_num);
                     render.invalidate(xy.first, xy.second);
 
-                    std::cout << "&deleting 0" << std::endl;
-
                 } else {
 
                     neuw[nxy].push_back(std::make_pair(xy, m_num));
@@ -544,8 +540,6 @@ struct Monsters {
                 neuw[xy].push_back(std::make_pair(xy, m_num));
             }
         }
-
-        std::cout << "&trashing " << trash.size() << std::endl;
 
         for (size_t m_num : trash) {
             mons.erase(m_num);
@@ -575,16 +569,12 @@ struct Monsters {
                         render.invalidate(monb->first.first, monb->first.second);
                         v.erase(monb);
 
-                        std::cout << "&deleting 1" << std::endl;
-
                     } else if (result == 2) {
                         
                         deadcount++;
                         mons.erase(mona->second);
                         render.invalidate(mona->first.first, mona->first.second);
                         v.erase(mona);
-
-                        std::cout << "&deleting 2" << std::endl;
 
                     } else {
 
@@ -610,8 +600,6 @@ struct Monsters {
 
         mgrid.clear();
 
-        std::cout << "&adding " << neuw.size() << std::endl;
-
         for (auto& i : neuw) {
 
             const pt& nxy = i.first;
@@ -628,8 +616,6 @@ struct Monsters {
                 render.invalidate(v[0].first.first, v[0].first.second);
             }
         }
-
-        std::cout << "&1 " << mgrid.size() << " " << mons.size() << std::endl;
 
         if (mons.size() != mgrid.size()) {
 
@@ -661,7 +647,6 @@ struct Monsters {
 
         tmp.insert(delaunay::pt(px, py));
 
-        std::cout << "[" << tmp.size() << std::endl;
         badguys.init(w, h, 50*50, tmp);
     }
 
