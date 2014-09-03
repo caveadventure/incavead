@@ -79,14 +79,14 @@ typedef point<int> pt;
 
 struct circle {
 
-    point<double> center;
-    double r2;
+    pt center;
+    unsigned int r2;
     double r;
 
     circle() : r2(0), r(0) {}
 
     template <typename S>
-    circle(const point<S>& _c, double _r2) : center(_c), r2(_r2), r(::sqrt(r)) {}
+    circle(const point<S>& _c, double _r2) : center(_c), r2(_r2), r(::sqrt(r2)) {}
 
     template <typename S>
     circle(const point<S>& _c, double _r, bool) : center(_c), r2(_r*_r), r(_r) {}
@@ -140,7 +140,7 @@ struct tri {
 
         double q = (a.x * b_c.y + b.x * c_a.y + c.x * a_b.y);
 
-        if (::fabs(q) < 0.00001) {
+        if (::fabs(q) < 0.01) {
 
             circ = circle(pt(0, 0), 0);
             return;
@@ -151,13 +151,28 @@ struct tri {
         pt center = pt((da * b_c.y + db * c_a.y + dc * a_b.y),
                        -(da * b_c.x + db * c_a.x + dc * a_b.x)) * D;
 
-        double radius = center.dist2(a);
+        unsigned int radius = std::max(center.dist2(a), std::max(center.dist2(b), center.dist2(c)));
+
+        std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
+                      << c.x << "," << c.y << std::endl;
+        std::cout << "< > " << radius << " " << center.dist2(b) << " " << center.dist2(c) << std::endl;
+
+        /*
+        if (::fabs(center.dist(b) - ::sqrt(radius)) >= 2 || 
+            ::fabs(center.dist(c) - ::sqrt(radius)) >= 2) {
+
+            throw std::runtime_error("Failed to circumscribe");
+        }
+        */
 
         circ = circle(center, radius);
     }
 
-    bool operator<(const tri& a) const {
-        return circ.center < a.circ.center;
+    bool operator<(const tri& t) const {
+        if (a < t.a) return true;
+        if (a == t.a && b < t.b) return true;
+        if (a == t.a && b == t.b && c < t.c) return true;
+        return false;
     }
 
     bool null() const {
@@ -220,7 +235,10 @@ struct flower_t {
                       super.r / 2, true);
     }
 
-    static bool insert(flower& root, const circle& super, const tri& t) {
+    static void insert(flower& root, const circle& super, const tri& t) {
+
+        std::cout << "~insert " << super.center.x << "," << super.center.y << "|" << super.r
+                  << " .. " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r << std::endl;
 
         if (!root) 
             root = flower(new flower_t);
@@ -231,18 +249,23 @@ struct flower_t {
 
             circle fc = petal(super, i);
 
-            if (fc.has(t.circ))
-                return insert(f, fc, t);
+            if (fc.has(t.circ)) {
+                insert(f, fc, t);
+                return;
+            }
         }
 
+        std::cout << "~inserted" << std::endl;
         root->data.insert(t);
-        return true;
     }
 
     static void query(const flower& root, const circle& super, const pt& q, std::set<tri>& ret) {
 
         if (!root)
             return;
+
+        std::cout << "~query " << super.center.x << "," << super.center.y << "|" << super.r
+                  << " .. " << q.x << "," << q.y << std::endl;
 
         for (int i = 0; i < 7; ++i) {
 
@@ -254,11 +277,19 @@ struct flower_t {
                 query(f, fc, q, ret);
         }
 
-        for (const tri& i : root->data) {
-            if (i.circ.has(q)) {
-                ret.insert(i);
+        auto i = root->data.begin();
+        while (i != root->data.end()) {
+
+            if (i->circ.has(q)) {
+                std::cout << "~ found " << i->circ.center.x << "," << i->circ.center.y << "|" << i->circ.r << std::endl;
+                ret.insert(*i);
+                i = root->data.erase(i);
+            } else {
+                ++i;
             }
         }
+
+        std::cout << "~done q" << super.center.x << "," << super.center.y << "|" << super.r << std::endl;
     }
 
     static void result(const flower& root, std::set<tri>& ret) {
@@ -277,6 +308,28 @@ struct flower_t {
     }
 };
 
+void check_pt(const tri& t, const pt& p) {
+
+    if (t.a == p || t.b == p || t.c == p || !t.circ.has(p))
+        return;
+
+    std::cout << "!!! " << p.x << "," << p.y << " " 
+              << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r << std::endl;
+    ::abort();
+}
+
+void check_delaunay(const std::set<tri>& s) {
+
+    for (const tri& t : s) {
+        for (const tri& i : s) {
+            if (i < t && t < i) continue;
+
+            check_pt(t, i.a);
+            check_pt(t, i.b);
+            check_pt(t, i.c);
+        }
+    }
+}
 
 struct Triangulation {
 
@@ -298,6 +351,9 @@ struct Triangulation {
 
         if (points.empty())
             return;
+        {
+            tri tmp(pt(0, 0), pt(1, 0), pt(0.5, ::sqrt(3)/2));
+        }
 
         flower tree(new flower_t);
 
@@ -306,18 +362,17 @@ struct Triangulation {
         pt fake3(w-1, h-1);
         pt fake4(0, h-1);
 
-        circle super(point<double>(w / 2, h / 2), fake3.dist2() + 1);
+        //circle super(point<double>(w / 2, h / 2), fake3.dist2() + 1);
 
-        tri top(fake1, fake2, fake3);
-        tri bot(fake1, fake4, fake3);
+        double sqrt3 = ::sqrt(3);
 
-        flower_t::insert(tree, super, top);
-        flower_t::insert(tree, super, bot);
+        tri supertri(pt(0.0 - h * sqrt3 / 3.0, 0),
+                     pt(w + h * sqrt3 / 3.0, 0),
+                     pt(w * 0.5, h + w * sqrt3 * 0.5));
 
-        if (points.count(fake1) == 0) fakes.insert(fake1);
-        if (points.count(fake2) == 0) fakes.insert(fake2);
-        if (points.count(fake3) == 0) fakes.insert(fake3);
-        if (points.count(fake4) == 0) fakes.insert(fake4);
+        circle super = supertri.circ;
+
+        flower_t::insert(tree, super, supertri);
 
         for (const pt& p : points) {
 
@@ -327,12 +382,21 @@ struct Triangulation {
 
             flower_t::query(tree, super, p, bad);
 
+            std::cout << "~ " << p.x << "," << p.y << " " << bad.size() << std::endl;
+
             for (const tri& t : bad) {
+
+                std::cout << "[ " << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " "
+                          << t.c.x << "," << t.c.y << std::endl;
+                std::cout << "( " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r << std::endl;
 
                 loose_edges[edge(t.a, t.b)]++;
                 loose_edges[edge(t.b, t.c)]++;
                 loose_edges[edge(t.c, t.a)]++;
             }
+
+            if (0 && bad.size() > 2)
+                check_delaunay(bad);
 
             for (const auto& v : loose_edges) {
         
