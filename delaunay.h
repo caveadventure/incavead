@@ -79,17 +79,17 @@ typedef point<int> pt;
 
 struct circle {
 
-    pt center;
-    unsigned int r2;
+    point<double> center;
+    double r2;
     double r;
 
     circle() : r2(0), r(0) {}
 
-    template <typename S>
-    circle(const point<S>& _c, double _r2) : center(_c), r2(_r2), r(::sqrt(r2)) {}
+    template <typename S, typename T>
+    circle(const point<S>& _c, T _r2) : center(_c), r2(_r2), r(::sqrt(r2)) {}
 
-    template <typename S>
-    circle(const point<S>& _c, double _r, bool) : center(_c), r2(_r*_r), r(_r) {}
+    template <typename S, typename T>
+    circle(const point<S>& _c, T _r, bool) : center(_c), r2(_r*_r), r(_r) {}
 
     bool null() const {
         return (r2 == 0);
@@ -140,22 +140,21 @@ struct tri {
 
         int q = (a.x * b_c.y + b.x * c_a.y + c.x * a_b.y);
 
-        std::cout << "\t\t\t" << q << std::endl;
-
         if (q == 0) {
 
             circ = circle(pt(0, 0), 0);
+            std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
+                      << c.x << "," << c.y << " +++ " << circ.center.x << "," << circ.center.y << std::endl;
+            std::cout << "<!> " << circ.center.dist2(a) << " " << circ.center.dist2(b) << " " << circ.center.dist2(c) << std::endl;
             return;
         }
 
         double D = 0.5 / q;
 
-        auto center = point<double>((da * b_c.y + db * c_a.y + dc * a_b.y),
-                                    -(da * b_c.x + db * c_a.x + dc * a_b.x)) * D;
+        point<double> center( D * (da * b_c.y + db * c_a.y + dc * a_b.y),
+                             -D * (da * b_c.x + db * c_a.x + dc * a_b.x));
 
-        std::cout << "\t\t\t" << (da * b_c.y + db * c_a.y + dc * a_b.y) << "\t" << -(da * b_c.x + db * c_a.x + dc * a_b.x) << std::endl;
-
-        unsigned int radius = std::max(center.dist2(a), std::max(center.dist2(b), center.dist2(c)));
+        double radius = std::max(center.dist2(a), std::max(center.dist2(b), center.dist2(c)));
 
         std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
                   << c.x << "," << c.y << " +++ " << center.x << "," << center.y << std::endl;
@@ -386,13 +385,11 @@ struct Triangulation {
 
         for (const pt& p : points) {
 
-            std::map<edge, size_t> loose_edges;
-
             std::set<tri> bad;
 
             //flower_t::query(tree, super, p, bad);
 
-            std::cout << "~ " << p.x << "," << p.y << " " << bad.size() << std::endl;
+            std::cout << "~ " << p.x << "," << p.y << std::endl;
 
             auto i = queue.begin();
             while (i != queue.end()) {
@@ -403,6 +400,8 @@ struct Triangulation {
                     ++i;
                 }
             }
+
+            std::map<edge, size_t> loose_edges;
 
             for (const tri& t : bad) {
 
@@ -415,25 +414,118 @@ struct Triangulation {
                 loose_edges[edge(t.c, t.a)]++;
             }
 
+            std::cout << "BAD" << std::endl;
+            print_tris(bad);
+
             std::set<tri> good;
 
+            std::map< pt, std::set<pt> > hull;
+
             for (const auto& v : loose_edges) {
+
+                std::cout << "chk " << v.first.a.x << "," << v.first.a.y << " " 
+                          << v.first.b.x << "," << v.first.b.y << " " << v.second << std::endl;
+
+                if (v.second > 2)
+                    throw std::runtime_error("Sanity error: not a mesh.");
         
                 // A double edge means this is an internal edge, so we delete it.
 
-                if (v.second > 1)
+                if (v.second == 2)
                     continue;
                 
-                tri tmp(v.first.a, v.first.b, p);
+                hull[v.first.a].insert(v.first.b);
+                hull[v.first.b].insert(v.first.a);
 
-                if (!tmp.null())    
-                    good.insert(tmp);
-                    //flower_t::insert(tree, super, tmp);
+                std::cout << "ins " << v.first.a.x << "," << v.first.a.y << " " 
+                          << v.first.b.x << "," << v.first.b.y << std::endl;
             }
+
+            while (1) {
+
+                std::cout << "LOOP" << std::endl;
+
+                std::map< pt, std::set<pt> > hull2;
+
+                for (const auto& v : hull) {
+
+                    std::cout << "ooo " << v.second.size() << " " << v.first.x << "," << v.first.y << std::endl;
+
+                    if (v.second.size() != 2) 
+                        throw std::runtime_error("Sanity error: not a hull. (1)");
+
+                    const pt& a = v.first;
+                    const pt& b = *(v.second.begin());
+                    const pt& c = *(++v.second.begin());
+
+                    std::cout << "hull " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
+                              << c.x << "," << c.y << std::endl;
+
+                    tri one(a, c, p);
+                    tri two(a, b, p);
+
+                    if (one.null() || two.null())
+                        continue;
+
+                    if (one.circ.has(b) || two.circ.has(c)) {
+                        // Oops.
+                        std::cout << "INS OOPS" << std::endl;
+                        tri tmp(a, b, c);
+
+                        if (tmp.null()) 
+                            continue;
+
+                        good.insert(tmp);
+
+                        hull2[b].insert(c);
+                        hull2[c].insert(b);
+
+                        std::cout << "SHIT" << std::endl;
+
+                    } else {
+                        hull2[a].insert(b);
+                        hull2[a].insert(c);
+                    }
+                }
+
+                if (hull2.size() == hull.size())
+                    break;
+
+                hull.swap(hull2);
+            }
+
+            std::set<edge> hull_edges;
+
+            for (const auto& v : hull) {
+
+                if (v.second.size() != 2) 
+                    throw std::runtime_error("Sanity error: not a hull. (2)");
+
+                const pt& a = v.first;
+                const pt& b = *(v.second.begin());
+                const pt& c = *(++v.second.begin());
+
+                hull_edges.insert(edge(a, b));
+                hull_edges.insert(edge(a, c));
+            }
+
+            for (const edge& e : hull_edges) {
+                std::cout << "OK INS" << std::endl;
+                tri tmp(e.a, e.b, p);
+
+                if (!tmp.null())
+                    good.insert(tmp);
+            }                
+
+            std::cout << "GOOD" << std::endl;
+            print_tris(good);
 
             queue.insert(good.begin(), good.end());
 
-            print_tris(queue);
+            //flower_t::insert(tree, super, tmp);
+
+            std::cout << "FULL" << std::endl;
+            //print_tris(queue);
             check_delaunay(queue);
         }
 
