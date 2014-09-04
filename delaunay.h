@@ -445,7 +445,7 @@ struct Triangulation {
 
                 std::cout << "LOOP" << std::endl;
 
-                std::map< pt, std::set<pt> > hull2;
+                std::set<pt> removed_pt;
 
                 for (const auto& v : hull) {
 
@@ -476,22 +476,14 @@ struct Triangulation {
                             continue;
 
                         good.insert(tmp);
-
-                        hull2[b].insert(c);
-                        hull2[c].insert(b);
+                        removed_pt.insert(a);
 
                         std::cout << "SHIT" << std::endl;
-
-                    } else {
-                        hull2[a].insert(b);
-                        hull2[a].insert(c);
                     }
                 }
 
-                if (hull2.size() == hull.size())
-                    break;
-
-                hull.swap(hull2);
+                // HANDLE removed_pt!
+                // first remove from values, then redistribute keys.
             }
 
             std::set<edge> hull_edges;
