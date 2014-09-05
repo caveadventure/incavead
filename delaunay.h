@@ -143,9 +143,9 @@ struct tri {
         if (q == 0) {
 
             circ = circle(pt(0, 0), 0);
-            std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
-                      << c.x << "," << c.y << " +++ " << circ.center.x << "," << circ.center.y << std::endl;
-            std::cout << "<!> " << circ.center.dist2(a) << " " << circ.center.dist2(b) << " " << circ.center.dist2(c) << std::endl;
+            //std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
+            //          << c.x << "," << c.y << " +++ " << circ.center.x << "," << circ.center.y << std::endl;
+            //std::cout << "<!> " << circ.center.dist2(a) << " " << circ.center.dist2(b) << " " << circ.center.dist2(c) << std::endl;
             return;
         }
 
@@ -156,9 +156,9 @@ struct tri {
 
         double radius = std::max(center.dist2(a), std::max(center.dist2(b), center.dist2(c)));
 
-        std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
-                  << c.x << "," << c.y << " +++ " << center.x << "," << center.y << std::endl;
-        std::cout << "< > " << center.dist2(a) << " " << center.dist2(b) << " " << center.dist2(c) << std::endl;
+        //std::cout << "<|> " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
+        //          << c.x << "," << c.y << " +++ " << center.x << "," << center.y << std::endl;
+        //std::cout << "< > " << center.dist2(a) << " " << center.dist2(b) << " " << center.dist2(c) << std::endl;
 
         circ = circle(center, radius);
     }
@@ -232,8 +232,8 @@ struct flower_t {
 
     static void insert(flower& root, const circle& super, const tri& t) {
 
-        std::cout << "~insert " << super.center.x << "," << super.center.y << "|" << super.r
-                  << " .. " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r << std::endl;
+        //std::cout << "~insert " << super.center.x << "," << super.center.y << "|" << super.r
+        //          << " .. " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r << std::endl;
 
         if (!root) 
             root = flower(new flower_t);
@@ -250,7 +250,7 @@ struct flower_t {
             }
         }
 
-        std::cout << "~inserted" << std::endl;
+        //std::cout << "~inserted" << std::endl;
         root->data.insert(t);
     }
 
@@ -259,8 +259,8 @@ struct flower_t {
         if (!root)
             return;
 
-        std::cout << "~query " << super.center.x << "," << super.center.y << "|" << super.r
-                  << " .. " << q.x << "," << q.y << std::endl;
+        //std::cout << "~query " << super.center.x << "," << super.center.y << "|" << super.r
+        //          << " .. " << q.x << "," << q.y << std::endl;
 
         for (int i = 0; i < 7; ++i) {
 
@@ -276,7 +276,7 @@ struct flower_t {
         while (i != root->data.end()) {
 
             if (i->circ.has(q)) {
-                std::cout << "~ found " << i->circ.center.x << "," << i->circ.center.y << "|" << i->circ.r << std::endl;
+                //std::cout << "~ found " << i->circ.center.x << "," << i->circ.center.y << "|" << i->circ.r << std::endl;
                 ret.insert(*i);
                 i = root->data.erase(i);
             } else {
@@ -284,7 +284,7 @@ struct flower_t {
             }
         }
 
-        std::cout << "~done q" << super.center.x << "," << super.center.y << "|" << super.r << std::endl;
+        //std::cout << "~done q" << super.center.x << "," << super.center.y << "|" << super.r << std::endl;
     }
 
     static void result(const flower& root, std::set<tri>& ret) {
@@ -308,10 +308,10 @@ void check_pt(const tri& t, const pt& p) {
     if (t.a == p || t.b == p || t.c == p || !t.circ.has(p))
         return;
 
-    std::cout << "!!! " << p.x << "," << p.y << " " 
-              << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " " << t.c.x << "," << t.c.y << " | "
-              << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << " ~~~ " << p.dist2(t.circ.center) << std::endl;
-    ::abort();
+    //std::cout << "!!!FAIL!!! " << p.x << "," << p.y << " " 
+    //          << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " " << t.c.x << "," << t.c.y << " | "
+    //          << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << " ~~~ " << p.dist2(t.circ.center) << std::endl;
+    //::abort();
 }
 
 void check_delaunay(const std::set<tri>& s) {
@@ -389,7 +389,7 @@ struct Triangulation {
 
             //flower_t::query(tree, super, p, bad);
 
-            std::cout << "~ " << p.x << "," << p.y << std::endl;
+            //std::cout << "~ " << p.x << "," << p.y << std::endl;
 
             auto i = queue.begin();
             while (i != queue.end()) {
@@ -405,17 +405,17 @@ struct Triangulation {
 
             for (const tri& t : bad) {
 
-                std::cout << "[ " << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " "
-                          << t.c.x << "," << t.c.y << std::endl;
-                std::cout << "( " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << std::endl;
+                //std::cout << "[ " << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " "
+                //          << t.c.x << "," << t.c.y << std::endl;
+                //std::cout << "( " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << std::endl;
 
                 loose_edges[edge(t.a, t.b)]++;
                 loose_edges[edge(t.b, t.c)]++;
                 loose_edges[edge(t.c, t.a)]++;
             }
 
-            std::cout << "BAD" << std::endl;
-            print_tris(bad);
+            //std::cout << "BAD" << std::endl;
+            //print_tris(bad);
 
             std::set<tri> good;
 
@@ -423,8 +423,8 @@ struct Triangulation {
 
             for (const auto& v : loose_edges) {
 
-                std::cout << "chk " << v.first.a.x << "," << v.first.a.y << " " 
-                          << v.first.b.x << "," << v.first.b.y << " " << v.second << std::endl;
+                //std::cout << "chk " << v.first.a.x << "," << v.first.a.y << " " 
+                //          << v.first.b.x << "," << v.first.b.y << " " << v.second << std::endl;
 
                 if (v.second > 2)
                     throw std::runtime_error("Sanity error: not a mesh.");
@@ -437,61 +437,28 @@ struct Triangulation {
                 hull[v.first.a].insert(v.first.b);
                 hull[v.first.b].insert(v.first.a);
 
-                std::cout << "ins " << v.first.a.x << "," << v.first.a.y << " " 
-                          << v.first.b.x << "," << v.first.b.y << std::endl;
-            }
-
-            while (1) {
-
-                std::cout << "LOOP" << std::endl;
-
-                std::set<pt> removed_pt;
-
-                for (const auto& v : hull) {
-
-                    std::cout << "ooo " << v.second.size() << " " << v.first.x << "," << v.first.y << std::endl;
-
-                    if (v.second.size() != 2) 
-                        throw std::runtime_error("Sanity error: not a hull. (1)");
-
-                    const pt& a = v.first;
-                    const pt& b = *(v.second.begin());
-                    const pt& c = *(++v.second.begin());
-
-                    std::cout << "hull " << a.x << "," << a.y << " " << b.x << "," << b.y << " "
-                              << c.x << "," << c.y << std::endl;
-
-                    tri one(a, c, p);
-                    tri two(a, b, p);
-
-                    if (one.null() || two.null())
-                        continue;
-
-                    if (one.circ.has(b) || two.circ.has(c)) {
-                        // Oops.
-                        std::cout << "INS OOPS" << std::endl;
-                        tri tmp(a, b, c);
-
-                        if (tmp.null()) 
-                            continue;
-
-                        good.insert(tmp);
-                        removed_pt.insert(a);
-
-                        std::cout << "SHIT" << std::endl;
-                    }
-                }
-
-                // HANDLE removed_pt!
-                // first remove from values, then redistribute keys.
+                //std::cout << "edge " << v.first.a.x << "," << v.first.a.y << " " 
+                //          << v.first.b.x << "," << v.first.b.y << std::endl;
             }
 
             std::set<edge> hull_edges;
 
             for (const auto& v : hull) {
 
-                if (v.second.size() != 2) 
-                    throw std::runtime_error("Sanity error: not a hull. (2)");
+                if (v.second.size() != 2) {
+
+                    std::cout << p.x << " " << p.y << std::endl << std::endl;
+                    print_tris(bad);
+
+                    for (const tri& tt : bad) {
+                        std::cout << "<|> " << tt.a.x << "," << tt.a.y << " " << tt.b.x << "," << tt.b.y << " "
+                                  << tt.c.x << "," << tt.c.y << " +++ " << tt.circ.center.x << "," 
+                                  << tt.circ.center.y << "|" << tt.circ.r2 << std::endl;
+                        std::cout << "< > " << tt.circ.center.dist2(p) << std::endl;
+                    }
+
+                    throw std::runtime_error("Sanity error: not a hull.");
+                }
 
                 const pt& a = v.first;
                 const pt& b = *(v.second.begin());
@@ -501,24 +468,36 @@ struct Triangulation {
                 hull_edges.insert(edge(a, c));
             }
 
+            /*
+                tri one(a, c, p);
+                tri two(a, b, p);
+
+                if (!one.null())
+                    good.insert(one);
+
+                if (!two.null())
+                    good.insert(two);
+            }
+            */
+
             for (const edge& e : hull_edges) {
-                std::cout << "OK INS" << std::endl;
+                //std::cout << "OK INS" << std::endl;
                 tri tmp(e.a, e.b, p);
 
                 if (!tmp.null())
                     good.insert(tmp);
             }                
 
-            std::cout << "GOOD" << std::endl;
-            print_tris(good);
+            //std::cout << "GOOD" << std::endl;
+            //print_tris(good);
 
             queue.insert(good.begin(), good.end());
 
             //flower_t::insert(tree, super, tmp);
 
-            std::cout << "FULL" << std::endl;
+            //std::cout << "FULL" << std::endl;
             //print_tris(queue);
-            check_delaunay(queue);
+            //check_delaunay(queue);
         }
 
         std::set<tri> finaltri;
