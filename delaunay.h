@@ -401,92 +401,125 @@ struct Triangulation {
                 }
             }
 
-            std::map<edge, size_t> loose_edges;
-
-            for (const tri& t : bad) {
-
-                //std::cout << "[ " << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " "
-                //          << t.c.x << "," << t.c.y << std::endl;
-                //std::cout << "( " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << std::endl;
-
-                loose_edges[edge(t.a, t.b)]++;
-                loose_edges[edge(t.b, t.c)]++;
-                loose_edges[edge(t.c, t.a)]++;
-            }
-
-            //std::cout << "BAD" << std::endl;
-            //print_tris(bad);
-
             std::set<tri> good;
 
-            std::map< pt, std::set<pt> > hull;
+            while (1) {
 
-            for (const auto& v : loose_edges) {
+                std::map<edge, size_t> loose_edges;
 
-                //std::cout << "chk " << v.first.a.x << "," << v.first.a.y << " " 
-                //          << v.first.b.x << "," << v.first.b.y << " " << v.second << std::endl;
+                for (const tri& t : bad) {
 
-                if (v.second > 2)
-                    throw std::runtime_error("Sanity error: not a mesh.");
-        
-                // A double edge means this is an internal edge, so we delete it.
+                    //std::cout << "[ " << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " "
+                    //          << t.c.x << "," << t.c.y << std::endl;
+                    //std::cout << "( " << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << std::endl;
 
-                if (v.second == 2)
-                    continue;
-                
-                hull[v.first.a].insert(v.first.b);
-                hull[v.first.b].insert(v.first.a);
-
-                //std::cout << "edge " << v.first.a.x << "," << v.first.a.y << " " 
-                //          << v.first.b.x << "," << v.first.b.y << std::endl;
-            }
-
-            std::set<edge> hull_edges;
-
-            for (const auto& v : hull) {
-
-                if (v.second.size() != 2) {
-
-                    std::cout << p.x << " " << p.y << std::endl << std::endl;
-                    print_tris(bad);
-
-                    for (const tri& tt : bad) {
-                        std::cout << "<|> " << tt.a.x << "," << tt.a.y << " " << tt.b.x << "," << tt.b.y << " "
-                                  << tt.c.x << "," << tt.c.y << " +++ " << tt.circ.center.x << "," 
-                                  << tt.circ.center.y << "|" << tt.circ.r2 << std::endl;
-                        std::cout << "< > " << tt.circ.center.dist2(p) << std::endl;
-                    }
-
-                    throw std::runtime_error("Sanity error: not a hull.");
+                    loose_edges[edge(t.a, t.b)]++;
+                    loose_edges[edge(t.b, t.c)]++;
+                    loose_edges[edge(t.c, t.a)]++;
                 }
 
-                const pt& a = v.first;
-                const pt& b = *(v.second.begin());
-                const pt& c = *(++v.second.begin());
+                //std::cout << "BAD" << std::endl;
+                //print_tris(bad);
 
-                hull_edges.insert(edge(a, b));
-                hull_edges.insert(edge(a, c));
+                std::map< pt, std::set<pt> > hull;
+
+                for (const auto& v : loose_edges) {
+
+                    //std::cout << "chk " << v.first.a.x << "," << v.first.a.y << " " 
+                    //          << v.first.b.x << "," << v.first.b.y << " " << v.second << std::endl;
+
+                    if (v.second > 2)
+                        throw std::runtime_error("Sanity error: not a mesh.");
+        
+                    // A double edge means this is an internal edge, so we delete it.
+
+                    if (v.second == 2)
+                        continue;
+                
+                    hull[v.first.a].insert(v.first.b);
+                    hull[v.first.b].insert(v.first.a);
+
+                    //std::cout << "edge " << v.first.a.x << "," << v.first.a.y << " " 
+                    //          << v.first.b.x << "," << v.first.b.y << std::endl;
+                }
+
+                std::set<edge> hull_edges;
+                bool try_again = false;
+
+                for (const auto& v : hull) {
+
+                    if (v.second.size() != 2) {
+
+                        // Oops, theoretically this should never happen, but it does.
+                        // (Rounding errors and such.)
+                        // Remove the triangles that are the furthest away,
+                        // hopefully this will get rid of non-connected triangles.
+                        // TODO.
+
+                        unsigned int minr2 = 0;
+                        std::vector<tri> to_remove;
+                        
+                        for (const tri& t : bad) {
+
+                            unsigned int d = t.circ.r2 - t.circ.center.dist2(p);
+
+                            if (to_remove.empty() || d <= minr2) {
+
+                                if (d != minr2) {
+                                    to_remove.clear();
+                                }
+
+                                to_remove.push_back(t);
+                                minr2 = d;
+                            }
+                        }
+
+                        for (const tri& t : to_remove) {
+                            bad.erase(t);
+                        }
+
+                        try_again = true;
+                        break;
+
+                        /*
+                          std::cout << p.x << " " << p.y << std::endl << std::endl;
+                          print_tris(bad);
+
+                          for (const tri& tt : bad) {
+                          std::cout << "<|> " << tt.a.x << "," << tt.a.y << " " << tt.b.x << "," << tt.b.y << " "
+                          << tt.c.x << "," << tt.c.y << " +++ " << tt.circ.center.x << "," 
+                          << tt.circ.center.y << "|" << tt.circ.r2 << std::endl;
+                          std::cout << "< > " << tt.circ.center.dist2(p) << std::endl;
+                          }
+                    
+                          throw std::runtime_error("Sanity error: not a hull.");
+                        */
+                    }
+
+
+                    const pt& a = v.first;
+                    const pt& b = *(v.second.begin());
+                    const pt& c = *(++v.second.begin());
+
+                    hull_edges.insert(edge(a, b));
+                    hull_edges.insert(edge(a, c));
+                }
+
+                if (try_again)
+                    continue;
+
+                // hull_edges is only needed to make the inserted triangles unique.
+
+                for (const edge& e : hull_edges) {
+
+                    tri tmp(e.a, e.b, p);
+
+                    if (!tmp.null())
+                        good.insert(tmp);
+                }
+            
+                break;
             }
-
-            /*
-                tri one(a, c, p);
-                tri two(a, b, p);
-
-                if (!one.null())
-                    good.insert(one);
-
-                if (!two.null())
-                    good.insert(two);
-            }
-            */
-
-            for (const edge& e : hull_edges) {
-                //std::cout << "OK INS" << std::endl;
-                tri tmp(e.a, e.b, p);
-
-                if (!tmp.null())
-                    good.insert(tmp);
-            }                
 
             //std::cout << "GOOD" << std::endl;
             //print_tris(good);
