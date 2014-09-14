@@ -496,6 +496,9 @@ void Game::process_world(GameState& state,
         }
     }
 
+
+    state.monsters._make_nn_graph(state.grid.w, state.grid.h, p.px, p.py);
+
     state.monsters.process(state.render, 
                            std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),
                                      std::placeholders::_1, std::placeholders::_2, 
@@ -533,9 +536,6 @@ void Game::process_world(GameState& state,
             }
         }
     }
-
-    state.monsters._make_nn_graph(p.px, p.py);
-
 
     for (std::vector<Terrain::spell_t>::iterator si = p.spells.begin(); si != p.spells.end(); ) {
         double k = p.karma.val;

@@ -88,21 +88,16 @@ struct Monsters {
 
     delaunay::Triangulation badguys;
 
-    unsigned int w;
-    unsigned int h;
-
     Monsters() : serial(0) {}
 
-    void init(unsigned int _w, unsigned int _h) {
-        w = _w;
-        h = _h;
+    void init() {
         mons.clear();
         mgrid.clear();
         badguys.clear();
     }
 
     void clear() {
-        init(w, h);
+        init();
     }
 
     static bool is_walkable(const grid::Map& grid, const Species& s, unsigned int x, unsigned int y) {
@@ -634,7 +629,7 @@ struct Monsters {
         }
     }
 
-    void _make_nn_graph(unsigned int px, unsigned int py) {
+    void _make_nn_graph(unsigned int w, unsigned int h, unsigned int px, unsigned int py) {
 
         bm __("delaunay");
 
