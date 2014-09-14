@@ -636,18 +636,20 @@ struct Monsters {
 
     void _make_nn_graph(unsigned int px, unsigned int py) {
 
-        std::set<delaunay::pt> tmp;
+        bm __("delaunay");
+
+        std::vector<delaunay::pt> tmp;
+
+        tmp.push_back(delaunay::pt(px, py));
+        //std::cout << px << " " << py << std::endl;
 
         for (const auto& i : mgrid) {
 
-            const Monster& m = get(i.second);
-
-            tmp.insert(i.first);
+            //std::cout << i.first.first << " " << i.first.second << std::endl;
+            tmp.push_back(i.first);
         }
 
-        tmp.insert(delaunay::pt(px, py));
-
-        badguys.init(w, h, 50*50, tmp);
+        badguys.init(w, h, tmp);
     }
 
     bool get_badguy(const pt& xy, pt& out) {
