@@ -86,14 +86,14 @@ struct Monsters {
     std::unordered_map<size_t, Monster> mons;
     std::unordered_map<pt, size_t> mgrid;
 
-    delaunay::Triangulation badguys;
+    delaunay::Triangulation nearest;
 
     Monsters() : serial(0) {}
 
     void init() {
         mons.clear();
         mgrid.clear();
-        badguys.clear();
+        nearest.clear();
     }
 
     void clear() {
@@ -644,21 +644,7 @@ struct Monsters {
             tmp.push_back(i.first);
         }
 
-        badguys.init(w, h, tmp);
-    }
-
-    bool get_badguy(const pt& xy, pt& out) {
-
-        auto tmp = badguys.get_neighbors(xy.first, xy.second);
-
-        if (tmp.empty())
-            return false;
-
-        const auto& oxy = *(tmp.begin());
-        out.first = oxy.x;
-        out.second = oxy.y;
-
-        return true;
+        nearest.init(w, h, tmp);
     }
 
 };

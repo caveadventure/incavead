@@ -317,7 +317,7 @@ void check_delaunay(const std::set<tri>& s) {
 
 struct Triangulation {
 
-    std::map< pt, std::set<pt> > res;
+    std::map< pt, std::map<pt,unsigned int> > res;
 
     void clear() {
 
@@ -487,31 +487,35 @@ struct Triangulation {
             auto& tb = res[t.b];
             auto& tc = res[t.c];
 
-            ta.insert(t.b);
-            ta.insert(t.c);
-            tb.insert(t.a);
-            tb.insert(t.c);
-            tc.insert(t.a);
-            tc.insert(t.b);
+            unsigned int a_b = t.a.dist2(t.b);
+            unsigned int b_c = t.b.dist2(t.c);
+            unsigned int c_a = t.c.dist2(t.a);
+
+            ta[t.b] = a_b;
+            ta[t.c] = c_a;
+            tb[t.a] = a_b;
+            tb[t.c] = b_c;
+            tc[t.a] = c_a;
+            tc[t.b] = b_c;
         }
     }
 
     struct neighbor_t {
-        double dist;
+        unsigned int dist2;
         unsigned int x;
         unsigned int y;
 
-        neighbor_t(double d = 0, unsigned int _x = 0, unsigned int _y = 0) : dist(d), x(_x), y(_y) {}
+        neighbor_t(unsigned int d2 = 0, unsigned int _x = 0, unsigned int _y = 0) : dist2(d2), x(_x), y(_y) {}
 
         bool operator<(const neighbor_t& a) const {
-            if (dist < a.dist) return true;
-            if (dist == a.dist && x < a.x) return true;
-            if (dist == a.dist && x < a.x && y < a.y) return true;
+            if (dist2 < a.dist2) return true;
+            if (dist2 == a.dist2 && x < a.x) return true;
+            if (dist2 == a.dist2 && x < a.x && y < a.y) return true;
             return false;
         }
     };
     
-    std::set<neighbor_t> get_neighbors(unsigned int x, unsigned int y) const {
+    std::set<neighbor_t> get(unsigned int x, unsigned int y, unsigned int d2max) const {
     
         std::set<neighbor_t> ret;
 
@@ -522,9 +526,11 @@ struct Triangulation {
         if (i == res.end())
             return ret;
 
-        for (const pt& p : i->second) {
+        for (const auto& p_d : i->second) {
 
-            ret.insert(neighbor_t(p0.dist(p), p.x, p.y));
+            if (p_d.second < d2max) {
+                ret.insert(neighbor_t(p_d.second, p_d.first.x, p_d.first.y));
+            }
         }
 
         return ret;

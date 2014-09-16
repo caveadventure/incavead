@@ -283,14 +283,85 @@ inline bool move_monster(Player& p, GameState& state,
     } else if (s.ai == Species::ai_t::inrange_random && dist <= range) {
         do_random = true;
 
-    } else if (do_seek && !do_random &&
+    } else if (do_seek && !do_random) {
+
+        /*
                path_walk(state, mxy.first, mxy.second, target.first, target.second, 1, range, 
                          [&state,&s,&m](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
                              return monster_move_cost(state, m, s, c, d);
                          },
                          nxy.first, nxy.second)) {
+        */
 
-        // Nothing, nxy is good.
+        auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, range);
+
+        int pri = -1;
+        unsigned int maxd2 = range;
+
+        for (const auto& i : nearest) {
+
+            const monsters::Monster& other = state.monsters.get(i.x, i.y);
+
+            bool is_player = (i.x == p.px && i.y == p.py);
+
+            if (other.null() && !is_player)
+                continue;
+
+            if (!is_player && m.ally == other.ally && i.dist2 <= 2)
+                continue;
+
+            int p = 0;
+
+            if (m.ally.null() && is_player) {
+                p = 3;
+
+            } else if (!m.ally.null() && is_player) {
+                p = 1;
+
+            } else if (m.ally != other.ally) {
+                p = 2;
+            }
+
+            unsigned int d2 = i.dist2;
+
+            if (p <= pri && d2 >= maxd2)
+                continue;
+
+            unsigned int tmpnn = 0;
+
+            bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
+                                [&d2, &nxy, &m, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
+
+                                    ++tmpnn;
+
+                                    if (tmpnn == 2) {
+                                        nxy.first = x;
+                                        nxy.second = y;
+                                    }
+
+                                    int mc = monster_move_cost(state, m, s, x, y);
+
+                                    if (mc < 0)
+                                        return false;
+
+                                    d2 += mc;
+                                    return true;
+                                });
+
+            if (!ok)
+                continue;
+
+            if (d2 >= maxd2)
+                continue;
+
+            pri = p;
+            maxd2 = d2;
+        }
+
+        if (pri < 0)
+            do_random = true;
+
+        // Else do nothing, nxy is good.
 
     } else {
 
@@ -316,7 +387,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             auto v = state.neigh.mk(v_, mxy);
 
-            if (monster_move_cost(state, m, s, v.first, v.second) != 0.0f) {
+            if (monster_move_cost(state, m, s, v.first, v.second) >= 0) {
                 tmp.push_back(v);
             }
         }
@@ -337,7 +408,7 @@ inline bool move_monster(Player& p, GameState& state,
             nxy.second = mxy.second + mxy.second - nxy.second;
         }
 
-        if (monster_move_cost(state, m, s, nxy.first, nxy.second) == 0.0f)
+        if (monster_move_cost(state, m, s, nxy.first, nxy.second) >= 0)
             return false;
     }
 

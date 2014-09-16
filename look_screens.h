@@ -305,12 +305,6 @@ inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, u
     unsigned int x0 = px;
     unsigned int y0 = py;
 
-    monsters::pt out;
-    if (state.monsters.get_badguy(monsters::pt(px, py), out)) {
-        x0 = out.first;
-        y0 = out.second;
-    }
-
     pstate = Player::LOOKING;
     look = Player::look_state_t(x0, y0);
 
