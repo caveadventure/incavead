@@ -293,10 +293,10 @@ inline bool move_monster(Player& p, GameState& state,
                          nxy.first, nxy.second)) {
         */
 
-        auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, range);
-
         int pri = -1;
-        unsigned int maxd2 = range;
+        unsigned int maxd2 = range*range;
+
+        auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
 
         for (const auto& i : nearest) {
 
