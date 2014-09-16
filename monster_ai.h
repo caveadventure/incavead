@@ -332,17 +332,17 @@ inline bool move_monster(Player& p, GameState& state,
             bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
                                 [&d2, &nxy, &m, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
 
+                                    int mc = monster_move_cost(state, m, s, x, y);
+
+                                    if (mc < 0)
+                                        return false;
+
                                     ++tmpnn;
 
                                     if (tmpnn == 2) {
                                         nxy.first = x;
                                         nxy.second = y;
                                     }
-
-                                    int mc = monster_move_cost(state, m, s, x, y);
-
-                                    if (mc < 0)
-                                        return false;
 
                                     d2 += mc;
                                     return true;

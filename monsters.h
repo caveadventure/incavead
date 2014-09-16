@@ -167,7 +167,8 @@ struct Monsters {
             pt xy = _clump[rng.n(_clump.size())];
 
             if (mgrid.count(xy) != 0) {
-                std::cout << "Shit " << xy.first << " " << xy.second << " " << species().get(tag).name << std::endl;
+                std::cout << "Placing " << xy.first << " " << xy.second << " " << species().get(tag).name << std::endl;
+                throw std::runtime_error("Sanity error: overwrote a monster while generating.");
             }
 
             serial++;
@@ -636,11 +637,9 @@ struct Monsters {
         std::vector<delaunay::pt> tmp;
 
         tmp.push_back(delaunay::pt(px, py));
-        //std::cout << px << " " << py << std::endl;
 
         for (const auto& i : mgrid) {
 
-            //std::cout << i.first.first << " " << i.first.second << std::endl;
             tmp.push_back(i.first);
         }
 

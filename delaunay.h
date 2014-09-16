@@ -331,8 +331,6 @@ struct Triangulation {
         if (points.empty())
             return;
 
-        std::cout << "/ " << w << " " << h << std::endl;
-
         flower tree(new flower_t);
 
         pt fake1(0, 0);
@@ -346,8 +344,6 @@ struct Triangulation {
         flower_t::insert(tree, super, tri(fake1, fake3, fake4));
 
         for (const pt& p : points) {
-
-            std::cout << "+ " << p.x << "," << p.y << std::endl;
 
             std::vector<tri> bad;
 
@@ -386,8 +382,6 @@ struct Triangulation {
                 for (const auto& v : hull) {
 
                     if (v.second.size() != 2) {
-
-                        std::cout << "FAULT" << std::endl;
 
                         // We found a set of triangles that isn't a triangulation.
 
