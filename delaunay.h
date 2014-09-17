@@ -199,6 +199,16 @@ struct edge {
 struct flower_t;
 typedef std::unique_ptr<flower_t> flower;
 
+//
+// Circle-based spatial indexing tree.
+//
+// Based on this picture: http://www2.stetson.edu/~efriedma/circovcir/7.gif
+//
+// A circle of radius R can be completely covered by 7 circles of radii R/2,
+// one circle in the center and 6 centered on the midpoints of edges of the hexagon
+// inscribed in the larger (radius R) circle.
+//
+
 struct flower_t {
 
     std::vector<tri> data;
