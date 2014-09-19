@@ -217,12 +217,14 @@ bool run_away(Player& p, GameState& state, size_t n_skin) {
 
     std::unordered_set<neighbors::pt> ms;
 
-    for (const auto& i : state.monsters.mgrid) {
+    auto nearest = state.monsters.nearest.get(p.px, p.py, radius * radius);
 
-        if (!state.render.is_in_fov(i.first.first, i.first.second))
+    for (const auto& i : nearest) {
+
+        if (!state.render.is_in_fov(i.x, i.y))
             continue;
 
-        ms.insert(neighbors::pt(i.first.first, i.first.second));
+        ms.insert(neighbors::pt(i.x, i.y));
     }
 
     if (ms.empty()) {

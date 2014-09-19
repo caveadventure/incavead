@@ -479,7 +479,32 @@ inline int conflict_monster(Player& p, GameState& state,
 
     // No double attacks for monsters!
 
-    return 0;
+    const Species& sa = species().get(ma.tag);
+    const Species& sb = species().get(mb.tag);
+
+    if (!ma.did_attack) {
+
+        ma.did_attack = true;
+        attack_from_env(p, sa.attacks, sa.get_computed_level(), state, mxyb, mb, false);
+    }
+
+    if (!mb.did_attack) {
+
+        mb.did_attack = true;
+        attack_from_env(p, sb.attacks, sb.get_computed_level(), state, mxya, ma, false);
+    }
+
+    int ret = 0;
+
+    if (ma.health <= -3) {
+        ret |= 2;
+    }
+
+    if (mb.health <= -3) {
+        ret |= 1;
+    }
+
+    return ret;
 }
 
 #endif

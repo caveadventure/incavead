@@ -104,6 +104,26 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (d.heal_stun) {
+
+        if (p.stun > 0) {
+            p.stun = 0;
+            state.render.do_message("You feel more stable.");
+        }
+
+        ret = true;
+    }
+
+    if (d.heal_fear) {
+
+        if (p.fear > 0) {
+            p.fear = 0;
+            state.render.do_message("You feel a surge of courage!");
+        }
+
+        ret = true;
+    }
+
     if (d.heal_unluck) {
 
         if (p.luck.val < 0) {

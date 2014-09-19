@@ -214,28 +214,47 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
     } else if (!mon.null()) {
 
-        std::string state;
+        std::vector<std::string> state;
 
         if (mon.sleep > 0) {
-            state = "sleeping";
+            state.push_back("sleeping");
+        }
 
-        } else if (mon.blind > 0) {
-            state = "blinded";
+        if (mon.blind > 0) {
+            state.push_back("blinded");
+        }
 
-        } else if (mon.stun > 0) {
-            state = "stunned";
+        if (mon.stun > 0) {
+            state.push_back("stunned");
+        }
 
-        } else if (mon.fear > 0) {
-            state = "afraid";
+        if (mon.fear > 0) {
+            state.push_back("afraid");
+        }
 
-        } else if (mon.magic <= -3.0) {
-            state = "cancelled";
+        if (mon.magic <= -3.0) {
+            state.push_back("cancelled");
+        }
+
+        if (!mon.ally.null()) {
+            state.push_back("ally");
         }
 
         if (state.empty()) {
             msg = nlp::message(" %s", species().get(mon.tag));
+
         } else {
-            msg = nlp::message(" %s (%s)", species().get(mon.tag), state);
+            std::string tmp;
+
+            for (const std::string& i : state) {
+
+                if (!tmp.empty())
+                    tmp += ", ";
+
+                tmp += i;
+            }
+
+            msg = nlp::message(" %s (%s)", species().get(mon.tag), tmp);
         }
 
     } else if (n > 1) {

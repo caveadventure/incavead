@@ -137,6 +137,8 @@ struct Design {
     bool heal_unluck;
     bool heal_ailments;
     bool heal_polymorph;
+    bool heal_stun;
+    bool heal_fear;
 
     std::string action_name;
 
@@ -195,8 +197,8 @@ struct Design {
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 
                descend(0), safe_descend(0), worth(0), is_lit(false), hunger(0), other_hunger_multiplier(0), 
                shield(0), count_is_rcode(false), wishing(NO_WISH), magic_mapping(false), heal_blind(false), 
-               heal_unluck(false), heal_ailments(false), heal_polymorph(false), forbid_wish(false), change_count(0),
-               lucky_free_apply(false)
+               heal_unluck(false), heal_ailments(false), heal_polymorph(false), heal_stun(false), heal_fear(false),
+               forbid_wish(false), change_count(0), lucky_free_apply(false)
         {}
     
 };

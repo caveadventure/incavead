@@ -482,6 +482,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_heal_unluck    = 'heal_unluck'    %{ des.heal_unluck = true; };
         design_heal_ailments  = 'heal_ailments'  %{ des.heal_ailments = true; };
         design_heal_polymorph = 'heal_polymorph' %{ des.heal_polymorph = true; };
+        design_heal_stun      = 'heal_stun'      %{ des.heal_stun = true; };
+        design_heal_fear      = 'heal_fear'      %{ des.heal_fear = true; };
 
         design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
 
@@ -532,7 +534,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
-            design_heal_ailments | design_heal_polymorph | design_forbid_wish | design_change_count |
+            design_heal_ailments | design_heal_polymorph | design_heal_stun | design_heal_fear |
+            design_forbid_wish | design_change_count |
             design_starsign | design_summon | design_polymorph | design_fast | design_lucky_free_apply |
             '}'
             ${ fret; })

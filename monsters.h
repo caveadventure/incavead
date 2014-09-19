@@ -558,24 +558,28 @@ struct Monsters {
 
                     int result = fconf(mona->first, get(mona->second), monb->first, get(monb->second));
 
-                    if (result == 1) {
-
-                        deadcount++;
-                        mons.erase(monb->second);
-                        render.invalidate(monb->first.first, monb->first.second);
-                        v.erase(monb);
-
-                    } else if (result == 2) {
-                        
-                        deadcount++;
-                        mons.erase(mona->second);
-                        render.invalidate(mona->first.first, mona->first.second);
-                        v.erase(mona);
-
-                    } else {
+                    if ((result & 3) == 0) {
 
                         failures.push_back(*monb);
                         v.erase(monb);
+
+                    } else {
+
+                        if (result & 1) {
+
+                            deadcount++;
+                            mons.erase(monb->second);
+                            render.invalidate(monb->first.first, monb->first.second);
+                            v.erase(monb);
+                        }
+
+                        if (result & 2) {
+
+                            deadcount++;
+                            mons.erase(mona->second);
+                            render.invalidate(mona->first.first, mona->first.second);
+                            v.erase(mona);
+                        }
                     }
                 }
             }
