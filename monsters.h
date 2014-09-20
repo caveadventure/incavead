@@ -26,8 +26,8 @@ struct Monster {
 
     Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false) {}
 
-    Monster(tag_t _tag, size_t ser) : 
-        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false)
+    Monster(tag_t _tag, size_t ser, tag_t a) : 
+        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false), ally(a)
         {}
 
     bool null() const {
@@ -132,7 +132,7 @@ struct Monsters {
                              tag_t tag, unsigned int n,
                              std::unordered_set<pt>& clump, 
                              std::unordered_set<pt>& placed,
-                             FUNC f, FUNCP fp) {
+                             FUNC f, FUNCP fp, tag_t ally) {
 
         unsigned int ret = 0;
 
@@ -172,7 +172,7 @@ struct Monsters {
             }
 
             serial++;
-            mons[serial] = Monster(tag, serial);
+            mons[serial] = Monster(tag, serial, ally);
             mgrid[xy] = serial;
             placed.insert(xy);
             ++ret;
@@ -198,7 +198,7 @@ struct Monsters {
     unsigned int place_clump(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                              tag_t tag, unsigned int n,
                              std::unordered_set<pt>& clump,
-                             std::unordered_set<pt>& placed) {
+                             std::unordered_set<pt>& placed, tag_t ally) {
 
 
         const Species& s = species().get(tag);
@@ -209,23 +209,23 @@ struct Monsters {
 
         case Species::habitat_t::walk:
             return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
-                               std::mem_fn(&T::one_of_walk), std::mem_fn(&grid::Map::is_walk));
+                               std::mem_fn(&T::one_of_walk), std::mem_fn(&grid::Map::is_walk), ally);
 
         case Species::habitat_t::floor:
             return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
-                               std::mem_fn(&T::one_of_floor), std::mem_fn(&grid::Map::is_floor));
+                               std::mem_fn(&T::one_of_floor), std::mem_fn(&grid::Map::is_floor), ally);
 
         case Species::habitat_t::water:
             return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
-                               std::mem_fn(&T::one_of_lake), std::mem_fn(&grid::Map::is_lake));
+                               std::mem_fn(&T::one_of_lake), std::mem_fn(&grid::Map::is_lake), ally);
 
         case Species::habitat_t::corner:
             return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
-                               std::mem_fn(&T::one_of_corner), std::mem_fn(&grid::Map::is_corner));
+                               std::mem_fn(&T::one_of_corner), std::mem_fn(&grid::Map::is_corner), ally);
 
         case Species::habitat_t::shoreline:
             return place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed,
-                               std::mem_fn(&T::one_of_shore), std::mem_fn(&grid::Map::is_shore));
+                               std::mem_fn(&T::one_of_shore), std::mem_fn(&grid::Map::is_shore), ally);
 
         }
 
@@ -279,7 +279,7 @@ struct Monsters {
     template <typename T>
     unsigned int place(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, T& ptsource,
                        counters::Counts& counts, pt* start, std::unordered_set<pt>& placed,
-                       unsigned int level, tag_t tag, unsigned int n) {
+                       unsigned int level, tag_t tag, unsigned int n, tag_t ally) {
 
         const Species& s = species().get(tag);
 
@@ -308,7 +308,7 @@ struct Monsters {
             clump.insert(*start);
         }
 
-        unsigned int ret = place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed);
+        unsigned int ret = place_clump(neigh, rng, grid, ptsource, tag, n, clump, placed, ally);
 
         for (const auto& comp : s.companion) {
 
@@ -325,11 +325,11 @@ struct Monsters {
             pt tmp;
             if (filter_habitat_find_one(grid, ptsource, clump, placed, tmp, species().get(comp.tag).habitat)) {
 
-                place(neigh, rng, grid, ptsource, counts, &tmp, placed, level, comp.tag, n2);
+                place(neigh, rng, grid, ptsource, counts, &tmp, placed, level, comp.tag, n2, ally);
 
             } else {
 
-                place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, comp.tag, n2);
+                place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, comp.tag, n2, ally);
             }
         }
 
@@ -340,7 +340,7 @@ struct Monsters {
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
                         const std::unordered_set<pt>& places, const unsigned int* px, const unsigned int* py,
-                        tag_t tag, unsigned int count, bool counts_taken) {
+                        tag_t tag, unsigned int count, bool counts_taken, tag_t ally = tag_t()) {
 
         std::unordered_set<pt> placed;
 
@@ -368,7 +368,7 @@ struct Monsters {
                 count = 1;
             }
 
-            unsigned int ret = place(neigh, rng, grid, grid, counts, &start, placed, s.level, tag, count);
+            unsigned int ret = place(neigh, rng, grid, grid, counts, &start, placed, s.level, tag, count, ally);
 
             for (const pt& xy : placed) {
                 render.invalidate(xy.first, xy.second);
@@ -383,7 +383,7 @@ struct Monsters {
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
                         unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
-                        tag_t tag, unsigned int count, bool counts_taken) {
+                        tag_t tag, unsigned int count, bool counts_taken, tag_t ally = tag_t()) {
 
 
         std::unordered_set<pt> n;
@@ -396,14 +396,14 @@ struct Monsters {
 
         n.insert(pt(x, y));
 
-        return summon(neigh, rng, grid, counts, render, n, px, py, tag, count, counts_taken);
+        return summon(neigh, rng, grid, counts, render, n, px, py, tag, count, counts_taken, ally);
     }
 
 
     unsigned int summon_any(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                             grender::Grid& render, 
                             unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
-                            unsigned int level, unsigned int count) {
+                            unsigned int level, unsigned int count, tag_t ally = tag_t()) {
 
         std::map<tag_t, unsigned int> q = counts.take(rng, level, count, true);
 
@@ -411,7 +411,7 @@ struct Monsters {
 
         for (auto& i : q) {
 
-            ret += summon(neigh, rng, grid, counts, render, x, y, px, py, i.first, i.second, true);
+            ret += summon(neigh, rng, grid, counts, render, x, y, px, py, i.first, i.second, true, ally);
         }
 
         return ret;
@@ -456,7 +456,7 @@ struct Monsters {
 
         for (auto& i : q) {
 
-            place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, i.first, i.second);
+            place(neigh, rng, grid, ptsource, counts, nullptr, placed, level, i.first, i.second, tag_t());
 
         }
     }

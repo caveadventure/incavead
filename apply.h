@@ -627,6 +627,68 @@ inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
     return true;
 }
 
+inline bool summon_poly(Player& p, size_t i, GameState& state) {
+
+    if (p.polymorph.species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph.species);
+
+    if (i >= s.summon.size())
+        return false;
+
+    const auto& c = s.summon[i];
+
+    if ((state.ticks % c.turns) != 0) {
+
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+    
+    double v = state.rng.gauss(0.0, 1.0);
+
+    if (v <= c.chance) {
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+
+    size_t n = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                     p.px, p.py, &p.px, &p.py, c.speciestag, 1, false, p.polymorph.species);
+
+    return (n > 0);
+}
+
+inline bool spawn_poly(Player& p, size_t i, GameState& state) {
+
+    if (p.polymorph.species.null())
+        return false;
+
+    const Species& s = species().get(p.polymorph.species);
+
+    if (i >= s.spawns.size())
+        return false;
+
+    const auto& c = s.spawns[i];
+
+    if ((state.ticks % c.turns) != 0) {
+
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+    
+    double v = state.rng.gauss(0.0, 1.0);
+
+    if (v <= c.chance) {
+        state.render.do_message("You failed to activate your ability properly.");
+        return false;
+    }
+
+    size_t n = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                         p.px, p.py, &p.px, &p.py, c.level, 1, p.polymorph.species);
+
+    return (n > 0);
+}
+
 
 inline bool start_digging(Player& p, tag_t slot, GameState& state) {
 

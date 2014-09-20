@@ -130,7 +130,14 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
         if (!mon.null()) {
 
             const Species& s = species().get(mon.tag);
-            state.render.set_skin(x, y, 5, s.skin[n_skin]);
+
+            auto skin = s.skin[n_skin];
+
+            if (!mon.ally.null()) {
+                skin.underline = true;
+            }
+
+            state.render.set_skin(x, y, 5, skin);
             state.render.set_is_walkblock(x, y, 5, true);
 
         } else {

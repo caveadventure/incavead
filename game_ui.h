@@ -337,6 +337,20 @@ std::string show_spells(const Player& p, const GameState& state) {
                           ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
         ++z;
     }
+
+    for (const auto& ps : s.summon) {
+
+        m += nlp::message("   \2%c\1) Summon %s\n", z, species().get(ps.speciestag),
+                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        ++z;
+    }
+
+    for (const auto& ps : s.spawns) {
+
+        m += nlp::message("   \2%c\1) Summon level %d monster\n", z, ps.level,
+                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        ++z;
+    }
         
     return m;
 }
@@ -406,14 +420,26 @@ void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
 
         size_t x = z - size3;
 
-        if (x < s.blast.size()) {
+        size_t size1 = s.blast.size();
+        size_t size2 = size1 + s.cast_cloud.size();
+        size_t size3 = size2 + s.summon.size();
+        size_t size4 = size3 + s.spawns.size();
+
+        if (x < size1) {
 
             start_poly_blast(p, x, state);
-        }
 
-        if (x < s.blast.size() + s.cast_cloud.size()) {
+        } else if (x < size2) {
 
-            start_poly_cloud(p, x - s.blast.size(), state);
+            start_poly_cloud(p, x - size1, state);
+
+        } else if (x < size3) {
+
+            summon_poly(p, x - size2, state);
+
+        } else if (x < size4) {
+
+            spawn_poly(p, x - size3, state);
         }
     }            
 
