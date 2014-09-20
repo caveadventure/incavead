@@ -340,14 +340,14 @@ std::string show_spells(const Player& p, const GameState& state) {
 
     for (const auto& ps : s.summon) {
 
-        m += nlp::message("   \2%c\1) Summon %s\n", z, species().get(ps.speciestag),
+        m += nlp::message("   \2%c\1) Summon %s%s\n", z, species().get(ps.speciestag),
                           ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
         ++z;
     }
 
     for (const auto& ps : s.spawns) {
 
-        m += nlp::message("   \2%c\1) Summon level %d monster\n", z, ps.level,
+        m += nlp::message("   \2%c\1) Summon level %d monster%s\n", z, ps.level,
                           ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
         ++z;
     }
@@ -890,6 +890,15 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
         break;
     }
                              
+    case 'A':
+    {
+        tag_mem_t tagmem;
+
+        state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                  p.px, p.py, &p.px, &p.py, p.level, 1, tag_t("something", tagmem));
+        break;
+    }
+
     case 'L':
         for (unsigned int y = 0; y < state.render.h; ++y) {
             for (unsigned int x = 0; x < state.render.w; ++x) {

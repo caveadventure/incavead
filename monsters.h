@@ -605,6 +605,9 @@ struct Monsters {
             const pt& nxy = i.first;
             const auto& v = i.second;
 
+            if (v.empty())
+                continue;
+
             if (v.size() != 1)
                 throw std::runtime_error("Sanity error: monster conflicts not resolved.");
 

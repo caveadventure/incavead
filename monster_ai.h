@@ -479,6 +479,9 @@ inline int conflict_monster(Player& p, GameState& state,
 
     // No double attacks for monsters!
 
+    if (ma.ally == mb.ally)
+        return 0;
+
     const Species& sa = species().get(ma.tag);
     const Species& sb = species().get(mb.tag);
 

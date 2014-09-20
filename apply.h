@@ -655,6 +655,8 @@ inline bool summon_poly(Player& p, size_t i, GameState& state) {
     size_t n = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
                                      p.px, p.py, &p.px, &p.py, c.speciestag, 1, false, p.polymorph.species);
 
+    ++(state.ticks);
+
     return (n > 0);
 }
 
@@ -685,6 +687,8 @@ inline bool spawn_poly(Player& p, size_t i, GameState& state) {
 
     size_t n = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
                                          p.px, p.py, &p.px, &p.py, c.level, 1, p.polymorph.species);
+
+    ++(state.ticks);
 
     return (n > 0);
 }
