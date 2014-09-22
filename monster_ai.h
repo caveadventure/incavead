@@ -500,10 +500,30 @@ inline int conflict_monster(Player& p, GameState& state,
     int ret = 0;
 
     if (ma.health <= -3) {
+
+        if (state.render.is_in_fov(mxya.first, mxya.second)) {
+
+            if (ma.ally.null()) {
+                state.render.do_message("%S is killed.", sa);
+            } else {
+                state.render.do_message("Your %s is killed.", sa);
+            }
+        }
+
         ret |= 2;
     }
 
     if (mb.health <= -3) {
+
+        if (state.render.is_in_fov(mxyb.first, mxyb.second)) {
+
+            if (mb.ally.null()) {
+                state.render.do_message("%S is killed.", sb);
+            } else {
+                state.render.do_message("Your %s is killed.", sb);
+            }
+        }
+
         ret |= 1;
     }
 

@@ -154,6 +154,27 @@ struct Items {
         return true;
     }
 
+    template <typename FUNC>
+    void consume(unsigned int x, unsigned int y, FUNC f) {
+
+        auto i = stuff.find(pt(x, y));
+
+        if (i == stuff.end()) 
+            return;
+
+        auto j = i->second.begin();
+
+        while (j != i->second.end()) {
+            bool wipe = f(*j);
+
+            if (wipe) {
+                j = i->second.erase(j);
+            } else {
+                ++j;
+            }
+        }
+    }
+
     void place(unsigned int x, unsigned int y, const Item& i, grender::Grid& grid) {
 
         grid.invalidate(x, y);

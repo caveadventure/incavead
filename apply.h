@@ -267,6 +267,9 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
+    if (d.raise_monsters) {
+    }
+
     if (!d.polymorph.species.null()) {
 
         p.polymorph.species = d.polymorph.species;
