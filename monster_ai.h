@@ -330,9 +330,9 @@ inline bool move_monster(Player& p, GameState& state,
             unsigned int tmpnn = 0;
 
             bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
-                                [&d2, &nxy, &m, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
+                                [&d2, &nxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
 
-                                    int mc = monster_move_cost(state, m, s, x, y);
+                                    int mc = monster_move_cost(state, s, x, y);
 
                                     if (mc < 0)
                                         return false;
@@ -387,7 +387,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             auto v = state.neigh.mk(v_, mxy);
 
-            if (monster_move_cost(state, m, s, v.first, v.second) >= 0) {
+            if (monster_move_cost(state, s, v.first, v.second) >= 0) {
                 tmp.push_back(v);
             }
         }
@@ -408,7 +408,7 @@ inline bool move_monster(Player& p, GameState& state,
             nxy.second = mxy.second + mxy.second - nxy.second;
         }
 
-        if (monster_move_cost(state, m, s, nxy.first, nxy.second) >= 0)
+        if (monster_move_cost(state, s, nxy.first, nxy.second) >= 0)
             return false;
     }
 
@@ -504,9 +504,9 @@ inline int conflict_monster(Player& p, GameState& state,
         if (state.render.is_in_fov(mxya.first, mxya.second)) {
 
             if (ma.ally.null()) {
-                state.render.do_message("%S is killed.", sa);
+                state.render.do_message(nlp::message("%S is killed.", sa));
             } else {
-                state.render.do_message("Your %s is killed.", sa);
+                state.render.do_message(nlp::message("Your %s is killed.", sa));
             }
         }
 
@@ -518,9 +518,9 @@ inline int conflict_monster(Player& p, GameState& state,
         if (state.render.is_in_fov(mxyb.first, mxyb.second)) {
 
             if (mb.ally.null()) {
-                state.render.do_message("%S is killed.", sb);
+                state.render.do_message(nlp::message("%S is killed.", sb));
             } else {
-                state.render.do_message("Your %s is killed.", sb);
+                state.render.do_message(nlp::message("Your %s is killed.", sb));
             }
         }
 

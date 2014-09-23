@@ -155,22 +155,19 @@ struct Items {
     }
 
     template <typename FUNC>
-    void consume(unsigned int x, unsigned int y, FUNC f) {
+    void consume(FUNC f) {
 
-        auto i = stuff.find(pt(x, y));
+        for (auto& j : stuff) {
 
-        if (i == stuff.end()) 
-            return;
+            for (auto i = j.second.begin(); i != j.second.end(); ) {
 
-        auto j = i->second.begin();
+                bool wipe = f(*i);
 
-        while (j != i->second.end()) {
-            bool wipe = f(*j);
-
-            if (wipe) {
-                j = i->second.erase(j);
-            } else {
-                ++j;
+                if (wipe) {
+                    i = j.second.erase(i);
+                } else {
+                    ++i;
+                }
             }
         }
     }

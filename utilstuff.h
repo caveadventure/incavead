@@ -113,8 +113,7 @@ bool path_walk(GameState& state,
     return true;
 }
 
-inline int monster_move_cost(GameState& state, monsters::Monster& m, const Species& s, 
-                             unsigned int x, unsigned int y) {
+inline int monster_move_cost(GameState& state, const Species& s, unsigned int x, unsigned int y) {
 
     if (!monsters::Monsters::is_walkable(state.grid, s, x, y))
         return -1;
@@ -143,7 +142,7 @@ inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py,
 
     radial_points(mxy.first, mxy.second, state, radius, ns, 
                   [&s,&m](GameState& state, unsigned int x, unsigned int y) {
-                      return (monster_move_cost(state, m, s, x, y) >= 0);
+                      return (monster_move_cost(state, s, x, y) >= 0);
                   });
 
     double maxd = 0.0;

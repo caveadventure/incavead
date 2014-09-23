@@ -267,7 +267,34 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
-    if (d.raise_monsters) {
+    if (!d.raise_monsters.null()) {
+
+        state.items.consume([&p,&state](const items::Item& item) {
+
+                const Design& d = designs().get(item.tag);
+
+                if (d.monster_raised.null())
+                    return false;
+
+                const Species& s = species().get(d.monster_raised);
+
+                if (distance(item.xy.first, item.xy.second, p.px, p.py) > s.range)
+                    return false;
+
+                if (!reachable(state, item.xy.first, item.xy.second, p.px, p.py,
+                               [&s](GameState& state, unsigned int xx, unsigned int yy) {
+                                   return monster_move_cost(state, s, xx, yy) >= 0;
+                               }))
+                    return false;
+
+                int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                               item.xy.first, item.xy.second, &p.px, &p.py, 
+                                               d.monster_raised, 1, true, d.raise_monsters);
+
+                return (nm > 0);
+            });
+
+        ret = true;
     }
 
     if (!d.polymorph.species.null()) {
