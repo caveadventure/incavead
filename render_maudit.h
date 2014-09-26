@@ -812,11 +812,11 @@ public:
                             continue;
                         }
 
-                        bool underline = false;
                         const skin& sk = *skin_c;
 
                         color_t fore = sk.fore;
                         auto text = sk.text;
+                        bool underline = sk.underline;
 
                         if (gp.is_lit == 0) {
 
@@ -824,6 +824,7 @@ public:
                                 back = black_color;
                                 fore = black_color;
                                 text = one_space;
+                                underline = false;
                                 
                             } else {
 
@@ -836,8 +837,6 @@ public:
                                 } else {
 
                                     fore = color_fade(fore, in_fov, found_s, params.do_fade_colors);
-
-                                    underline = sk.underline;
                                 }
                             }
                         }

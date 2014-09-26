@@ -349,6 +349,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_hunger_rate = 'hunger_rate' ws1 real %{ spe.hunger_rate = toreal(state.match); };
 
+        species_ally = 'ally' ws1 tag %{ spe.ally = tag_t(state.match, tagmem); };
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
@@ -357,7 +359,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
-            species_morph | species_hunger_rate |
+            species_morph | species_hunger_rate | species_ally |
             '}'
             ${ fret; })
             ;
@@ -993,6 +995,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
               ws1 string %{ __constants__().starsigns.names[starsign_n] = state.match; } )+
             ;
 
+        constant_ai_radius = 'ai_radius' ws1 number %{ __constants__().ai_radius = toint(state.match); };
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
@@ -1005,7 +1009,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | 
-                       constant_starsigns
+                       constant_starsigns | constant_ai_radius
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';

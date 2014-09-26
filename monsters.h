@@ -205,6 +205,9 @@ struct Monsters {
 
         Species::habitat_t h = s.habitat; 
 
+        if (ally.null())
+            ally = s.ally;
+
         switch (h) {
 
         case Species::habitat_t::walk:
@@ -641,13 +644,22 @@ struct Monsters {
 
         bm __("delaunay");
 
+        unsigned int ai_radius = constants().ai_radius;
+
+        ai_radius = ai_radius * ai_radius;
+
         std::vector<delaunay::pt> tmp;
 
         tmp.push_back(delaunay::pt(px, py));
 
         for (const auto& i : mgrid) {
 
-            tmp.push_back(i.first);
+            const pt& xy = i.first;
+
+            if (pow2(xy.first - px) + pow2(xy.second - py) > ai_radius)
+                continue;
+
+            tmp.push_back(xy);
         }
 
         nearest.init(w, h, tmp);

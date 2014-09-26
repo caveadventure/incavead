@@ -128,6 +128,8 @@ struct ConstantsBank {
 
     starsigns_t starsigns;
 
+    unsigned int ai_radius;
+
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       health_shield_max(0), min_money_value(0.01), max_celauto_cells(1000),
@@ -135,7 +137,8 @@ struct ConstantsBank {
                       blindturns_to_radius(10),
                       max_ailments(6u),
                       monetary_supply_base(1e6),
-                      player_level_cap(12) {}
+                      player_level_cap(12),
+                      ai_radius(30) {}
 
 };
 
