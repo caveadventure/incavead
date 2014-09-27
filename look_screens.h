@@ -214,6 +214,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
     } else if (!mon.null()) {
 
+        const Species& s = species().get(mon.tag);
+
         std::vector<std::string> state;
 
         if (mon.sleep > 0) {
@@ -240,6 +242,25 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
             state.push_back("ally");
         }
 
+        if (s.flags.robot) {
+
+            if (mon.health < -2) {
+                state.push_back("badly damaged");
+            } else if (mon.health < 0) {
+                state.push_back("damaged");
+            } else if (mon.health < 1.5) {
+                state.push_back("slightly damaged");
+            }
+
+        } else if (!s.flags.plant) {
+
+            if (mon.health < -2) {
+                state.push_back("badly wounded");
+            } else if (mon.health < 0) {
+                state.push_back("wounded");
+            }
+        }
+
         if (state.empty()) {
             msg = nlp::message(" %s", species().get(mon.tag));
 
@@ -254,7 +275,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
                 tmp += i;
             }
 
-            msg = nlp::message(" %s (%s)", species().get(mon.tag), tmp);
+            msg = nlp::message(" %s (%s)", s, tmp);
         }
 
     } else if (n > 1) {

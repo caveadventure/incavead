@@ -155,7 +155,9 @@ struct Items {
     }
 
     template <typename FUNC>
-    void consume(FUNC f) {
+    size_t consume(grender::Grid& grid, FUNC f) {
+
+        size_t ret = 0;
 
         for (auto& j : stuff) {
 
@@ -165,11 +167,17 @@ struct Items {
 
                 if (wipe) {
                     i = j.second.erase(i);
+
+                    grid.invalidate(j.first.first, j.first.second);
+                    ret++;
+
                 } else {
                     ++i;
                 }
             }
         }
+
+        return ret;
     }
 
     void place(unsigned int x, unsigned int y, const Item& i, grender::Grid& grid) {

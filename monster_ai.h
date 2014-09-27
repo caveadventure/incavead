@@ -502,30 +502,31 @@ inline int conflict_monster(Player& p, GameState& state,
 
     int ret = 0;
 
-    if (ma.health <= -3) {
+    auto do_message = [](GameState& state, const monsters::pt& mxy, const monsters::Monster& m,
+                         const Species& s) {
 
-        if (state.render.is_in_fov(mxya.first, mxya.second)) {
+        if (state.render.is_in_fov(mxy.first, mxy.second)) {
 
-            if (ma.ally.null()) {
-                state.render.do_message(nlp::message("%S is killed.", sa));
+            std::string verb = (s.flags.robot || s.flags.plant ? "destroyed" : "killed");
+
+            if (m.ally.null()) {
+                state.render.do_message(nlp::message("%S is %s.", s, verb));
             } else {
-                state.render.do_message(nlp::message("Your %s is killed.", sa));
+                state.render.do_message(nlp::message("%S ally is %s!", s, verb));
             }
         }
+    };
+
+    if (ma.health <= -3) {
+
+        do_message(state, mxya, ma, sa);
 
         ret |= 2;
     }
 
     if (mb.health <= -3) {
 
-        if (state.render.is_in_fov(mxyb.first, mxyb.second)) {
-
-            if (mb.ally.null()) {
-                state.render.do_message(nlp::message("%S is killed.", sb));
-            } else {
-                state.render.do_message(nlp::message("Your %s is killed.", sb));
-            }
-        }
+        do_message(state, mxyb, mb, sb);
 
         ret |= 1;
     }

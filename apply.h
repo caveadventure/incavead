@@ -269,7 +269,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     if (!d.raise_monsters.null()) {
 
-        state.items.consume([&p,&state](const items::Item& item) {
+        size_t n = state.items.consume(state.render, [&p,&state,&d](const items::Item& item) {
 
                 const Design& d2 = designs().get(item.tag);
 
@@ -293,6 +293,9 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
                 return (nm > 0);
             });
+
+        if (n > 0)
+            state.render.do_message("The earth shudders and the dead wake!", true);
 
         ret = true;
     }
