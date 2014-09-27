@@ -257,7 +257,7 @@ inline bool move_monster(Player& p, GameState& state,
         --(m.blind);
     }
 
-    if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0)) {
+    if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0) && m.ally.null()) {
 
         if (do_monster_magic(p, state, dist, range, summons, mxy, m, s)) 
             return false;
