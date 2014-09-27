@@ -271,12 +271,12 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         state.items.consume([&p,&state](const items::Item& item) {
 
-                const Design& d = designs().get(item.tag);
+                const Design& d2 = designs().get(item.tag);
 
-                if (d.monster_raised.null())
+                if (d2.monster_raised.null())
                     return false;
 
-                const Species& s = species().get(d.monster_raised);
+                const Species& s = species().get(d2.monster_raised);
 
                 if (distance(item.xy.first, item.xy.second, p.px, p.py) > s.range)
                     return false;
@@ -289,7 +289,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
                 int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
                                                item.xy.first, item.xy.second, &p.px, &p.py, 
-                                               d.monster_raised, 1, true, d.raise_monsters);
+                                               d2.monster_raised, 1, true, d.raise_monsters);
 
                 return (nm > 0);
             });

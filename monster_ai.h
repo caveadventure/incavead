@@ -310,27 +310,28 @@ inline bool move_monster(Player& p, GameState& state,
             if (!is_player && m.ally == other.ally && i.dist2 <= 2)
                 continue;
 
-            int p = 0;
+            int pr = 0;
 
             if (m.ally.null() && is_player) {
-                p = 3;
+                pr = 3;
 
             } else if (!m.ally.null() && is_player) {
-                p = 1;
+                pr = 1;
 
             } else if (m.ally != other.ally) {
-                p = 2;
+                pr = 2;
             }
 
             unsigned int d2 = i.dist2;
 
-            if (p <= pri && d2 >= maxd2)
+            if (pr <= pri && d2 >= maxd2)
                 continue;
 
             unsigned int tmpnn = 0;
+            monsters::pt nnxy;
 
             bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
-                                [&d2, &nxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
+                                [&d2, &nnxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
 
                                     int mc = monster_move_cost(state, s, x, y);
 
@@ -340,11 +341,12 @@ inline bool move_monster(Player& p, GameState& state,
                                     ++tmpnn;
 
                                     if (tmpnn == 2) {
-                                        nxy.first = x;
-                                        nxy.second = y;
+                                        nnxy.first = x;
+                                        nnxy.second = y;
                                     }
 
                                     d2 += mc;
+
                                     return true;
                                 });
 
@@ -354,8 +356,9 @@ inline bool move_monster(Player& p, GameState& state,
             if (d2 >= maxd2)
                 continue;
 
-            pri = p;
+            pri = pr;
             maxd2 = d2;
+            nxy = nnxy;
         }
 
         if (pri < 0)

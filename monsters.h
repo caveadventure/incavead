@@ -9,7 +9,6 @@ namespace monsters {
 
 typedef std::pair<unsigned int, unsigned int> pt;
 
-
 struct Monster {
     size_t serial;
     tag_t tag;
@@ -79,6 +78,16 @@ struct writer<monsters::Monster> {
 
 
 namespace monsters {
+
+namespace {
+
+unsigned int dist2(int x1, int x2, int y1, int y2) {
+    int a = x1 - x2;
+    int b = y1 - y2;
+    return a*a + b*b;
+}
+
+}
 
 struct Monsters {
 
@@ -656,7 +665,7 @@ struct Monsters {
 
             const pt& xy = i.first;
 
-            if (pow2(xy.first - px) + pow2(xy.second - py) > ai_radius)
+            if (dist2(xy.first, px, xy.second, py) > ai_radius)
                 continue;
 
             tmp.push_back(xy);
