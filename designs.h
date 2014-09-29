@@ -196,6 +196,15 @@ struct Design {
 
     tag_t raise_monsters;
 
+    struct charm_t {
+        unsigned int range;
+        std::string msg;
+        charm_t() : range(0) {}
+    };
+
+    charm_t charm;
+    
+
     Design() : level(0), count(0), bonus_a_count(0), bonus_b_count(0), count_is_only_one(false), stackrange(0), 
                heal(0), feed(0), karma(0), consume_luck(0), usable(false), use_for_free(false), destructible(false), 
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 

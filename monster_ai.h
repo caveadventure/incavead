@@ -294,7 +294,7 @@ inline bool move_monster(Player& p, GameState& state,
         */
 
         int pri = -1;
-        unsigned int maxd2 = range*range;
+        unsigned int maxd2 = (range + 1) * (range + 1);
 
         auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
 

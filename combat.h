@@ -91,7 +91,7 @@ inline void monster_kill(Player& p, GameState& state, const monsters::pt& mxy, m
 }
 
 
-inline void attack_damage_monster(const damage::val_t& v, 
+inline bool attack_damage_monster(const damage::val_t& v, 
                                   const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   double& totdamage, double& totmagic, double& totsleep, double& totstun, 
@@ -110,7 +110,7 @@ inline void attack_damage_monster(const damage::val_t& v,
         !dam.flags.magic(s.flags.magic) ||
         !dam.flags.eyeless(s.flags.eyeless) ||
         !dam.flags.player(false)) 
-        return;
+        return false;
 
     if (dam.heavenly) {
 
@@ -121,8 +121,10 @@ inline void attack_damage_monster(const damage::val_t& v,
         karmic_damage_scale(false, -s.karma, 0, dmg);
     }
 
+    std::cout << ":" << dmg << " " << dam.threshold << std::endl;
+
     if (dmg <= dam.threshold)
-        return;
+        return false;
 
     unsigned int sleepturns = dam.sleepturns(dmg);
     unsigned int stunturns = dam.stunturns(dmg);
@@ -184,6 +186,12 @@ inline void attack_damage_monster(const damage::val_t& v,
         state.render.invalidate(mxy.first, mxy.second);
     }
 
+    if (!dam.ally.null()) {
+        
+        mon.ally = dam.ally;
+        state.render.invalidate(mxy.first, mxy.second);
+    }
+
     if (dam.health || dam.vampiric) {
 
         if (dam.vampiric) {
@@ -204,15 +212,17 @@ inline void attack_damage_monster(const damage::val_t& v,
     // dam.hunger, dam.unluck:
     // Monsters don't feel hunger and don't have luck.
     // They also cannot be infected.
+
+    return true;
 }
 
 
-inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
+inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
                             GameState& state, const monsters::pt& mxy, monsters::Monster& mon,
                             bool track_kills) {
 
     if (attacks.empty()) {
-        return;
+        return false;
     }
 
     const Species& s = species().get(mon.tag);
@@ -221,7 +231,7 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
-        return;
+        return false;
     }
 
     double totdamage = 0.0;
@@ -235,11 +245,16 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     std::set<tag_t> types;
 
+    bool ret = false;
+
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mxy, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
-                              types, mortal);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, 
+                                         totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
+                                         types, mortal);
+
+        if (tmp)
+            ret = true;
     }
 
     if (totpoly > 0) {
@@ -250,6 +265,8 @@ inline void attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
         monster_kill(p, state, mxy, mon, s, track_kills, types);
     }
+
+    return ret;
 }
 
 
@@ -288,11 +305,16 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     std::set<tag_t> types;
 
+    bool ret = false;
+
     for (const auto& v : attack_res) {
 
-        attack_damage_monster(v, mxy, mon, s, p, state, 
-                              totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
-                              types, mortal);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, 
+                                         totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
+                                         types, mortal);
+
+        if (tmp)
+            ret = true;
     }
 
     p.karma.inc(s.karma * totdamage);
@@ -383,7 +405,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
     }
 
-    return true;
+    return ret;
 }
 
 

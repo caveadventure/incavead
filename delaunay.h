@@ -530,7 +530,11 @@ struct Triangulation {
         if (i == res.end())
             return ret;
 
+        std::cout << "!!! " << i->second.size() << " " << x << "," << y << std::endl;
+
         for (const auto& p_d : i->second) {
+
+            std::cout << "; " << p_d.second << " " << d2max << " " << p_d.first.x << ","<< p_d.first.y << std::endl;
 
             if (p_d.second < d2max) {
                 ret.insert(neighbor_t(p_d.second, p_d.first.x, p_d.first.y));

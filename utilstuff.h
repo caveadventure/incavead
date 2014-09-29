@@ -48,7 +48,10 @@ inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsign
 
     while (1) {
 
-        if (!f(state, x, y))
+        bool ok = f(state, x, y);
+        std::cout << " /// " << ok << " " << x << "," << y << std::endl;
+
+        if (!ok)
             break;
 
         bool ret = line.step((int&)x, (int&)y);

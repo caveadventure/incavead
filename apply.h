@@ -44,6 +44,40 @@ inline std::string dowsing_message(const Player& p, const GameState& state) {
     }
 }
 
+inline bool charm_attack(Player& p, GameState& state, 
+                         unsigned int plevel, const damage::attacks_t& attacks, unsigned int range) {
+
+    auto nearest = state.monsters.nearest.get(p.px, p.py, range * range);
+
+    std::cout << "CHARM " << nearest.size() << " " << range << std::endl;
+
+    for (const auto& i : nearest) {
+
+        monsters::Monster& m = state.monsters.get(i.x, i.y);
+
+        if (m.null() || !m.ally.null())
+            continue;
+
+        std::cout << "+ " << species().get(m.tag).name << " " << i.x << "," << i.y 
+                  << p.px << "," << p.py << " -- " << i.dist2 << std::endl;
+
+        bool ok = reachable(state, p.px, p.py, i.x, i.y, player_walkable);
+
+        std::cout << "_ " << ok << std::endl;
+
+        if (!ok)
+            continue;
+
+        ok = attack_from_env(p, attacks, plevel, state, monsters::pt(i.x, i.y), m, true);
+
+        std::cout << "__ " << ok << std::endl;
+
+        if (ok)
+            return true;
+    }
+
+    return false;
+}
 
 inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
@@ -296,6 +330,17 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         if (n > 0)
             state.render.do_message("The earth shudders and the dead wake!", true);
+
+        ret = true;
+    }
+
+    if (d.charm.range > 0) {
+
+        if (charm_attack(p, state, d.attack_level, d.attacks, d.charm.range)) {
+            state.render.do_message(d.charm.msg, true);
+        } else {
+            state.render.do_message("Nothing happens. Strange.");
+        }
 
         ret = true;
     }
