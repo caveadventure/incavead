@@ -296,6 +296,8 @@ inline bool move_monster(Player& p, GameState& state,
         int pri = -1;
         unsigned int maxd2 = (range + 1) * (range + 1);
 
+        std::cout << "++ " << s.name << " " << mxy.first << "," << mxy.second << std::endl;
+
         auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
 
         for (const auto& i : nearest) {
@@ -324,7 +326,12 @@ inline bool move_monster(Player& p, GameState& state,
 
             unsigned int d2 = i.dist2;
 
-            if (pr <= pri && d2 >= maxd2)
+            if (is_player)
+                std::cout << "  " << pr << " " << "player" << " " << i.dist2 << " " << i.x << "," << i.y << std::endl;
+            else
+                std::cout << "  " << pr << " " << species().get(other.tag).name << other.ally.null() << " " << i.dist2 << " " << i.x << "," << i.y << std::endl;
+
+            if (pr < pri)
                 continue;
 
             unsigned int tmpnn = 0;
@@ -353,13 +360,17 @@ inline bool move_monster(Player& p, GameState& state,
             if (!ok)
                 continue;
 
-            if (d2 >= maxd2)
+            if (pr == pri && d2 >= maxd2)
                 continue;
+
+            std::cout << " ! " << std::endl;
 
             pri = pr;
             maxd2 = d2;
             nxy = nnxy;
         }
+
+        std::cout << "--> " << pri << " " << maxd2 << std::endl;
 
         if (pri < 0)
             do_random = true;
