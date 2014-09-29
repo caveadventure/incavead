@@ -55,6 +55,8 @@ inline bool charm_attack(Player& p, GameState& state,
 
         monsters::Monster& m = state.monsters.get(i.x, i.y);
 
+        std::cout << "?? " << i.x << "," << i.y << " " << m.null() << " " << m.ally.null() << std::endl;
+
         if (m.null() || !m.ally.null())
             continue;
 
