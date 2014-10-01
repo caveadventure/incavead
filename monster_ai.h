@@ -327,36 +327,39 @@ inline bool move_monster(Player& p, GameState& state,
                 if (thispri < pri)
                     continue;
 
-                unsigned int tmpnn = 0;
-                monsters::pt nnxy;
+                bool enemy_sleeping = (is_player ? p.sleep > 0 : other.sleep > 0);
 
-                bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
-                                    [&d2, &nnxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
+                if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
+                    continue;
 
-                                        bool mc = monster_walkable(state, s, x, y);
-
-                                        if (!mc)
-                                            return false;
-
-                                        ++tmpnn;
-
-                                        if (tmpnn == 2) {
-                                            nnxy.first = x;
-                                            nnxy.second = y;
-                                        }
-
-                                        return true;
-                                    });
+                bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y, player_walkable);
 
                 if (!ok)
                     continue;
 
-                if (thispri == pri && d2 >= maxd2)
+                monsters::pt nnxy;
+                bool found = false;
+
+                for (const neighbors::pt& v_ : state.neigh(mxy)) {
+
+                    auto v = state.neigh.mk(v_, mxy);
+
+                    if (!monster_walkable(state, s, v.first, v.second))
+                        continue;
+
+                    if (!found) {
+                        nnxy = v;
+                        found = true;
+
+                    } else {
+
+                    }
+                }
+
+                if (!found)
                     continue;
 
-                bool enemy_sleeping = (is_player ? p.sleep > 0 : other.sleep > 0);
-
-                if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
+                if (thispri == pri && d2 >= maxd2)
                     continue;
 
                 pri = thispri;
