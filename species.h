@@ -14,11 +14,11 @@ struct Species {
 
     enum class ai_t : unsigned int {
         none,
-        seek_player,
+        seek,
         random,
-        inrange_random,
-        seek_nosleep,
-        none_nosleep,
+        seek_awake,
+        magic,
+        magic_awake,
         suicide
     };
 

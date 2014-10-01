@@ -285,8 +285,12 @@ struct Player {
 
                 size_t time = state.ticks + state.rng.n(constants().achievement_trigger_rate);
 
-                state.triggers[time].summon_out_of_view.monster = i.second.summon;
-                state.triggers[time].summon_out_of_view.count = 0;
+                auto trig = state.triggers.insert(std::make_pair(time, GameState::trigger_t()));
+
+                auto& summon = trig->second.summon_out_of_view;
+
+                summon.monster = i.second.summon;
+                summon.count = 0;
             }
         }
     }

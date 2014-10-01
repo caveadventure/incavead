@@ -32,8 +32,12 @@ void add_ailments(Player& p, GameState& state) {
 
     if (num_ails > 0) {
 
-        std::string& msg = state.triggers[1].message.message;
-        state.triggers[1].message.important = true;
+        auto trig = state.triggers.insert(std::make_pair(1, GameState::trigger_t()));
+
+        auto& message = trig->second.message;
+
+        std::string& msg = message.message;
+        message.important = true;
 
         switch (num_ails) {
         case 1:
@@ -277,13 +281,15 @@ void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned 
         if (!bones::bones().get(p, x, y, bone))
             return;
 
-        auto& trig = state.triggers[state.ticks];
+        auto trig = state.triggers.insert(std::make_pair(state.ticks, GameState::trigger_t()));
 
-        trig.summon_genus.genus = constants().ghost;
-        trig.summon_genus.level = bone.level;
-        trig.summon_genus.count = 1;
-        trig.summon_genus.x = x;
-        trig.summon_genus.y = y;
+        auto& summon = trig->second.summon_genus;
+
+        summon.genus = constants().ghost;
+        summon.level = bone.level;
+        summon.count = 1;
+        summon.x = x;
+        summon.y = y;
 
         give_change(state, x, y, bone.worth);
 
@@ -484,7 +490,7 @@ void Game::process_world(GameState& state,
 
             if (!trig.summon.species.null()) {
 
-                summons.push_back(summons_t{p.px, p.py, trig.summon.species, trig.summon.count, tag_t(), ""});
+                summons.emplace_back(trig.x, trig.y, trig.summon.species, trig.summon.count, tag_t(), trig.ally, "");
             }
 
             if (trig.message.message.size() > 0) {
@@ -518,11 +524,11 @@ void Game::process_world(GameState& state,
 
         if (i.summontag.null()) {
             nm = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
-                                           i.x, i.y, &p.px, &p.py, i.arg, 1);
+                                           i.x, i.y, &p.px, &p.py, i.arg, 1, i.ally);
 
         } else {
             nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                       i.x, i.y, &p.px, &p.py, i.summontag, i.arg, false);
+                                       i.x, i.y, &p.px, &p.py, i.summontag, i.arg, false, i.ally);
         }
 
         if (nm > 0 && state.render.is_in_fov(i.x, i.y) && i.msg.size() > 0) {

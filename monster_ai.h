@@ -9,6 +9,7 @@ struct summons_t {
     tag_t summontag;
     unsigned int arg;
     tag_t summonertag;
+    tag_t ally;
     std::string msg;
 };
 
@@ -81,49 +82,9 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 }
 
 
-inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned int range,
-                             std::vector<summons_t>& summons, 
+inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>& summons, 
+                             const monsters::pt& target, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
-
-    bool reachd = false;
-
-    if (dist >= range)
-        return false;
-
-    if (s.blast.size() > 0 || s.cast_cloud.size() > 0) {
-
-        reachd = reachable(state, mxy.first, mxy.second, p.px, p.py, player_walkable);
-    }
-
-    if (reachd) {
-
-        for (const auto& b : s.blast) {
-
-            if (dist >= b.range) 
-                continue;
-
-            if ((state.ticks % b.turns) != 0)
-                continue;
-
-            double v = state.rng.gauss(0.0, 1.0);
-            if (v <= b.chance) continue;
-
-            do_monster_blast(p, state, s, p.px, p.py, b.radius, b.attacks);
-            return true;
-        }
-
-        for (const auto& c : s.cast_cloud) {
-
-            if ((state.ticks % c.turns) != 0) continue;
-                    
-            double v = state.rng.gauss(0.0, 1.0);
-            if (v <= c.chance) continue;
-
-            cast_cloud(state, p.px, p.py, c.radius, c.terraintag);
-            state.render.do_message(nlp::message("%s casts %s!", s, c.name));
-            return true;
-        }
-    }
 
     if (s.summon.size() > 0) {
 
@@ -131,14 +92,10 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
 
             if ((state.ticks & c.turns) != 0) continue;
 
-            //const Species& s = species().get(c.speciestag);
-            //if (!state.species_counts.has(s.level, c.speciestag))
-            //    continue;
-
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{mxy.first, mxy.second, c.speciestag, 1, m.tag, c.msg});
+            summons.emplace_back(mxy.first, mxy.second, c.speciestag, 1, m.tag, m.ally, c.msg);
         }
     }
 
@@ -151,9 +108,12 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.push_back(summons_t{mxy.first, mxy.second, tag_t(), c.level, m.tag, c.msg});
+            summons.emplace_back(mxy.first, mxy.second, tag_t(), c.level, m.tag, m.ally, c.msg);
         }        
     }
+
+    if (ally == m.ally || (is_player && !m.ally.null()))
+        return false;
 
     if (!s.morph.species.null()) {
 
@@ -169,6 +129,36 @@ inline bool do_monster_magic(Player& p, GameState& state, double dist, unsigned 
         }
     }
 
+    for (const auto& b : s.blast) {
+
+        if (dist >= b.range) 
+            continue;
+
+        if ((state.ticks % b.turns) != 0)
+            continue;
+
+        double v = state.rng.gauss(0.0, 1.0);
+        if (v <= b.chance) continue;
+
+        do_monster_blast(p, state, s, target.first, target.second, b.radius, b.attacks);
+        return true;
+    }
+
+    for (const auto& c : s.cast_cloud) {
+
+        if ((state.ticks % c.turns) != 0) continue;
+                    
+        double v = state.rng.gauss(0.0, 1.0);
+        if (v <= c.chance) continue;
+
+        cast_cloud(state, target.first, target.second, c.radius, c.terraintag);
+
+        if (state.render.is_in_fov(mxy.first, mxy.second)) 
+            state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+
+        return true;
+    }
+
     return false;
 }
 
@@ -180,6 +170,9 @@ inline bool move_monster(Player& p, GameState& state,
     bool do_stop = false;
 
     unsigned int range = s.range;
+
+    if (s.ai == Species::ai_t::none)
+        do_stop = true;
 
     features::Feature feat;
     if (state.features.get(mxy.first, mxy.second, feat) && 
@@ -196,7 +189,7 @@ inline bool move_monster(Player& p, GameState& state,
             }
         }
 
-        if (t.sticky) {
+        if (t.sticky && !do_stop) {
 
             if (t.uncharge.move) {
                 state.features.uncharge(mxy.first, mxy.second, state.render);
@@ -215,7 +208,7 @@ inline bool move_monster(Player& p, GameState& state,
     if (m.health <= -3) {
 
         if (!s.death_summon.null()) {
-            summons.push_back(summons_t{mxy.first, mxy.second, s.death_summon, 1, m.tag, ""});
+            summons.emplace_back(mxy.first, mxy.second, s.death_summon, 1, m.tag, m.ally, "");
         }
 
         do_die = true;
@@ -257,142 +250,140 @@ inline bool move_monster(Player& p, GameState& state,
         --(m.blind);
     }
 
-    if (m.magic > -3.0 && !(s.ai == Species::ai_t::none_nosleep && p.sleep > 0) && m.ally.null()) {
 
-        if (do_monster_magic(p, state, dist, range, summons, mxy, m, s)) 
-            return false;
-    }
-
-    // HACK!
-    // Performance tweak.
     bool do_random = false;
-    bool do_seek = false;
 
-    if (s.ai == Species::ai_t::seek_player ||
-        s.ai == Species::ai_t::suicide ||
-        (s.ai == Species::ai_t::seek_nosleep && p.sleep == 0)) {
+    unsigned int maxd2 = (range + 1) * (range + 1);
 
-        if (dist <= s.range + 5) {
-            do_seek = true;
-        }
-    }
+    auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
 
-    if (s.ai == Species::ai_t::random) {
-        do_random = true;
+    if (nearest.empty()) {
 
-    } else if (s.ai == Species::ai_t::inrange_random && dist <= range) {
-        do_random = true;
+        // Short-path AI for out-of-range monsters.
+        if (s.idle_ai == Species::idle_ai_t::random) {
 
-    } else if (do_seek && !do_random) {
-
-        /*
-               path_walk(state, mxy.first, mxy.second, target.first, target.second, 1, range, 
-                         [&state,&s,&m](unsigned int a, unsigned int b, unsigned int c, unsigned int d) {
-                             return monster_move_cost(state, m, s, c, d);
-                         },
-                         nxy.first, nxy.second)) {
-        */
-
-        int pri = -1;
-        unsigned int maxd2 = (range + 1) * (range + 1);
-
-        std::cout << "++ " << s.name << " " << mxy.first << "," << mxy.second << std::endl;
-
-        auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
-
-        for (const auto& i : nearest) {
-
-            const monsters::Monster& other = state.monsters.get(i.x, i.y);
-
-            bool is_player = (i.x == p.px && i.y == p.py);
-
-            if (other.null() && !is_player)
-                continue;
-
-            if (!is_player && m.ally == other.ally && i.dist2 <= 2)
-                continue;
-
-            int pr = 0;
-
-            if (m.ally.null() && is_player) {
-                pr = 3;
-
-            } else if (!m.ally.null() && is_player) {
-                pr = 1;
-
-            } else if (m.ally != other.ally) {
-                pr = 2;
-            }
-
-            unsigned int d2 = i.dist2;
-
-            if (is_player)
-                std::cout << "  " << pr << " " << "player" << " " << i.dist2 << " " << i.x << "," << i.y << std::endl;
-            else
-                std::cout << "  " << pr << " " << species().get(other.tag).name << other.ally.null() << " " << i.dist2 << " " << i.x << "," << i.y << std::endl;
-
-            if (pr < pri)
-                continue;
-
-            unsigned int tmpnn = 0;
-            monsters::pt nnxy;
-
-            bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
-                                [&d2, &nnxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
-
-                                    int mc = monster_move_cost(state, s, x, y);
-
-                                    if (mc < 0)
-                                        return false;
-
-                                    ++tmpnn;
-
-                                    if (tmpnn == 2) {
-                                        nnxy.first = x;
-                                        nnxy.second = y;
-                                    }
-
-                                    d2 += mc;
-
-                                    return true;
-                                });
-
-            if (!ok)
-                continue;
-
-            if (pr == pri && d2 >= maxd2)
-                continue;
-
-            std::cout << " ! " << std::endl;
-
-            pri = pr;
-            maxd2 = d2;
-            nxy = nnxy;
-        }
-
-        std::cout << "--> " << pri << " " << maxd2 << std::endl;
-
-        if (pri < 0)
             do_random = true;
 
-        // Else do nothing, nxy is good.
+        } else {
+
+            return false;
+        }
 
     } else {
 
-        switch (s.idle_ai) {
-
-        case Species::idle_ai_t::random:
-
-            if (dist > range + 10)
-                return false;
+        if (s.ai == Species::ai_t::random) {
 
             do_random = true;
-            break;
 
-        default:
-            return false;
+        } else {
+
+            int pri = -1;
+
+            monsters::pt target;
+            bool enemy_is_player = false;
+            tag_t enemy_ally;
+
+            for (const auto& i : nearest) {
+
+                const monsters::Monster& other = state.monsters.get(i.x, i.y);
+
+                bool is_player = (i.x == p.px && i.y == p.py);
+
+                if (other.null() && !is_player)
+                    continue;
+
+                if (!is_player && m.ally == other.ally && i.dist2 <= 2)
+                    continue;
+
+                int thispri = 0;
+
+                if (m.ally.null() && is_player) {
+                    thispr = 3;
+
+                } else if (!m.ally.null() && is_player) {
+                    thispr = 1;
+
+                } else if (m.ally != other.ally) {
+                    thispr = 2;
+                }
+
+                unsigned int d2 = i.dist2;
+
+                if (thispr < pri)
+                    continue;
+
+                unsigned int tmpnn = 0;
+                monsters::pt nnxy;
+
+                bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
+                                    [&d2, &nnxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
+
+                                        int mc = monster_move_cost(state, s, x, y);
+
+                                        if (mc < 0)
+                                            return false;
+
+                                        ++tmpnn;
+
+                                        if (tmpnn == 2) {
+                                            nnxy.first = x;
+                                            nnxy.second = y;
+                                        }
+
+                                        d2 += mc;
+
+                                        return true;
+                                    });
+
+                if (!ok)
+                    continue;
+
+                if (thispr == pri && d2 >= maxd2)
+                    continue;
+
+                bool enemy_sleeping = (is_player ? p.sleep > 0 : other.sleep > 0);
+
+                if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
+                    continue;
+
+                pri = thispr;
+                maxd2 = d2;
+                nxy = nnxy;
+                target = monsters::pt(i.x, i.y);
+                enemy_is_player = is_player;
+                enemy_ally = (is_player ? tag_t() : other.ally);
+            }
+
+            if (pri < 0) {
+
+                if (s.ai == Species::ai_t::magic || s.ai == Species::ai_t::magic_awake) {
+
+                    return false;
+
+                } else {
+
+                    do_random = true;
+                }
+
+            } else {
+
+                // We found a target. 'nxy' is our next step, 'target' is our target.
+
+                if (m.magic > -3.0 &&
+                    do_monster_magic(p, state, summons, target, enemy_is_player, enemy_ally, mxy, m, s)) {
+ 
+                    return false;
+                }
+
+                if (s.ai == Species::ai_t::magic || s.ai == Species::ai_t::magic_awake)
+                    return false;
+
+                // OK! If we got here, then 'nxy' holds a valid move and the monster
+                // is actually doing something intelligent.
+            }
         }
     }
+
 
     if (do_random) {
         std::vector<monsters::pt> tmp;

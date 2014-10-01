@@ -70,8 +70,11 @@ struct GameState {
         struct summon_t {
             tag_t species;
             unsigned int count;
+            tag_t ally;
+            unsigned int x;
+            unsigned int y;
 
-            summon_t() : count(0) {}
+            summon_t() : count(0), x(0), y(0) {}
         };
 
         summon_t summon;
@@ -86,7 +89,7 @@ struct GameState {
         message_t message;
     };
 
-    std::map<size_t, trigger_t> triggers;
+    std::multimap<size_t, trigger_t> triggers;
 
     struct window_t {
         std::string message;

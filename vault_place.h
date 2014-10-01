@@ -258,7 +258,7 @@ inline void generate_vault(const Vault& vault, GameState& state,
                 if (!state.grid.is_walk(xi, yi))
                     throw std::runtime_error("Invalid vault monster placement");
 
-                summons.push_back(summons_t{xi, yi, b.species, (vault.use_species_counts ? 1u : 0u), tag_t(), ""});
+                summons.emplace_back(xi, yi, b.species, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
             }
         }
     }

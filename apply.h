@@ -296,9 +296,15 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     }
 
     if (!d.summon.species.null()) {
-        
-        state.triggers[state.ticks].summon.species = d.summon.species;
-        state.triggers[state.ticks].summon.count = d.summon.count;
+
+        auto trig = state.triggers.insert(std::make_pair(state.ticks, GameState::trigger_t()));
+
+        auto& summon = trig->second.summon;
+
+        summon.species = d.summon.species;
+        summon.count = d.summon.count;
+        summon.x = p.px;
+        summon.y = p.py;
 
         ret = true;
     }
@@ -323,11 +329,17 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
                                }))
                     return false;
 
-                int nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                               item.xy.first, item.xy.second, &p.px, &p.py, 
-                                               d2.monster_raised, 1, true, d.raise_monsters);
+                auto trig = state.triggers.insert(std::make_pair(state.ticks, GameState::trigger_t()));
 
-                return (nm > 0);
+                auto& summon = trig->second.summon;
+
+                summon.species = d2.monster_raised;
+                summon.count = 1;
+                summon.ally = d.raise_monsters;
+                summon.x = item.xy.first;
+                summon.y = item.xy.second;
+
+                return true;
             });
 
         if (n > 0)
@@ -814,8 +826,12 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
             if (!d.take_summon.species.null() && 
                 taken_item.count >= d.take_summon.needs_count) {
 
-                state.triggers[state.ticks].summon_out_of_view.monster = d.take_summon.species;
-                state.triggers[state.ticks].summon_out_of_view.count = 0;
+                auto trig = state.triggers.insert(std::make_pair(state.ticks, GameState::trigger_t()));
+
+                auto& summon = trig->second.summon_out_of_view;
+
+                summon.monster = d.take_summon.species;
+                summon.count = 0;
             }
         }
 
