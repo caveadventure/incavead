@@ -176,7 +176,6 @@ struct Monsters {
             pt xy = _clump[rng.n(_clump.size())];
 
             if (mgrid.count(xy) != 0) {
-                std::cout << "Placing " << xy.first << " " << xy.second << " " << species().get(tag).name << std::endl;
                 throw std::runtime_error("Sanity error: overwrote a monster while generating.");
             }
 

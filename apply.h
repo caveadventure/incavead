@@ -49,30 +49,19 @@ inline bool charm_attack(Player& p, GameState& state,
 
     auto nearest = state.monsters.nearest.get(p.px, p.py, range * range);
 
-    std::cout << "CHARM " << nearest.size() << " " << range << std::endl;
-
     for (const auto& i : nearest) {
 
         monsters::Monster& m = state.monsters.get(i.x, i.y);
 
-        std::cout << "?? " << i.x << "," << i.y << " " << m.null() << " " << m.ally.null() << std::endl;
-
         if (m.null() || !m.ally.null())
             continue;
 
-        std::cout << "+ " << species().get(m.tag).name << " " << i.x << "," << i.y 
-                  << p.px << "," << p.py << " -- " << i.dist2 << std::endl;
-
         bool ok = reachable(state, p.px, p.py, i.x, i.y, player_walkable);
-
-        std::cout << "_ " << ok << std::endl;
 
         if (!ok)
             continue;
 
         ok = attack_from_env(p, attacks, plevel, state, monsters::pt(i.x, i.y), m, true);
-
-        std::cout << "__ " << ok << std::endl;
 
         if (ok)
             return true;

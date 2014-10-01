@@ -49,7 +49,6 @@ inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsign
     while (1) {
 
         bool ok = f(state, x, y);
-        std::cout << " /// " << ok << " " << x << "," << y << std::endl;
 
         if (!ok)
             break;

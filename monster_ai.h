@@ -92,6 +92,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
+    std::cout << "  " << s.summon.size() << std::endl;
+
     if (s.summon.size() > 0) {
 
         for (const auto& c : s.summon) {
@@ -100,6 +102,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
+
+            std::cout << "  Summoned!" << std::endl;
 
             summons.emplace_back(mxy.first, mxy.second, c.speciestag, 1, m.tag, m.ally, c.msg);
         }
@@ -120,6 +124,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
     if (ally == m.ally || (is_player && !m.ally.null()))
         return false;
+
+    std::cout << "  Doing other stuff" << std::endl;
 
     if (!s.morph.species.null()) {
 
@@ -156,6 +162,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                     
         double v = state.rng.gauss(0.0, 1.0);
         if (v <= c.chance) continue;
+
+        std::cout << "  Casting cloud" << std::endl;
 
         cast_cloud(state, target.first, target.second, c.radius, c.terraintag);
 
@@ -287,6 +295,9 @@ inline bool move_monster(Player& p, GameState& state,
             bool enemy_is_player = false;
             tag_t enemy_ally;
 
+            std::cout << ": " << s.name << " " << (int)s.ai << " " << maxd2 << " " << nearest.size() << " / " 
+                      << pow2((int)mxy.first - (int)p.px) + pow2((int)mxy.second - (int)p.py) << std::endl;
+
             for (const auto& i : nearest) {
 
                 const monsters::Monster& other = state.monsters.get(i.x, i.y);
@@ -372,6 +383,8 @@ inline bool move_monster(Player& p, GameState& state,
             } else {
 
                 // We found a target. 'nxy' is our next step, 'target' is our target.
+
+                std::cout << ":: " << s.name << " " << (int)s.ai << " " << m.magic << std::endl;
 
                 if (m.magic > -3.0 &&
                     do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {

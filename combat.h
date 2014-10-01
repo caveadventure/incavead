@@ -121,8 +121,6 @@ inline bool attack_damage_monster(const damage::val_t& v,
         karmic_damage_scale(false, -s.karma, 0, dmg);
     }
 
-    std::cout << ":" << dmg << " " << dam.threshold << std::endl;
-
     if (dmg <= dam.threshold)
         return false;
 

@@ -296,34 +296,6 @@ struct flower_t {
     }
 };
 
-/*
-
-void check_pt(const tri& t, const pt& p) {
-
-    if (t.a == p || t.b == p || t.c == p || !t.circ.has(p))
-        return;
-
-    std::cout << "!!!FAIL!!! " << p.x << "," << p.y << " " 
-              << t.a.x << "," << t.a.y << " " << t.b.x << "," << t.b.y << " " << t.c.x << "," << t.c.y << " | "
-              << t.circ.center.x << "," << t.circ.center.y << "|" << t.circ.r2 << " ~~~ " << p.dist2(t.circ.center) 
-              << std::endl;
-    ::abort();
-}
-
-void check_delaunay(const std::set<tri>& s) {
-
-    for (const tri& t : s) {
-        for (const tri& i : s) {
-            if (i < t && t < i) continue;
-
-            check_pt(t, i.a);
-            check_pt(t, i.b);
-            check_pt(t, i.c);
-        }
-    }
-}
-
-*/
 
 struct Triangulation {
 
@@ -483,8 +455,6 @@ struct Triangulation {
         std::vector<tri> finaltri;
         flower_t::result(tree, finaltri);
 
-        //std::cout << "--" << std::endl;
-
         for (const auto& t : finaltri) {
 
             auto& ta = res[t.a];
@@ -530,11 +500,7 @@ struct Triangulation {
         if (i == res.end())
             return ret;
 
-        std::cout << "!!! " << i->second.size() << " " << x << "," << y << std::endl;
-
         for (const auto& p_d : i->second) {
-
-            std::cout << "; " << p_d.second << " " << d2max << " " << p_d.first.x << ","<< p_d.first.y << std::endl;
 
             if (p_d.second < d2max) {
                 ret.insert(neighbor_t(p_d.second, p_d.first.x, p_d.first.y));
