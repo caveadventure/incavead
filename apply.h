@@ -314,7 +314,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
                 if (!reachable(state, item.xy.first, item.xy.second, p.px, p.py,
                                [&s](GameState& state, unsigned int xx, unsigned int yy) {
-                                   return monster_move_cost(state, s, xx, yy) >= 0;
+                                   return monster_walkable(state, s, xx, yy);
                                }))
                     return false;
 

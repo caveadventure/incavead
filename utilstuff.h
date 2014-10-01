@@ -37,6 +37,23 @@ inline bool player_walkable(GameState& state, unsigned int x, unsigned int y) {
     return true;
 }
 
+inline bool monster_walkable(GameState& state, const Species& s, unsigned int x, unsigned int y) {
+
+    if (!monsters::Monsters::is_walkable(state.grid, s, x, y))
+        return false;
+
+    features::Feature feat;
+    if (state.features.get(x, y, feat)) {
+
+        const Terrain& t = terrain().get(feat.tag);
+
+        if (t.walkblock)
+            return false;
+    }
+
+    return true;
+}
+
 template <typename FUNC>
 inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by,
                       FUNC f) {
@@ -115,26 +132,6 @@ bool path_walk(GameState& state,
     return true;
 }
 
-inline int monster_move_cost(GameState& state, const Species& s, unsigned int x, unsigned int y) {
-
-    if (!monsters::Monsters::is_walkable(state.grid, s, x, y))
-        return -1;
-
-    features::Feature feat;
-    if (state.features.get(x, y, feat)) {
-
-        const Terrain& t = terrain().get(feat.tag);
-
-        if (t.walkblock)
-            return -1;
-
-        if (t.viewblock)
-            return 1;
-    }
-
-    return 0;
-}
-
 inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py, 
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
@@ -144,7 +141,7 @@ inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py,
 
     radial_points(mxy.first, mxy.second, state, radius, ns, 
                   [&s,&m](GameState& state, unsigned int x, unsigned int y) {
-                      return (monster_move_cost(state, s, x, y) >= 0);
+                      return monster_walkable(state, s, x, y);
                   });
 
     double maxd = 0.0;

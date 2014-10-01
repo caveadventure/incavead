@@ -333,9 +333,9 @@ inline bool move_monster(Player& p, GameState& state,
                 bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y,
                                     [&d2, &nnxy, &s, &tmpnn](GameState& state, unsigned int x, unsigned int y) {
 
-                                        int mc = monster_move_cost(state, s, x, y);
+                                        bool mc = monster_walkable(state, s, x, y);
 
-                                        if (mc < 0)
+                                        if (!mc)
                                             return false;
 
                                         ++tmpnn;
@@ -344,8 +344,6 @@ inline bool move_monster(Player& p, GameState& state,
                                             nnxy.first = x;
                                             nnxy.second = y;
                                         }
-
-                                        d2 += mc;
 
                                         return true;
                                     });
@@ -409,7 +407,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             auto v = state.neigh.mk(v_, mxy);
 
-            if (monster_move_cost(state, s, v.first, v.second) >= 0) {
+            if (monster_walkable(state, s, v.first, v.second)) {
                 tmp.push_back(v);
             }
         }
@@ -430,7 +428,7 @@ inline bool move_monster(Player& p, GameState& state,
             nxy.second = mxy.second + mxy.second - nxy.second;
         }
 
-        if (monster_move_cost(state, s, nxy.first, nxy.second) >= 0)
+        if (!monster_walkable(state, s, nxy.first, nxy.second))
             return false;
     }
 
