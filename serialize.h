@@ -224,6 +224,13 @@ struct writer< std::map<K,V> > {
     }
 };
 
+template <typename K,typename V>
+struct writer< std::multimap<K,V> > {
+    void write(Sink& s, const std::multimap<K,V>& v) {
+        write_stl(s, v);
+    }
+};
+
 template <typename T>
 struct writer< std::unordered_set<T> > {
     void write(Sink& s, const std::unordered_set<T>& v) {
@@ -256,6 +263,13 @@ struct reader< std::set<K> > {
 template <typename K,typename V>
 struct reader< std::map<K,V> > {
     void read(Source& s, std::map<K,V>& v) {
+        read_stl(s, v);
+    }
+};
+
+template <typename K,typename V>
+struct reader< std::multimap<K,V> > {
+    void read(Source& s, std::multimap<K,V>& v) {
         read_stl(s, v);
     }
 };

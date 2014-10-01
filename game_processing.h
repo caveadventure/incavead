@@ -490,7 +490,8 @@ void Game::process_world(GameState& state,
 
             if (!trig.summon.species.null()) {
 
-                summons.emplace_back(trig.x, trig.y, trig.summon.species, trig.summon.count, tag_t(), trig.ally, "");
+                summons.emplace_back(trig.summon.x, trig.summon.y, 
+                                     trig.summon.species, trig.summon.count, tag_t(), trig.summon.ally, "");
             }
 
             if (trig.message.message.size() > 0) {

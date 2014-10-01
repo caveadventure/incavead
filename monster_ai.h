@@ -11,6 +11,12 @@ struct summons_t {
     tag_t summonertag;
     tag_t ally;
     std::string msg;
+
+    summons_t() : x(0), y(0), arg(0) {}
+
+    summons_t(unsigned int _x, unsigned int _y, tag_t _st, unsigned int _a, tag_t _sut, tag_t _al, 
+              const std::string& _m) : x(_x), y(_y), summontag(_st), arg(_a), 
+                                       summonertag(_sut), ally(_al), msg(_m) {}
 };
 
 
@@ -83,7 +89,7 @@ inline void do_monster_blast(Player& p, GameState& state, const Species& s,
 
 
 inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>& summons, 
-                             const monsters::pt& target, bool is_player, tag_t ally,
+                             const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
     if (s.summon.size() > 0) {
@@ -131,7 +137,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
     for (const auto& b : s.blast) {
 
-        if (dist >= b.range) 
+        if (dist2 >= b.range * b.range) 
             continue;
 
         if ((state.ticks % b.turns) != 0)
@@ -242,8 +248,6 @@ inline bool move_monster(Player& p, GameState& state,
         target = m.target;
     }
 
-    double dist = distance(mxy.first, mxy.second, p.px, p.py);
-
     if (m.blind > 0) {
         range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) - 1);
 
@@ -298,18 +302,18 @@ inline bool move_monster(Player& p, GameState& state,
                 int thispri = 0;
 
                 if (m.ally.null() && is_player) {
-                    thispr = 3;
+                    thispri = 3;
 
                 } else if (!m.ally.null() && is_player) {
-                    thispr = 1;
+                    thispri = 1;
 
                 } else if (m.ally != other.ally) {
-                    thispr = 2;
+                    thispri = 2;
                 }
 
                 unsigned int d2 = i.dist2;
 
-                if (thispr < pri)
+                if (thispri < pri)
                     continue;
 
                 unsigned int tmpnn = 0;
@@ -338,7 +342,7 @@ inline bool move_monster(Player& p, GameState& state,
                 if (!ok)
                     continue;
 
-                if (thispr == pri && d2 >= maxd2)
+                if (thispri == pri && d2 >= maxd2)
                     continue;
 
                 bool enemy_sleeping = (is_player ? p.sleep > 0 : other.sleep > 0);
@@ -346,7 +350,7 @@ inline bool move_monster(Player& p, GameState& state,
                 if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
                     continue;
 
-                pri = thispr;
+                pri = thispri;
                 maxd2 = d2;
                 nxy = nnxy;
                 target = monsters::pt(i.x, i.y);
@@ -370,7 +374,7 @@ inline bool move_monster(Player& p, GameState& state,
                 // We found a target. 'nxy' is our next step, 'target' is our target.
 
                 if (m.magic > -3.0 &&
-                    do_monster_magic(p, state, summons, target, enemy_is_player, enemy_ally, mxy, m, s)) {
+                    do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
  
                     return false;
                 }
