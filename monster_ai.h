@@ -439,25 +439,32 @@ inline bool move_monster(Player& p, GameState& state,
                 if (possible_xy.empty())
                     return false;
 
-                bool found = false;
+                if (!monster_walkable(state, s, target.first, target.second)) {
 
-                for (const auto& v : possible_xy) {
+                    do_random = true;
 
-                    if (beeline_xy == v) {
-                        nxy = v;
-                        break;
+                } else {
 
-                    } else if (!found) {
-                        nxy = v;
-                        found = true;
+                    bool found = false;
 
-                    } else if (is_closer(v, nxy, target)) {
-                        nxy = v;
+                    for (const auto& v : possible_xy) {
+
+                        if (beeline_xy == v) {
+                            nxy = v;
+                            break;
+
+                        } else if (!found) {
+                            nxy = v;
+                            found = true;
+
+                        } else if (is_closer(v, nxy, target)) {
+                            nxy = v;
+                        }
                     }
-                }
 
-                // OK! If we got here, then 'nxy' holds a valid move and the monster
-                // is actually doing something intelligent.
+                    // OK! If we got here, then 'nxy' holds a valid move and the monster
+                    // is actually doing something intelligent.
+                }
             }
         }
     }
