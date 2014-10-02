@@ -92,6 +92,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
+    std::cout << " magic: " << dist2 << " " << is_player << " " << ally.null() << std::endl;
     std::cout << "  " << s.summon.size() << std::endl;
 
     if (s.summon.size() > 0) {
@@ -122,7 +123,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
         }        
     }
 
-    if (ally == m.ally || (is_player && !m.ally.null()))
+    if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
         return false;
 
     std::cout << "  Doing other stuff" << std::endl;
@@ -174,6 +175,27 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
     }
 
     return false;
+}
+
+namespace {
+
+inline unsigned int dist2(int x1, int x2, int y1, int y2) {
+    int a = x1 - x2;
+    int b = y1 - y2;
+    return a*a + b*b;
+}
+
+inline bool is_closer(const monsters::pt& a, const monsters::pt& b, const monsters::pt& target) {
+
+    unsigned int da = dist2(a.first, a.second, target.first, target.second);
+    unsigned int db = dist2(b.first, b.second, target.first, target.second);
+    
+    if (da < db)
+        return true;
+
+    return false;
+}
+
 }
 
 inline bool move_monster(Player& p, GameState& state, 
@@ -295,14 +317,35 @@ inline bool move_monster(Player& p, GameState& state,
             bool enemy_is_player = false;
             tag_t enemy_ally;
 
+            monsters::pt beeline_xy;
+
             std::cout << ": " << s.name << " " << (int)s.ai << " " << maxd2 << " " << nearest.size() << " / " 
                       << pow2((int)mxy.first - (int)p.px) + pow2((int)mxy.second - (int)p.py) << std::endl;
+
+            std::vector<monsters::pt> possible_xy;
+
+            if (s.ai != Species::ai_t::magic && s.ai != Species::ai_t::magic_awake) {
+
+                for (const neighbors::pt& v_ : state.neigh(mxy)) {
+
+                    auto v = state.neigh.mk(v_, mxy);
+
+                    if (!monster_walkable(state, s, v.first, v.second))
+                        continue;
+
+                    possible_xy.push_back(v);
+                }
+            }
+
 
             for (const auto& i : nearest) {
 
                 const monsters::Monster& other = state.monsters.get(i.x, i.y);
 
                 bool is_player = (i.x == p.px && i.y == p.py);
+
+                std::cout << "  --- " << (is_player ? std::string("(player)") : species().get(other.tag).name)
+                          << std::endl;
 
                 if (other.null() && !is_player)
                     continue;
@@ -324,6 +367,8 @@ inline bool move_monster(Player& p, GameState& state,
 
                 unsigned int d2 = i.dist2;
 
+                std::cout << "  --| " << thispri << "," << d2 << " " << pri << "," << maxd2 << std::endl;
+
                 if (thispri < pri)
                     continue;
 
@@ -332,42 +377,40 @@ inline bool move_monster(Player& p, GameState& state,
                 if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
                     continue;
 
-                bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y, player_walkable);
+                
+                unsigned int tmpnn = 0;
+                monsters::pt bxy;
+
+                bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y, 
+                                    [&tmpnn,&bxy](GameState& state, unsigned int x, unsigned int y) {
+
+                                        if (!player_walkable(state, x, y))
+                                            return false;
+
+                                        ++tmpnn;
+
+                                        if (tmpnn == 2) 
+                                            bxy = monsters::pt(x, y);
+
+                                        return true;
+                                    });
 
                 if (!ok)
                     continue;
 
-                monsters::pt nnxy;
-                bool found = false;
-
-                for (const neighbors::pt& v_ : state.neigh(mxy)) {
-
-                    auto v = state.neigh.mk(v_, mxy);
-
-                    if (!monster_walkable(state, s, v.first, v.second))
-                        continue;
-
-                    if (!found) {
-                        nnxy = v;
-                        found = true;
-
-                    } else {
-
-                    }
-                }
-
-                if (!found)
-                    continue;
+                std::cout << "   (ok)" << std::endl;
 
                 if (thispri == pri && d2 >= maxd2)
                     continue;
 
                 pri = thispri;
                 maxd2 = d2;
-                nxy = nnxy;
+                beeline_xy = bxy;
                 target = monsters::pt(i.x, i.y);
                 enemy_is_player = is_player;
                 enemy_ally = (is_player ? tag_t() : other.ally);
+
+                std::cout << "  (yeah!)" << std::endl;
             }
 
             if (pri < 0) {
@@ -383,7 +426,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             } else {
 
-                // We found a target. 'nxy' is our next step, 'target' is our target.
+                // We found a target.
 
                 std::cout << ":: " << s.name << " " << (int)s.ai << " " << m.magic << std::endl;
 
@@ -393,8 +436,25 @@ inline bool move_monster(Player& p, GameState& state,
                     return false;
                 }
 
-                if (s.ai == Species::ai_t::magic || s.ai == Species::ai_t::magic_awake)
+                if (possible_xy.empty())
                     return false;
+
+                bool found = false;
+
+                for (const auto& v : possible_xy) {
+
+                    if (beeline_xy == v) {
+                        nxy = v;
+                        break;
+
+                    } else if (!found) {
+                        nxy = v;
+                        found = true;
+
+                    } else if (is_closer(v, nxy, target)) {
+                        nxy = v;
+                    }
+                }
 
                 // OK! If we got here, then 'nxy' holds a valid move and the monster
                 // is actually doing something intelligent.

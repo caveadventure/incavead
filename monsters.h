@@ -81,7 +81,7 @@ namespace monsters {
 
 namespace {
 
-unsigned int dist2(int x1, int x2, int y1, int y2) {
+inline unsigned int dist2(int x1, int x2, int y1, int y2) {
     int a = x1 - x2;
     int b = y1 - y2;
     return a*a + b*b;
