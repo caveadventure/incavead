@@ -484,6 +484,10 @@ struct reader<Player> {
         serialize::read(s, p.ailments);
         serialize::read(s, p.starsign.day);
         serialize::read(s, p.starsign.sign);
+
+        p.current_wx = p.worldx;
+        p.current_wy = p.worldy;
+        p.current_wz = p.worldz;
     }
 };
 
