@@ -89,7 +89,7 @@ struct CaMap {
 
 
     template <typename FUNC1, typename FUNC2, typename FUNC3>
-    inline void step(neighbors::Neighbors& neigh_plain, FUNC1 cell_good, FUNC2 funcon, FUNC3 funcoff,
+    inline void step(neighbors::Neighbors& neigh, FUNC1 cell_good, FUNC2 funcon, FUNC3 funcoff,
                      size_t MAX) {
 
         /// ///
@@ -100,8 +100,8 @@ struct CaMap {
                 const pt& xy = i.first;
                 tag_t tag = i.second.tag;
 
-                for (const auto& xy_ : neigh_plain(xy)) {
-                    count_of_n[xy_][tag]++;
+                for (const auto& xy_ : neigh(xy)) {
+                    count_of_n[neigh.mk(xy_, xy)][tag]++;
                 }
             }
 
@@ -191,8 +191,8 @@ struct CaMap {
 
             camap[xy] = ca_element(rul.tag, 0);
 
-            for (const auto& xy_ : neigh_plain(xy)) {
-                count_of_n[xy_][rul.tag]++;
+            for (const auto& xy_ : neigh(xy)) {
+                count_of_n[neigh.mk(xy_, xy)][rul.tag]++;
             }
 
             funcon(xy.first, xy.second, rul);
@@ -216,14 +216,16 @@ struct CaMap {
 
             if (cae.age == 0 && cae.age_add > 0) {
 
-                for (const auto& xy_ : neigh_plain(xy)) {
+                for (const auto& xy_ : neigh(xy)) {
 
-                    size_t qq = count_of_n[xy_][cae.tag];
+                    auto nxy = neigh.mk(xy_, xy);
+
+                    size_t qq = count_of_n[nxy][cae.tag];
                     if (qq == 0) {
                         throw std::runtime_error("Sanity error in camap");
                     }
 
-                    count_of_n[xy_][cae.tag]--;
+                    count_of_n[nxy][cae.tag]--;
                 }
             }
 

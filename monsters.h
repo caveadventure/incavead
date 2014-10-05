@@ -185,7 +185,7 @@ struct Monsters {
             placed.insert(xy);
             ++ret;
 
-            for (const pt& v_ : neigh(xy)) {
+            for (const auto& v_ : neigh(xy)) {
 
                 auto v = neigh.mk(v_, xy);
 
@@ -397,7 +397,7 @@ struct Monsters {
 
         pt xy(x, y);
 
-        for (const pt& xy_ : neigh(xy)) {
+        for (const auto& xy_ : neigh(xy)) {
             n.insert(neigh.mk(xy_, xy));
         }
 
@@ -489,6 +489,59 @@ struct Monsters {
         }
 
         return get(i->second);
+    }
+
+    template <typename FUNC>
+    bool take(unsigned int x, unsigned int y, FUNC f, std::vector<Monster>& out) {
+
+        auto i = mgrid.find(pt(x, y));
+
+        if (i == mgrid.end())
+            return false;
+
+        auto j = mons.find(i->second);
+
+        if (j == mons.end())
+            throw std::runtime_error("Sanity error: monster lists unsynced.");
+
+        if (!f(j->second))
+            return false;
+
+        out.push_back(j->second);
+
+        mons.erase(j);
+        mgrid.erase(i);
+
+        return true;
+    }
+
+    void replace(neighbors::Neighbors& neigh, grid::Map& grid, 
+                 unsigned int x, unsigned int y, const std::vector<Monster>& ms) {
+
+        std::unordered_set<pt> places;
+        pt xy(x, y);
+
+        for (const auto& xy_ : neigh(xy)) {
+            places.insert(neigh.mk(xy_, xy));
+        }
+
+        std::unordered_set<pt> placed;
+        placed.insert(xy);
+
+        for (const Monster& m : ms) {
+
+            const Species& s = species().get(m.tag);
+
+            pt place;
+            if (!filter_habitat_find_one(grid, grid, places, placed, place, s.habitat))
+                continue;
+
+            placed.insert(place);
+
+            serial++;
+            mons[serial] = m;
+            mgrid[place] = serial;
+        }
     }
 
     void dispose(counters::Counts& counts) {

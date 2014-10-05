@@ -339,7 +339,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             if (s.ai != Species::ai_t::magic && s.ai != Species::ai_t::magic_awake) {
 
-                for (const neighbors::pt& v_ : state.neigh(mxy)) {
+                for (const auto& v_ : state.neigh(mxy)) {
 
                     auto v = state.neigh.mk(v_, mxy);
 
@@ -486,7 +486,7 @@ inline bool move_monster(Player& p, GameState& state,
     if (do_random) {
         std::vector<monsters::pt> tmp;
 
-        for (const neighbors::pt& v_ : state.neigh(mxy)) {
+        for (const auto& v_ : state.neigh(mxy)) {
 
             auto v = state.neigh.mk(v_, mxy);
 

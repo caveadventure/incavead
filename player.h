@@ -98,6 +98,8 @@ struct Player {
     int current_wy;
     int current_wz;
 
+    std::vector<monsters::Monster> followers;
+
     unsigned int level;
 
     shielded_a_stat_t health;
@@ -434,6 +436,7 @@ struct reader<Player> {
         serialize::read(s, p.worldx);
         serialize::read(s, p.worldy);
         serialize::read(s, p.worldz);
+        serialize::read(s, p.followers);
         serialize::read(s, p.level);
         serialize::read(s, p.health.val);
         serialize::read(s, p.health.shield);
@@ -492,6 +495,7 @@ struct writer<Player> {
         serialize::write(s, p.worldx);
         serialize::write(s, p.worldy);
         serialize::write(s, p.worldz);
+        serialize::write(s, p.followers);
         serialize::write(s, p.level);
         serialize::write(s, p.health.val);
         serialize::write(s, p.health.shield);

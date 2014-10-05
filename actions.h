@@ -300,6 +300,19 @@ std::string tombstone_text(const Player& p) {
                         std::max(bone.worth, 0.0));
 }
 
+void take_followers(Player& p, GameState& state) {
+
+    neighbors::pt pxy(p.px, p.py);
+
+    for (const auto& xy_ : state.neigh(pxy)) {
+
+        auto xy = state.neigh.mk(xy_, pxy);
+
+        state.monsters.take(xy.first, xy.second, [](const monsters::Monster& m) { return !m.ally.null(); },
+                            p.followers);
+    }
+}
+
 void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dead) {
 
     features::Feature feat;
@@ -356,12 +369,17 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
         p.worldz += t.stairs;
 
+        if (t.stairs > 0) {
+            take_followers(p, state);
+        }
+
         ++(state.ticks);
         regen = true;
         return;
     }
 
     if (t.tunnel_x != 0 || t.tunnel_y != 0) {
+
         state.render.do_message("You climb into the tunnel.");
         p.worldx += t.tunnel_x;
         p.worldy += t.tunnel_y;
@@ -371,6 +389,8 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
         if (p.worldy > 1) p.worldy = -1;
         else if (p.worldy < -1) p.worldy = 1;
+
+        take_followers(p, state);
 
         ++(state.ticks);
         regen = true;

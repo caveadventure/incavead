@@ -406,6 +406,10 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
     }
 
+    state.monsters.replace(state.neigh, state.grid, p.px, p.py, p.followers);
+
+    p.followers.clear();
+
     for (const auto& mv : state.monsters.mgrid) {
         if (state.grid.walkmap.count(mv.first) == 0)
             throw std::runtime_error("Sanity error 4");
