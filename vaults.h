@@ -17,11 +17,41 @@ struct Vault {
         bool is_walk;
         bool is_water;
         tag_t terrain;
-        tag_t design;
-        tag_t species;
-        int design_level;
 
-        brush() : is_blank(false), is_walk(false), is_water(false), design_level(-1) {}
+        struct design_t {
+            enum class type_t : unsigned int {
+                NONE,
+                SPECIFIC,
+                LEVEL
+            };
+
+            type_t type;
+            tag_t tag;
+            unsigned int level;
+
+            design_t() : type(type_t::NONE), level(0) {}
+        };
+
+        design_t design;
+
+        struct species_t {
+            enum class type_t : unsigned int {
+                NONE,
+                SPECIFIC,
+                GENUS,
+                LEVEL
+            };
+            
+            type_t type;
+            tag_t tag;
+            unsigned int level;
+
+            species_t() : type(type_t::NONE), level(0) {}
+        };
+
+        species_t species;
+
+        brush() : is_blank(false), is_walk(false), is_water(false) {}
     };
 
     std::map<unsigned char, brush> brushes;

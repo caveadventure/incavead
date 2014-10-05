@@ -695,9 +695,26 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ vau.py = toint(state.match); }
             ;      
 
-        vault_brush_design_level_or_tag = 
-            (string %{ vbrush.design = tag_t(state.match, tagmem); } |
-             number %{ vbrush.design_level = toint(state.match); });
+        vault_brush_terrain = 
+            ('-' %{ vbrush.terrain = tag_t(); } |
+             tag %{ vbrush.terrain = tag_t(state.match, tagmem); });
+
+        vault_brush_design = 
+            ('-'        %{ vbrush.design.type = Vault::brush::design_t::type_t::NONE; } |
+             'specific' %{ vbrush.design.type = Vault::brush::design_t::type_t::SPECIFIC; }
+               ws '(' ws tag %{ vbrush.design.tag = tag_t(state.match, tagmem); } ws ')' |
+             'level'    %{ vbrush.design.type = Vault::brush::design_t::type_t::LEVEL; }
+               ws '(' ws number %{ vbrush.design.level = toint(state.match); } ws ')');
+
+        vault_brush_species =
+            ('-'        %{ vbrush.species.type = Vault::brush::species_t::type_t::NONE; }  |
+             'specific' %{ vbrush.species.type = Vault::brush::species_t::type_t::SPECIFIC; }
+               ws '(' ws tag %{ vbrush.species.tag = tag_t(state.match, tagmem); } ws ')'  |
+             'level'    %{ vbrush.species.type = Vault::brush::species_t::type_t::LEVEL; }
+               ws '(' ws number %{ vbrush.species.level = toint(state.match); } ws ')'     |
+             'genus'    %{ vbrush.species.type = Vault::brush::species_t::type_t::GENUS; } 
+               ws '(' ws tag     %{ vbrush.species.tag = tag_t(state.match, tagmem); }
+                      ws1 number %{ vbrush.species.level = toint(state.match); } ws ')');
 
         vault_brush = 'brush' %{ vbrush = Vault::brush(); }
             ws1 ('blank' ${ vbrush.is_blank = true; } |
@@ -705,9 +722,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                  'water' ${ vbrush.is_walk = true; vbrush.is_water = true;   } |
                  'wall'  ${ vbrush.is_walk = false; vbrush.is_water = false; } |
                  'wwall' ${ vbrush.is_walk = false; vbrush.is_water = true;  })
-            ws1 string   %{ vbrush.terrain = tag_t(state.match, tagmem); }
-            ws1 vault_brush_design_level_or_tag
-            ws1 string   %{ vbrush.species = tag_t(state.match, tagmem); }
+            ws1 vault_brush_terrain
+            ws1 vault_brush_design
+            ws1 vault_brush_species
             ws1 '\'' any ${ vau.brushes[fc] = vbrush; } '\''
             ;
 

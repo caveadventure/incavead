@@ -217,7 +217,7 @@ unsigned int summon_out_of_view(const Player& p, GameState& state, tag_t monster
 
     unsigned int res = state.monsters.summon(state.neigh, state.rng, state.grid, 
                                              state.species_counts, state.render, 
-                                             range, &p.px, &p.py, monster, count, false);
+                                             range, p.px, p.py, monster, count, false);
 
     return res;
 }
@@ -477,21 +477,14 @@ void Game::process_world(GameState& state,
 
                 const auto& sg = trig.summon_genus;
 
-                unsigned int n = state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts,
-                                                             state.render, 
-                                                             sg.x, sg.y, &p.px, &p.py, 
-                                                             sg.genus, sg.level, sg.count);
-
-                if (n == 0) {
-                    ++i;
-                    continue;
-                }
+                summons.emplace_back(sg.x, sg.y, summons_t::type_t::GENUS,
+                                     sg.genus, sg.level, sg.count, tag_t(), tag_t(), "");
             }
 
             if (!trig.summon.species.null()) {
 
-                summons.emplace_back(trig.summon.x, trig.summon.y, 
-                                     trig.summon.species, trig.summon.count, tag_t(), trig.summon.ally, "");
+                summons.emplace_back(trig.summon.x, trig.summon.y, summons_t::type_t::SPECIFIC,
+                                     trig.summon.species, 0, trig.summon.count, tag_t(), trig.summon.ally, "");
             }
 
             if (trig.message.message.size() > 0) {
@@ -523,13 +516,21 @@ void Game::process_world(GameState& state,
 
         unsigned int nm = 0;
 
-        if (i.summontag.null()) {
-            nm = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
-                                           i.x, i.y, &p.px, &p.py, i.arg, 1, i.ally);
-
-        } else {
+        switch (i.type) {
+        case summons_t::type_t::SPECIFIC:
             nm = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                       i.x, i.y, &p.px, &p.py, i.summontag, i.arg, false, i.ally);
+                                       i.x, i.y, p.px, p.py, i.summontag, i.count, false, i.ally);
+            break;
+
+        case summons_t::type_t::LEVEL:
+            nm = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
+                                           i.x, i.y, p.px, p.py, i.level, i.count, i.ally);
+            break;
+
+        case summons_t::type_t::GENUS:
+            nm = state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts, state.render,
+                                             i.x, i.y, p.px, p.py, i.summontag, i.level, i.count, i.ally);
+            break;
         }
 
         if (nm > 0 && state.render.is_in_fov(i.x, i.y) && i.msg.size() > 0) {

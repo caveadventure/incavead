@@ -350,15 +350,11 @@ struct Monsters {
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
-                        const std::unordered_set<pt>& places, const unsigned int* px, const unsigned int* py,
+                        const std::unordered_set<pt>& places, unsigned int px, unsigned int py,
                         tag_t tag, unsigned int count, bool counts_taken, tag_t ally = tag_t()) {
 
         std::unordered_set<pt> placed;
-
-        if (px != nullptr && py != nullptr) {
-
-            placed.insert(pt(*px, *py));
-        }
+        placed.insert(pt(px, py));
 
         const Species& s = species().get(tag);
 
@@ -393,7 +389,7 @@ struct Monsters {
 
     unsigned int summon(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, 
                         counters::Counts& counts, grender::Grid& render, 
-                        unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py,
+                        unsigned int x, unsigned int y, unsigned int px, unsigned int py,
                         tag_t tag, unsigned int count, bool counts_taken, tag_t ally = tag_t()) {
 
 
@@ -413,7 +409,7 @@ struct Monsters {
 
     unsigned int summon_any(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                             grender::Grid& render, 
-                            unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
+                            unsigned int x, unsigned int y, unsigned int px, unsigned int py, 
                             unsigned int level, unsigned int count, tag_t ally = tag_t()) {
 
         std::map<tag_t, unsigned int> q = counts.take(rng, level, count, true);
@@ -430,8 +426,8 @@ struct Monsters {
 
     unsigned int summon_genus(neighbors::Neighbors& neigh, rnd::Generator& rng, grid::Map& grid, counters::Counts& counts, 
                               grender::Grid& render, 
-                              unsigned int x, unsigned int y, const unsigned int* px, const unsigned int* py, 
-                              tag_t genus, unsigned int level, unsigned int count) {
+                              unsigned int x, unsigned int y, unsigned int px, unsigned int py, 
+                              tag_t genus, unsigned int level, unsigned int count, tag_t ally = tag_t()) {
 
         std::map< unsigned int, std::vector<tag_t> > found;
 
@@ -454,7 +450,7 @@ struct Monsters {
         if (maxlev.empty())
             return 0;
 
-        return summon(neigh, rng, grid, counts, render, x, y, px, py, maxlev[rng.n(maxlev.size())], count, false);
+        return summon(neigh, rng, grid, counts, render, x, y, px, py, maxlev[rng.n(maxlev.size())], count, false, ally);
     }
 
 

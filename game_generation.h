@@ -378,8 +378,23 @@ void Game::generate(GameState& state, FUNC progressbar) {
         progressbar("Placing monsters...");
 
         for (const auto& s : summons) {
-            state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, 
-                                  state.render, s.x, s.y, nullptr, nullptr, s.summontag, s.arg, false);
+
+            switch (s.type) {
+            case summons_t::type_t::SPECIFIC:
+                state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
+                                      s.x, s.y, p.px, p.py, s.summontag, s.count, false, s.ally);
+                break;
+
+            case summons_t::type_t::LEVEL:
+                state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render,
+                                          s.x, s.y, p.px, p.py, s.level, s.count, s.ally);
+                break;
+
+            case summons_t::type_t::GENUS:
+                state.monsters.summon_genus(state.neigh, state.rng, state.grid, state.species_counts, state.render,
+                                            s.x, s.y, p.px, p.py, s.summontag, s.level, s.count, s.ally);
+                break;
+            }
         }
 
         unsigned int mongroups = ::fabs(state.rng.gauss(lev.number_monsters.mean, lev.number_monsters.deviation));

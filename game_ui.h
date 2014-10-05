@@ -895,7 +895,7 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
         tag_mem_t tagmem;
 
         state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                  p.px, p.py, &p.px, &p.py, p.level, 1, tag_t("something", tagmem));
+                                  p.px, p.py, p.px, p.py, p.level, 1, tag_t("something", tagmem));
         break;
     }
 

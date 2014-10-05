@@ -6,17 +6,27 @@
 struct summons_t {
     unsigned int x;
     unsigned int y;
+    
+    enum class type_t : unsigned int {
+        SPECIFIC,
+        LEVEL,
+        GENUS
+    };
+
+    type_t type;
+
     tag_t summontag;
-    unsigned int arg;
+    unsigned int level;
+    unsigned int count;
     tag_t summonertag;
     tag_t ally;
     std::string msg;
 
-    summons_t() : x(0), y(0), arg(0) {}
+    summons_t() : x(0), y(0), type(type_t::SPECIFIC), level(0), count(0) {}
 
-    summons_t(unsigned int _x, unsigned int _y, tag_t _st, unsigned int _a, tag_t _sut, tag_t _al, 
-              const std::string& _m) : x(_x), y(_y), summontag(_st), arg(_a), 
-                                       summonertag(_sut), ally(_al), msg(_m) {}
+    summons_t(unsigned int _x, unsigned int _y, type_t _t, tag_t _st, unsigned int _l, unsigned int _c, 
+              tag_t _sut, tag_t _al, const std::string& _m) : 
+        x(_x), y(_y), type(_t), summontag(_st), level(_l), count(_c), summonertag(_sut), ally(_al), msg(_m) {}
 };
 
 
@@ -106,7 +116,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
             std::cout << "  Summoned!" << std::endl;
 
-            summons.emplace_back(mxy.first, mxy.second, c.speciestag, 1, m.tag, m.ally, c.msg);
+            summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::SPECIFIC,
+                                 c.speciestag, 0, 1, m.tag, m.ally, c.msg);
         }
     }
 
@@ -119,7 +130,8 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
 
-            summons.emplace_back(mxy.first, mxy.second, tag_t(), c.level, m.tag, m.ally, c.msg);
+            summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::LEVEL,
+                                 tag_t(), c.level, 1, m.tag, m.ally, c.msg);
         }        
     }
 
@@ -244,7 +256,8 @@ inline bool move_monster(Player& p, GameState& state,
     if (m.health <= -3) {
 
         if (!s.death_summon.null()) {
-            summons.emplace_back(mxy.first, mxy.second, s.death_summon, 1, m.tag, m.ally, "");
+            summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::SPECIFIC,
+                                 s.death_summon, 0, 1, m.tag, m.ally, "");
         }
 
         do_die = true;

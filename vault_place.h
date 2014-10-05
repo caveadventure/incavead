@@ -236,16 +236,23 @@ inline void generate_vault(const Vault& vault, GameState& state,
 
             tag_t item;
 
-            if (!b.design.null()) {
-                item = b.design;
+            switch (b.design.type) {
+            case Vault::brush::design_t::type_t::NONE:
+                break;
 
-            } else if (b.design_level >= 0) {
+            case Vault::brush::design_t::type_t::SPECIFIC:
+                item = b.design.tag;
+                break;
 
-                auto is = state.designs_counts.take(state.rng, b.design_level);
+            case Vault::brush::design_t::type_t::LEVEL:
+            {
+                auto is = state.designs_counts.take(state.rng, b.design.level);
 
                 if (is.size() > 0) {
                     item = is.begin()->first;
                 }
+                break;
+            }
             }
 
             if (!item.null()) {
@@ -254,11 +261,30 @@ inline void generate_vault(const Vault& vault, GameState& state,
                                   state.render);
             }
 
-            if (!b.species.null()) {
-                if (!state.grid.is_walk(xi, yi))
-                    throw std::runtime_error("Invalid vault monster placement");
+            if (b.species.type != Vault::brush::species_t::type_t::NONE && 
+                !state.grid.is_walk(xi, yi)) {
 
-                summons.emplace_back(xi, yi, b.species, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+                throw std::runtime_error("Invalid vault monster placement");
+            }
+
+            switch (b.species.type) {
+            case Vault::brush::species_t::type_t::NONE:
+                break;
+
+            case Vault::brush::species_t::type_t::SPECIFIC:
+                summons.emplace_back(xi, yi, summons_t::type_t::SPECIFIC, b.species.tag, 
+                                     0, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+                break;
+
+            case Vault::brush::species_t::type_t::LEVEL:
+                summons.emplace_back(xi, yi, summons_t::type_t::LEVEL, b.species.tag, 
+                                     b.species.level, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+                break;
+
+            case Vault::brush::species_t::type_t::GENUS:
+                summons.emplace_back(xi, yi, summons_t::type_t::GENUS, b.species.tag, 
+                                     b.species.level, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+                break;
             }
         }
     }
