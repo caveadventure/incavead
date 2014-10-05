@@ -102,9 +102,6 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
-    std::cout << " magic: " << dist2 << " " << is_player << " " << ally.null() << std::endl;
-    std::cout << "  " << s.summon.size() << std::endl;
-
     if (s.summon.size() > 0) {
 
         for (const auto& c : s.summon) {
@@ -113,8 +110,6 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
             double v = state.rng.gauss(0.0, 1.0);
             if (v <= c.chance) continue;
-
-            std::cout << "  Summoned!" << std::endl;
 
             summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::SPECIFIC,
                                  c.speciestag, 0, 1, m.tag, m.ally, c.msg);
@@ -137,8 +132,6 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
     if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
         return false;
-
-    std::cout << "  Doing other stuff" << std::endl;
 
     if (!s.morph.species.null()) {
 
@@ -175,8 +168,6 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                     
         double v = state.rng.gauss(0.0, 1.0);
         if (v <= c.chance) continue;
-
-        std::cout << "  Casting cloud" << std::endl;
 
         cast_cloud(state, target.first, target.second, c.radius, c.terraintag);
 
@@ -332,9 +323,6 @@ inline bool move_monster(Player& p, GameState& state,
 
             monsters::pt beeline_xy;
 
-            std::cout << ": " << s.name << " " << (int)s.ai << " " << maxd2 << " " << nearest.size() << " / " 
-                      << pow2((int)mxy.first - (int)p.px) + pow2((int)mxy.second - (int)p.py) << std::endl;
-
             std::vector<monsters::pt> possible_xy;
 
             if (s.ai != Species::ai_t::magic && s.ai != Species::ai_t::magic_awake) {
@@ -357,9 +345,6 @@ inline bool move_monster(Player& p, GameState& state,
 
                 bool is_player = (i.x == p.px && i.y == p.py);
 
-                std::cout << "  --- " << (is_player ? std::string("(player)") : species().get(other.tag).name)
-                          << std::endl;
-
                 if (other.null() && !is_player)
                     continue;
 
@@ -379,8 +364,6 @@ inline bool move_monster(Player& p, GameState& state,
                 }
 
                 unsigned int d2 = i.dist2;
-
-                std::cout << "  --| " << thispri << "," << d2 << " " << pri << "," << maxd2 << std::endl;
 
                 if (thispri < pri)
                     continue;
@@ -411,8 +394,6 @@ inline bool move_monster(Player& p, GameState& state,
                 if (!ok)
                     continue;
 
-                std::cout << "   (ok)" << std::endl;
-
                 if (thispri == pri && d2 >= maxd2)
                     continue;
 
@@ -422,8 +403,6 @@ inline bool move_monster(Player& p, GameState& state,
                 target = monsters::pt(i.x, i.y);
                 enemy_is_player = is_player;
                 enemy_ally = (is_player ? tag_t() : other.ally);
-
-                std::cout << "  (yeah!)" << std::endl;
             }
 
             if (pri < 0) {
@@ -440,8 +419,6 @@ inline bool move_monster(Player& p, GameState& state,
             } else {
 
                 // We found a target.
-
-                std::cout << ":: " << s.name << " " << (int)s.ai << " " << m.magic << std::endl;
 
                 if (m.magic > -3.0 &&
                     do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {

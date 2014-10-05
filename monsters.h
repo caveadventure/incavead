@@ -697,7 +697,7 @@ struct Monsters {
         }
     }
 
-    void _make_nn_graph(unsigned int w, unsigned int h, unsigned int px, unsigned int py) {
+    void find_nearest(unsigned int w, unsigned int h, unsigned int px, unsigned int py) {
 
         bm __("delaunay");
 

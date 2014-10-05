@@ -47,6 +47,8 @@ inline std::string dowsing_message(const Player& p, const GameState& state) {
 inline bool charm_attack(Player& p, GameState& state, 
                          unsigned int plevel, const damage::attacks_t& attacks, unsigned int range) {
 
+    state.monsters.find_nearest(state.grid.w, state.grid.h, p.px, p.py);
+
     auto nearest = state.monsters.nearest.get(p.px, p.py, range * range);
 
     for (const auto& i : nearest) {

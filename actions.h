@@ -209,11 +209,15 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
 
 bool run_away(Player& p, GameState& state, size_t n_skin) {
 
+    bm __("run_away");
+
     unsigned int radius = get_lightradius(p, state);
 
     std::unordered_set<neighbors::pt> ns;
 
     radial_points(p.px, p.py, state, radius, ns, player_walkable);
+
+    state.monsters.find_nearest(state.grid.w, state.grid.h, p.px, p.py);
 
     std::unordered_set<neighbors::pt> ms;
 

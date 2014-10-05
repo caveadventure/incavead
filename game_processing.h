@@ -497,7 +497,7 @@ void Game::process_world(GameState& state,
     }
 
 
-    state.monsters._make_nn_graph(state.grid.w, state.grid.h, p.px, p.py);
+    state.monsters.find_nearest(state.grid.w, state.grid.h, p.px, p.py);
 
     state.monsters.process(state.render, 
                            std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),
