@@ -489,7 +489,7 @@ struct Triangulation {
         }
     };
     
-    std::set<neighbor_t> get(unsigned int x, unsigned int y, unsigned int d2max) const {
+    std::set<neighbor_t> get(unsigned int x, unsigned int y, unsigned int d2max, bool& full_empty) const {
     
         std::set<neighbor_t> ret;
 
@@ -497,8 +497,12 @@ struct Triangulation {
 
         const auto i = res.find(p0);
 
-        if (i == res.end())
+        if (i == res.end()) {
+            full_empty = true;
             return ret;
+        }
+
+        full_empty = false;
 
         for (const auto& p_d : i->second) {
 

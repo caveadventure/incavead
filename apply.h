@@ -49,7 +49,8 @@ inline bool charm_attack(Player& p, GameState& state,
 
     state.monsters.find_nearest(state.grid.w, state.grid.h, p.px, p.py);
 
-    auto nearest = state.monsters.nearest.get(p.px, p.py, range * range);
+    bool full_empty;
+    auto nearest = state.monsters.nearest.get(p.px, p.py, range * range, full_empty);
 
     for (const auto& i : nearest) {
 

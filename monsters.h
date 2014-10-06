@@ -557,6 +557,8 @@ struct Monsters {
     void process(grender::Grid& render, FUNC1 fmove, FUNC2 fconf) {
 
         bm __("mprocess");
+        std::vector<double> __m;
+        __m.resize(6);
 
         size_t sbefore = mgrid.size();
 
@@ -578,7 +580,7 @@ struct Monsters {
             pt nxy;
             bool dead = false;
 
-            if (fmove(xy, m, s, nxy, dead)) {
+            if (fmove(xy, m, s, nxy, dead, __m)) {
 
                 if (dead) {
 
@@ -694,6 +696,10 @@ struct Monsters {
             std::cout << "  " << neuw.size() << std::endl;
             
             throw std::runtime_error("Lost a monster in monster::process()!");
+        }
+
+        for (size_t i = 0; i < __m.size(); ++i) {
+            std::cout << "moving" << i << ": " << __m[i] << std::endl;
         }
     }
 

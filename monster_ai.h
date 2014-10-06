@@ -204,8 +204,11 @@ inline bool is_closer(const monsters::pt& a, const monsters::pt& b, const monste
 inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
                          const monsters::pt& mxy, monsters::Monster& m, const Species& s,
-                         monsters::pt& nxy, bool& do_die) {
+                         monsters::pt& nxy, bool& do_die,
+                         std::vector<double>& _1) {
 
+    bm_s __1(_1[0]);
+    
     bool do_stop = false;
 
     unsigned int range = s.range;
@@ -289,16 +292,22 @@ inline bool move_monster(Player& p, GameState& state,
     }
 
 
+    std::vector<monsters::pt> possible_xy;
+    bool did_possible = false;
     bool do_random = false;
 
     unsigned int maxd2 = (range + 1) * (range + 1);
 
-    auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2);
+    bool full_empty;
+    auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2, full_empty);
+
+    bm_s __2(_1[1]);
 
     if (nearest.empty()) {
 
         // Short-path AI for out-of-range monsters.
-        if (s.idle_ai == Species::idle_ai_t::random) {
+
+        if (s.idle_ai == Species::idle_ai_t::random && !full_empty) {
 
             do_random = true;
 
@@ -315,6 +324,8 @@ inline bool move_monster(Player& p, GameState& state,
 
         } else {
 
+            bm_s __3(_1[2]);
+
             int pri = -1;
 
             monsters::pt target;
@@ -323,7 +334,6 @@ inline bool move_monster(Player& p, GameState& state,
 
             monsters::pt beeline_xy;
 
-            std::vector<monsters::pt> possible_xy;
 
             if (s.ai != Species::ai_t::magic && s.ai != Species::ai_t::magic_awake) {
 
@@ -336,10 +346,13 @@ inline bool move_monster(Player& p, GameState& state,
 
                     possible_xy.push_back(v);
                 }
+
+                did_possible = true;
             }
 
-
             for (const auto& i : nearest) {
+
+                bm_s __4(_1[3]);
 
                 const monsters::Monster& other = state.monsters.get(i.x, i.y);
 
@@ -459,23 +472,29 @@ inline bool move_monster(Player& p, GameState& state,
         }
     }
 
-
+    bm_s __5(_1[4]);
+            
     if (do_random) {
-        std::vector<monsters::pt> tmp;
+        bm_s __6(_1[5]);
 
-        for (const auto& v_ : state.neigh(mxy)) {
+        if (!did_possible) {
 
-            auto v = state.neigh.mk(v_, mxy);
+            for (const auto& v_ : state.neigh(mxy)) {
 
-            if (monster_walkable(state, s, v.first, v.second)) {
-                tmp.push_back(v);
+                auto v = state.neigh.mk(v_, mxy);
+
+                if (monster_walkable(state, s, v.first, v.second)) {
+                    possible_xy.push_back(v);
+                }
             }
+
+            did_possible = true;
         }
 
-        if (tmp.empty())
+        if (possible_xy.empty())
             return false;
 
-        nxy = tmp[state.rng.n(tmp.size())];
+        nxy = possible_xy[state.rng.n(possible_xy.size())];
     }
 
     if (m.stun > 0) {

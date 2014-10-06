@@ -221,7 +221,8 @@ bool run_away(Player& p, GameState& state, size_t n_skin) {
 
     std::unordered_set<neighbors::pt> ms;
 
-    auto nearest = state.monsters.nearest.get(p.px, p.py, radius * radius);
+    bool full_empty;
+    auto nearest = state.monsters.nearest.get(p.px, p.py, radius * radius, full_empty);
 
     for (const auto& i : nearest) {
 
