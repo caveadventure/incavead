@@ -329,6 +329,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_magic  = 'magic'  %{ spe.flags.magic = true; } ;
         species_plant  = 'plant'  %{ spe.flags.plant = true; } ;
         species_robot  = 'robot'  %{ spe.flags.robot = true; } ;
+        species_cosmic = 'cosmic' %{ spe.flags.cosmic = true; } ;
 
         species_terrain_immune = 'terrain_immune' %{ spe.flags.terrain_immune = true; } ;
 
@@ -357,7 +358,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_companion | species_attack | species_defense | species_drop | species_drop_random |
             species_cast_cloud | species_summon | species_death_summon | species_spawn | 
             species_animal | species_undead | species_magic | species_plant |
-            species_robot | species_terrain_immune | species_eyeless |
+            species_robot | species_cosmic | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
             species_morph | species_hunger_rate | species_ally |
             '}'
@@ -1169,6 +1170,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         damage_animal  = 'animal'  ws (('+' %{ dam.flags.animal.v = 1; })  | ('-' %{ dam.flags.animal.v = 0; }));
         damage_plant   = 'plant'   ws (('+' %{ dam.flags.plant.v = 1; })   | ('-' %{ dam.flags.plant.v = 0; }));
         damage_robot   = 'robot'   ws (('+' %{ dam.flags.robot.v = 1; })   | ('-' %{ dam.flags.robot.v = 0; }));
+        damage_cosmic  = 'cosmic'  ws (('+' %{ dam.flags.cosmic.v = 1; })  | ('-' %{ dam.flags.cosmic.v = 0; }));
         damage_magic   = 'magic'   ws (('+' %{ dam.flags.magic.v = 1; })   | ('-' %{ dam.flags.magic.v = 0; }));
         damage_player  = 'player'  ws (('+' %{ dam.flags.player.v = 1; })  | ('-' %{ dam.flags.player.v = 0; }));
 
@@ -1188,7 +1190,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             damage_vampiric | damage_hunger | damage_unluck | damage_polymorph | damage_health | 
             damage_infect | damage_eyeless | damage_undead | damage_animal | damage_plant | damage_player |
             damage_robot | damage_magic | damage_melee_msg | damage_env_msg | damage_player_poly |
-            damage_ally |
+            damage_cosmic | damage_ally |
             '}' ${ fret; })
             ;
 

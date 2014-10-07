@@ -62,6 +62,7 @@ struct Damage {
         tristate_t robot;
         tristate_t magic;
         tristate_t player;
+        tristate_t cosmic;
     };
 
     flags_t flags;

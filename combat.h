@@ -103,7 +103,8 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
     const Damage& dam = damages().get(v.type);
 
-    if (!dam.flags.robot(s.flags.robot) || 
+    if (!dam.flags.cosmic(s.flags.cosmic) ||
+        !dam.flags.robot(s.flags.robot) || 
         !dam.flags.undead(s.flags.undead) ||
         !dam.flags.animal(s.flags.animal) ||
         !dam.flags.plant(s.flags.plant) ||
@@ -217,7 +218,7 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
 inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
                             GameState& state, const monsters::pt& mxy, monsters::Monster& mon,
-                            bool track_kills) {
+                            bool track_kills, bool zero_mon_level = false) {
 
     if (attacks.empty()) {
         return false;
@@ -226,7 +227,8 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     const Species& s = species().get(mon.tag);
 
     damage::attacks_t attack_res;
-    roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
+    roll_attack(state.rng, s.defenses, (zero_mon_level ? 1 : s.get_computed_level()+1), 
+                attacks, plevel+1, attack_res);
 
     if (attack_res.empty()) {
         return false;
@@ -481,6 +483,7 @@ inline double defend(Player& p,
                 !dam.flags.plant(false) ||
                 !dam.flags.magic(false) ||
                 !dam.flags.eyeless(false) ||
+                !dam.flags.cosmic(false) ||
                 !dam.flags.player(true)) 
                 continue;
 
@@ -494,6 +497,7 @@ inline double defend(Player& p,
                 !dam.flags.plant(sp.flags.plant) ||
                 !dam.flags.magic(sp.flags.magic) ||
                 !dam.flags.eyeless(sp.flags.eyeless) ||
+                !dam.flags.cosmic(sp.flags.cosmic) ||
                 !dam.flags.player(false)) 
                 continue;
         }

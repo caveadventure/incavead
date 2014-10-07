@@ -246,6 +246,17 @@ inline bool move_monster(Player& p, GameState& state,
         }
     }
 
+    {
+        const Levelskin& ls = levelskins().get(p.worldz);
+
+        if (!ls.damage_terrain.null()) {
+
+            const Terrain& t = terrain().get(ls.damage_terrain);
+
+            attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, false, true);
+        }
+    }
+
 
     if (m.health <= -3) {
 
