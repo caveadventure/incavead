@@ -326,7 +326,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
                 auto& summon = trig->second.summon;
 
                 summon.species = d2.monster_raised;
-                summon.count = 1;
+                summon.count = 0;
                 summon.ally = d.raise_monsters;
                 summon.x = item.xy.first;
                 summon.y = item.xy.second;
@@ -334,8 +334,11 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
                 return true;
             });
 
-        if (n > 0)
+        if (n > 0) {
             state.render.do_message("The earth shudders and the dead wake!", true);
+        } else {
+            state.render.do_message("Nothing happens. How curious.");
+        }
 
         ret = true;
     }
