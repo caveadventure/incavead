@@ -94,8 +94,19 @@ void Game::generate(GameState& state, FUNC progressbar) {
             throw std::runtime_error("Sanity error 1.4");
     }
 
+    // Level-specific random seed that's always the same.
+
     state.rng.init(gridseed);
 
+    // A known random seed for the randomized dungeon parts.
+        
+    size_t& num_visits = state.dungeon_visits_count[worldkey::key_t(p.worldx, p.worldy, p.worldz)];
+
+    uint64_t randomseed = ((game_seed + gridseed + num_visits) & 0xFFFFFFFF);
+
+    num_visits++;
+
+    //
 
     const Levelskin& lev = levelskins().get(p.worldz);
 
@@ -111,6 +122,11 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     {
         progressbar("Placing vaults...");
+
+        if (lev.random_vaults) {
+
+            state.rng.init(randomseed);
+        }
 
         state.vaults_counts = vaults().counts;
 
@@ -224,6 +240,9 @@ void Game::generate(GameState& state, FUNC progressbar) {
                     continue;
             }
 
+            if (!state.grid.is_walk(xy.first, xy.second))
+                continue;
+
             state.features.set(xy.first, xy.second, grave, state.render);
         }
     }
@@ -261,11 +280,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Initialize a known random sequence.
         
-    size_t& num_visits = state.dungeon_visits_count[worldkey::key_t(p.worldx, p.worldy, p.worldz)];
-
-    state.rng.init((game_seed + gridseed + num_visits) & 0xFFFFFFFF);
-
-    num_visits++;
+    state.rng.init(randomseed);
 
     // Place player.
 
