@@ -48,6 +48,55 @@ void make_map(int worldx, int worldy, int worldz, GameState& state,
 }
 
 
+inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource, 
+                            unsigned int vaults_level, unsigned int number_vaults, 
+                            std::vector<summons_t>& summons,
+                            std::vector<grid::pt>& player_positions,
+                            std::vector<vault_packing_t>& vault_packing,
+                            bool randomized) {
+
+    std::set<grid::pt> affected;
+
+    std::map<tag_t, unsigned int> vc;
+
+    if (randomized) {
+
+        vc = state.random_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+
+    } else {
+        vc = state.vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+    }
+
+    std::cout << "/// " << randomized << " " << number_vaults << " " << vc.size() << std::endl;
+
+    std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
+
+    for (const auto& vi : vc) {
+        const Vault& v = vaults().get(vi.first);
+
+        s_vc[v.priority].insert(vi);
+    }
+
+    for (const auto& tmp : s_vc) {
+
+        for (const auto vi : tmp.second) {
+
+            const Vault& v = vaults().get(vi.first);
+
+            std::cout << " + " << (v.pic.empty() ? "null" : v.pic.at(0)) << std::endl;
+
+            for (unsigned int ci = 0; ci < vi.second; ++ci) {
+                generate_vault(v, state, ptsource, summons, affected, vault_packing, player_positions);
+            }
+        }
+
+        vault_generation_cleanup(state, affected);
+
+        ptsource.swap(grid::Map::genmaps_t(ptsource, state.grid));
+    }
+}
+
+
 template <typename FUNC>
 void Game::generate(GameState& state, FUNC progressbar) {
 
@@ -120,42 +169,49 @@ void Game::generate(GameState& state, FUNC progressbar) {
     std::vector<grid::pt> player_positions;
     std::vector<vault_packing_t> vault_packing;
 
+    grid::Map::genmaps_t maps(state.grid);
+
+
+    // Place some dungeon features on the same spots every time.
+
+    {
+        progressbar("Placing features...");
+
+        state.terrain_counts = terrain().counts;
+
+        unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
+
+        for (unsigned int i = 0; i < featscount; ++i) {
+
+            unsigned int takecount = 1;
+
+            std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+
+            for (const auto& j : t) {
+                state.features.generate(state.rng, state.grid, maps, j.first, j.second);
+            }
+        }
+    }
+
+    // Place some vaults. Some are randomized, some are always on the same spots every time.
+
     {
         progressbar("Placing vaults...");
 
-        if (lev.random_vaults) {
-
-            state.rng.init(randomseed);
-        }
-
         state.vaults_counts = vaults().counts;
+        state.random_vaults_counts = vaults().random_counts;
 
-        std::set<grid::pt> affected;
+        generate_vaults(state, maps, vaults_level, lev.number_vaults, 
+                        summons, player_positions, vault_packing, false);
 
-        std::map<tag_t, unsigned int> vc = state.vaults_counts.take(state.rng, vaults_level, lev.number_vaults, true);
+        // Initialize a known random sequence here!!
 
-        std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
+        state.rng.init(randomseed);
 
-        for (const auto& vi : vc) {
-            const Vault& v = vaults().get(vi.first);
-
-            s_vc[v.priority].insert(vi);
-        }
-
-        for (const auto& tmp : s_vc) {
-
-            for (const auto vi : tmp.second) {
-
-                const Vault& v = vaults().get(vi.first);
-
-                for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                    generate_vault(v, state, summons, affected, vault_packing, player_positions);
-                }
-            }
-
-            vault_generation_cleanup(state, affected);
-        }
+        generate_vaults(state, maps, vaults_level, lev.number_random_vaults, 
+                        summons, player_positions, vault_packing, true);
     }
+
 
     for (const auto& xy : state.grid.cornermap) {
         if (state.grid.walkmap.count(xy) == 0)
@@ -190,32 +246,10 @@ void Game::generate(GameState& state, FUNC progressbar) {
             throw std::runtime_error("Sanity error 3");
     }
 
+
+
     // 
     //
-
-    grid::Map::genmaps_t maps(state.grid);
-
-
-    {
-        progressbar("Placing features...");
-
-        // Place some dungeon features on the same spots every time.
-
-        state.terrain_counts = terrain().counts;
-
-        unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
-
-        for (unsigned int i = 0; i < featscount; ++i) {
-
-            unsigned int takecount = 1;
-
-            std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
-
-            for (const auto& j : t) {
-                state.features.generate(state.rng, state.grid, maps, j.first, j.second);
-            }
-        }
-    }
 
     // Place bones.
     {
@@ -277,10 +311,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
     }
 
-
-    // Initialize a known random sequence.
-        
-    state.rng.init(randomseed);
+    maps.swap(grid::Map::genmaps_t(maps, state.grid));
 
     // Place player.
 
@@ -426,8 +457,10 @@ void Game::generate(GameState& state, FUNC progressbar) {
     p.followers.clear();
 
     for (const auto& mv : state.monsters.mgrid) {
-        if (state.grid.walkmap.count(mv.first) == 0)
+        if (state.grid.walkmap.count(mv.first) == 0) {
+            std::cout << "!!! " << species().get(state.monsters.get(mv.first.first, mv.first.second).tag).name << std::endl;
             throw std::runtime_error("Sanity error 4");
+        }
     }
 
     p.current_wx = p.worldx;

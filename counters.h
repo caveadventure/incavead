@@ -19,6 +19,25 @@ struct Counts {
         }
     }
 
+    tag_t find(rnd::Generator& rng, unsigned int level) {
+
+        auto d = data.find(level);
+
+        if (d == data.end() || d->second.empty())
+            return tag_t();
+        
+        size_t n = rng.n(d->second.size());
+
+        auto i = d->second.begin();
+
+        while (n > 0) {
+            ++i;
+            --n;
+        }
+
+        return i->first;
+    }
+
     std::map<tag_t, unsigned int> take(rnd::Generator& rng, unsigned int level, 
                                        unsigned int n = 1, bool exclusive = false) {
 

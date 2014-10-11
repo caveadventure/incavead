@@ -8,6 +8,7 @@ struct VaultsBank {
 
     std::unordered_map<tag_t,Vault> bank;
     counters::Counts counts;
+    counters::Counts random_counts;
 
     void copy(const Vault& s) {
 
@@ -16,7 +17,14 @@ struct VaultsBank {
         }
 
         bank[s.tag] = s;
-        counts.init(s.tag, s.level, s.count);
+
+        if (s.randomized) {
+
+            random_counts.init(s.tag, s.level, s.count);
+
+        } else {
+            counts.init(s.tag, s.level, s.count);
+        }
     }
 
     const Vault& get(tag_t tag) const {

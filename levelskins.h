@@ -33,6 +33,7 @@ struct Levelskin {
     int vaults_level;
 
     unsigned int number_vaults;
+    unsigned int number_random_vaults;
 
     struct mean_deviation_t {
         double mean;
@@ -49,8 +50,6 @@ struct Levelskin {
 
     bool has_treasure;
     double treasure_level;
-
-    bool random_vaults;
 
     struct mapgen_params_t {
         double flow_epsilon;
@@ -97,11 +96,11 @@ struct Levelskin {
 
     Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive_monsters(false), 
                   exclusive_items(false), no_phase_level(false), 
-                  species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100),
+                  species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100), number_random_vaults(0),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),
                   number_features(160.0, 30.0),
-                  has_treasure(false), treasure_level(0), random_vaults(false)
+                  has_treasure(false), treasure_level(0)
         {}
 };
 

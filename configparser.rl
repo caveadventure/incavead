@@ -701,10 +701,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
              tag %{ vbrush.terrain = tag_t(state.match, tagmem); });
 
         vault_brush_design = 
-            ('-'        %{ vbrush.design.type = Vault::brush::design_t::type_t::NONE; } |
-             'specific' %{ vbrush.design.type = Vault::brush::design_t::type_t::SPECIFIC; }
+            ('-'         %{ vbrush.design.type = Vault::brush::design_t::type_t::NONE; } |
+             'specific'  %{ vbrush.design.type = Vault::brush::design_t::type_t::SPECIFIC; }
                ws '(' ws tag %{ vbrush.design.tag = tag_t(state.match, tagmem); } ws ')' |
-             'level'    %{ vbrush.design.type = Vault::brush::design_t::type_t::LEVEL; }
+             'level'     %{ vbrush.design.type = Vault::brush::design_t::type_t::LEVEL; }
+               ws '(' ws number %{ vbrush.design.level = toint(state.match); } ws ')'    |
+             'level_any' %{ vbrush.design.type = Vault::brush::design_t::type_t::LEVEL_ANY; }
                ws '(' ws number %{ vbrush.design.level = toint(state.match); } ws ')');
 
         vault_brush_species =
@@ -739,10 +741,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
       
         vault_use_species_counts = 'use_monster_counts' %{ vau.use_species_counts = true; };
 
+        vault_randomized = 'randomized' %{ vau.randomized = true; };
+
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
-            vault_use_species_counts |
+            vault_use_species_counts | vault_randomized |
             '}'
              ${ fret; })
             ;
@@ -835,6 +839,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         levelskin_number_vaults = 'number_vaults' ws1 number %{ lev.number_vaults = toint(state.match); };
 
+        levelskin_number_random_vaults = 'number_random_vaults' ws1 number 
+            %{ lev.number_random_vaults = toint(state.match); };
+
         levelskin_number_monsters = 'number_monsters' 
             ws1 real %{ lev.number_monsters.mean = toreal(state.match); }
             ws1 real %{ lev.number_monsters.deviation = toreal(state.match); }
@@ -853,8 +860,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
 
         levelskin_treasure_level = 'treasure_level' ws1 real %{ lev.has_treasure = true; lev.treasure_level = toreal(state.match); };
-
-        levelskin_random_vaults = 'random_vaults' %{ lev.random_vaults = true; };
 
         levelskin_flow_epsilon           = 'flow_epsilon'        ws1 real   %{ lev.genparams.flow_epsilon = toreal(state.match); };
         levelskin_flow_n_freq            = 'flow_n_freq'         ws1 number %{ lev.genparams.flow_n_freq = toint(state.match); };
@@ -882,9 +887,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage_terrain |
             levelskin_exclusive_monsters | levelskin_exclusive_items | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
-            levelskin_number_vaults | levelskin_number_monsters | levelskin_number_items |
-            levelskin_number_features | levelskin_name | levelskin_treasure_level |
-            levelskin_random_vaults |
+            levelskin_number_vaults | levelskin_number_random_vaults | levelskin_number_monsters | 
+            levelskin_number_items | levelskin_number_features | levelskin_name | levelskin_treasure_level |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |

@@ -92,7 +92,8 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
 }
 
 
-inline void generate_vault(const Vault& vault, GameState& state,
+template <typename T>
+inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                            std::vector<summons_t>& summons, std::set<grid::pt>& affected,
                            std::vector<vault_packing_t>& packed, std::vector<grid::pt>& player_positions) {
 
@@ -137,19 +138,19 @@ inline void generate_vault(const Vault& vault, GameState& state,
 
             switch (vault.placement) {
             case Vault::placement_t::floor:
-                if (!state.grid.one_of_floor(state.rng, xy)) return;
+                if (!ptsource.one_of_floor(state.rng, xy)) return;
                 break;
             case Vault::placement_t::water:
-                if (!state.grid.one_of_lake(state.rng, xy)) return;
+                if (!ptsource.one_of_lake(state.rng, xy)) return;
                 break;
             case Vault::placement_t::corner:
-                if (!state.grid.one_of_corner(state.rng, xy)) return;
+                if (!ptsource.one_of_corner(state.rng, xy)) return;
                 break;
             case Vault::placement_t::shoreline:
-                if (!state.grid.one_of_shore(state.rng, xy)) return;
+                if (!ptsource.one_of_shore(state.rng, xy)) return;
                 break;
             case Vault::placement_t::lowlands:
-                if (!state.grid.one_of_lowlands(state.rng, xy)) return;
+                if (!ptsource.one_of_lowlands(state.rng, xy)) return;
                 break;
             default:
                 return;
@@ -253,6 +254,10 @@ inline void generate_vault(const Vault& vault, GameState& state,
                 }
                 break;
             }
+
+            case Vault::brush::design_t::type_t::LEVEL_ANY:
+                item = state.designs_counts.find(state.rng, b.design.level);
+                break;
             }
 
             if (!item.null()) {

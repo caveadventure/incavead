@@ -149,6 +149,22 @@ struct Map {
             lakemap.assign(g.lakemap.begin(), g.lakemap.end());
             lowlands.assign(g.lowlands.begin(), g.lowlands.end());
         }
+
+        template <typename T>
+        genmaps_t(const genmaps_t& maps, const T& g) : genmaps_t(g) {
+            nogens = maps.nogens;
+        }
+
+        void swap(genmaps_t&& maps) {
+            walkmap.swap(maps.walkmap);
+            floormap.swap(maps.floormap);
+            cornermap.swap(maps.cornermap);
+            shoremap.swap(maps.shoremap);
+            watermap.swap(maps.watermap);
+            lakemap.swap(maps.lakemap);
+            lowlands.swap(maps.lowlands);
+            nogens.swap(maps.nogens);
+        }
     };
 
 
