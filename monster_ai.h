@@ -102,6 +102,9 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
+    if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
+        return false;
+
     if (s.summon.size() > 0) {
 
         for (const auto& c : s.summon) {
@@ -129,9 +132,6 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                                  tag_t(), c.level, 1, m.tag, m.ally, c.msg);
         }        
     }
-
-    if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
-        return false;
 
     if (!s.morph.species.null()) {
 
