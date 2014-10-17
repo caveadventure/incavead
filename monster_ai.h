@@ -339,7 +339,7 @@ inline bool move_monster(Player& p, GameState& state,
             monsters::pt beeline_xy;
 
 
-            if (s.ai != Species::ai_t::magic && s.ai != Species::ai_t::magic_awake) {
+            if (s.ai != Species::ai_t::magic_none && s.ai != Species::ai_t::magic_none_awake) {
 
                 for (const auto& v_ : state.neigh(mxy)) {
 
@@ -385,7 +385,7 @@ inline bool move_monster(Player& p, GameState& state,
 
                 bool enemy_sleeping = (is_player ? p.sleep > 0 : other.sleep > 0);
 
-                if (enemy_sleeping && (s.ai == Species::ai_t::magic_awake || s.ai == Species::ai_t::seek_awake))
+                if (enemy_sleeping && (s.ai == Species::ai_t::magic_none_awake || s.ai == Species::ai_t::seek_awake))
                     continue;
 
                 
@@ -422,7 +422,7 @@ inline bool move_monster(Player& p, GameState& state,
 
             if (pri < 0) {
 
-                if (s.ai == Species::ai_t::magic || s.ai == Species::ai_t::magic_awake) {
+                if (s.ai == Species::ai_t::magic_none || s.ai == Species::ai_t::magic_none_awake) {
 
                     return false;
 
@@ -444,7 +444,8 @@ inline bool move_monster(Player& p, GameState& state,
                 if (possible_xy.empty())
                     return false;
 
-                if (!monster_walkable(state, s, target.first, target.second)) {
+                if (s.ai == Species::ai_t::magic_random ||
+                    !monster_walkable(state, s, target.first, target.second)) {
 
                     do_random = true;
 

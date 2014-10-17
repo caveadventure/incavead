@@ -233,13 +233,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'shoreline'         %{ spe.habitat = Species::habitat_t::shoreline; }         ; 
 
         ai = 
-            'none'           %{ spe.ai = Species::ai_t::none; }           |
-            'seek'           %{ spe.ai = Species::ai_t::seek; }           |
-            'random'         %{ spe.ai = Species::ai_t::random; }         |
-            'seek_awake'     %{ spe.ai = Species::ai_t::seek_awake; }     |
-            'magic'          %{ spe.ai = Species::ai_t::magic; }          |
-            'magic_awake'    %{ spe.ai = Species::ai_t::magic_awake; }    |
-            'suicide'        %{ spe.ai = Species::ai_t::suicide; }        ;
+            'none'             %{ spe.ai = Species::ai_t::none; }             |
+            'seek'             %{ spe.ai = Species::ai_t::seek; }             |
+            'random'           %{ spe.ai = Species::ai_t::random; }           |
+            'seek_awake'       %{ spe.ai = Species::ai_t::seek_awake; }       |
+            'magic_none'       %{ spe.ai = Species::ai_t::magic_none; }       |
+            'magic_none_awake' %{ spe.ai = Species::ai_t::magic_none_awake; } |
+            'suicide'          %{ spe.ai = Species::ai_t::suicide; }          |
+            'magic_random'     %{ spe.ai = Species::ai_t::magic_random; }     ;
 
         idle_ai = 
             'none'   %{ spe.idle_ai = Species::idle_ai_t::none; }   |

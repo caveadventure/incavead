@@ -67,8 +67,6 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
         vc = state.vaults_counts.take(state.rng, vaults_level, number_vaults, true);
     }
 
-    std::cout << "/// " << randomized << " " << number_vaults << " " << vc.size() << std::endl;
-
     std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
 
     for (const auto& vi : vc) {
@@ -82,8 +80,6 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
         for (const auto vi : tmp.second) {
 
             const Vault& v = vaults().get(vi.first);
-
-            std::cout << " + " << (v.pic.empty() ? "null" : v.pic.at(0)) << std::endl;
 
             for (unsigned int ci = 0; ci < vi.second; ++ci) {
                 generate_vault(v, state, ptsource, summons, affected, vault_packing, player_positions);
@@ -458,7 +454,6 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     for (const auto& mv : state.monsters.mgrid) {
         if (state.grid.walkmap.count(mv.first) == 0) {
-            std::cout << "!!! " << species().get(state.monsters.get(mv.first.first, mv.first.second).tag).name << std::endl;
             throw std::runtime_error("Sanity error 4");
         }
     }

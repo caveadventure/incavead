@@ -17,9 +17,10 @@ struct Species {
         seek,
         random,
         seek_awake,
-        magic,
-        magic_awake,
-        suicide
+        magic_none,
+        magic_none_awake,
+        suicide,
+        magic_random
     };
 
     enum class idle_ai_t : unsigned int {
