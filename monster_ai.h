@@ -204,11 +204,8 @@ inline bool is_closer(const monsters::pt& a, const monsters::pt& b, const monste
 inline bool move_monster(Player& p, GameState& state, 
                          std::vector<summons_t>& summons,
                          const monsters::pt& mxy, monsters::Monster& m, const Species& s,
-                         monsters::pt& nxy, bool& do_die,
-                         std::vector<double>& _1) {
+                         monsters::pt& nxy, bool& do_die) {
 
-    bm_s __1(_1[0]);
-    
     bool do_stop = false;
 
     unsigned int range = s.range;
@@ -312,8 +309,6 @@ inline bool move_monster(Player& p, GameState& state,
     bool full_empty;
     auto nearest = state.monsters.nearest.get(mxy.first, mxy.second, maxd2, full_empty);
 
-    bm_s __2(_1[1]);
-
     if (nearest.empty()) {
 
         // Short-path AI for out-of-range monsters.
@@ -334,8 +329,6 @@ inline bool move_monster(Player& p, GameState& state,
             do_random = true;
 
         } else {
-
-            bm_s __3(_1[2]);
 
             int pri = -1;
 
@@ -362,8 +355,6 @@ inline bool move_monster(Player& p, GameState& state,
             }
 
             for (const auto& i : nearest) {
-
-                bm_s __4(_1[3]);
 
                 const monsters::Monster& other = state.monsters.get(i.x, i.y);
 
@@ -483,10 +474,7 @@ inline bool move_monster(Player& p, GameState& state,
         }
     }
 
-    bm_s __5(_1[4]);
-            
     if (do_random) {
-        bm_s __6(_1[5]);
 
         if (!did_possible) {
 

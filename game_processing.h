@@ -346,8 +346,6 @@ void Game::process_world(GameState& state,
                          bool& done, bool& dead, bool& regen, bool& need_input, bool& do_draw) {
 
 
-    bm __("process_world");
-
     //
     const auto& consts = constants();
 
@@ -503,8 +501,7 @@ void Game::process_world(GameState& state,
                            std::bind(move_monster, std::ref(p), std::ref(state), std::ref(summons),
                                      std::placeholders::_1, std::placeholders::_2, 
                                      std::placeholders::_3, std::placeholders::_4,
-                                     std::placeholders::_5,
-                                     std::placeholders::_6),
+                                     std::placeholders::_5),
                            std::bind(conflict_monster, std::ref(p), std::ref(state),
                                      std::placeholders::_1, std::placeholders::_2,
                                      std::placeholders::_3, std::placeholders::_4));

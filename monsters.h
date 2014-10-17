@@ -556,10 +556,6 @@ struct Monsters {
     template <typename FUNC1, typename FUNC2>
     void process(grender::Grid& render, FUNC1 fmove, FUNC2 fconf) {
 
-        bm __("mprocess");
-        std::vector<double> __m;
-        __m.resize(6);
-
         size_t sbefore = mgrid.size();
 
         std::unordered_map< pt, std::vector< std::pair<pt,size_t> > > neuw;
@@ -580,7 +576,7 @@ struct Monsters {
             pt nxy;
             bool dead = false;
 
-            if (fmove(xy, m, s, nxy, dead, __m)) {
+            if (fmove(xy, m, s, nxy, dead)) {
 
                 if (dead) {
 
@@ -697,15 +693,9 @@ struct Monsters {
             
             throw std::runtime_error("Lost a monster in monster::process()!");
         }
-
-        for (size_t i = 0; i < __m.size(); ++i) {
-            std::cout << "moving" << i << ": " << __m[i] << std::endl;
-        }
     }
 
     void find_nearest(unsigned int w, unsigned int h, unsigned int px, unsigned int py) {
-
-        bm __("delaunay");
 
         unsigned int ai_radius = constants().ai_radius;
 

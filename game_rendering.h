@@ -267,28 +267,28 @@ void Game::draw_hud(GameState& state) {
         state.render.push_hud_line("Sleep", maudit::color::bright_red,
                                    std::min(p.sleep / 15 + 1, (unsigned int)6), 
                                    '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
     }
 
     if (p.blind > 0) {
         state.render.push_hud_line("Blind", maudit::color::bright_red,
                                    std::min(p.blind / constants().blindturns_to_radius + 1, (unsigned int)6), 
                                    '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
     }
 
     if (p.stun > 0) {
         state.render.push_hud_line("Stunned", maudit::color::bright_red,
                                    std::min(p.stun / 15 + 1, (unsigned int)6), 
                                    '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
     }
 
     if (p.fear > 0) {
         state.render.push_hud_line("Scared", maudit::color::bright_red,
                                    std::min(p.fear / 15 + 1, (unsigned int)6), 
                                    '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::dim_red));
+                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
     }
 
     if (p.digging) {
