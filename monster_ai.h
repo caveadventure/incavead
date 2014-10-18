@@ -420,6 +420,11 @@ inline bool move_monster(Player& p, GameState& state,
                 enemy_ally = (is_player ? tag_t() : other.ally);
             }
 
+            // HACK
+            if (!m.ally.null() && enemy_is_player && maxd2 <= 2) {
+                pri = -1;
+            }
+
             if (pri < 0) {
 
                 if (s.ai == Species::ai_t::magic_none || s.ai == Species::ai_t::magic_none_awake) {
