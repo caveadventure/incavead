@@ -132,39 +132,4 @@ bool path_walk(GameState& state,
     return true;
 }
 
-inline bool make_monster_run(GameState& state, unsigned int px, unsigned int py, 
-                             const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
-
-    unsigned int radius = std::max(1u, s.range / 2);
-
-    std::unordered_set<neighbors::pt> ns;
-
-    radial_points(mxy.first, mxy.second, state, radius, ns, 
-                  [&s,&m](GameState& state, unsigned int x, unsigned int y) {
-                      return monster_walkable(state, s, x, y);
-                  });
-
-    double maxd = 0.0;
-    monsters::pt maxn;
-
-    for (const auto& z : ns) {
-
-        double dist = distance(px, py, z.first, z.second);
-
-        if (dist > maxd) {
-            maxd = dist;
-            maxn = z;
-        }
-    }
-
-    if (maxd == 0.0) {
-
-        m.target = mxy;
-        return false;
-    }
-
-    m.target = maxn;
-    return true;
-}
-
 #endif

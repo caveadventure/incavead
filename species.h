@@ -131,10 +131,11 @@ struct Species {
         bool terrain_immune;
         bool eyeless;
         bool cosmic;
-
+        bool stealthy;
+        
         flags_t() : 
             undead(false), animal(false), magic(false), plant(false), robot(false), 
-            terrain_immune(false), eyeless(false), cosmic(false)
+            terrain_immune(false), eyeless(false), cosmic(false), stealthy(false)
             {}
     };
 

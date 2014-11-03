@@ -102,6 +102,9 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
+    if (m.magic <= -3.0 || m.fear > 0) 
+        return false;
+                    
     if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
         return false;
 
@@ -199,12 +202,52 @@ inline bool is_closer(const monsters::pt& a, const monsters::pt& b, const monste
     return false;
 }
 
+inline void find_furthest(const std::vector<monsters::pt>& possible_xy,
+                          const monsters::pt& beeline_xy, const monsters::pt& target,
+                          monsters::pt& nxy) {
+
+    bool found = false;
+
+    for (const auto& v : possible_xy) {
+
+        if (!found) {
+            nxy = v;
+            found = true;
+
+        } else if (!is_closer(v, nxy, target)) {
+            nxy = v;
+        }
+    }
+}
+    
+inline void find_closest(const std::vector<monsters::pt>& possible_xy,
+                         const monsters::pt& beeline_xy, const monsters::pt& target,
+                         monsters::pt& nxy) {
+
+    bool found = false;
+
+    for (const auto& v : possible_xy) {
+
+        if (beeline_xy == v) {
+            nxy = v;
+            break;
+
+        } else if (!found) {
+            nxy = v;
+            found = true;
+
+        } else if (is_closer(v, nxy, target)) {
+            nxy = v;
+        }
+    }
 }
 
-inline bool move_monster(Player& p, GameState& state, 
-                         std::vector<summons_t>& summons,
-                         const monsters::pt& mxy, monsters::Monster& m, const Species& s,
-                         monsters::pt& nxy, bool& do_die) {
+}
+
+inline bool move_monster_main(Player& p, GameState& state, 
+                              std::vector<summons_t>& summons,
+                              const monsters::pt& mxy, monsters::Monster& m, const Species& s,
+                              monsters::pt& nxy, bool& do_die) {
 
     bool do_stop = false;
 
@@ -270,7 +313,6 @@ inline bool move_monster(Player& p, GameState& state,
         return false;
     }
 
-    monsters::pt target(p.px, p.py);
 
     if (m.sleep > 0) {
         --(m.sleep);
@@ -283,14 +325,6 @@ inline bool move_monster(Player& p, GameState& state,
 
     if (m.fear > 0) {
         --(m.fear);
-
-        if (m.target == mxy) {
-
-            if (!make_monster_run(state, p.px, p.py, mxy, m, s))
-                return false;
-        }
-
-        target = m.target;
     }
 
     if (m.blind > 0) {
@@ -440,8 +474,7 @@ inline bool move_monster(Player& p, GameState& state,
 
                 // We found a target.
 
-                if (m.magic > -3.0 &&
-                    do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
+                if (do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
  
                     return false;
                 }
@@ -456,21 +489,13 @@ inline bool move_monster(Player& p, GameState& state,
 
                 } else {
 
-                    bool found = false;
+                    if (m.fear > 0) {
 
-                    for (const auto& v : possible_xy) {
+                        find_furthest(possible_xy, beeline_xy, target, nxy);
 
-                        if (beeline_xy == v) {
-                            nxy = v;
-                            break;
+                    } else {
 
-                        } else if (!found) {
-                            nxy = v;
-                            found = true;
-
-                        } else if (is_closer(v, nxy, target)) {
-                            nxy = v;
-                        }
+                        find_closest(possible_xy, beeline_xy, target, nxy);
                     }
 
                     // OK! If we got here, then 'nxy' holds a valid move and the monster
@@ -572,6 +597,24 @@ inline bool move_monster(Player& p, GameState& state,
 
     return true;
 }
+
+
+inline bool move_monster(Player& p, GameState& state, 
+                         std::vector<summons_t>& summons,
+                         const monsters::pt& mxy, monsters::Monster& m, const Species& s,
+                         monsters::pt& nxy, bool& do_die) {
+
+    bool moved = move_monster(p, state, summons, mxy, m, s, nxy, do_die);
+
+    if (s.flags.stealthy && !moved && !do_die) {
+
+        m.hidden = true;
+        state.render.invalidate(mxy.first, mxy.second);
+    }
+    
+    return moved;
+}
+    
 
 inline int conflict_monster(Player& p, GameState& state, 
                             const monsters::pt& mxya, monsters::Monster& ma, 

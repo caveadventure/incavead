@@ -68,7 +68,7 @@ struct Main {
     GAMEOPTIONS options;
     GAMESTATE state;
 
-    static const unsigned int SAVEFILE_VERSION = 20;
+    static const unsigned int SAVEFILE_VERSION = 21;
 
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 

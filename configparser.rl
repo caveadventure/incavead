@@ -332,6 +332,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_robot  = 'robot'  %{ spe.flags.robot = true; } ;
         species_cosmic = 'cosmic' %{ spe.flags.cosmic = true; } ;
 
+        species_stealthy = 'stealthy' %{ spe.flags.stealthy = true; } ;
+
         species_terrain_immune = 'terrain_immune' %{ spe.flags.terrain_immune = true; } ;
 
         species_eyeless = 'eyeless' %{ spe.flags.eyeless = true; } ;
@@ -361,7 +363,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_cosmic | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
-            species_morph | species_hunger_rate | species_ally |
+            species_morph | species_hunger_rate | species_ally | species_stealthy |
             '}'
             ${ fret; })
             ;

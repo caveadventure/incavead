@@ -127,7 +127,7 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
         monsters::Monster& mon = state.monsters.get(x, y);
 
-        if (!mon.null()) {
+        if (!mon.null() && !mon.hidden) {
 
             const Species& s = species().get(mon.tag);
 

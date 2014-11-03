@@ -20,13 +20,15 @@ struct Monster {
     unsigned int blind;
     unsigned int fear;
     bool did_attack;
+    bool hidden;
     tag_t ally;
-    pt target;
 
-    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false) {}
+    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false),
+                hidden(false) {}
 
     Monster(tag_t _tag, size_t ser, tag_t a) : 
-        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false), ally(a)
+        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false),
+        hidden(false), ally(a)
         {}
 
     bool null() const {
@@ -52,8 +54,8 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.blind);
         serialize::read(s, m.fear);
         serialize::read(s, m.did_attack);
+        serialize::read(s, m.hidden);
         serialize::read(s, m.ally);
-        serialize::read(s, m.target);
     }
 };
 
@@ -69,8 +71,8 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.blind);
         serialize::write(s, m.fear);
         serialize::write(s, m.did_attack);
+        serialize::write(s, m.hidden);
         serialize::write(s, m.ally);
-        serialize::write(s, m.target);
     }
 };
 
@@ -570,7 +572,8 @@ struct Monsters {
             Monster& m = get(m_num);
 
             m.did_attack = false;
-
+            m.hidden = false;
+            
             const Species& s = species().get(m.tag);
 
             pt nxy;
