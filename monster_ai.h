@@ -604,7 +604,7 @@ inline bool move_monster(Player& p, GameState& state,
                          const monsters::pt& mxy, monsters::Monster& m, const Species& s,
                          monsters::pt& nxy, bool& do_die) {
 
-    bool moved = move_monster(p, state, summons, mxy, m, s, nxy, do_die);
+    bool moved = move_monster_main(p, state, summons, mxy, m, s, nxy, do_die);
 
     if (s.flags.stealthy && !moved && !do_die) {
 
