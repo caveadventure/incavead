@@ -17,12 +17,13 @@ using key_t = worldkey::key_t;
 
 struct Features {
 
-    static const size_t NUMBER = 150;
+    static const size_t NUMBER = 300;
 
     struct terrain_t {
         tag_t feat;
         bool walk;
         bool water;
+        std::string message;
     };
 
     struct q_t {
@@ -41,7 +42,7 @@ struct Features {
     Features() : max_level_feats(NUMBER) {}
 
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, bool walk, bool water) {
+    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, bool walk, bool water, const std::string& message) {
 
         key_t key(p);
         pt xy(x, y);
@@ -49,7 +50,7 @@ struct Features {
         std::unique_lock<std::mutex> l(mutex);
 
         auto& m = data[key];
-        m.l.push_back(std::make_pair(xy, terrain_t{feat, walk, water}));
+        m.l.push_back(std::make_pair(xy, terrain_t{feat, walk, water, message}));
         ++m.size;
 
         while (m.size > max_level_feats) {
@@ -66,26 +67,28 @@ struct Features {
             serialize::write(sink, walk);
             serialize::write(sink, water);
         }
+
+        serialize::write(sink, message);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat) {
-        add(p, x, y, feat, true, false);
+    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, const std::string& message = "") {
+        add(p, x, y, feat, true, false, message);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, bool walk, bool water) {
-        add(p, x, y, tag_t(), walk, water);
+    void add(const PLAYER& p, unsigned int x, unsigned int y, bool walk, bool water, const std::string& message = "") {
+        add(p, x, y, tag_t(), walk, water, message);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, tag_t feat) {
-        add(p, p.px, p.py, feat);
+    void add(const PLAYER& p, tag_t feat, const std::string& message = "") {
+        add(p, p.px, p.py, feat, message);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, bool walk, bool water) {
-        add(p, p.px, p.py, walk, water);
+    void add(const PLAYER& p, bool walk, bool water, const std::string& message = "") {
+        add(p, p.px, p.py, walk, water, message);
     }
 
     void load(size_t _max = NUMBER) {
@@ -113,8 +116,11 @@ struct Features {
                         serialize::read(source, water);
                     }
 
+                    std::string message;
+                    serialize::read(source, message);
+                    
                     auto& m = data[key];
-                    m.l.push_back(std::make_pair(xy, terrain_t{tag, walk, water}));
+                    m.l.push_back(std::make_pair(xy, terrain_t{tag, walk, water, message}));
                     ++m.size;
 
                 } catch (...) {

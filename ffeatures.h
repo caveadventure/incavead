@@ -57,6 +57,8 @@ struct Features {
 
     std::unordered_map<pt, Feature> feats;
 
+    std::unordered_map<pt, std::string> labels;
+    
     void init() {
         feats.clear();
     }
@@ -85,6 +87,24 @@ struct Features {
             feats.erase(i);
             render.invalidate(x, y);
         }
+    }
+
+    void label(unsigned int x, unsigned int y, const std::string& s) {
+        labels[pt(x, y)] = s;
+    }
+
+    std::string label(unsigned int x, unsigned int y) {
+
+        pt xy(x, y);
+
+        auto i = labels.find(xy);
+
+        if (i != labels.end()) {
+
+            return i->second;
+        }
+
+        return "";
     }
 
     void set(unsigned int x, unsigned int y, tag_t tag, grender::Grid& render) {

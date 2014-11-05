@@ -39,7 +39,18 @@ void move_player(const Player& p, GameState& state) {
         if (state.features.get(p.px, p.py, feat)) {
             const Terrain& t = terrain().get(feat.tag);
 
-            if (t.name.size() > 0) {
+            if (t.message.size() > 0) {
+
+                std::string label = state.features.label(p.px, p.py);
+
+                if (label.size() > 0) {
+                    state.render.do_message(label);
+
+                } else {
+                    state.render.do_message(t.message); 
+                }
+
+            } else if (t.name.size() > 0) {
                 state.render.do_message(nlp::message("There is %s here.", t));
             }
         }

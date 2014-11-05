@@ -287,7 +287,8 @@ void Game::generate(GameState& state, FUNC progressbar) {
             tag_t tag = i.second.feat;
             bool walk = i.second.walk;
             bool water = i.second.water;
-
+            const std::string& message = i.second.message;
+            
             features::Feature feat;
             if (state.features.get(x, y, feat)) {
 
@@ -303,6 +304,10 @@ void Game::generate(GameState& state, FUNC progressbar) {
             } else {
                 state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
                 state.features.set(x, y, tag, state.render);
+            }
+
+            if (message.size() > 0) {
+                state.features.label(x, y, message);
             }
         }
     }
