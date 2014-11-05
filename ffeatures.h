@@ -241,6 +241,7 @@ template <>
 struct reader<features::Features> {
     void read(Source& s, features::Features& t) {
         serialize::read(s, t.feats);
+        serialize::read(s, t.labels);
     }
 };
 
@@ -248,6 +249,7 @@ template <>
 struct writer<features::Features> {
     void write(Sink& s, const features::Features& t) {
         serialize::write(s, t.feats);
+        serialize::write(s, t.labels);
     }
 };
 
