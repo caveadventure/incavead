@@ -1010,7 +1010,7 @@ void handle_input_overmap(Player& p, GameState& state, maudit::keypress k) {
     }
 }
 
-bool handle_input_input(GameState& state, std::string& input_string, maudit::keypress k) {
+bool handle_input_input(GameState& state, std::string& input_string, int limit, maudit::keypress k) {
 
     if (k.letter == '\n') {
         return false;
@@ -1028,6 +1028,9 @@ bool handle_input_input(GameState& state, std::string& input_string, maudit::key
 
     } else if (k.letter >= ' ' && k.letter <= '~') {
 
+        if (limit >= 0 && input_string.size() >= (size_t)limit)
+            return true;
+        
         unsigned char letter = k.letter;
 
         state.render.replace_message([letter](std::string& msg) {
@@ -1101,7 +1104,7 @@ void Game::handle_input(GameState& state, GameOptions& options,
 
     if (p.state & Player::INPUTTING) {
 
-        if (!handle_input_input(state, p.input.s, k)) {
+        if (!handle_input_input(state, p.input.s, p.input.limit, k)) {
 
             if (p.state & Player::WISHING) {
 
@@ -1119,6 +1122,11 @@ void Game::handle_input(GameState& state, GameOptions& options,
                     ++(state.ticks);
                 }
 
+            } else if (p.state & Player::LABELLING) {
+
+                state.features.label(p.px, p.py, p.input.s);
+                permafeats::features().add(p, p.input.s);
+                
             } else if (p.state & Player::SELFNOTE) {
                 state.render.do_message(">>> " + p.input.s);
             }

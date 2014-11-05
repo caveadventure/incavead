@@ -14,6 +14,26 @@ typedef std::pair<unsigned int, unsigned int> pt;
 
 using key_t = worldkey::key_t;
 
+struct tristate_t {
+    int v;
+
+    tristate_t() : v(-1) {}
+    tristate_t(bool _v) : v(_v ? 1 : 0) {}
+
+    bool is(bool x) const {
+        return (v >= 0 && (x ? v == 1 : v == 0));
+    }
+
+    bool set() const {
+        return (v >= 0);
+    }
+    
+    void set(tristate_t x) {
+        if (x.v >= 0)
+            v = x.v;
+    }
+};
+
 
 struct Features {
 
@@ -21,9 +41,10 @@ struct Features {
 
     struct terrain_t {
         tag_t feat;
-        bool walk;
-        bool water;
-        std::string message;
+        tristate_t walk;
+        tristate_t water;
+        tristate_t label;
+        std::string text;
     };
 
     struct q_t {
@@ -41,54 +62,92 @@ struct Features {
 
     Features() : max_level_feats(NUMBER) {}
 
+    void _append(const key_t& key, const pt& xy,
+                 tag_t feat, tristate_t walk, tristate_t water, tristate_t label, const std::string& text) {
+
+        auto& m = data[key];
+
+        if (m.size > 0 && m.l.back().first == xy) {
+
+            terrain_t& last = m.l.back().second;
+
+            if (!feat.null()) {
+                last.feat = feat;
+            }
+
+            last.walk.set(walk);
+            last.water.set(water);
+            last.label.set(label);
+            
+            if (label.is(true)) {
+                last.text = text;
+            }
+
+        } else {
+        
+            m.l.push_back(std::make_pair(xy, terrain_t{feat, walk, water, label, text}));
+            ++m.size;
+
+            while (m.size > max_level_feats) {
+                m.l.pop_front();
+                --m.size;
+            }
+        }
+    }
+
+    
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, bool walk, bool water, const std::string& message) {
+    void add(const PLAYER& p, unsigned int x, unsigned int y,
+             tag_t feat, tristate_t walk, tristate_t water, tristate_t label, const std::string& text = "") {
 
         key_t key(p);
         pt xy(x, y);
 
         std::unique_lock<std::mutex> l(mutex);
 
-        auto& m = data[key];
-        m.l.push_back(std::make_pair(xy, terrain_t{feat, walk, water, message}));
-        ++m.size;
-
-        while (m.size > max_level_feats) {
-            m.l.pop_front();
-            --m.size;
-        }
+        _append(key, xy, feat, walk, water, label, text);
 
         serialize::Sink sink("permafeats.dat", true);
         serialize::write(sink, key);
         serialize::write(sink, xy);
         serialize::write(sink, feat);
-
-        if (feat.null()) {
-            serialize::write(sink, walk);
-            serialize::write(sink, water);
+        serialize::write(sink, walk.v);
+        serialize::write(sink, water.v);
+        serialize::write(sink, label.v);
+        
+        if (label.is(true)) {
+            serialize::write(sink, text);
         }
-
-        serialize::write(sink, message);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat, const std::string& message = "") {
-        add(p, x, y, feat, true, false, message);
+    void add(const PLAYER& p, unsigned int x, unsigned int y, tag_t feat) {
+        add(p, x, y, feat, tristate_t(), tristate_t(), tristate_t());
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, unsigned int x, unsigned int y, bool walk, bool water, const std::string& message = "") {
-        add(p, x, y, tag_t(), walk, water, message);
+    void add(const PLAYER& p, unsigned int x, unsigned int y, bool walk, bool water) {
+        add(p, x, y, tag_t(), walk, water, tristate_t());
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, tag_t feat, const std::string& message = "") {
-        add(p, p.px, p.py, feat, message);
+    void add(const PLAYER& p, unsigned int x, unsigned int y, const std::string& label) {
+        add(p, x, y, tag_t(), tristate_t(), tristate_t(), tristate_t(!label.empty()), label);
     }
 
     template <typename PLAYER>
-    void add(const PLAYER& p, bool walk, bool water, const std::string& message = "") {
-        add(p, p.px, p.py, walk, water, message);
+    void add(const PLAYER& p, tag_t feat) {
+        add(p, p.px, p.py, feat);
+    }
+
+    template <typename PLAYER>
+    void add(const PLAYER& p, bool walk, bool water) {
+        add(p, p.px, p.py, walk, water);
+    }
+
+    template <typename PLAYER>
+    void add(const PLAYER& p, const std::string& label) {
+        add(p, p.px, p.py, label);
     }
 
     void load(size_t _max = NUMBER) {
@@ -108,20 +167,21 @@ struct Features {
                     serialize::read(source, xy);
                     serialize::read(source, tag);
 
-                    bool walk = true;
-                    bool water = false;
+                    tristate_t walk;
+                    tristate_t water;
+                    tristate_t label;
 
-                    if (tag.null()) {
-                        serialize::read(source, walk);
-                        serialize::read(source, water);
+                    serialize::read(source, walk.v);
+                    serialize::read(source, water.v);
+                    serialize::read(source, label.v);
+
+                    std::string text;
+
+                    if (label.is(true)) {
+                        serialize::read(source, text);
                     }
 
-                    std::string message;
-                    serialize::read(source, message);
-                    
-                    auto& m = data[key];
-                    m.l.push_back(std::make_pair(xy, terrain_t{tag, walk, water, message}));
-                    ++m.size;
+                    _append(key, xy, tag, walk, water, label, text);
 
                 } catch (...) {
                     break;
@@ -129,13 +189,6 @@ struct Features {
             }
 
         } catch (...) {
-        }
-
-        for (auto& i : data) {
-            while (i.second.size > max_level_feats) {
-                i.second.l.pop_front();
-                --i.second.size;
-            }
         }
     }
 

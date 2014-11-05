@@ -161,11 +161,15 @@ struct Player {
     static const unsigned int CLOUDING       = 0x2000;
     static const unsigned int P_CLOUDING     = 0x4000;
     static const unsigned int P_BLASTING     = 0x8000;
+    static const unsigned int LABELLING      = 0x10000;
 
     unsigned int state;
 
     struct input_state_t {
         std::string s;
+        int limit;
+
+        input_state_t() : limit(-1) {}
     };
 
     input_state_t input;
@@ -479,6 +483,7 @@ struct reader<Player> {
         serialize::read(s, p.kills);
         serialize::read(s, p.achievements);
         serialize::read(s, p.input.s);
+        serialize::read(s, p.input.limit);
         serialize::read(s, p.overmap.scale);
         serialize::read(s, p.num_replay_codes);
         serialize::read(s, p.ailments);
@@ -542,6 +547,7 @@ struct writer<Player> {
         serialize::write(s, p.kills);
         serialize::write(s, p.achievements);
         serialize::write(s, p.input.s);
+        serialize::write(s, p.input.limit);
         serialize::write(s, p.overmap.scale);
         serialize::write(s, p.num_replay_codes);
         serialize::write(s, p.ailments);

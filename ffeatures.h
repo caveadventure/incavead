@@ -90,7 +90,15 @@ struct Features {
     }
 
     void label(unsigned int x, unsigned int y, const std::string& s) {
-        labels[pt(x, y)] = s;
+
+        pt xy(x, y);
+            
+        if (s.empty()) {
+            labels.erase(xy);
+
+        } else {
+            labels[xy] = s;
+        }
     }
 
     std::string label(unsigned int x, unsigned int y) {

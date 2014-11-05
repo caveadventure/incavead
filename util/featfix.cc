@@ -32,17 +32,21 @@ int main(int argc, char** argv) {
                     serialize::read(source, water);
                 }
 
+                //
+                
                 serialize::write(sink, key);
                 serialize::write(sink, xy);
                 serialize::write(sink, tag);
 
-                if (tag.null()) {
+                if (!tag.null()) {
+                    serialize::write(sink, -1);
+                    serialize::write(sink, -1);
+                } else {
                     serialize::write(sink, walk);
                     serialize::write(sink, water);
                 }
 
-                std::string message;
-                serialize::write(sink, message);
+                serialize::write(sink, -1);
 
             } catch (...) {
                 break;

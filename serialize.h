@@ -138,9 +138,9 @@ struct writer<std::string> {
 
 template <>
 struct reader<std::string> {
-    void read(Source& s, std::string& t) {
-        size_t n;
-        s >> n;
+
+    void read(Source& s, std::string& t, size_t n) {
+
         t.clear();
 
         s >> std::noskipws;
@@ -154,6 +154,13 @@ struct reader<std::string> {
             t += c;
         }
         s >> std::skipws;
+    }
+
+    void read(Source& s, std::string& t) {
+        size_t n;
+        s >> n;
+
+        read(s, t, n);
     }
 };
 

@@ -2,9 +2,10 @@
 #define __ACTIONS_H
 
 
-void do_player_input(GameState& state, Player& p, const std::string& prompt) {
+void do_player_input(GameState& state, Player& p, const std::string& prompt, int limit = -1) {
 
     p.input.s.clear();
+    p.input.limit = limit;
     state.render.do_message(prompt, true);
     p.state = Player::INPUTTING;
 }
@@ -17,6 +18,12 @@ void do_player_wish(GameState& state, Player& p, bool special) {
     if (special) {
         p.state |= Player::SPECIAL_WISH;
     }
+}
+
+void do_player_label(GameState& state, Player& p, int limit) {
+
+    do_player_input(state, p, "Write what: >>> ", limit);
+    p.state |= Player::LABELLING;
 }
 
 void move_player(const Player& p, GameState& state) {
@@ -44,10 +51,10 @@ void move_player(const Player& p, GameState& state) {
                 std::string label = state.features.label(p.px, p.py);
 
                 if (label.size() > 0) {
-                    state.render.do_message(label);
+                    state.render.do_message(nlp::message("\"%s\"", label));
 
                 } else {
-                    state.render.do_message(t.message); 
+                    state.render.do_message(nlp::message("\"%s\"", t.message));
                 }
 
             } else if (t.name.size() > 0) {

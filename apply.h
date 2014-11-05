@@ -383,6 +383,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         defend(p, defenses, p.get_computed_level(state.rng), d, state);
     }
 
+    if (d.label_spot) {
+
+        // HACK!
+        // Hardcoded constants!
+        do_player_label(state, p, 38);
+        ret = true;
+    }
+
     if (ret && !d.use_for_free) {
 
         ++(state.ticks);

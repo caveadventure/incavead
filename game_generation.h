@@ -284,11 +284,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
         for (const auto& i : feats) {
             unsigned int x = i.first.first;
             unsigned int y = i.first.second;
-            tag_t tag = i.second.feat;
-            bool walk = i.second.walk;
-            bool water = i.second.water;
-            const std::string& message = i.second.message;
-            
+
             features::Feature feat;
             if (state.features.get(x, y, feat)) {
 
@@ -298,16 +294,19 @@ void Game::generate(GameState& state, FUNC progressbar) {
                     continue;
             }
 
-            if (tag.null()) {
-                state.grid.set_walk_water(state.neigh, x, y, walk, water);
+            const auto& spec = i.second;
 
-            } else {
-                state.grid.set_walk_water(state.neigh, x, y, true, state.grid.is_water(x, y));
-                state.features.set(x, y, tag, state.render);
+            if (spec.walk.set() && spec.water.set()) {
+
+                state.grid.set_walk_water(state.neigh, x, y, spec.walk.is(true), spec.water.is(true));
             }
 
-            if (message.size() > 0) {
-                state.features.label(x, y, message);
+            if (!spec.feat.null()) {
+                state.features.set(x, y, spec.feat, state.render);
+            }
+
+            if (spec.label.set()) {
+                state.features.label(x, y, spec.text);
             }
         }
     }
