@@ -33,7 +33,8 @@ struct Species {
         floor,
         water,
         corner,
-        shoreline
+        shoreline,
+        rock
     };
 
     tag_t tag;
@@ -52,6 +53,8 @@ struct Species {
     idle_ai_t idle_ai;
     move_t move;
 
+    double digging;
+    
     unsigned int range;
 
     struct mean_deviation_t {
@@ -179,7 +182,7 @@ struct Species {
     tag_t ally;
 
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), range(0), clumpsize(), flags(), karma(0), hunger_rate(NAN) {}
+                move(move_t::walk), digging(0), range(0), clumpsize(), flags(), karma(0), hunger_rate(NAN) {}
 
 
     unsigned int get_computed_level() const {

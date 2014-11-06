@@ -50,7 +50,6 @@ inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigne
                                          return;
                                  }
 
-
                                  if (!state.grid.is_walk(_x, _y)) return;
 
                                  state.features.set(_x, _y, terraintag, state.render);
@@ -541,6 +540,17 @@ inline bool move_monster_main(Player& p, GameState& state,
             return false;
     }
 
+    if (!state.grid.is_walk(nxy.first, nxy.second)) {
+
+        if (digging_step(state, nxy.first, nxy.second, s.digging)) {
+
+            state.render.do_message("You hear a loud crashing noise.");
+
+        } else {
+            return false;
+        }
+    }
+    
     if (nxy.first == p.px && nxy.second == p.py) {
 
         if (s.ai == Species::ai_t::suicide) {

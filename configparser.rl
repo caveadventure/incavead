@@ -251,7 +251,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'floor'     %{ spe.move = Species::move_t::floor; }     | 
             'water'     %{ spe.move = Species::move_t::water; }     |
             'corner'    %{ spe.move = Species::move_t::corner; }    |
-            'shoreline' %{ spe.move = Species::move_t::shoreline; } ;
+            'shoreline' %{ spe.move = Species::move_t::shoreline; } |
+            'rock'      %{ spe.move = Species::move_t::rock; }      ;
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;
@@ -266,6 +267,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
         species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
         species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); } ;
+
+        species_digging = 'digging' ws1 real %{ spe.digging = toreal(state.match); } ;
 
         species_clumpsize = 'clumpsize' 
             ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
@@ -363,7 +366,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_cosmic | species_terrain_immune | species_eyeless |
             species_karma | species_blast | species_true_level | species_trail | species_steal |
-            species_morph | species_hunger_rate | species_ally | species_stealthy |
+            species_morph | species_hunger_rate | species_ally | species_stealthy | species_digging |
             '}'
             ${ fret; })
             ;

@@ -55,8 +55,8 @@ inline bool monster_walkable(GameState& state, const Species& s, unsigned int x,
 }
 
 template <typename FUNC>
-inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by,
-                      FUNC f) {
+bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsigned int bx, unsigned int by,
+               FUNC f) {
 
     bresenham::Line line(ax, ay, bx, by);
 
@@ -80,8 +80,8 @@ inline bool reachable(GameState& state, unsigned int ax, unsigned int ay, unsign
 }
 
 template <typename FUNC>
-inline void radial_points(unsigned int px, unsigned int py, GameState& state, unsigned int radius, 
-                          std::unordered_set<neighbors::pt>& points, FUNC f) {
+void radial_points(unsigned int px, unsigned int py, GameState& state, unsigned int radius, 
+                   std::unordered_set<neighbors::pt>& points, FUNC f) {
 
     unsigned int r2 = radius * radius;
 
@@ -131,5 +131,25 @@ bool path_walk(GameState& state,
 
     return true;
 }
+
+inline bool digging_step(GameState& state, unsigned int x, unsigned int y, double speed) {
+
+    float& height = state.grid._get(x, y);
+
+    height -= speed;
+
+    if (height < -10) {
+        height = -10;
+            
+        bool water = state.grid.is_water(x, y);
+
+        state.grid.set_walk_water(state.neigh, x, y, true, water);
+        state.render.invalidate(x, y);
+        return true;
+    }
+
+    return false;
+}
+
 
 #endif

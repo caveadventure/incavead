@@ -130,6 +130,10 @@ struct Monsters {
             if (!grid.is_shore(x, y)) return false;
             break;
 
+        case Species::move_t::rock:
+            if (!grid.is_corner(x, y) && grid.is_walk(x, y)) return false;
+            break;
+            
         default:
             if (!grid.is_walk(x, y)) return false;
             break;
