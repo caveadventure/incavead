@@ -251,8 +251,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             'floor'     %{ spe.move = Species::move_t::floor; }     | 
             'water'     %{ spe.move = Species::move_t::water; }     |
             'corner'    %{ spe.move = Species::move_t::corner; }    |
-            'shoreline' %{ spe.move = Species::move_t::shoreline; } |
-            'rock'      %{ spe.move = Species::move_t::rock; }      ;
+            'shoreline' %{ spe.move = Species::move_t::shoreline; } ;
 
         species_count       = 'count'       ws1 number     %{ spe.count = toint(state.match); } ;
         species_name        = 'name'        ws1 string     %{ spe.name = state.match; } ;

@@ -19,9 +19,9 @@ inline double distance(double ax, double ay, double bx, double by) {
     return ::sqrt(q*q + p*p);
 }
 
-inline bool player_walkable(GameState& state, unsigned int x, unsigned int y) {
+inline bool player_walkable(GameState& state, unsigned int x, unsigned int y, bool walk_rock = false) {
 
-    if (!state.grid.is_walk(x, y))
+    if (!walk_rock && !state.grid.is_walk(x, y))
         return false;
 
     features::Feature feat;

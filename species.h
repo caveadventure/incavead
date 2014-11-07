@@ -33,8 +33,7 @@ struct Species {
         floor,
         water,
         corner,
-        shoreline,
-        rock
+        shoreline
     };
 
     tag_t tag;

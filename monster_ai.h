@@ -426,9 +426,9 @@ inline bool move_monster_main(Player& p, GameState& state,
                 monsters::pt bxy;
 
                 bool ok = reachable(state, mxy.first, mxy.second, i.x, i.y, 
-                                    [&tmpnn,&bxy](GameState& state, unsigned int x, unsigned int y) {
+                                    [&tmpnn,&bxy,&s](GameState& state, unsigned int x, unsigned int y) {
 
-                                        if (!player_walkable(state, x, y))
+                                        if (!player_walkable(state, x, y, (s.digging > 0)))
                                             return false;
 
                                         ++tmpnn;

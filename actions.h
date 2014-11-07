@@ -102,6 +102,12 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
 
         const Species& s = species().get(poly);
 
+        if (s.digging > 0 && !state.grid.is_walk(nx, ny)) {
+
+            if (!digging_step(state, nx, ny, s.digging))
+                return;
+        }
+
         switch (s.move) {
 
         case Species::move_t::floor:
@@ -119,21 +125,12 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
         case Species::move_t::shoreline:
             if (!state.grid.is_shore(nx, ny)) return;
             break;
-
-        case Species::move_t::rock:
-            if (!state.grid.is_corner(nx, ny) && state.grid.is_walk(nx, ny)) return;
-            break;
             
         default:
             if (!state.grid.is_walk(nx, ny)) return;
             break;
         }
 
-        if (!state.grid.is_walk(nx, ny)) {
-
-            if (!digging_step(state, nx, ny, s.digging))
-                return;
-        }
     }
 
     monsters::Monster& mon = state.monsters.get(nx, ny);

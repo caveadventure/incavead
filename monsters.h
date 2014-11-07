@@ -113,6 +113,9 @@ struct Monsters {
 
     static bool is_walkable(const grid::Map& grid, const Species& s, unsigned int x, unsigned int y) {
 
+        if (s.digging > 0 && !grid.is_walk(x, y))
+            return true;
+        
         switch (s.move) {
         case Species::move_t::floor: 
             if (!grid.is_floor(x, y)) return false;
@@ -128,10 +131,6 @@ struct Monsters {
 
         case Species::move_t::shoreline:
             if (!grid.is_shore(x, y)) return false;
-            break;
-
-        case Species::move_t::rock:
-            if (!grid.is_corner(x, y) && grid.is_walk(x, y)) return false;
             break;
             
         default:
