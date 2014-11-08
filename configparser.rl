@@ -258,6 +258,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_skin        = 'skin'        ws1 skin       %{ spe.skin.set(SKINS); } ;
         species_true_level  = 'true_level'  ws1 number     %{ spe.true_level = toint(state.match); } ;
         species_genus       = 'genus'       ws1 tag        %{ spe.genus = tag_t(state.match, tagmem); } ;
+        species_descr       = 'descr'       ws1 string     %{ spe.descr = state.match; } ;
         species_habitat     = 'habitat'     ws1 habitat    ;
         species_ai          = 'ai'          ws1 ai         ;
         species_idle_ai     = 'idle_ai'     ws1 idle_ai    ;
@@ -359,7 +360,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
-            species_genus | species_idle_ai | species_move | species_range | species_clumpsize |
+            species_genus | species_descr | species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop | species_drop_random |
             species_cast_cloud | species_summon | species_death_summon | species_spawn | 
             species_animal | species_undead | species_magic | species_plant |

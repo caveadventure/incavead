@@ -259,6 +259,8 @@ struct Player {
 
     starsign_t starsign;
 
+    std::set<tag_t> seen_monsters;
+    
 
     Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0),
@@ -491,7 +493,8 @@ struct reader<Player> {
         serialize::read(s, p.ailments);
         serialize::read(s, p.starsign.day);
         serialize::read(s, p.starsign.sign);
-
+        serialize::read(s, p.seen_monsters);
+        
         p.current_wx = p.worldx;
         p.current_wy = p.worldy;
         p.current_wz = p.worldz;
@@ -556,6 +559,7 @@ struct writer<Player> {
         serialize::write(s, p.ailments);
         serialize::write(s, p.starsign.day);
         serialize::write(s, p.starsign.sign);
+        serialize::write(s, p.seen_monsters);
     }
 };
 

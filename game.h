@@ -71,6 +71,29 @@ struct Game {
 
 };
 
+
+enum class screens_t : unsigned int {
+    messages = 0,
+    inventory,
+    inv_item,
+    floor_item,
+    spells,
+    help,
+    tombstone,
+    howto,
+    achievements,
+    monsters,
+    victory_status,
+    stats,
+    overmap,
+    bank_main,
+    bank_withdrawal,
+    bank_deposit,
+    bank_buy,
+    bank_buy_confirm,
+    options
+};
+
 #include "game_generation.h"
 #include "game_rendering.h"
 #include "game_processing.h"

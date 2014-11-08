@@ -47,6 +47,8 @@ struct Species {
 
     tag_t genus;
 
+    std::string descr;
+    
     habitat_t habitat;
     ai_t ai;
     idle_ai_t idle_ai;

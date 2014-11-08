@@ -140,6 +140,10 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
             state.render.set_skin(x, y, 5, skin);
             state.render.set_is_walkblock(x, y, 5, true);
 
+            if (state.render.is_in_fov(x, y)) {
+                p.seen_monsters.insert(mon.tag);
+            }
+            
         } else {
             state.render.unset_skin(x, y, 5);
             state.render.set_is_walkblock(x, y, 5, false);

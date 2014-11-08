@@ -65,29 +65,6 @@ extern void parse_config(const std::string& filename, tag_mem_t& tagmem);
 
 #include "vault_place.h"
 
-
-enum class screens_t : unsigned int {
-    messages = 0,
-    inventory,
-    inv_item,
-    floor_item,
-    spells,
-    help,
-    tombstone,
-    howto,
-    achievements,
-    victory_status,
-    stats,
-    overmap,
-    bank_main,
-    bank_withdrawal,
-    bank_deposit,
-    bank_buy,
-    bank_buy_confirm,
-    options
-};
-
-
 #include "game.h"
 
 

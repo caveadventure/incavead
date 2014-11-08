@@ -525,6 +525,51 @@ std::string show_achievements(const Player& p) {
     return ret;
 }
 
+std::string show_monsters(const Player& p, const GameState& state) {
+
+    std::string ret = "\nKnown enemies:\n";
+
+    for (tag_t tag : p.seen_monsters) {
+
+        const Species& s = species().get(tag);
+
+        auto i = constants().genus_names.find(s.genus);
+
+        if (i != constants().genus_names.end()) {
+
+            nlp::parsed_name pn(i->second);
+
+            ret += nlp::message("\n\2%S\1: %s of level %d.", s, pn.make(1, false), s.get_computed_level() + 1);
+
+        } else {
+
+            ret += nlp::message("\n\2%S\1: level %d.", s, s.get_computed_level() + 1);
+        }
+
+        if (!s.ally.null()) {
+            ret += " It is usually friendly.";
+        }
+
+        if (s.descr.size() > 0) {
+            ret += "\n";
+            ret += "    \"";
+
+            for (unsigned char c : s.descr) {
+                if (c == '\n') {
+                    ret += "\n    ";
+                } else {
+                    ret += c;
+                }
+            }
+
+            ret += "\"\n";
+        }
+    }
+
+    return ret;
+}
+
+
 std::string help_text() {
 
     std::string ret = 
@@ -545,8 +590,9 @@ std::string help_text() {
         "  \2P\1 :          Show message history.\n"
         "  \2@\1 :          Show your attack and defense stats.\n"
         "  \2#\1 :          Show the current level's map overview.\n"
-        "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
+        "  \2K\1 :          Show kills and achievements.\n"
+        "  \2M\1 :          Show a detailed log of all encountered enemies.\n"
         "  \2=\1 :          Set game options.\n"
         "  \2\"\1 :          Send a message in spectator mode chat. (Also useful for notes to self.)\n"
         "  \2?\1 :          Show this help message.\n"
@@ -664,6 +710,10 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         state.push_window(show_achievements(p), screens_t::achievements);
         break;
 
+    case 'M':
+        state.push_window(show_monsters(p, state), screens_t::monsters);
+        break;
+        
     case '*':
         state.push_window(show_victory(p, state), screens_t::victory_status);
         break;
