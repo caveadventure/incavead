@@ -104,8 +104,10 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
 
         if (s.digging > 0 && !state.grid.is_walk(nx, ny)) {
 
-            if (!digging_step(state, nx, ny, s.digging))
+            if (!digging_step(state, nx, ny, s.digging)) {
+                state.render.do_message("You remove some of the rock.");
                 return;
+            }
         }
 
         switch (s.move) {

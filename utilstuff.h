@@ -19,7 +19,7 @@ inline double distance(double ax, double ay, double bx, double by) {
     return ::sqrt(q*q + p*p);
 }
 
-inline bool player_walkable(GameState& state, unsigned int x, unsigned int y, bool walk_rock = false) {
+inline bool player_walkable_aux(GameState& state, unsigned int x, unsigned int y, bool walk_rock = false) {
 
     if (!walk_rock && !state.grid.is_walk(x, y))
         return false;
@@ -35,6 +35,11 @@ inline bool player_walkable(GameState& state, unsigned int x, unsigned int y, bo
     }
 
     return true;
+}
+
+inline bool player_walkable(GameState& state, unsigned int x, unsigned int y) {
+
+    return player_walkable_aux(state, x, y);
 }
 
 inline bool monster_walkable(GameState& state, const Species& s, unsigned int x, unsigned int y) {
