@@ -643,6 +643,13 @@ void Game::process_world(GameState& state,
         return;
     }
 
+    if (p.rest > 0) {
+        ++(state.ticks);
+        --(p.rest);
+        do_draw = true;
+        return;
+    }
+    
     if (p.digging) {
 
         ++(state.ticks);

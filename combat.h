@@ -413,6 +413,11 @@ inline void handle_post_defend(Player& p, GameState& state) {
         state.render.do_message("You stop digging.");
         p.digging = false;
     }
+
+    if (p.rest > 0) {
+        state.render.do_message("You stop resting.");
+        p.rest = 0;
+    }
 }
 
 

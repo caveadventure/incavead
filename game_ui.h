@@ -536,7 +536,7 @@ std::string help_text() {
         "  \2.\1 :          Stand still.\n"
         "  \2S\1 :          Save and quit.\n"
         "  \2Q\1 :          Commit suicide and quit.\n"
-        "  \2>\1 :          Use terrain. (Enter holes and tunnels, use statues.)\n"
+        "  \2>\1 :          Use terrain. (Enter holes and tunnels, use statues, etc.)\n"
         "  \2i\1 :          Interact with inventory, use items and show character info.\n"
         "  \2z\1 :          Cast spells if you know them.\n"
         "\3Information commands:\1\n"
@@ -544,7 +544,7 @@ std::string help_text() {
         "  \2tab\1 :        Look at monsters and items in view.\n"
         "  \2P\1 :          Show message history.\n"
         "  \2@\1 :          Show your attack and defense stats.\n"
-        "  \2#\1 :          Show the current map's overview.\n"
+        "  \2#\1 :          Show the current level's map overview.\n"
         "  \2K\1 :          Show kills and achievements.\n"
         "  \2*\1 :          Show the Ring of Power's current status.\n"
         "  \2=\1 :          Set game options.\n"
@@ -557,6 +557,7 @@ std::string help_text() {
         "  \1s\1 :            (Same as '>'.)\n"
         "  \2q\1 :          Move away from the monsters in view. (Optimal direction is chosen automatically.)\n"
         "  \2,\1 :          Examine the first item laying on the floor.\n"
+        "  \2R\1 :          Stand still for 100 turns.\n"
         ;
 
     for (const auto& shortcut : constants().shortcuts) {
@@ -628,6 +629,11 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         rest(state);
         break;
 
+    case 'R':
+        p.rest += 100;
+        ++(state.ticks);
+        break;
+        
     case 'T':
     case 'a':
         take_item(p.px, p.py, 0, p, state);
