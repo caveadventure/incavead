@@ -529,9 +529,9 @@ std::string show_monsters(const Player& p, const GameState& state) {
 
     std::string ret = "\nKnown enemies:\n";
 
-    for (tag_t tag : p.seen_monsters) {
+    for(auto t = p.seen_monsters.timeline.rbegin(); t != p.seen_monsters.timeline.rend(); ++t) {
 
-        const Species& s = species().get(tag);
+        const Species& s = species().get(*t);
 
         auto i = constants().genus_names.find(s.genus);
 
@@ -539,17 +539,33 @@ std::string show_monsters(const Player& p, const GameState& state) {
 
             nlp::parsed_name pn(i->second);
 
-            ret += nlp::message("\n\2%S\1: %s of level %d.", s, pn.make(1, false), s.get_computed_level() + 1);
+            ret += nlp::message("\n\3%S\1: \2%s\1 of level \2%d\1.", s, pn.make(1, false), s.get_computed_level() + 1);
 
         } else {
 
-            ret += nlp::message("\n\2%S\1: level %d.", s, s.get_computed_level() + 1);
+            ret += nlp::message("\n\3%S\1: level \2%d\1.", s, s.get_computed_level() + 1);
         }
 
         if (!s.ally.null()) {
-            ret += " It is usually friendly.";
+            ret += " \2It is usually friendly.\1";
         }
 
+        if (s.count == 0) {
+            ret += " (\2Exceedingly rare\1)";
+
+        } else if (s.count <= 5) {
+            ret += " (\2Rare\1)";
+
+        } else if (s.count <= 10) {
+            ret += " (\2Uncommon\1)";
+
+        } else if (s.count <= 20) {
+            ret += " (\2Common\1)";
+
+        } else {
+            ret += " (\2Very common\1)";
+        }
+        
         if (s.descr.size() > 0) {
             ret += "\n";
             ret += "    \"";
@@ -563,6 +579,9 @@ std::string show_monsters(const Player& p, const GameState& state) {
             }
 
             ret += "\"\n";
+
+        } else {
+            ret += "\n";
         }
     }
 
