@@ -308,6 +308,14 @@ inline bool move_monster_main(Player& p, GameState& state,
         return true;
     }
 
+    // Keep track of seen monsters, hack.
+
+    if (p.seen_monsters.tally.count(m.tag) == 0 && state.render.is_in_fov(mxy.first, mxy.second)) {
+                
+        p.seen_monsters.tally.insert(m.tag);
+        p.seen_monsters.timeline.push_back(m.tag);
+    }
+
     if (do_stop) {
         return false;
     }

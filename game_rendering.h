@@ -139,17 +139,6 @@ void Game::set_skin(GameState& state, unsigned int x, unsigned int y) {
 
             state.render.set_skin(x, y, 5, skin);
             state.render.set_is_walkblock(x, y, 5, true);
-
-            std::cout << ": " << s.name << " " << state.render.is_in_fov(x, y) <<
-                      << " " << p.seen_monsters.tally.count(mon.tag) << std::endl;
-            
-            if (state.render.is_in_fov(x, y) && p.seen_monsters.tally.count(mon.tag) == 0) {
-
-                std::cout << "ADDING: " << s.name << std::endl;
-                
-                p.seen_monsters.tally.insert(mon.tag);
-                p.seen_monsters.timeline.push_back(mon.tag);
-            }
             
         } else {
             state.render.unset_skin(x, y, 5);
