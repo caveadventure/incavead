@@ -533,6 +533,34 @@ std::string show_monsters(const Player& p, const GameState& state) {
 
         const Species& s = species().get(*t);
 
+        double danger = 0;
+
+        for (const auto& i : s.attacks.attacks) {
+            danger += (i.val / 6.0);
+        }
+
+        for (const auto& i : s.cast_cloud) {
+            danger += (-i.chance / i.turns) / 2.0;
+        }
+
+        for (const auto& i : s.summon) {
+            danger += (-i.chance / i.turns);
+        }
+
+        for (const auto& i : s.spawns) {
+            danger += (-i.chance / i.turns);
+        }
+
+        for (const auto& i : s.blast) {
+
+            double f = (-i.chance / i.turns) * 2;
+            
+            for (const auto& j : i.attacks.attacks) {
+                danger += (j.val / 6.0) / f;
+            }
+        }
+
+
         auto i = constants().genus_names.find(s.genus);
 
         if (i != constants().genus_names.end()) {
@@ -551,21 +579,43 @@ std::string show_monsters(const Player& p, const GameState& state) {
         }
 
         if (s.count == 0) {
-            ret += " (\2Exceedingly rare\1)";
+            ret += " (\2Exceedingly rare, ";
 
         } else if (s.count <= 5) {
-            ret += " (\2Rare\1)";
+            ret += " (\2Rare, ";
 
         } else if (s.count <= 10) {
-            ret += " (\2Uncommon\1)";
+            ret += " (\2Uncommon, ";
 
         } else if (s.count <= 20) {
-            ret += " (\2Common\1)";
+            ret += " (\2Common, ";
 
         } else {
-            ret += " (\2Very common\1)";
+            ret += " (\2Very common, ";
         }
-        
+
+        if (danger >= 3) {
+            ret += "epically dangerous.\1)";
+
+        } else if (danger >= 2.5) {
+            ret += "terribly dangerous.\1)";
+
+        } else if (danger >= 1.7) {
+            ret += "highly dangerous.\1)";
+
+        } else if (danger >= 0.8) {
+            ret += "dangerous.\1)";
+
+        } else if (danger >= 0.6) {
+            ret += "slightly dangerous.\1)";
+
+        } else if (danger >= 0.4) {
+            ret += "mostly harmless.\1)";
+
+        } else {
+            ret += "harmless.\1)";
+        }
+
         if (s.descr.size() > 0) {
             ret += "\n";
             ret += "    \"";
