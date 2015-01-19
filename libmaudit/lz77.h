@@ -463,9 +463,9 @@ struct decompress_t {
 
     bool feed(const unsigned char* i, const unsigned char* e, std::string& remaining) {
 
-        std::cout << state.state << "[" << std::string(i, e) << "]" << std::endl;
-
         if (state.state == -1) {
+
+            ret.clear();
 
             size_t size;
             if (!pop_vlq_uint(i, e, size))
@@ -473,13 +473,9 @@ struct decompress_t {
 
             ++i;
 
-            ret.clear();
-
             state = state_t();
 
             ret.resize(size);
-
-            std::cout << "! " << size << std::endl;
 
             outb = (unsigned char*)ret.data();
             oute = outb + size;
@@ -527,12 +523,8 @@ struct decompress_t {
                     state.state = 2;
                 }
 
-                std::cout << "+ " << state.run << " " << state.off_or_len << std::endl;
-
-                if (out + state.off_or_len > oute) {
-                    std::cout << state.state << " " << (size_t)out << " " << state.off_or_len << " " << (size_t)oute << std::endl;
-                    throw std::runtime_error("Malformed data while uncompressing 1");
-                }
+                if (out + state.off_or_len > oute)
+                    throw std::runtime_error("Malformed data while uncompressing");
 
                 if (i == e)
                     return false;
@@ -565,14 +557,10 @@ struct decompress_t {
 
                 state.state = 0;
 
-                std::cout << "- " << state.run << " " << state.off_or_len << std::endl;
-
                 unsigned char* outi = out - state.off_or_len;
 
-                if (outi < outb || out + state.run > oute) {
-                    std::cout << state.state << " " << (size_t)outb << " " << (size_t)outi << " " << (size_t)out << " " << state.off_or_len << " " << state.run << " " << (size_t)oute << std::endl;
-                    throw std::runtime_error("Malformed data while uncompressing 2");
-                }
+                if (outi < outb || out + state.run > oute)
+                    throw std::runtime_error("Malformed data while uncompressing");
 
                 if (outi + state.run < out) {
                     ::memcpy(out, outi, state.run);
