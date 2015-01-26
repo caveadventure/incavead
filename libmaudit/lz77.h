@@ -9,6 +9,7 @@
 
 /*
  * This is a variation on the LZ77 compression algorithm.
+ * It is designed for code simplicity and clarity.
  * 
  * Highlights:
  *
@@ -17,13 +18,16 @@
  *   - Fast decompression.
  *   - Pretty good compression
  *   - Simple 'one-button' API for realistic use-cases.
- *   - No penalty (only 3 bytes) even when compressing very short strings.
+ *   - No penalty (only 2 bytes overhead) even when compressing very short strings.
  *
- * Compression performance and quality should be _roughly_ on par with LZO 
- * at highest quality setting.
- * (Note that your mileage will vary depending on input data; for example, 
- * this code will degrade less gracefully compared to LZO when trying to 
- * compress uncompressable data.)
+ * Compression performance and quality should be _roughly_ on par with other
+ * compression algorithms.
+ *
+ * (Compression ratio is comparable to other LZ algorithms at when at high 
+ * quality settings, compression speed is comparable to gzip; it could be made 
+ * better if the standard C++ data structures were to be replaced by something 
+ * more customized and more complex. Decompression speed is on par with other 
+ * fast LZ algorithms.)
  *
  */
 
@@ -73,7 +77,7 @@
   'result' is the decompressed message.
 
   NOTE: calling feed() and result() out of order is undefined
-  behaviour and will result in crashes.
+  behaviour and might result in crashes.
 
 */
 
@@ -89,6 +93,16 @@
 
 
 namespace lz77 {
+
+// Constants
+enum {
+    DEFAULT_SEARCHLEN = 8,
+    DEFAULT_BLOCKSIZE = 64*1024,
+    SHORTRUN_BITS = 3,
+    SHORTRUN_MAX = (1 << SHORTRUN_BITS),
+    MIN_RUN = 3
+};
+
 
 // Utility function: encode a size_t as a variable-sized stream of octets with 7 bits of useful data. 
 // (One bit is used to signal an end of stream.)
@@ -132,16 +146,18 @@ inline size_t substr_run(const unsigned char* ai, const unsigned char* ae,
     return n;
 }
 
-// Utility function: Hash the first 4 and 7 bytes of a string into 32-bit ints.
-// (4 and 7 are magic constants.)
+// Utility function: Hash the first 3 and 6 bytes of a string into 16-bit ints.
+// (3 and 6 are magic constants.)
+// The hash function itself is important for compression quality, and was arrived
+// at by a series of unscientific empirical tests.
 
-inline void pack_bytes(const unsigned char* i, uint32_t& packed4, uint32_t& packed7, size_t blocksize) {
+inline void pack_bytes(const unsigned char* i, uint16_t& packed3, uint16_t& packed6, size_t blocksize) {
 
-    packed4 = (*i | (*(i+1) << 8) | (*(i+2) << 16) | (*(i+3) << 24));
-    packed7 = packed4 + ((*(i+4) << 8) | (*(i+5) << 16) | (*(i+6) << 24));
+    packed3 = ((*(i+0) << 0) | (*(i+1) << 8)) ^ (*(i+2) << 0);
+    packed6 = packed3 + ((*(i+4) << 8) | (*(i+5) << 0));
 
-    packed4 = packed4 % blocksize;
-    packed7 = packed7 % blocksize;
+    packed3 = packed3 % blocksize;
+    packed6 = packed6 % blocksize;
 }
 
 
@@ -149,33 +165,31 @@ inline void pack_bytes(const unsigned char* i, uint32_t& packed4, uint32_t& pack
 // 'run' and 'offset' are numbers encoded as variable-length bitstreams; the sum length of 
 // encoded 'run' and 'offset' must be less than 'run'.
 
+inline size_t vlq_length(size_t x) {
+    size_t ret = 1;
+
+    if (x > 0x7F)
+        ret++;
+
+    if (x > 0x3fff)
+        ret++;
+
+    if (x > 0x1fffff)
+        ret++;
+
+    return ret;
+}
+
 inline size_t gains(size_t run, size_t offset) {
 
     size_t gain = run;
-    size_t loss = 2;
+    
+    offset = offset << (SHORTRUN_BITS + 1);
 
-    if (run > 0x7F) {
-        loss++;
-    }
-
-    if (run > 0x3fff) {
-        loss++;
-    }
-
-    if (run > 0x1fffff) {
-        loss++;
-    }
-
-    if (offset > 0x7F) {
-        loss++;
-    }
-
-    if (offset > 0x3fff) {
-        loss++;
-    }
-
-    if (offset > 0x1fffff) {
-        loss++;
+    size_t loss = vlq_length(offset);
+    
+    if (run >= SHORTRUN_MAX) {
+        loss += vlq_length(run - MIN_RUN + 1);
     }
 
     if (loss > gain)
@@ -214,6 +228,10 @@ struct circular_buffer_t {
         }
     }
 
+    bool empty() {
+        return (head == buff.end());
+    }
+    
     const_iterator begin() {
         return buff.begin();
     }
@@ -227,50 +245,54 @@ struct circular_buffer_t {
 // a list of offsets. (At each offset there is a string with a prefix that hashes
 // to the key.)
 
+struct no_hash_t {
+    size_t operator()(uint16_t x) const { return x; }
+};
+
 struct offsets_dict_t {
 
-    typedef std::unordered_map< uint32_t, circular_buffer_t<size_t> > offsets_t;
+    typedef std::unordered_map< uint16_t, circular_buffer_t<size_t>, no_hash_t > offsets_t;
     offsets_t offsets;
 
     size_t searchlen;
 
-    offsets_dict_t(size_t sl) : searchlen(sl) {
-    }
+    offsets_dict_t(size_t sl, size_t bs) : searchlen(sl) { }
 
-    void operator()(uint32_t packed, const unsigned char* i0, const unsigned char* i, const unsigned char* e,
+    void operator()(uint16_t packed, const unsigned char* i0, const unsigned char* i, const unsigned char* e,
                     size_t& maxrun, size_t& maxoffset, size_t& maxgain) {
 
         circular_buffer_t<size_t>& voffs = offsets[packed];
-        voffs.push_back(i - i0, searchlen);
 
-        if (maxrun > 0)
-            return;
+        if (!voffs.empty()) {
 
-        circular_buffer_t<size_t>::const_iterator z = voffs.head;
+            circular_buffer_t<size_t>::const_iterator z = voffs.head;
 
-        while (1) {
+            while (1) {
 
-            if (z == voffs.begin()) {
-                z = voffs.end() - 1;
+                int offset = i - i0 - *z;
 
-            } else {
-                --z;
-            }
+                size_t run = substr_run(i, e, i0 + *z, e);
+                size_t gain = gains(run, offset);
 
-            if (z == voffs.head)
-                break;
+                if (gain > maxgain) {
+                    maxrun = run;
+                    maxoffset = offset;
+                    maxgain = gain;
+                }
 
-            int offset = i - i0 - *z;
+                if (z == voffs.begin()) {
+                    z = voffs.end() - 1;
 
-            size_t run = substr_run(i, e, i0 + *z, e);
-            size_t gain = gains(run, offset);
+                } else {
+                    --z;
+                }
 
-            if (gain > maxgain) {
-                maxrun = run;
-                maxoffset = offset;
-                maxgain = gain;
+                if (z == voffs.head)
+                    break;
             }
         }
+
+        voffs.push_back(i - i0, searchlen);
     }
 };
 
@@ -287,35 +309,35 @@ struct offsets_dict_t {
  * 'blocksize' is the upper bound for hash table sizes.
  * 'searchlen' is the upper bound for lists of offsets at each hash value.
  *
- * A larger 'blocksize' increases memory consumption and compression quality.
- * A larger 'searchlen' increases running time, memory consumption and compression quality.
+ * A larger 'searchlen' increases running time, memory consumption and compression quality. 
+ * A larger 'blocksize' increases memory consumption and compression quality. 
+ *  (Blocksize really shouldn't be changed, the default is good.)
  *
  * Output: the compressed data as a string.
  */
 
-inline std::string compress(const std::string& s, size_t searchlen = 32, size_t blocksize = 64*1024) {
+inline std::string compress(const unsigned char* i, const unsigned char* e,
+                            size_t searchlen = DEFAULT_SEARCHLEN, size_t blocksize = DEFAULT_BLOCKSIZE) {
 
-    const unsigned char* i0 = (const unsigned char*)s.data();
-    const unsigned char* i = i0;
-    const unsigned char* e = i0 + s.size();
+    const unsigned char* i0 = i;
 
     std::string ret;
-
+        
     std::string unc;
 
-    push_vlq_uint(s.size(), ret);
+    push_vlq_uint(e - i, ret);
 
-    offsets_dict_t offsets1(searchlen);
-    offsets_dict_t offsets2(searchlen);
+    offsets_dict_t offsets3(searchlen, blocksize);
+    offsets_dict_t offsets6(searchlen, blocksize);
 
     while (i != e) {
 
         unsigned char c = *i;
 
-        // The last 7 bytes are uncompressable. (At least 7 bytes
+        // The last 5 bytes are uncompressable. (At least 6 bytes
         // are needed to calculate a prefix hash.)
 
-        if (i > e - 7) {
+        if (i > e - 6) {
 
             unc +=c;
             ++i;
@@ -326,65 +348,75 @@ inline std::string compress(const std::string& s, size_t searchlen = 32, size_t 
         size_t maxoffset = 0;
         size_t maxgain = 0;
 
-        uint32_t packed7;
-        uint32_t packed4;
+        uint16_t packed3;
+        uint16_t packed6;
 
-        // Prefix lengths of 4 and 7 were chosen empirically, based on a series
+        // Prefix lengths of 3 and 6 were chosen empirically, based on a series
         // of unscientific tests.
 
-        // NOTE:
-        // An additional hash map for prefixes of size 11 would increase quality
-        // further, at the cost of longer running time. I decided against implementing
-        // it here.
+        pack_bytes(i, packed3, packed6, blocksize);
 
-        pack_bytes(i, packed7, packed4, blocksize);
+        offsets6(packed6, i0, i, e, maxrun, maxoffset, maxgain);
+        offsets3(packed3, i0, i, e, maxrun, maxoffset, maxgain);
 
-        offsets2(packed7, i0, i, e, maxrun, maxoffset, maxgain);
-        offsets1(packed4, i0, i, e, maxrun, maxoffset, maxgain);
-
-        // A substring of length less than 4 is useless for us.
-        // (Theoretically a substring of length 3 can be compressed
-        // to two bytes, but I found that this decreases quality in
-        // practice.)
-
-        if (maxrun < 4) {
+        // A substring of length less than 3 is useless for us.
+        // (The hash uses 3 characters to search for matches.)
+        if (maxrun < MIN_RUN) {
             unc += c;
             ++i;
             continue;
         }
 
+        
         if (unc.size() > 0) {
+            // Write a packet of uncompressed data.
 
-            // Uncompressed strings of length 3 and less are encoded
-            // with one extra byte: the length. Longer uncompressed strings 
-            // are encoded with at least two extra bytes: a 0 flag and a 
-            // length.
-
-            if (unc.size() >= 4) {
-                push_vlq_uint(0, ret);
-            }
-
-            push_vlq_uint(unc.size(), ret);
+            size_t msg = (unc.size() << 1) | 1;
+            push_vlq_uint(msg, ret);
             ret += unc;
             unc.clear();
         }
 
-        // Compressed strings are encoded with at least two bytes:
-        // a length and an offset.
+        // A compressed string is a length and an offset.
+        // First subtract 2 from the length (lengths less than 3 don't exist).
+        // Then check if the length fits in three bits; if it does, then
+        // tack it on to the offset. Otherwise write length and offset separately.
+        // The rightmost bit is a zero to differentiate from packets of
+        // uncompressed data.
 
-        push_vlq_uint(maxrun, ret);
-        push_vlq_uint(maxoffset, ret);
         i += maxrun;
+        maxrun = maxrun - MIN_RUN + 1;
+
+        if (maxrun < SHORTRUN_MAX) {
+
+            size_t msg = ((maxoffset << SHORTRUN_BITS) | maxrun) << 1;
+            push_vlq_uint(msg, ret);
+            
+        } else {
+
+            size_t msg = (maxoffset << (SHORTRUN_BITS + 1));
+            push_vlq_uint(msg, ret);
+            push_vlq_uint(maxrun, ret);
+        }
     }
 
     if (unc.size() > 0) {
-        push_vlq_uint(0, ret);
-        push_vlq_uint(unc.size(), ret);
+
+        size_t msg = (unc.size() << 1) | 1;
+        push_vlq_uint(msg, ret);
         ret += unc;
         unc.clear();
     }
 
     return ret;
+}
+
+inline std::string compress(const std::string& s,
+                            size_t searchlen = DEFAULT_SEARCHLEN, size_t blocksize = DEFAULT_BLOCKSIZE) {
+
+    const unsigned char* i = (const unsigned char*)s.data();
+    const unsigned char* e = i + s.size();
+    return compress(i, e, searchlen, blocksize);
 }
 
 /*
@@ -401,13 +433,18 @@ struct decompress_t {
     unsigned char* oute;
 
     struct state_t {
+        size_t msg;
         size_t run;
-        size_t off_or_len;
         size_t vlq_num;
         size_t vlq_off;
-        int state;
+        enum {
+            INIT,
+            START,
+            READ_DATA,
+            READ_RUN
+        } state;
 
-        state_t() : run(0), off_or_len(0), vlq_num(0), vlq_off(0), state(-1) {}
+        state_t() : msg(0), run(0), vlq_num(0), vlq_off(0), state(INIT) {}
     };
 
     state_t state;
@@ -463,7 +500,11 @@ struct decompress_t {
 
     bool feed(const unsigned char* i, const unsigned char* e, std::string& remaining) {
 
-        if (state.state == -1) {
+        // This function is complex because it is streamable and robust.
+        // The routine checks if the input isn't complete and will properly
+        // pick up from where we left off when the rest of the input arrives.
+        
+        if (state.state == state_t::INIT) {
 
             ret.clear();
 
@@ -481,106 +522,100 @@ struct decompress_t {
             oute = outb + size;
             out = outb;
 
-            state.state = 0;
+            state.state = state_t::START;
         }
 
         while (i != e) {
 
             if (out == oute) {
                 remaining.assign(i, e);
-                state.state = -1;
+                state.state = state_t::INIT;
                 return true;
             }
 
-            if (state.state == 0) {
+            if (state.state == state_t::START) {
 
-                if (!pop_vlq_uint(i, e, state.run))
+                if (!pop_vlq_uint(i, e, state.msg))
                     return false;
 
                 ++i;
 
-                state.state = 1;
+                state.state = ((state.msg & 1) ? state_t::READ_DATA : state_t::READ_RUN);
+
+                state.msg = state.msg >> 1;
             }
 
-            if (i == e) {
-                return false;
-            }
+            if (state.state == state_t::READ_DATA) {
 
-            if (state.run < 4) {
-
-                if (state.state == 1) {
-
-                    state.off_or_len = state.run;
-
-                    if (state.run == 0) {
-
-                        if (!pop_vlq_uint(i, e, state.off_or_len))
-                            return false;
-
-                        ++i;
-                    }
-
-                    state.state = 2;
-                }
-
-                if (out + state.off_or_len > oute)
+                size_t len = state.msg;
+                
+                if (out + len > oute)
                     throw std::runtime_error("Malformed data while uncompressing");
 
                 if (i == e)
                     return false;
 
-                if (i + state.off_or_len > e) {
+                if (i + len > e) {
 
-                    size_t len = e - i;
-                    ::memcpy(out, &(*i), len);
-                    out += len;
-                    state.off_or_len -= len;
+                    size_t l = e - i;
+                    ::memcpy(out, &(*i), l);
+                    out += l;
+                    state.msg -= l;
 
                     return false;
                 }
 
-                ::memcpy(out, &(*i), state.off_or_len);
-                out += state.off_or_len;
-                i += state.off_or_len;
+                ::memcpy(out, &(*i), len);
+                out += len;
+                i += len;
 
-                state.state = 0;
+                state.state = state_t::START;
 
-            } else {
+            } else if (state.state == state_t::READ_RUN) {
 
-                if (state.state == 1) {
+                size_t shortrun = state.msg & (SHORTRUN_MAX - 1);
 
-                    if (!pop_vlq_uint(i, e, state.off_or_len))
+                if (shortrun) {
+
+                    state.run = shortrun;
+
+                } else {
+
+                    if (!pop_vlq_uint(i, e, state.run))
                         return false;
 
                     ++i;
                 }
 
-                state.state = 0;
+                size_t off = (state.msg >> SHORTRUN_BITS);
+                size_t run = state.run + MIN_RUN - 1;
 
-                unsigned char* outi = out - state.off_or_len;
+                unsigned char* outi = out - off;
 
-                if (outi < outb || out + state.run > oute)
+                if (outi < outb || out + run > oute)
                     throw std::runtime_error("Malformed data while uncompressing");
 
-                if (outi + state.run < out) {
-                    ::memcpy(out, outi, state.run);
-                    out += state.run;
+                if (outi + run < out) {
+                    ::memcpy(out, outi, run);
+                    out += run;
 
                 } else {
 
-                    while (state.run > 0) {
+                    while (run > 0) {
                         *out = *outi;
                         ++out;
                         ++outi;
-                        --state.run;
+                        --run;
                     }
                 }
+
+                state.state = state_t::START;
             }
         }
 
         if (out == oute) {
             remaining.assign(i, e);
-            state.state = -1;
+            state.state = state_t::INIT;
             return true;
         }
 
