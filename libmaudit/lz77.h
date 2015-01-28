@@ -37,7 +37,8 @@
   #include "lz77.h"
 
   std::string input = ...;
-  std::string compressed = lz77::compress(input);
+  lz77::compress_t compress;
+  std::string compressed = compress.feed(input);
 
   lz77::decompress_t decompress;
 
@@ -45,6 +46,10 @@
   decompress.feed(compressed, temp);
 
   const std::string& uncompressed = decompress.result();
+
+  Note: if you're compressing short strings (on the order of a few kilobytes)
+  then instantiating lz77::compress_t with the arguments (8, 4096) will
+  give better results.
 
   --------
 
@@ -86,7 +91,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <unordered_map>
 
 #include <string.h>
 #include <stdint.h>
@@ -148,16 +152,28 @@ inline size_t substr_run(const unsigned char* ai, const unsigned char* ae,
 
 // Utility function: Hash the first 3 and 6 bytes of a string into 16-bit ints.
 // (3 and 6 are magic constants.)
-// The hash function itself is important for compression quality, and was arrived
-// at by a series of unscientific empirical tests.
+// The hash function itself is important for compression quality.
+// This is the FNV hash, a very very simple and quite good hash algorithm.
+
+inline uint32_t fnv32a(const unsigned char* i, size_t len, uint32_t hash = 0x811c9dc5) {
+
+    while (len > 0) {
+        hash ^= (uint32_t)(*i);
+        hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+        ++i;
+        --len;
+    }
+
+    return hash;
+}
 
 inline void pack_bytes(const unsigned char* i, uint16_t& packed3, uint16_t& packed6, size_t blocksize) {
 
-    packed3 = ((*(i+0) << 0) | (*(i+1) << 8)) ^ (*(i+2) << 0);
-    packed6 = packed3 + ((*(i+4) << 8) | (*(i+5) << 0));
+    uint32_t a = fnv32a(i, 3);
+    uint32_t b = fnv32a(i+3, 3, a);
 
-    packed3 = packed3 % blocksize;
-    packed6 = packed6 % blocksize;
+    packed3 = (a >> 16) % blocksize;
+    packed6 = (b >> 16) % blocksize;
 }
 
 
@@ -181,7 +197,8 @@ inline size_t vlq_length(size_t x) {
 }
 
 inline size_t gains(size_t run, size_t offset) {
-
+    // Note: this function uses knowledge about the layout of bits in the compressed data format.
+    
     size_t gain = run;
     
     offset = offset << (SHORTRUN_BITS + 1);
@@ -198,101 +215,89 @@ inline size_t gains(size_t run, size_t offset) {
     return gain - loss;
 }
 
-// Utility function: hack a circular buffer from an std::vector.
-
-template <typename T>
-struct circular_buffer_t {
-
-    typedef typename std::vector<T> holder_t;
-    typedef typename holder_t::iterator iterator;
-    typedef typename holder_t::const_iterator const_iterator;
-    holder_t buff;
-    iterator head;
-
-    circular_buffer_t() : head(buff.end()) {}
-
-    void push_back(const T& t, size_t maxsize) {
-
-        if (buff.size() < maxsize) {
-            buff.push_back(t);
-            head = buff.end() - 1;
-
-        } else {
-
-            ++head;
-
-            if (head == buff.end())
-                head = buff.begin();
-
-            *head = t;
-        }
-    }
-
-    bool empty() {
-        return (head == buff.end());
-    }
-    
-    const_iterator begin() {
-        return buff.begin();
-    }
-
-    const_iterator end() {
-        return buff.end();
-    }
-};
-
 // Hash table already seen strings; it maps from a hash of a string prefix to
 // a list of offsets. (At each offset there is a string with a prefix that hashes
 // to the key.)
 
-struct no_hash_t {
-    size_t operator()(uint16_t x) const { return x; }
-};
-
 struct offsets_dict_t {
 
-    typedef std::unordered_map< uint16_t, circular_buffer_t<size_t>, no_hash_t > offsets_t;
+    typedef std::vector<size_t> offsets_t;
     offsets_t offsets;
 
     size_t searchlen;
+    size_t blocksize;
 
-    offsets_dict_t(size_t sl, size_t bs) : searchlen(sl) { }
+    offsets_dict_t(size_t sl, size_t bs) : searchlen(sl), blocksize(bs) {
 
+        offsets.resize((searchlen + 1) * blocksize);
+    }
+
+    void clear() {
+        offsets.assign((searchlen + 1) * blocksize, 0);
+    }
+        
+    // Functions for a simple circular buffer data structure.
+
+    static size_t* prev(size_t* b, size_t* e, size_t* i) {
+
+        if (i == b)
+            i = e;
+
+        --i;
+        return i;
+    }
+
+    static size_t push_back(size_t* b, size_t* e, size_t* head, size_t val) {
+
+        *head = val;
+        ++head;
+
+        if (head == e)
+            head = b;
+
+        return head - b;
+    }
+    
     void operator()(uint16_t packed, const unsigned char* i0, const unsigned char* i, const unsigned char* e,
                     size_t& maxrun, size_t& maxoffset, size_t& maxgain) {
 
-        circular_buffer_t<size_t>& voffs = offsets[packed];
+        // Select a range of values representing a circular buffer.
+        // The first value is the index of the buffer head, the rest are
+        // the values of the buffer itself. 
 
-        if (!voffs.empty()) {
+        size_t* cb_start = &offsets[packed * (searchlen + 1)];
 
-            circular_buffer_t<size_t>::const_iterator z = voffs.head;
+        size_t* cb_beg = (cb_start + 1);
+        size_t* cb_end = (cb_start + 1 + searchlen);
+        size_t* cb_head = cb_beg + *cb_start;
 
-            while (1) {
+        size_t* cb_i = cb_head;
 
-                int offset = i - i0 - *z;
+        while (1) {
 
-                size_t run = substr_run(i, e, i0 + *z, e);
-                size_t gain = gains(run, offset);
+            cb_i = prev(cb_beg, cb_end, cb_i);
 
-                if (gain > maxgain) {
-                    maxrun = run;
-                    maxoffset = offset;
-                    maxgain = gain;
-                }
+            if (*cb_i == 0)
+                break;
 
-                if (z == voffs.begin()) {
-                    z = voffs.end() - 1;
+            // The stored value is position + 1 to allow 0 to mean 'uninitialized offset'.
+            size_t pos = *cb_i - 1;
 
-                } else {
-                    --z;
-                }
+            size_t offset = i - i0 - pos;
+            size_t run = substr_run(i, e, i0 + pos, e);
+            size_t gain = gains(run, offset);
 
-                if (z == voffs.head)
-                    break;
+            if (gain > maxgain) {
+                maxrun = run;
+                maxoffset = offset;
+                maxgain = gain;
             }
+
+            if (cb_i == cb_head)
+                break;
         }
 
-        voffs.push_back(i - i0, searchlen);
+        *cb_start = push_back(cb_beg, cb_end, cb_head, i - i0 + 1);
     }
 };
 
@@ -309,67 +314,110 @@ struct offsets_dict_t {
  * 'blocksize' is the upper bound for hash table sizes.
  * 'searchlen' is the upper bound for lists of offsets at each hash value.
  *
- * A larger 'searchlen' increases running time, memory consumption and compression quality. 
+ * A larger 'searchlen' increases compression quality, running time and memory consumption. 
  * A larger 'blocksize' increases memory consumption and compression quality. 
- *  (Blocksize really shouldn't be changed, the default is good.)
+ *
+ * If you want faster compression at the expense of quality, try lowering searchlen.
+ *
+ * If you only ever compress short strings, try lowering blocksize to save memory.
  *
  * Output: the compressed data as a string.
  */
 
-inline std::string compress(const unsigned char* i, const unsigned char* e,
-                            size_t searchlen = DEFAULT_SEARCHLEN, size_t blocksize = DEFAULT_BLOCKSIZE) {
+struct compress_t {
 
-    const unsigned char* i0 = i;
+    offsets_dict_t offsets3;
+    offsets_dict_t offsets6;
 
-    std::string ret;
+    compress_t(size_t searchlen = DEFAULT_SEARCHLEN, size_t blocksize = DEFAULT_BLOCKSIZE) :
+        offsets3(searchlen, blocksize),
+        offsets6(searchlen, blocksize) {}
+    
+    std::string feed(const unsigned char* i, const unsigned char* e) {
+
+        const unsigned char* i0 = i;
+
+        std::string ret;
         
-    std::string unc;
+        std::string unc;
 
-    push_vlq_uint(e - i, ret);
+        push_vlq_uint(e - i, ret);
 
-    offsets_dict_t offsets3(searchlen, blocksize);
-    offsets_dict_t offsets6(searchlen, blocksize);
+        offsets3.clear();
+        offsets6.clear();
 
-    while (i != e) {
+        size_t blocksize = offsets3.blocksize;
+        
+        while (i != e) {
 
-        unsigned char c = *i;
+            unsigned char c = *i;
 
-        // The last 5 bytes are uncompressable. (At least 6 bytes
-        // are needed to calculate a prefix hash.)
+            // The last 5 bytes are uncompressable. (At least 6 bytes
+            // are needed to calculate a prefix hash.)
 
-        if (i > e - 6) {
+            if (i > e - 6) {
 
-            unc +=c;
-            ++i;
-            continue;
+                unc +=c;
+                ++i;
+                continue;
+            }
+
+            size_t maxrun = 0;
+            size_t maxoffset = 0;
+            size_t maxgain = 0;
+
+            uint16_t packed3;
+            uint16_t packed6;
+
+            // Prefix lengths of 3 and 6 were chosen empirically, based on a series
+            // of unscientific tests.
+
+            pack_bytes(i, packed3, packed6, blocksize);
+
+            offsets6(packed6, i0, i, e, maxrun, maxoffset, maxgain);
+            offsets3(packed3, i0, i, e, maxrun, maxoffset, maxgain);
+
+            // A substring of length less than 3 is useless for us.
+            // (The hash uses 3 characters to search for matches.)
+            if (maxrun < MIN_RUN) {
+                unc += c;
+                ++i;
+                continue;
+            }
+
+            if (unc.size() > 0) {
+                // Write a packet of uncompressed data.
+
+                size_t msg = (unc.size() << 1) | 1;
+                push_vlq_uint(msg, ret);
+                ret += unc;
+                unc.clear();
+            }
+
+            // A compressed string is a length and an offset.
+            // First subtract 2 from the length (lengths less than 3 don't exist).
+            // Then check if the length fits in three bits; if it does, then
+            // tack it on to the offset. Otherwise write length and offset separately.
+            // The rightmost bit is a zero to differentiate from packets of
+            // uncompressed data.
+
+            i += maxrun;
+            maxrun = maxrun - MIN_RUN + 1;
+
+            if (maxrun < SHORTRUN_MAX) {
+
+                size_t msg = ((maxoffset << SHORTRUN_BITS) | maxrun) << 1;
+                push_vlq_uint(msg, ret);
+
+            } else {
+
+                size_t msg = (maxoffset << (SHORTRUN_BITS + 1));
+                push_vlq_uint(msg, ret);
+                push_vlq_uint(maxrun, ret);
+            }
         }
 
-        size_t maxrun = 0;
-        size_t maxoffset = 0;
-        size_t maxgain = 0;
-
-        uint16_t packed3;
-        uint16_t packed6;
-
-        // Prefix lengths of 3 and 6 were chosen empirically, based on a series
-        // of unscientific tests.
-
-        pack_bytes(i, packed3, packed6, blocksize);
-
-        offsets6(packed6, i0, i, e, maxrun, maxoffset, maxgain);
-        offsets3(packed3, i0, i, e, maxrun, maxoffset, maxgain);
-
-        // A substring of length less than 3 is useless for us.
-        // (The hash uses 3 characters to search for matches.)
-        if (maxrun < MIN_RUN) {
-            unc += c;
-            ++i;
-            continue;
-        }
-
-        
         if (unc.size() > 0) {
-            // Write a packet of uncompressed data.
 
             size_t msg = (unc.size() << 1) | 1;
             push_vlq_uint(msg, ret);
@@ -377,47 +425,16 @@ inline std::string compress(const unsigned char* i, const unsigned char* e,
             unc.clear();
         }
 
-        // A compressed string is a length and an offset.
-        // First subtract 2 from the length (lengths less than 3 don't exist).
-        // Then check if the length fits in three bits; if it does, then
-        // tack it on to the offset. Otherwise write length and offset separately.
-        // The rightmost bit is a zero to differentiate from packets of
-        // uncompressed data.
-
-        i += maxrun;
-        maxrun = maxrun - MIN_RUN + 1;
-
-        if (maxrun < SHORTRUN_MAX) {
-
-            size_t msg = ((maxoffset << SHORTRUN_BITS) | maxrun) << 1;
-            push_vlq_uint(msg, ret);
-            
-        } else {
-
-            size_t msg = (maxoffset << (SHORTRUN_BITS + 1));
-            push_vlq_uint(msg, ret);
-            push_vlq_uint(maxrun, ret);
-        }
+        return ret;
     }
 
-    if (unc.size() > 0) {
+    std::string feed(const std::string& s) {
 
-        size_t msg = (unc.size() << 1) | 1;
-        push_vlq_uint(msg, ret);
-        ret += unc;
-        unc.clear();
+        const unsigned char* i = (const unsigned char*)s.data();
+        const unsigned char* e = i + s.size();
+        return feed(i, e);
     }
-
-    return ret;
-}
-
-inline std::string compress(const std::string& s,
-                            size_t searchlen = DEFAULT_SEARCHLEN, size_t blocksize = DEFAULT_BLOCKSIZE) {
-
-    const unsigned char* i = (const unsigned char*)s.data();
-    const unsigned char* e = i + s.size();
-    return compress(i, e, searchlen, blocksize);
-}
+};
 
 /*
  * Entry point for decompression.

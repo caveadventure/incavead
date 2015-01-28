@@ -28,6 +28,7 @@ private:
     buff_t::const_iterator buffi;
     buff_t::const_iterator buffe;
 
+    lz77::compress_t compressor;
     bool compression;
 
 public:
@@ -41,7 +42,7 @@ public:
         }
     }
 
-    client_socket(int _fd) : compression(false), fd(_fd) {
+    client_socket(int _fd) : compressor(8, 4096), compression(false), fd(_fd) {
 
         buff.resize(buffsize);
         buffi = buff.end();
@@ -66,7 +67,7 @@ public:
     bool write(const std::string& s) {
 
         if (compression) {
-            std::string data = lz77::compress(s);
+            std::string data = compressor.feed(s);
 
             return write_(data);
 
