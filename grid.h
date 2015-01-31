@@ -484,53 +484,17 @@ struct Map {
         }
 
         for (const auto& z : nwalk) {
-            if (z.second >= genparams.flatten_walk_ng) {
+            if (genparams.flatten_walk_ng & (1 << z.second)) {
                 walkmap.insert(z.first);
             }
         }
 
         for (const auto& z : nwater) {
-            if (z.second >= genparams.flatten_water_ng) {
+            if (genparams.flatten_water_ng & (1 << z.second)) {
                 watermap.insert(z.first);
                 walkmap.insert(z.first);
             }
         }
-
-        /*
-        std::unordered_set<pt> towalk;
-        std::unordered_set<pt> towater;
-
-        for (size_t x = 0; x < w; ++x) {
-            for (size_t y = 0; y < h; ++y) {
-
-                int nwall = 0;
-                int nwater = 0;
-
-                pt xy(x, y);
-
-                for (const auto& xy_ : neigh(xy)) {
-
-                    if (walkmap.count(xy_) == 0)
-                        nwall++;
-
-                    if (watermap.count(xy_) != 0)
-                        nwater++;
-                }
-
-                if (walkmap.count(xy) == 0 && nwall < 3) {
-                    towalk.insert(xy);
-                }
-
-                if (watermap.count(xy) == 0 && nwater > 2) {
-                    towater.insert(xy);
-                }
-            }
-        }
-
-        walkmap.insert(towalk.begin(), towalk.end());
-        walkmap.insert(towater.begin(), towater.end());
-        watermap.insert(towater.begin(), towater.end());
-        */
     }
 
 
@@ -548,7 +512,7 @@ struct Map {
                     nwater++;
             }
 
-            if (nwater < genparams.unflow_ng) {
+            if (genparams.unflow_ng & (1 << nwater)) {
                 unwater.insert(xy);
             }
         }

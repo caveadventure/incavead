@@ -8,8 +8,8 @@
 struct CelAuto {
     tag_t tag;
 
-    std::set<unsigned int> survive;
-    std::set<unsigned int> born;
+    size_t survive;
+    size_t born;
     unsigned int age;
 
     tag_t terrain;

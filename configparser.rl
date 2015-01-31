@@ -108,6 +108,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     maudit::glyph skin_b;
     maudit::glyph skin_c;
 
+    size_t bitmask_v;
+
 #define SKINS skin, skin_b, skin_c
     
     Vault::brush vbrush;
@@ -214,6 +216,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                 ws
                 ('|' ws string %{ skin_c.set_text(state.match); })?)?
                ;
+
+        bitmask = '' %{ bitmask_v = 0; }
+                  ( number %{ bitmask_v |= (1 << toint(state.match)); } ws)* ;
 
         ####
 
@@ -779,9 +784,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        celauto_s = 's' ws1 ( [0-9] ${ cel.survive.insert(fc - '0'); } )*;
+        celauto_s = 's' ws1 bitmask %{ cel.survive = bitmask_v; };
 
-        celauto_b = 'b' ws1 ( [0-9] ${ cel.born.insert(fc - '0'); } )+;
+        celauto_b = 'b' ws1 bitmask %{ cel.born = bitmask_v; };
 
         celauto_a = 'a' ws1 number %{ cel.age = toint(state.match); } ;
 
@@ -881,9 +886,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_lowlands_threshold     = 'lowlands_threshold'  ws1 number %{ lev.genparams.lowlands_threshold = toint(state.match); };
         levelskin_water_quantile_mean    = 'water_quantile_mean' ws1 real   %{ lev.genparams.water_quantile_mean = toreal(state.match); };
         levelskin_water_quantile_dev     = 'water_quantile_dev'  ws1 real   %{ lev.genparams.water_quantile_dev = toreal(state.match); };
-        levelskin_flatten_walk_ng        = 'flatten_walk_ng'     ws1 number %{ lev.genparams.flatten_walk_ng = toint(state.match); };
-        levelskin_flatten_water_ng       = 'flatten_water_ng'    ws1 number %{ lev.genparams.flatten_water_ng = toint(state.match); };
-        levelskin_unflow_ng              = 'unflow_ng'           ws1 number %{ lev.genparams.unflow_ng = toint(state.match); };
+        levelskin_flatten_walk_ng        = 'flatten_walk_ng'     ws1 bitmask %{ lev.genparams.flatten_walk_ng = bitmask_v; };
+        levelskin_flatten_water_ng       = 'flatten_water_ng'    ws1 bitmask %{ lev.genparams.flatten_water_ng = bitmask_v; };
+        levelskin_unflow_ng              = 'unflow_ng'           ws1 bitmask %{ lev.genparams.unflow_ng = bitmask_v; };
         levelskin_karma_mean             = 'karma_mean'          ws1 real   %{ lev.genparams.karma_mean = toreal(state.match); };
         levelskin_karma_dev              = 'karma_dev'           ws1 real   %{ lev.genparams.karma_dev = toreal(state.match); };
         levelskin_nflatten               = 'nflatten'            ws1 number %{ lev.genparams.nflatten = toint(state.match); };

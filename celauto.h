@@ -138,7 +138,7 @@ struct CaMap {
 
                 unsigned int n = count_of_n[xy][rul.tag];
 
-                if (rul.survive.count(n) == 0) {
+                if ((rul.survive & (1 << n)) == 0) {
                     age_add = 1;
                 }
             }
@@ -166,7 +166,7 @@ struct CaMap {
 
                 const CelAuto& rul = celautos().get(j.first);
 
-                if (rul.born.count(n) != 0 &&
+                if ((rul.born & (1 << n)) != 0 &&
                     cell_good(xy.first, xy.second, rul) &&
                     n_cells + for_add.size() < MAX) {
 

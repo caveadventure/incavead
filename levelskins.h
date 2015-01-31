@@ -81,9 +81,9 @@ struct Levelskin {
             lowlands_threshold(1), 
             water_quantile_mean(5.0), 
             water_quantile_dev(1.0),
-            flatten_walk_ng(5),
-            flatten_water_ng(3),
-            unflow_ng(5),
+            flatten_walk_ng(0x1FF & ~0x1F), // Bitmask of 5,6,7,8
+            flatten_water_ng(0x1FF & ~0x7), // Bitmask of 3,4,5,6,7,8
+            unflow_ng(0x1F), // Bitmask of 0,1,2,3,4
             karma_mean(0.0),
             karma_dev(0.2),
             nflatten(-1),
