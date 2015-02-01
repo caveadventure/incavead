@@ -35,7 +35,8 @@ struct GameState {
     counters::Counts designs_counts;
     counters::Counts species_counts;
     counters::Counts terrain_counts;
-    counters::Counts vaults_counts;
+    counters::Counts fixed_vaults_counts;
+    counters::Counts semirandom_vaults_counts;
     counters::Counts random_vaults_counts;
 
     counters::Counts bonus_designs_a_counts;
@@ -126,6 +127,57 @@ struct GameOptions {
     GameOptions() : center_view(false), no_fade_colors(false), menu_theme(0) {}
 };
 
+
+struct summons_t {
+    unsigned int x;
+    unsigned int y;
+    
+    enum class type_t : unsigned int {
+        SPECIFIC,
+        LEVEL,
+        GENUS
+    };
+
+    type_t type;
+
+    tag_t summontag;
+    unsigned int level;
+    unsigned int count;
+    tag_t summonertag;
+    tag_t ally;
+    std::string msg;
+
+    summons_t() : x(0), y(0), type(type_t::SPECIFIC), level(0), count(0) {}
+
+    summons_t(unsigned int _x, unsigned int _y, type_t _t, tag_t _st, unsigned int _l, unsigned int _c, 
+              tag_t _sut, tag_t _al, const std::string& _m) : 
+        x(_x), y(_y), type(_t), summontag(_st), level(_l), count(_c), summonertag(_sut), ally(_al), msg(_m) {}
+};
+
+struct itemplace_t {
+    unsigned int x;
+    unsigned int y;
+
+    enum class type_t : unsigned int {
+        SPECIFIC,
+        LEVEL,
+        LEVEL_ANY
+    };
+
+    type_t type;
+
+    tag_t tag;
+    unsigned int level;
+
+    itemplace_t() : x(0), y(0), type(type_t::SPECIFIC), level(0) {}
+
+    itemplace_t(unsigned int _x, unsigned int _y, type_t _t, tag_t _dt, unsigned int _l) :
+        x(_x), y(_y), type(_t), tag(_dt), level(_l) {}
+};
+
+
+/*** ***/
+
 namespace serialize {
 
 template <>
@@ -169,7 +221,8 @@ struct reader<GameState> {
         serialize::read(s, state.designs_counts);
         serialize::read(s, state.species_counts);
         serialize::read(s, state.terrain_counts);
-        serialize::read(s, state.vaults_counts);
+        serialize::read(s, state.fixed_vaults_counts);
+        serialize::read(s, state.semirandom_vaults_counts);
         serialize::read(s, state.random_vaults_counts);
         serialize::read(s, state.bonus_designs_a_counts);
         serialize::read(s, state.bonus_designs_b_counts);
@@ -225,7 +278,8 @@ struct writer<GameState> {
         serialize::write(s, state.designs_counts);
         serialize::write(s, state.species_counts);
         serialize::write(s, state.terrain_counts);
-        serialize::write(s, state.vaults_counts);
+        serialize::write(s, state.fixed_vaults_counts);
+        serialize::write(s, state.semirandom_vaults_counts);
         serialize::write(s, state.random_vaults_counts);
         serialize::write(s, state.bonus_designs_a_counts);
         serialize::write(s, state.bonus_designs_b_counts);
@@ -243,7 +297,6 @@ struct writer<GameState> {
 template <>
 struct reader<GameOptions> {
     void read(Source& s, GameOptions& t) {
-
         serialize::read(s, t.center_view);
         serialize::read(s, t.no_fade_colors);
         serialize::read(s, t.menu_theme);
@@ -256,6 +309,59 @@ struct writer<GameOptions> {
         serialize::write(s, t.center_view);
         serialize::write(s, t.no_fade_colors);
         serialize::write(s, t.menu_theme);
+    }
+};
+
+
+template <>
+struct reader<summons_t> {
+    void read(Source& s, summons_t& t) {
+        serialize::read(s, t.x);
+        serialize::read(s, t.y);
+        serialize::read(s, t.type);
+        serialize::read(s, t.summontag);
+        serialize::read(s, t.level);
+        serialize::read(s, t.count);
+        serialize::read(s, t.summonertag);
+        serialize::read(s, t.ally);
+        serialize::read(s, t.msg);
+    }
+};
+
+template <>
+struct writer<summons_t> {
+    void write(Sink& s, const summons_t& t) {
+        serialize::write(s, t.x);
+        serialize::write(s, t.y);
+        serialize::write(s, t.type);
+        serialize::write(s, t.summontag);
+        serialize::write(s, t.level);
+        serialize::write(s, t.count);
+        serialize::write(s, t.summonertag);
+        serialize::write(s, t.ally);
+        serialize::write(s, t.msg);
+    }
+};
+
+template <>
+struct reader<itemplace_t> {
+    void read(Source& s, itemplace_t& t) {
+        serialize::read(s, t.x);
+        serialize::read(s, t.y);
+        serialize::read(s, t.type);
+        serialize::read(s, t.tag);
+        serialize::read(s, t.level);
+    }
+};
+
+template <>
+struct writer<itemplace_t> {
+    void write(Sink& s, const itemplace_t& t) {
+        serialize::write(s, t.x);
+        serialize::write(s, t.y);
+        serialize::write(s, t.type);
+        serialize::write(s, t.tag);
+        serialize::write(s, t.level);
     }
 };
 

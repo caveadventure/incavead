@@ -85,11 +85,19 @@ struct Vault {
 
     bool use_species_counts;
 
-    bool randomized;
+    enum class type_t : unsigned int {
+        FIXED,
+        SEMIRANDOM,
+        RANDOM
+    };
+
+    type_t type;
+    
+    bool random;
 
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
-              use_species_counts(false), randomized(false) {}
+              use_species_counts(false), type(type_t::SEMIRANDOM) {}
 
     void postprocess() {
 

@@ -94,8 +94,9 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
 
 template <typename T>
 inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
-                           std::vector<summons_t>& summons, std::set<grid::pt>& affected,
-                           std::vector<vault_packing_t>& packed, std::vector<grid::pt>& player_positions) {
+                           std::vector<summons_t>& summons, std::vector<itemplace_t>& itemplace,
+                           std::set<grid::pt>& affected, std::vector<vault_packing_t>& packed,
+                           std::vector<grid::pt>& player_positions) {
 
     grid::pt xy;
 
@@ -235,37 +236,23 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                 state.features.unset(xi, yi, state.render);
             }
 
-            tag_t item;
-
             switch (b.design.type) {
             case Vault::brush::design_t::type_t::NONE:
                 break;
 
             case Vault::brush::design_t::type_t::SPECIFIC:
-                item = b.design.tag;
+                itemplace.emplace_back(xi, yi, itemplace_t::type_t::SPECIFIC, b.design.tag, 0);
                 break;
 
             case Vault::brush::design_t::type_t::LEVEL:
-            {
-                auto is = state.designs_counts.take(state.rng, b.design.level);
-
-                if (is.size() > 0) {
-                    item = is.begin()->first;
-                }
+                itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL, tag_t(), b.design.level);
                 break;
-            }
 
             case Vault::brush::design_t::type_t::LEVEL_ANY:
-                item = state.designs_counts.find(state.rng, b.design.level);
+                itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL_ANY, tag_t(), b.design.level);
                 break;
             }
-
-            if (!item.null()) {
-                state.items.place(xi, yi,
-                                  state.items.make_item(item, items::pt(xi, yi), state.rng),
-                                  state.render);
-            }
-
+            
             if (b.species.type != Vault::brush::species_t::type_t::NONE && 
                 !state.grid.is_walk(xi, yi)) {
 

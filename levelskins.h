@@ -32,7 +32,8 @@ struct Levelskin {
     int designs_level;
     int vaults_level;
 
-    unsigned int number_vaults;
+    unsigned int number_fixed_vaults;
+    unsigned int number_semirandom_vaults;
     unsigned int number_random_vaults;
 
     struct mean_deviation_t {
@@ -67,7 +68,8 @@ struct Levelskin {
         unsigned int unflow_ng;
         double karma_mean;
         double karma_dev;
-        int nflatten;
+        int nflatten_walk;
+        int nflatten_water;
         int nunflow;
 
         mapgen_params_t() : 
@@ -86,7 +88,8 @@ struct Levelskin {
             unflow_ng(0x1F), // Bitmask of 0,1,2,3,4
             karma_mean(0.0),
             karma_dev(0.2),
-            nflatten(-1),
+            nflatten_walk(-1),
+            nflatten_water(-1),
             nunflow(-1)
             {}
     };
@@ -96,7 +99,8 @@ struct Levelskin {
 
     Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive_monsters(false), 
                   exclusive_items(false), no_phase_level(false), 
-                  species_level(-1), designs_level(-1), vaults_level(-1), number_vaults(100), number_random_vaults(0),
+                  species_level(-1), designs_level(-1), vaults_level(-1),
+                  number_fixed_vaults(100), number_semirandom_vaults(100), number_random_vaults(0),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),
                   number_features(160.0, 30.0),

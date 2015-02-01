@@ -158,7 +158,7 @@ void spectatorloop(SOCKET& sock) {
     }
 }
 
-void do_genmaps() {
+void do_genmaps(int start, int end) {
 
     std::cout << "Generating a new set of maps. Please wait." << std::endl;
 
@@ -166,7 +166,7 @@ void do_genmaps() {
     state.neigh.init(Game::GRID_W, Game::GRID_H);
     state.grid.init(Game::GRID_W, Game::GRID_H);
 
-    for (int worldz = -10; worldz <= 28; ++worldz) {
+    for (int worldz = start; worldz <= end; ++worldz) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
 
@@ -203,6 +203,9 @@ int main(int argc, char** argv) {
     int graphics = 0;
     bool fullwidth = false;
 
+    int genmaps_start = -9;
+    int genmaps_end = 26;
+    
     for (int argi = 1; argi < argc; ++argi) {
 
         std::string arg(argv[argi]);
@@ -227,11 +230,20 @@ int main(int argc, char** argv) {
 
             graphics = 2;
             fullwidth = true;
+
+        } else if (genmaps) {
+
+            size_t n = arg.find(':');
+
+            if (n != std::string::npos) {
+                genmaps_start = std::stoi(arg.substr(0, n));
+                genmaps_end = std::stoi(arg.substr(n+1));
+            }
         }
     }
 
     if (genmaps) {
-        do_genmaps();
+        do_genmaps(genmaps_start, genmaps_end);
         return 0;
     }
 

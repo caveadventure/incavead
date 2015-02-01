@@ -756,12 +756,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
       
         vault_use_species_counts = 'use_monster_counts' %{ vau.use_species_counts = true; };
 
-        vault_randomized = 'randomized' %{ vau.randomized = true; };
+        vault_fixed = 'fixed' %{ vau.type = Vault::type_t::FIXED; };
+        vault_semirandom = 'semirandom' %{ vau.type = Vault::type_t::SEMIRANDOM; };
+        vault_random = 'random' %{ vau.type = Vault::type_t::RANDOM; };
 
         vault_one_data =
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
-            vault_use_species_counts | vault_randomized |
+            vault_use_species_counts | vault_fixed | vault_semirandom | vault_random |
             '}'
              ${ fret; })
             ;
@@ -852,7 +854,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_designs_level = 'designs_level' ws1 number %{ lev.designs_level = toint(state.match); };
         levelskin_vaults_level  = 'vaults_level'  ws1 number %{ lev.vaults_level  = toint(state.match); };
 
-        levelskin_number_vaults = 'number_vaults' ws1 number %{ lev.number_vaults = toint(state.match); };
+        levelskin_number_fixed_vaults = 'number_fixed_vaults' ws1 number
+            %{ lev.number_fixed_vaults = toint(state.match); };
+
+        levelskin_number_semirandom_vaults = 'number_semirandom_vaults' ws1 number 
+            %{ lev.number_semirandom_vaults = toint(state.match); };
 
         levelskin_number_random_vaults = 'number_random_vaults' ws1 number 
             %{ lev.number_random_vaults = toint(state.match); };
@@ -891,7 +897,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_unflow_ng              = 'unflow_ng'           ws1 bitmask %{ lev.genparams.unflow_ng = bitmask_v; };
         levelskin_karma_mean             = 'karma_mean'          ws1 real   %{ lev.genparams.karma_mean = toreal(state.match); };
         levelskin_karma_dev              = 'karma_dev'           ws1 real   %{ lev.genparams.karma_dev = toreal(state.match); };
-        levelskin_nflatten               = 'nflatten'            ws1 number %{ lev.genparams.nflatten = toint(state.match); };
+        levelskin_nflatten_walk          = 'nflatten_walk'       ws1 number %{ lev.genparams.nflatten_walk = toint(state.match); };
+        levelskin_nflatten_water         = 'nflatten_water'      ws1 number %{ lev.genparams.nflatten_water = toint(state.match); };
         levelskin_nunflow                = 'nunflow'             ws1 number %{ lev.genparams.nunflow = toint(state.match); };
 
         levelskin_one_data =
@@ -902,14 +909,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_lightradius | levelskin_lightradius_max | levelskin_damage_terrain |
             levelskin_exclusive_monsters | levelskin_exclusive_items | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
-            levelskin_number_vaults | levelskin_number_random_vaults | levelskin_number_monsters | 
+            levelskin_number_fixed_vaults | levelskin_number_semirandom_vaults | levelskin_number_random_vaults |
+            levelskin_number_monsters | 
             levelskin_number_items | levelskin_number_features | levelskin_name | levelskin_treasure_level |
             levelskin_flow_epsilon | levelskin_flow_n_freq | levelskin_flow_volume |
             levelskin_flow_erosion | levelskin_flow_renorm_freq | levelskin_flow_renorm_scale |
             levelskin_walk_threshold | levelskin_lowlands_threshold | levelskin_water_quantile_mean |
             levelskin_water_quantile_dev | levelskin_flatten_walk_ng | levelskin_flatten_water_ng |
             levelskin_unflow_ng | levelskin_karma_mean | levelskin_karma_dev |
-            levelskin_nflatten | levelskin_nunflow |
+            levelskin_nflatten_walk | levelskin_nflatten_water | levelskin_nunflow |
             '}' 
             ${ fret; })
             ;

@@ -2,34 +2,6 @@
 #define __MONSTER_AI_H
 
 
-// HACK
-struct summons_t {
-    unsigned int x;
-    unsigned int y;
-    
-    enum class type_t : unsigned int {
-        SPECIFIC,
-        LEVEL,
-        GENUS
-    };
-
-    type_t type;
-
-    tag_t summontag;
-    unsigned int level;
-    unsigned int count;
-    tag_t summonertag;
-    tag_t ally;
-    std::string msg;
-
-    summons_t() : x(0), y(0), type(type_t::SPECIFIC), level(0), count(0) {}
-
-    summons_t(unsigned int _x, unsigned int _y, type_t _t, tag_t _st, unsigned int _l, unsigned int _c, 
-              tag_t _sut, tag_t _al, const std::string& _m) : 
-        x(_x), y(_y), type(_t), summontag(_st), level(_l), count(_c), summonertag(_sut), ally(_al), msg(_m) {}
-};
-
-
 inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 

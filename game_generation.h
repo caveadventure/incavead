@@ -4,30 +4,25 @@
 
 void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
 
-    std::ostringstream cached_grid;
+    std::ostringstream cached_map;
 
-    cached_grid << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
+    cached_map << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
 
-    gridseed = (((uint64_t)worldx) ^ 
-                ((uint64_t)worldy << 16) ^
-                ((uint64_t)worldz << 32)) + 1;
-
-    filename = cached_grid.str();
+    filename = cached_map.str();
 }
 
 template <typename FUNC>
 void make_map(int worldx, int worldy, int worldz, GameState& state,
-              uint64_t gridseed, const std::string& cached_grid,
-              FUNC progressbar) {
-
-    state.rng.init(gridseed);
-
-    const Levelskin& lev = levelskins().get(worldz);
+              const std::string& cached_grid, const Levelskin& lev, FUNC progressbar) {
 
     auto genparams = lev.genparams;
 
-    if (genparams.nflatten < 0) {
-        genparams.nflatten = std::max(0, 4 - 2*(worldx + worldy));
+    if (genparams.nflatten_walk < 0) {
+        genparams.nflatten_walk = std::max(0, 5 - 2*(worldx + worldy));
+    }
+
+    if (genparams.nflatten_water < 0) {
+        genparams.nflatten_water = std::max(0, 3 - 2*(worldx + worldy));
     }
 
     if (genparams.nunflow < 0) {
@@ -35,36 +30,30 @@ void make_map(int worldx, int worldy, int worldz, GameState& state,
     }
 
     state.grid.generate(state.neigh, state.rng, genparams, progressbar);
-
-    {
-        // Having two threads generate the same level at the same time is very rare,
-        // but let's put a lock in place just in case anyways.
-        static std::mutex m;
-        std::unique_lock<std::mutex> l(m);
-
-        serialize::Sink sink(cached_grid);
-        serialize::write(sink, state.grid);
-    }
 }
 
 
 inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource, 
-                            unsigned int vaults_level, unsigned int number_vaults, 
+                            unsigned int vaults_level, unsigned int number_vaults, Vault::type_t type,
                             std::vector<summons_t>& summons,
+                            std::vector<itemplace_t>& itemplace,
                             std::vector<grid::pt>& player_positions,
-                            std::vector<vault_packing_t>& vault_packing,
-                            bool randomized) {
+                            std::vector<vault_packing_t>& vault_packing) {
 
     std::set<grid::pt> affected;
 
     std::map<tag_t, unsigned int> vc;
 
-    if (randomized) {
-
+    switch (type) {
+    case Vault::type_t::FIXED:
+        vc = state.fixed_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        break;
+    case Vault::type_t::SEMIRANDOM:
+        vc = state.semirandom_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        break;
+    case Vault::type_t::RANDOM:
         vc = state.random_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
-
-    } else {
-        vc = state.vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        break;
     }
 
     std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
@@ -82,7 +71,7 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
             const Vault& v = vaults().get(vi.first);
 
             for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                generate_vault(v, state, ptsource, summons, affected, vault_packing, player_positions);
+                generate_vault(v, state, ptsource, summons, itemplace, affected, vault_packing, player_positions);
             }
         }
 
@@ -98,20 +87,84 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Read or generate cached map.
 
-    uint64_t gridseed;
+    const Levelskin& lev = levelskins().get(p.worldz);
+
+    uint64_t fixedseed = (((uint64_t)worldx) ^ 
+                          ((uint64_t)worldy << 16) ^
+                          ((uint64_t)worldz << 32)) + 1;
+
     std::string filename;
-    make_mapname(p.worldx, p.worldy, p.worldz, gridseed, filename);
+    make_mapname(p.worldx, p.worldy, p.worldz, filename);
 
     progressbar("Generating dungeon...");
+
+    unsigned int species_level = (lev.species_level >= 0 ? lev.species_level : std::max(p.worldz, 0));
+    unsigned int designs_level = (lev.designs_level >= 0 ? lev.designs_level : std::max(p.worldz, 0));
+    unsigned int vaults_level  = (lev.vaults_level  >= 0 ? lev.vaults_level  : std::max(p.worldz, 0));
+
+    std::vector<summons_t> summons;
+    std::vector<itemplace_t> itemplace;
+
+    std::vector<grid::pt> player_positions;
+    std::vector<vault_packing_t> vault_packing;
+
+    // Level-specific random seed that's always the same.
+
+    state.rng.init(fixedseed);
 
     try {
 
         serialize::Source source(filename);
         serialize::read(source, state.grid);
+        serialize::read(source, state.features);
+        serialize::read(source, summons);
+        serialize::read(source, itemplace);
+        serialize::read(source, player_positions);
+        serialize::read(source, vault_packing);
 
     } catch (std::exception& e) {
 
-        make_map(p.worldx, p.worldy, p.worldz, state, gridseed, filename, progressbar);
+        make_map(p.worldx, p.worldy, p.worldz, state, fixedseed, filename, lev, progressbar);
+
+        // Place some dungeon features on the same spots every time.
+
+        {
+            progressbar("Placing features...");
+
+            state.terrain_counts = terrain().counts;
+
+            unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
+
+            for (unsigned int i = 0; i < featscount; ++i) {
+
+                unsigned int takecount = 1;
+
+                std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+
+                for (const auto& j : t) {
+                    state.features.generate(state.rng, state.grid, maps, j.first, j.second);
+                }
+            }
+        }
+
+        grid::Map::genmaps_t maps(state.grid);
+
+        {
+            progressbar("Placing vaults...");
+
+            generate_vaults(state, maps, vaults_level, lev.number_random_vaults, 
+                            summons, itemplace, player_positions, vault_packing, true);
+        }
+
+        {
+            // Having two threads generate the same level at the same time is very rare,
+            // but let's put a lock in place just in case anyways.
+            static std::mutex m;
+            std::unique_lock<std::mutex> l(m);
+
+            serialize::Sink sink(cached_grid);
+            serialize::write(sink, state.grid);
+        }
     }
 
     // //
@@ -139,73 +192,37 @@ void Game::generate(GameState& state, FUNC progressbar) {
             throw std::runtime_error("Sanity error 1.4");
     }
 
-    // Level-specific random seed that's always the same.
-
-    state.rng.init(gridseed);
-
     // A known random seed for the randomized dungeon parts.
         
     size_t& num_visits = state.dungeon_visits_count[worldkey::key_t(p.worldx, p.worldy, p.worldz)];
 
-    uint64_t randomseed = ((game_seed + gridseed + num_visits) & 0xFFFFFFFF);
+    uint64_t semirandomseed = ((fixedseed + num_visits) & 0xFFFFFFFF);
 
     num_visits++;
 
+    uint64_r randomseed = ((game_seed + semirandomseed) & 0xFFFFFFFF);
+    
     //
-
-    const Levelskin& lev = levelskins().get(p.worldz);
-
-    unsigned int species_level = (lev.species_level >= 0 ? lev.species_level : std::max(p.worldz, 0));
-    unsigned int designs_level = (lev.designs_level >= 0 ? lev.designs_level : std::max(p.worldz, 0));
-    unsigned int vaults_level  = (lev.vaults_level  >= 0 ? lev.vaults_level  : std::max(p.worldz, 0));
-
-
-    std::vector<summons_t> summons;
-
-    std::vector<grid::pt> player_positions;
-    std::vector<vault_packing_t> vault_packing;
-
-    grid::Map::genmaps_t maps(state.grid);
-
-
-    // Place some dungeon features on the same spots every time.
-
-    {
-        progressbar("Placing features...");
-
-        state.terrain_counts = terrain().counts;
-
-        unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
-
-        for (unsigned int i = 0; i < featscount; ++i) {
-
-            unsigned int takecount = 1;
-
-            std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
-
-            for (const auto& j : t) {
-                state.features.generate(state.rng, state.grid, maps, j.first, j.second);
-            }
-        }
-    }
 
     // Place some vaults. Some are randomized, some are always on the same spots every time.
 
     {
         progressbar("Placing vaults...");
 
-        state.vaults_counts = vaults().counts;
+        state.semirandom_vaults_counts = vaults().counts;
         state.random_vaults_counts = vaults().random_counts;
 
+        state.rng.init(semirandomseed);
+
         generate_vaults(state, maps, vaults_level, lev.number_vaults, 
-                        summons, player_positions, vault_packing, false);
+                        summons, itemplace, player_positions, vault_packing, false);
 
         // Initialize a known random sequence here!!
 
         state.rng.init(randomseed);
 
         generate_vaults(state, maps, vaults_level, lev.number_random_vaults, 
-                        summons, player_positions, vault_packing, true);
+                        summons, itemplace, player_positions, vault_packing, true);
     }
 
 
@@ -301,6 +318,9 @@ void Game::generate(GameState& state, FUNC progressbar) {
                 state.grid.set_walk_water(state.neigh, x, y, spec.walk.is(true), spec.water.is(true));
             }
 
+            if (!state.grid.is_walk(xy.first, xy.second))
+                continue;
+
             if (!spec.feat.null()) {
                 state.features.set(x, y, spec.feat, state.render);
             }
@@ -380,12 +400,15 @@ void Game::generate(GameState& state, FUNC progressbar) {
         std::vector<items::Item> perms = uniques::items().get(p.worldx, p.worldy, p.worldz, tmp);
 
         for (const auto& i : perms) {
+
+            if (!state.grid.is_walk(i.xy.first, i.xy.second))
+                continue;
+
             state.items.place(i.xy.first, i.xy.second, i, state.render);
         }
     }
 
     // Place some random items.
-
     {
         progressbar("Placing items...");
 
@@ -418,8 +441,42 @@ void Game::generate(GameState& state, FUNC progressbar) {
         }
     }
 
-    // Place some random monsters.
+    // Place non-random items.
+    {
+        for (const auto& s : itemplace) {
+        
+            tag_t item;
 
+            switch (s.type) {
+
+            case itemplace_t::type_t::SPECIFIC:
+                item = s.tag;
+                break;
+
+            case itemplace_t::type_t::LEVEL:
+            {
+                auto is = state.designs_counts.take(state.rng, s.level);
+
+                if (is.size() > 0) {
+                    item = is.begin()->first;
+                }
+                break;
+            }
+
+            case itemplace_t::type_t::LEVEL_ANY:
+                item = state.designs_counts.find(state.rng, s.level);
+                break;
+            }
+
+            if (!item.null()) {
+                state.items.place(s.x, s.y,
+                                  state.items.make_item(item, items::pt(s.x, s.y), state.rng),
+                                  state.render);
+            }
+        }
+    }
+
+    // Place some random monsters.
     {
         progressbar("Placing monsters...");
 

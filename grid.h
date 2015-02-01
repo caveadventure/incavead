@@ -459,83 +459,125 @@ struct Map {
 
     }
 
-    template <typename PARAMS>
-    void flatten_pass(neighbors::Neighbors& neigh, const PARAMS& genparams) {
+    template <typename PARAMS, typename FUNC>
+    void flatten_pass(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar,
+                      size_t np_walk, size_t np_water) {
 
-        std::unordered_map<pt, size_t> nwalk;
-        std::unordered_map<pt, size_t> nwater;
+        std::unordered_set<pt> newwalkmap;
 
-        for (const auto& xy : walkmap) {
+        auto* walkmap_p = &walkmap;
 
-            bool iswater = watermap.count(xy);
+        size_t npass = std::max(np_walk, np_water);
+        
+        for (size_t np = 0; np < npass; ++np) {
 
-            for (const auto& ij_ : neigh(xy)) {
+            if (walkmap_p->size() > 2000)
+                progressbar("  ...");
 
-                auto ij = neigh.mk(ij_, xy);
+            std::unordered_map<pt, size_t> nwalk;
+            std::unordered_map<pt, size_t> nwater;
 
-                // For all solid squares neighboring a walkable square, count the number of neighbor walkable squares.
-                if (walkmap.count(ij) == 0)
-                    nwalk[ij]++;
+            for (const auto& xy : *walkmap_p) {
 
-                // For all dry squares neighboring a walkable water square, count the number of neighbor walkable water squares.
-                if (iswater && watermap.count(ij) == 0)
-                    nwater[ij]++;
+                bool iswater = watermap.count(xy);
+
+                for (const auto& ij_ : neigh(xy)) {
+
+                    auto ij = neigh.mk(ij_, xy);
+
+                    // For all solid squares neighboring a walkable square,
+                    // count the number of neighbor walkable squares.
+                    if (np < np_walk && walkmap.count(ij) == 0)
+                        nwalk[ij]++;
+
+                    // For all dry squares neighboring a walkable water square,
+                    // count the number of neighbor walkable water squares.
+                    if (np < np_water && iswater && watermap.count(ij) == 0)
+                        nwater[ij]++;
+                }
             }
-        }
 
-        for (const auto& z : nwalk) {
-            if (genparams.flatten_walk_ng & (1 << z.second)) {
-                walkmap.insert(z.first);
-            }
-        }
+            newwalkmap.clear();
 
-        for (const auto& z : nwater) {
-            if (genparams.flatten_water_ng & (1 << z.second)) {
-                watermap.insert(z.first);
-                walkmap.insert(z.first);
+            auto add_newwalkmap = [&](const pt& xy) {
+
+                newwalkmap.insert(xy);
+
+                for (const auto& ij_ : neigh(xy)) {
+                    auto ij = neigh.mk(ij_, xy);
+
+                    if (walkmap.count(ij))
+                        newwalkmap.insert(ij);
+                }
+            };
+            
+            for (const auto& z : nwalk) {
+                if (genparams.flatten_walk_ng & (1 << z.second)) {
+                    walkmap.insert(z.first);
+                    add_newwalkmap(z.first);
+                }
             }
+
+            for (const auto& z : nwater) {
+                if (genparams.flatten_water_ng & (1 << z.second)) {
+                    watermap.insert(z.first);
+                    walkmap.insert(z.first);
+                    add_newwalkmap(z.first);
+                }
+            }
+
+            walkmap_p = &newwalkmap;
         }
     }
 
 
-    template <typename PARAMS>
-    void unflow(neighbors::Neighbors& neigh, const PARAMS& genparams) {
+    template <typename PARAMS, typename FUNC>
+    void unflow(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar, size_t npass) {
 
         std::unordered_set<pt> unwater;
 
-        for (const pt& xy : watermap) {
-            unsigned int nwater = 0;
+        auto* watermap_p = &watermap;
 
-            for (const auto& xy_ : neigh(xy)) {
+        for (size_t np = 0; np < npass; ++np) {
 
-                if (watermap.count(neigh.mk(xy_, xy)) != 0)
-                    nwater++;
+            if (watermap_p->size() > 2000)
+                progressbar("  ...");
+            
+            unwater.clear();
+
+            for (const pt& xy : *watermap_p) {
+                unsigned int nwater = 0;
+
+                for (const auto& xy_ : neigh(xy)) {
+
+                    if (watermap.count(neigh.mk(xy_, xy)) != 0)
+                        nwater++;
+                }
+
+                if (genparams.unflow_ng & (1 << nwater)) {
+                    unwater.insert(xy);
+                }
             }
 
-            if (genparams.unflow_ng & (1 << nwater)) {
-                unwater.insert(xy);
+            for (const pt& xy : unwater) {
+                watermap.erase(xy);
             }
-        }
 
-        for (const pt& xy : unwater) {
-            watermap.erase(xy);
+            watermap_p = &unwater;
         }
     }
 
     template <typename PARAMS, typename FUNC>
     void flatten(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar) {
 
-        // genparams.nflatten and genparams.nunflow must be greater than zero!
-        // (Guaranteed elsewhere in the code.)
-
-        for (unsigned int i = 0; i < (unsigned int)genparams.nflatten; ++i) {
-            progressbar("Aging rock, " + std::to_string((int)((double)i/genparams.nflatten*100)) + "%...");
-            flatten_pass(neigh, genparams);
+        {
+            progressbar("Aging rock...");
+            flatten_pass(neigh, genparams, progressbar, genparams.nflatten_walk, genparams.nflatten_water);
         }
 
-        for (unsigned int i = 0; i < (unsigned int)genparams.nunflow; ++i) {
-            progressbar("Flowing water, " + std::to_string((int)((double)i/genparams.nunflow*100)) + "%...");
-            unflow(neigh, genparams);
+        {
+            progressbar("Flowing water...");
+            unflow(neigh, genparams,  progressbar, genparams.nunflow);
         }
     }
 
@@ -607,10 +649,6 @@ struct Map {
             progressbar("Placing water...");
             makerivers(neigh, rng, genparams);
         }        
-
-        // nflatten, nunflow:
-        // 5, 0; 
-        // 1, 6;
 
         flatten(neigh, genparams, progressbar);
 
