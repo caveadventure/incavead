@@ -318,7 +318,9 @@ struct reader<summons_t> {
     void read(Source& s, summons_t& t) {
         serialize::read(s, t.x);
         serialize::read(s, t.y);
-        serialize::read(s, t.type);
+        unsigned int tmp;
+        serialize::read(s, tmp);
+        t.type = (summons_t::type_t)tmp;
         serialize::read(s, t.summontag);
         serialize::read(s, t.level);
         serialize::read(s, t.count);
@@ -333,7 +335,7 @@ struct writer<summons_t> {
     void write(Sink& s, const summons_t& t) {
         serialize::write(s, t.x);
         serialize::write(s, t.y);
-        serialize::write(s, t.type);
+        serialize::write(s, (unsigned int)t.type);
         serialize::write(s, t.summontag);
         serialize::write(s, t.level);
         serialize::write(s, t.count);
@@ -348,7 +350,9 @@ struct reader<itemplace_t> {
     void read(Source& s, itemplace_t& t) {
         serialize::read(s, t.x);
         serialize::read(s, t.y);
-        serialize::read(s, t.type);
+        unsigned int tmp;
+        serialize::read(s, tmp);
+        t.type = (itemplace_t::type_t)tmp;
         serialize::read(s, t.tag);
         serialize::read(s, t.level);
     }
@@ -359,7 +363,7 @@ struct writer<itemplace_t> {
     void write(Sink& s, const itemplace_t& t) {
         serialize::write(s, t.x);
         serialize::write(s, t.y);
-        serialize::write(s, t.type);
+        serialize::write(s, (unsigned int)t.type);
         serialize::write(s, t.tag);
         serialize::write(s, t.level);
     }

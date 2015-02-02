@@ -2,7 +2,7 @@
 #define __GAME_GENERATION_H
 
 
-void make_mapname(int worldx, int worldy, int worldz, uint64_t& gridseed, std::string& filename) {
+void make_mapname(int worldx, int worldy, int worldz, std::string& filename) {
 
     std::ostringstream cached_map;
 
@@ -83,7 +83,8 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
 
 template <typename FUNC>
 inline grid::Map::genmaps_t generate_or_read_cached(const std::string& filename, GameState& state, const Levelskin& lev,
-                                                    unsigned int vaults_level, FUNC progressbar,
+                                                    int worldx, int worldy, int worldz, unsigned int vaults_level,
+                                                    FUNC progressbar,
                                                     std::vector<summons_t>& summons,
                                                     std::vector<itemplace_t>& itemplace,
                                                     std::vector<grid::pt>& player_positions,
@@ -104,7 +105,7 @@ inline grid::Map::genmaps_t generate_or_read_cached(const std::string& filename,
     } catch (std::exception& e) {
     }
 
-    make_map(p.worldx, p.worldy, p.worldz, state, lev, progressbar);
+    make_map(worldx, worldy, worldz, state, lev, progressbar);
 
     grid::Map::genmaps_t maps(state.grid);
 
@@ -143,12 +144,12 @@ inline grid::Map::genmaps_t generate_or_read_cached(const std::string& filename,
         std::unique_lock<std::mutex> l(m);
 
         serialize::Sink sink(filename);
-        serialize::read(sink, state.grid);
-        serialize::read(sink, state.features);
-        serialize::read(sink, summons);
-        serialize::read(sink, itemplace);
-        serialize::read(sink, player_positions);
-        serialize::read(sink, vault_packing);
+        serialize::write(sink, state.grid);
+        serialize::write(sink, state.features);
+        serialize::write(sink, summons);
+        serialize::write(sink, itemplace);
+        serialize::write(sink, player_positions);
+        serialize::write(sink, vault_packing);
     }
 
     return maps;
@@ -162,9 +163,9 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     const Levelskin& lev = levelskins().get(p.worldz);
 
-    uint64_t fixedseed = (((uint64_t)worldx) ^ 
-                          ((uint64_t)worldy << 16) ^
-                          ((uint64_t)worldz << 32)) + 1;
+    uint64_t fixedseed = (((uint64_t)p.worldx) ^ 
+                          ((uint64_t)p.worldy << 16) ^
+                          ((uint64_t)p.worldz << 32)) + 1;
 
     std::string filename;
     make_mapname(p.worldx, p.worldy, p.worldz, filename);
@@ -189,7 +190,9 @@ void Game::generate(GameState& state, FUNC progressbar) {
     state.semirandom_vaults_counts = vaults().semirandom_counts;
     state.random_vaults_counts = vaults().random_counts;
 
-    grid::Map::genmaps_t maps = generate_or_read_cached(filename, state, lev, vaults_level, progressbar,
+    grid::Map::genmaps_t maps = generate_or_read_cached(filename, state, lev,
+                                                        p.worldx, p.worldy, p.worldz,
+                                                        vaults_level, progressbar,
                                                         summons, itemplace, player_positions, vault_packing);
 
     // //
@@ -221,8 +224,8 @@ void Game::generate(GameState& state, FUNC progressbar) {
         
     size_t& num_visits = state.dungeon_visits_count[worldkey::key_t(p.worldx, p.worldy, p.worldz)];
 
-    uint64_t semirandomseed = ((fixedseed + (int)state.moon.phase) & 0xFFFFFFFF);
-    uint64_r randomseed = ((game_seed + fixedseed + num_visits) & 0xFFFFFFFF);
+    uint64_t semirandomseed = ((fixedseed + (int)state.moon.pi.phase) & 0xFFFFFFFF);
+    uint64_t randomseed = ((game_seed + fixedseed + num_visits) & 0xFFFFFFFF);
 
     num_visits++;
 
@@ -340,7 +343,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
                 state.grid.set_walk_water(state.neigh, x, y, spec.walk.is(true), spec.water.is(true));
             }
 
-            if (!state.grid.is_walk(xy.first, xy.second))
+            if (!state.grid.is_walk(x, y))
                 continue;
 
             if (!spec.feat.null()) {

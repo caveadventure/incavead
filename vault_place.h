@@ -8,6 +8,31 @@ struct vault_packing_t {
     unsigned int h;
 };
 
+namespace serialize {
+
+template <>
+struct reader<vault_packing_t> {
+    void read(Source& s, vault_packing_t& t) {
+        serialize::read(s, t.x);
+        serialize::read(s, t.y);
+        serialize::read(s, t.w);
+        serialize::read(s, t.h);
+    }
+};
+
+template <>
+struct writer<vault_packing_t> {
+    void write(Sink& s, const vault_packing_t& t) {
+        serialize::write(s, t.x);
+        serialize::write(s, t.y);
+        serialize::write(s, t.w);
+        serialize::write(s, t.h);
+    }
+};
+
+}
+
+
 /* (i is inner rectangle, o is outer rectangle)
 
  +-----------------------------------+

@@ -170,14 +170,18 @@ void do_genmaps(int start, int end) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
 
-                uint64_t gridseed;
                 std::string filename;
+                make_mapname(worldx, worldy, worldz, filename);
 
-                make_mapname(worldx, worldy, worldz, gridseed, filename);
+                /*
+                uint64_t fixedseed = (((uint64_t)worldx) ^ 
+                                      ((uint64_t)worldy << 16) ^
+                                      ((uint64_t)worldz << 32)) + 1;
 
                 std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
-                make_map(worldx, worldy, worldz, state, gridseed, filename,
+                make_map(worldx, worldy, worldz, state, fixedseed, filename,
                          [](const std::string& msg) { std::cout << msg << std::endl; });
+                */
             }
         }
     }

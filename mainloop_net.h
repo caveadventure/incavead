@@ -168,7 +168,8 @@ struct Main {
         state.designs_counts = designs().counts;
         state.species_counts = species().counts;
         state.terrain_counts = terrain().counts;
-        state.vaults_counts = vaults().counts;
+        state.fixed_vaults_counts = vaults().fixed_counts;
+        state.semirandom_vaults_counts = vaults().semirandom_counts;
         state.random_vaults_counts = vaults().random_counts;
 
         state.bonus_designs_a_counts = designs().bonus_a_counts;
