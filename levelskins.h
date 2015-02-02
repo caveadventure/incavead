@@ -100,12 +100,25 @@ struct Levelskin {
     Levelskin() : lightradius(8), lightradius_max(8), level(0), exclusive_monsters(false), 
                   exclusive_items(false), no_phase_level(false), 
                   species_level(-1), designs_level(-1), vaults_level(-1),
-                  number_fixed_vaults(100), number_semirandom_vaults(100), number_random_vaults(0),
+                  number_fixed_vaults(100), number_semirandom_vaults(0), number_random_vaults(0),
                   number_monsters(250.0, 20.0), 
                   number_items(300.0, 50.0),
                   number_features(160.0, 30.0),
                   has_treasure(false), treasure_level(0)
         {}
+
+
+    unsigned int get_species_level(int worldz) const {
+        return (species_level >= 0 ? species_level : std::max(worldz, 0));
+    }
+
+    unsigned int get_designs_level(int worldz) const {
+        return (designs_level >= 0 ? designs_level : std::max(worldz, 0));
+    }
+
+    unsigned int get_vaults_level(int worldz) const {
+        return (vaults_level  >= 0 ? vaults_level  : std::max(worldz, 0));
+    }
 };
 
 struct Levelskins {

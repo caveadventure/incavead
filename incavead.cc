@@ -170,18 +170,25 @@ void do_genmaps(int start, int end) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
 
-                std::string filename;
-                make_mapname(worldx, worldy, worldz, filename);
-
-                /*
-                uint64_t fixedseed = (((uint64_t)worldx) ^ 
-                                      ((uint64_t)worldy << 16) ^
-                                      ((uint64_t)worldz << 32)) + 1;
-
+                std::string filename = make_mapname(worldx, worldy, worldz);
+                uint64_t fixedseed = make_fixedseed(worldx, worldy, worldz);
+                
                 std::cout << "=== Making map for: " << worldx << "," << worldy << "," << worldz << std::endl;
-                make_map(worldx, worldy, worldz, state, fixedseed, filename,
-                         [](const std::string& msg) { std::cout << msg << std::endl; });
-                */
+
+                const Levelskin& lev = levelskins().get(worldz);
+                state.rng.init(fixedseed);
+
+                std::vector<summons_t> summons;
+                std::vector<itemplace_t> itemplace;
+
+                std::vector<grid::pt> player_positions;
+                std::vector<vault_packing_t> vault_packing;
+
+                generate_or_read_cached(filename, state, lev, worldx, worldy, worldz,
+                                        lev.get_vaults_level(worldz),
+                                        [](const std::string& msg) { std::cout << msg << std::endl; },
+                                        summons, itemplace, player_positions, vault_packing, true);
+
             }
         }
     }

@@ -2,13 +2,22 @@
 #define __GAME_GENERATION_H
 
 
-void make_mapname(int worldx, int worldy, int worldz, std::string& filename) {
+inline std::string make_mapname(int worldx, int worldy, int worldz) {
 
     std::ostringstream cached_map;
 
     cached_map << "_level_" << worldx << "_" << worldy << "_" << worldz << ".dat";
 
-    filename = cached_map.str();
+    return cached_map.str();
+}
+
+inline uint64_t make_fixedseed(int worldx, int worldy, int worldz) {
+
+    uint64_t ret = (((uint64_t)worldx) ^ 
+                    ((uint64_t)worldy << 16) ^
+                    ((uint64_t)worldz << 32)) + 1;
+
+    return ret;
 }
 
 template <typename FUNC>
@@ -82,27 +91,31 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
 
 
 template <typename FUNC>
-inline grid::Map::genmaps_t generate_or_read_cached(const std::string& filename, GameState& state, const Levelskin& lev,
-                                                    int worldx, int worldy, int worldz, unsigned int vaults_level,
-                                                    FUNC progressbar,
-                                                    std::vector<summons_t>& summons,
-                                                    std::vector<itemplace_t>& itemplace,
-                                                    std::vector<grid::pt>& player_positions,
-                                                    std::vector<vault_packing_t>& vault_packing) {
+inline grid::Map::genmaps_t
+generate_or_read_cached(const std::string& filename, GameState& state, const Levelskin& lev,
+                        int worldx, int worldy, int worldz, unsigned int vaults_level,
+                        FUNC progressbar,
+                        std::vector<summons_t>& summons,
+                        std::vector<itemplace_t>& itemplace,
+                        std::vector<grid::pt>& player_positions,
+                        std::vector<vault_packing_t>& vault_packing, bool force = false) {
 
-    try {
+    if (!force) {
 
-        serialize::Source source(filename);
-        serialize::read(source, state.grid);
-        serialize::read(source, state.features);
-        serialize::read(source, summons);
-        serialize::read(source, itemplace);
-        serialize::read(source, player_positions);
-        serialize::read(source, vault_packing);
+        try {
 
-        return grid::Map::genmaps_t(state.grid);
+            serialize::Source source(filename);
+            serialize::read(source, state.grid);
+            serialize::read(source, state.features);
+            serialize::read(source, summons);
+            serialize::read(source, itemplace);
+            serialize::read(source, player_positions);
+            serialize::read(source, vault_packing);
+
+            return grid::Map::genmaps_t(state.grid);
         
-    } catch (std::exception& e) {
+        } catch (std::exception& e) {
+        }
     }
 
     make_map(worldx, worldy, worldz, state, lev, progressbar);
@@ -163,18 +176,15 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     const Levelskin& lev = levelskins().get(p.worldz);
 
-    uint64_t fixedseed = (((uint64_t)p.worldx) ^ 
-                          ((uint64_t)p.worldy << 16) ^
-                          ((uint64_t)p.worldz << 32)) + 1;
+    uint64_t fixedseed = make_fixedseed(p.worldx, p.worldy, p.worldz);
 
-    std::string filename;
-    make_mapname(p.worldx, p.worldy, p.worldz, filename);
+    std::string filename = make_mapname(p.worldx, p.worldy, p.worldz);
 
     progressbar("Generating dungeon...");
 
-    unsigned int species_level = (lev.species_level >= 0 ? lev.species_level : std::max(p.worldz, 0));
-    unsigned int designs_level = (lev.designs_level >= 0 ? lev.designs_level : std::max(p.worldz, 0));
-    unsigned int vaults_level  = (lev.vaults_level  >= 0 ? lev.vaults_level  : std::max(p.worldz, 0));
+    unsigned int species_level = lev.get_species_level(p.worldz);
+    unsigned int designs_level = lev.get_designs_level(p.worldz);
+    unsigned int vaults_level  = lev.get_vaults_level(p.worldz);
 
     std::vector<summons_t> summons;
     std::vector<itemplace_t> itemplace;
