@@ -50,19 +50,21 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
 
     std::set<grid::pt> affected;
 
-    std::map<tag_t, unsigned int> vc;
+    counters::Counts vaults_counts;
 
     switch (type) {
     case Vault::type_t::FIXED:
-        vc = state.fixed_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        vaults_counts = vaults().fixed_counts;
         break;
     case Vault::type_t::SEMIRANDOM:
-        vc = state.semirandom_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        vaults_counts = vaults().semirandom_counts;
         break;
     case Vault::type_t::RANDOM:
-        vc = state.random_vaults_counts.take(state.rng, vaults_level, number_vaults, true);
+        vaults_counts = vaults().random_counts;
         break;
     }
+
+    std::map<tag_t, unsigned int> vc = vaults_counts.take(state.rng, vaults_level, number_vaults, true);
 
     std::map< unsigned int, std::map<tag_t, unsigned int> > s_vc;
 
@@ -98,24 +100,21 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
                         std::vector<summons_t>& summons,
                         std::vector<itemplace_t>& itemplace,
                         std::vector<grid::pt>& player_positions,
-                        std::vector<vault_packing_t>& vault_packing, bool force = false) {
+                        std::vector<vault_packing_t>& vault_packing) {
 
-    if (!force) {
+    try {
 
-        try {
+        serialize::Source source(filename);
+        serialize::read(source, state.grid);
+        serialize::read(source, state.features);
+        serialize::read(source, summons);
+        serialize::read(source, itemplace);
+        serialize::read(source, player_positions);
+        serialize::read(source, vault_packing);
 
-            serialize::Source source(filename);
-            serialize::read(source, state.grid);
-            serialize::read(source, state.features);
-            serialize::read(source, summons);
-            serialize::read(source, itemplace);
-            serialize::read(source, player_positions);
-            serialize::read(source, vault_packing);
-
-            return grid::Map::genmaps_t(state.grid);
+        return grid::Map::genmaps_t(state.grid);
         
-        } catch (std::exception& e) {
-        }
+    } catch (std::exception& e) {
     }
 
     make_map(worldx, worldy, worldz, state, lev, progressbar);
@@ -127,15 +126,13 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
     {
         progressbar("Placing features...");
 
-        state.terrain_counts = terrain().counts;
+        counters::Counts terrain_counts = terrain().counts;
 
         unsigned int featscount = ::fabs(state.rng.gauss(lev.number_features.mean, lev.number_features.deviation));
 
         for (unsigned int i = 0; i < featscount; ++i) {
 
-            unsigned int takecount = 1;
-
-            std::map<tag_t, unsigned int> t = state.terrain_counts.take(state.rng, 0, takecount);
+            std::map<tag_t, unsigned int> t = terrain_counts.take(state.rng, 0, 1);
 
             for (const auto& j : t) {
                 state.features.generate(state.rng, state.grid, maps, j.first, j.second);
@@ -195,10 +192,6 @@ void Game::generate(GameState& state, FUNC progressbar) {
     // Level-specific random seed that's always the same.
 
     state.rng.init(fixedseed);
-
-    state.fixed_vaults_counts = vaults().fixed_counts;
-    state.semirandom_vaults_counts = vaults().semirandom_counts;
-    state.random_vaults_counts = vaults().random_counts;
 
     grid::Map::genmaps_t maps = generate_or_read_cached(filename, state, lev,
                                                         p.worldx, p.worldy, p.worldz,

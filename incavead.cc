@@ -165,6 +165,7 @@ void do_genmaps(int start, int end) {
     GameState state;
     state.neigh.init(Game::GRID_W, Game::GRID_H);
     state.grid.init(Game::GRID_W, Game::GRID_H);
+    state.render.init(Game::GRID_W, Game::GRID_H);
 
     for (int worldz = start; worldz <= end; ++worldz) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
@@ -187,7 +188,7 @@ void do_genmaps(int start, int end) {
                 generate_or_read_cached(filename, state, lev, worldx, worldy, worldz,
                                         lev.get_vaults_level(worldz),
                                         [](const std::string& msg) { std::cout << msg << std::endl; },
-                                        summons, itemplace, player_positions, vault_packing, true);
+                                        summons, itemplace, player_positions, vault_packing);
 
             }
         }
