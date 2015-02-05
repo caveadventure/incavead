@@ -117,6 +117,77 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
 }
 
 
+inline void vault_draw_point(unsigned int xi, unsigned int yi, const Vault::brush& b,
+                             GameState& state, std::vector<summons_t>& summons,
+                             std::vector<itemplace_t>& itemplace, bool use_species_counts) {
+
+    if (!b.is_blank) {
+
+        if (b.is_walk) {
+            state.grid.walkmap.insert(grid::pt(xi, yi));
+        } else {
+            state.grid.walkmap.erase(grid::pt(xi, yi));
+        }
+
+        if (b.is_water) {
+            state.grid.watermap.insert(grid::pt(xi, yi));
+        } else {
+            state.grid.watermap.erase(grid::pt(xi, yi));
+        }
+    }
+
+    if (!b.terrain.null()) {
+        state.features.set(xi, yi, b.terrain, state.render);
+
+    } else {
+        state.features.unset(xi, yi, state.render);
+    }
+
+    switch (b.design.type) {
+    case Vault::brush::design_t::type_t::NONE:
+        break;
+
+    case Vault::brush::design_t::type_t::SPECIFIC:
+        itemplace.emplace_back(xi, yi, itemplace_t::type_t::SPECIFIC, b.design.tag, 0);
+        break;
+
+    case Vault::brush::design_t::type_t::LEVEL:
+        itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL, tag_t(), b.design.level);
+        break;
+
+    case Vault::brush::design_t::type_t::LEVEL_ANY:
+        itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL_ANY, tag_t(), b.design.level);
+        break;
+    }
+            
+    if (b.species.type != Vault::brush::species_t::type_t::NONE && 
+        !state.grid.is_walk(xi, yi)) {
+
+        throw std::runtime_error("Invalid vault monster placement");
+    }
+
+    switch (b.species.type) {
+    case Vault::brush::species_t::type_t::NONE:
+        break;
+
+    case Vault::brush::species_t::type_t::SPECIFIC:
+        summons.emplace_back(xi, yi, summons_t::type_t::SPECIFIC, b.species.tag, 
+                             0, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        break;
+
+    case Vault::brush::species_t::type_t::LEVEL:
+        summons.emplace_back(xi, yi, summons_t::type_t::LEVEL, b.species.tag, 
+                             b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        break;
+
+    case Vault::brush::species_t::type_t::GENUS:
+        summons.emplace_back(xi, yi, summons_t::type_t::GENUS, b.species.tag, 
+                             b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        break;
+    }
+}
+
+
 template <typename T>
 inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                            std::vector<summons_t>& summons, std::vector<itemplace_t>& itemplace,
@@ -151,7 +222,11 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                        vault.pic :
                        vaults().get(vault.inherit).pic);
 
+    const auto& cloud = (vault.inherit.null() ?
+                         vault.cloud :
+                         vaults().get(vault.inherit).cloud);
 
+    
     if (vault.placement == Vault::placement_t::packing) {
 
         if (!packing_placement(state, w, h, packed, xy)) {
@@ -217,92 +292,66 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
         affected.insert(grid::pt(xy.first + w, xy.second + i));
     }
 
-    for (unsigned int y = 0; y < _h; ++y) {
-        for (unsigned int x = 0; x < _w; ++x) {
+    auto get_brush = [&brushes](unsigned char c) {
+        auto bi = brushes.find(c);
 
-            const std::string& line = pic[y];
-            if (x >= line.size())
+        if (bi == brushes.end()) {
+            throw std::runtime_error("Invalid brush char: '" + std::string(1, c) + "'");
+        }
+
+        const Vault::brush& b = bi->second;
+        return b;
+    };
+
+    if (pic.size() > 0) {
+    
+        for (unsigned int y = 0; y < _h; ++y) {
+            for (unsigned int x = 0; x < _w; ++x) {
+
+                const std::string& line = pic[y];
+                if (x >= line.size())
+                    continue;
+
+                unsigned int c = line[x];
+                const Vault::brush& b = get_brush(c);
+
+                unsigned int xi = xy.first  + (vault.transpose ? y : x);
+                unsigned int yi = xy.second + (vault.transpose ? x : y);
+
+                affected.insert(grid::pt(xi, yi));
+
+                vault_draw_point(xi, yi, b, state, summons, itemplace, vault.use_species_counts);
+            }
+        }
+    }
+
+    if (cloud.n > 0) {
+
+        for (size_t i = 0; i < cloud.n; ++i) {
+
+            double xx = state.rng.gauss(cloud.mean, cloud.deviation);
+            double yy = state.rng.gauss(cloud.mean, cloud.deviation);
+
+            int xi = (int)(xy.first + ax) + xx;
+            int yi = (int)(xy.second + ay) + yy;
+
+            if (xi < 0 || yi < 0 || xi >= (int)state.grid.w || yi >= (int)state.grid.h)
                 continue;
 
-            unsigned int c = line[x];
-            auto bi = brushes.find(c);
+            std::discrete_distribution<size_t> d(cloud.chances.begin(), cloud.chances.end());
+            unsigned char c = cloud.brushes[d(state.rng.gen)];
 
-            if (bi == brushes.end()) {
-                throw std::runtime_error("Invalid brush char: '" +
-                                         std::string(1, c) + "'");
+            const Vault::brush& b = get_brush(c);
+
+            vault_draw_point(xi, yi, b, state, summons, itemplace, vault.use_species_counts);
+
+            grid::pt tmp(xi, yi);
+
+            for (const auto& v : state.neigh(tmp)) {
+                affected.insert(state.neigh.mk(v, tmp));
             }
 
-            const Vault::brush& b = bi->second;
-
-            unsigned int xi = xy.first  + (vault.transpose ? y : x);
-            unsigned int yi = xy.second + (vault.transpose ? x : y);
-
-            affected.insert(grid::pt(xi, yi));
-
-            if (!b.is_blank) {
-
-                if (b.is_walk) {
-                    state.grid.walkmap.insert(grid::pt(xi, yi));
-                } else {
-                    state.grid.walkmap.erase(grid::pt(xi, yi));
-                }
-
-                if (b.is_water) {
-                    state.grid.watermap.insert(grid::pt(xi, yi));
-                } else {
-                    state.grid.watermap.erase(grid::pt(xi, yi));
-                }
-            }
-
-            if (!b.terrain.null()) {
-                state.features.set(xi, yi, b.terrain, state.render);
-
-            } else {
-                state.features.unset(xi, yi, state.render);
-            }
-
-            switch (b.design.type) {
-            case Vault::brush::design_t::type_t::NONE:
-                break;
-
-            case Vault::brush::design_t::type_t::SPECIFIC:
-                itemplace.emplace_back(xi, yi, itemplace_t::type_t::SPECIFIC, b.design.tag, 0);
-                break;
-
-            case Vault::brush::design_t::type_t::LEVEL:
-                itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL, tag_t(), b.design.level);
-                break;
-
-            case Vault::brush::design_t::type_t::LEVEL_ANY:
-                itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL_ANY, tag_t(), b.design.level);
-                break;
-            }
-            
-            if (b.species.type != Vault::brush::species_t::type_t::NONE && 
-                !state.grid.is_walk(xi, yi)) {
-
-                throw std::runtime_error("Invalid vault monster placement");
-            }
-
-            switch (b.species.type) {
-            case Vault::brush::species_t::type_t::NONE:
-                break;
-
-            case Vault::brush::species_t::type_t::SPECIFIC:
-                summons.emplace_back(xi, yi, summons_t::type_t::SPECIFIC, b.species.tag, 
-                                     0, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
-                break;
-
-            case Vault::brush::species_t::type_t::LEVEL:
-                summons.emplace_back(xi, yi, summons_t::type_t::LEVEL, b.species.tag, 
-                                     b.species.level, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
-                break;
-
-            case Vault::brush::species_t::type_t::GENUS:
-                summons.emplace_back(xi, yi, summons_t::type_t::GENUS, b.species.tag, 
-                                     b.species.level, (vault.use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
-                break;
-            }
+            affected.insert(tmp);
         }
     }
 }

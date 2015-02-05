@@ -92,21 +92,34 @@ struct Vault {
     };
 
     type_t type;
-    
-    bool random;
 
+    struct cloud_t {
+        size_t n;
+        double mean;
+        double deviation;
+        std::vector<double> chances;
+        std::vector<unsigned char> brushes;
+
+        cloud_t() : n(0), mean(0), deviation(0) {}
+    };
+
+    cloud_t cloud;
+    
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
               use_species_counts(false), type(type_t::FIXED) {}
 
     void postprocess() {
 
-        h = pic.size();
-        w = 0;
+        unsigned int _h = pic.size();
+        unsigned int _w = 0;
 
         for (const std::string& s : pic) {
-            w = std::max((unsigned int)s.size(), w);
+            _w = std::max((unsigned int)s.size(), _w);
         }
+
+        w = std::max(w, _w);
+        h = std::max(h, _h);
     }
 
 };

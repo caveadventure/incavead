@@ -748,6 +748,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         vault_line = 'l' ws1 string %{ vau.pic.push_back(state.match); } ;
 
+        vault_cloud = 'cloud' ws1 number %{ vau.cloud.n = toint(state.match); }
+                      ws1 real %{ vau.cloud.mean = toreal(state.match); }
+                      ws1 real %{ vau.cloud.deviation = toreal(state.match); }
+                      (ws1 '\'' any ${ vau.cloud.brushes.push_back(fc); } '\''
+                       ws1 real %{ vau.cloud.chances.push_back(toreal(state.match)); } )+
+                      ;
+
         vault_inherit = 'inherit' ws1 tag %{ vau.inherit = tag_t(state.match, tagmem); };
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
@@ -755,6 +762,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         vault_priority = 'priority' ws1 number %{ vau.priority = toint(state.match); };
       
         vault_use_species_counts = 'use_monster_counts' %{ vau.use_species_counts = true; };
+
+        vault_width  = 'width'  ws1 number %{ vau.w = toint(state.match); };
+        vault_height = 'height' ws1 number %{ vau.h = toint(state.match); };
 
         vault_fixed = 'fixed' %{ vau.type = Vault::type_t::FIXED; };
         vault_semirandom = 'semirandom' %{ vau.type = Vault::type_t::SEMIRANDOM; };
@@ -764,7 +774,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
             vault_use_species_counts | vault_fixed | vault_semirandom | vault_random |
-            '}'
+            vault_cloud | vault_width | vault_height | '}'
              ${ fret; })
             ;
 
