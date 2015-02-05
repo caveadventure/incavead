@@ -115,6 +115,11 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
         return grid::Map::genmaps_t(state.grid);
         
     } catch (std::exception& e) {
+        state.features.init();
+        summons.clear();
+        itemplace.clear();
+        player_positions.clear();
+        vault_packing.clear();
     }
 
     make_map(worldx, worldy, worldz, state, lev, progressbar);
@@ -122,7 +127,7 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
     grid::Map::genmaps_t maps(state.grid);
 
     // Place some dungeon features on the same spots every time.
-
+    
     {
         progressbar("Placing features...");
 
@@ -161,7 +166,7 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
         serialize::write(sink, player_positions);
         serialize::write(sink, vault_packing);
     }
-
+    
     return maps;
 }
                                     
@@ -221,6 +226,8 @@ void Game::generate(GameState& state, FUNC progressbar) {
     for (const auto& xy : state.grid.floormap) {
         if (state.grid.watermap.count(xy) != 0)
             throw std::runtime_error("Sanity error 1.4");
+        if (state.grid.walkmap.count(xy) == 0)
+            throw std::runtime_error("Sanity error 1.5");
     }
 
     // A known random seed for the randomized dungeon parts.

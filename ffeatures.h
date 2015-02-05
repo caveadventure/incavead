@@ -61,6 +61,7 @@ struct Features {
     
     void init() {
         feats.clear();
+        labels.clear();
     }
 
     void clear() {
@@ -157,7 +158,7 @@ struct Features {
             if (!ptsource.one_of_shore(rng, ret)) return false;
             break;
         }
-
+        
         ptsource.add_nogen(ret.first, ret.second);
         return true;
     }

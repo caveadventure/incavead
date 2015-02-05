@@ -162,14 +162,15 @@ void do_genmaps(int start, int end) {
 
     std::cout << "Generating a new set of maps. Please wait." << std::endl;
 
-    GameState state;
-    state.neigh.init(Game::GRID_W, Game::GRID_H);
-    state.grid.init(Game::GRID_W, Game::GRID_H);
-    state.render.init(Game::GRID_W, Game::GRID_H);
-
     for (int worldz = start; worldz <= end; ++worldz) {
         for (int worldx = -1; worldx <= 1; ++worldx) {
             for (int worldy = -1; worldy <= 1; ++worldy) {
+
+                GameState state;
+                state.neigh.init(Game::GRID_W, Game::GRID_H);
+                state.grid.init(Game::GRID_W, Game::GRID_H);
+                state.render.init(Game::GRID_W, Game::GRID_H);
+                state.features.init();
 
                 std::string filename = make_mapname(worldx, worldy, worldz);
                 uint64_t fixedseed = make_fixedseed(worldx, worldy, worldz);
