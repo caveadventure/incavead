@@ -208,7 +208,7 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
     int _px = (vault.transpose ? vault.py : vault.px);
     int _py = (vault.transpose ? vault.px : vault.py);
 
-    if (ax >= w || ay >= h) {
+    if (w > 0 && h > 0 && (ax >= w || ay >= h)) {
         std::cerr << "Sanity error in vault anchor! " << ax << "," << ay << " "
                   << w << "," << h << " : " << vault.tag.v << " " << vault.inherit.v << std::endl;
         return;
@@ -327,15 +327,34 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
 
     if (cloud.n > 0) {
 
+        std::unordered_set<grid::pt> used;
+
         for (size_t i = 0; i < cloud.n; ++i) {
 
-            double xx = state.rng.gauss(cloud.mean, cloud.deviation);
-            double yy = state.rng.gauss(cloud.mean, cloud.deviation);
+            grid::pt cxy;
 
-            int xi = (int)(xy.first + ax) + xx;
-            int yi = (int)(xy.second + ay) + yy;
+            size_t j;
+            for (j = 0; j < 10; ++j) {
 
-            if (xi < 0 || yi < 0 || xi >= (int)state.grid.w || yi >= (int)state.grid.h)
+                double xx = state.rng.gauss(cloud.mean, cloud.deviation);
+                double yy = state.rng.gauss(cloud.mean, cloud.deviation);
+
+                int xi = (int)(xy.first + ax) + xx;
+                int yi = (int)(xy.second + ay) + yy;
+
+                if (xi < 0 || yi < 0 || xi >= (int)state.grid.w || yi >= (int)state.grid.h)
+                    continue;
+
+                cxy = grid::pt(xi, yi);
+
+                if (used.count(cxy) != 0)
+                    continue;
+
+                used.insert(cxy);
+                break;
+            }
+
+            if (j >= 10)
                 continue;
 
             std::discrete_distribution<size_t> d(cloud.chances.begin(), cloud.chances.end());
@@ -343,15 +362,13 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
 
             const Vault::brush& b = get_brush(c);
 
-            vault_draw_point(xi, yi, b, state, summons, itemplace, vault.use_species_counts);
+            vault_draw_point(cxy.first, cxy.second, b, state, summons, itemplace, vault.use_species_counts);
 
-            grid::pt tmp(xi, yi);
-
-            for (const auto& v : state.neigh(tmp)) {
-                affected.insert(state.neigh.mk(v, tmp));
+            for (const auto& v : state.neigh(cxy)) {
+                affected.insert(state.neigh.mk(v, cxy));
             }
 
-            affected.insert(tmp);
+            affected.insert(cxy);
         }
     }
 }
