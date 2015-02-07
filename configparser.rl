@@ -755,6 +755,18 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        ws1 real %{ vau.cloud.chances.push_back(toreal(state.match)); } )+
                       ;
 
+        vbplacement = 
+            'floor'     %{ vau.blob.placement = Vault::placement_t::floor; }     | 
+            'water'     %{ vau.blob.placement = Vault::placement_t::water; }     | 
+            'corner'    %{ vau.blob.placement = Vault::placement_t::corner; }    |
+            'shoreline' %{ vau.blob.placement = Vault::placement_t::shoreline; } |
+            'lowlands'  %{ vau.blob.placement = Vault::placement_t::lowlands; }  ;
+
+        vault_blob = 'blob' ws1 number %{ vau.blob.n = toint(state.match); }
+                      ws1 vbplacement
+                      ws1 '\'' any ${ vau.blob.brush = fc; } '\''
+                      ;
+
         vault_inherit = 'inherit' ws1 tag %{ vau.inherit = tag_t(state.match, tagmem); };
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
@@ -774,7 +786,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
             vault_use_species_counts | vault_fixed | vault_semirandom | vault_random |
-            vault_cloud | vault_width | vault_height | '}'
+            vault_cloud | vault_width | vault_height | vault_blob |
+            '}'
              ${ fret; })
             ;
 

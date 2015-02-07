@@ -104,7 +104,17 @@ struct Vault {
     };
 
     cloud_t cloud;
-    
+
+    struct blob_t {
+        size_t n;
+        placement_t placement;
+        unsigned char brush;
+
+        blob_t() : n(0), placement(placement_t::floor), brush(0) {}
+    };
+
+    blob_t blob;
+
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
               use_species_counts(false), type(type_t::FIXED) {}

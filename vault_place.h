@@ -226,6 +226,9 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                          vault.cloud :
                          vaults().get(vault.inherit).cloud);
 
+    const auto& blob = (vault.inherit.null() ?
+                        vault.blob :
+                        vaults().get(vault.inherit).blob);
     
     if (vault.placement == Vault::placement_t::packing) {
 
@@ -371,6 +374,68 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
             affected.insert(cxy);
         }
     }
+
+    if (blob.n > 0) {
+
+        auto check_memfn = [](Vault::placement_t p) {
+            switch (p) {
+
+            case Vault::placement_t::floor:
+                return std::mem_fn(&grid::Map::is_floor);
+
+            case Vault::placement_t::water:
+                return std::mem_fn(&grid::Map::is_lake);
+
+            case Vault::placement_t::corner:
+                return std::mem_fn(&grid::Map::is_corner);
+
+            case Vault::placement_t::shoreline:
+                return std::mem_fn(&grid::Map::is_shore);
+
+            case Vault::placement_t::lowlands:
+                return std::mem_fn(&grid::Map::is_lowlands);
+
+            default:
+                return std::mem_fn(&grid::Map::is_floor);
+            }
+        }(blob.placement);
+
+
+        std::unordered_set<grid::pt> used;
+
+        for (size_t i = 0; i < blob.n; ++i) {
+
+            std::vector<grid::pt> possibles;
+
+            for (const auto& v : state.neigh(xy)) {
+
+                grid::pt nxy = state.neigh.mk(v, xy);
+
+                if (check_memfn(state.grid, nxy.first, nxy.second) && used.count(nxy) == 0) {
+
+                    possibles.push_back(nxy);
+                }
+            }
+
+            if (possibles.empty())
+                break;
+
+            xy = possibles[state.rng.n(possibles.size())];
+
+            used.insert(xy);
+
+            const Vault::brush& b = get_brush(blob.brush);
+
+            vault_draw_point(xy.first, xy.second, b, state, summons, itemplace, vault.use_species_counts);
+
+            for (const auto& v : state.neigh(xy)) {
+                affected.insert(state.neigh.mk(v, xy));
+            }
+
+            affected.insert(xy);
+        }
+
+    }    
 }
 
 
