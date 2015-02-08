@@ -127,6 +127,18 @@ struct Vault {
     };
 
     river_t river;
+
+    struct room_t {
+        unsigned int w1;
+        unsigned int w2;
+        unsigned int h1;
+        unsigned int h2;
+        unsigned char brush;
+
+        room_t() : w1(0), w2(0), h1(0), h2(0), brush(0) {}
+    };
+
+    room_t room;
     
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),

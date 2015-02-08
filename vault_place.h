@@ -328,6 +328,25 @@ inline void vault_draw_river(GameState& state, vault_state_t& vaultstate, double
 
     const Vault::brush& b = vault_get_brush(brushes, river.brush);
 
+    std::unordered_set<grid::pt> drawn;
+
+    auto do_draw = [&](int px, int py) {
+
+        while (px < 0) px += state.grid.w;
+        while (py < 0) py += state.grid.h;
+
+        px = px % state.grid.w;
+        py = py % state.grid.h;
+
+        grid::pt pxy(px, py);
+        
+        if (drawn.count(pxy) == 0) {
+
+            vault_draw_point(px, py, b, state, vaultstate, use_species_counts);
+            drawn.insert(pxy);
+        }
+    };
+
     for (size_t i = 0; i < length; ++i) {
 
         double ax = ::cos(angle);
@@ -350,17 +369,14 @@ inline void vault_draw_river(GameState& state, vault_state_t& vaultstate, double
 
         while (line.step(px, py)) {
 
-            while (px < 0) px += state.grid.w;
-            while (py < 0) py += state.grid.h;
-
-            px = px % state.grid.w;
-            py = py % state.grid.h;
-            
-            vault_draw_point(px, py, b, state, vaultstate, use_species_counts);
+            do_draw(px, py);
         }
 
-        vault_draw_point(::round(x), ::round(y), b, state, vaultstate, use_species_counts);
-        
+        int tmpx = ::round(x);
+        int tmpy = ::round(y);
+
+        do_draw(tmpx, tmpy);
+
         x += ax * 0.5;
         y += ay * 0.5;
 
@@ -374,6 +390,10 @@ inline void vault_draw_river(GameState& state, vault_state_t& vaultstate, double
 
             vault_draw_river(state, vaultstate, x, y, brushes, river, angle, width, length-i, use_species_counts);
         }
+    }
+
+    for (const grid::pt& xy : drawn) {
+        vaultstate.affect(state, xy);
     }
 }
 
@@ -394,12 +414,6 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
     int _px = (vault.transpose ? vault.py : vault.px);
     int _py = (vault.transpose ? vault.px : vault.py);
 
-    if (w > 0 && h > 0 && (ax >= w || ay >= h)) {
-        std::cerr << "Sanity error in vault anchor! " << ax << "," << ay << " "
-                  << w << "," << h << " : " << vault.tag.v << " " << vault.inherit.v << std::endl;
-        return;
-    }
-
     const auto& brushes = (vault.inherit.null() ?
                            vault.brushes :
                            vaults().get(vault.inherit).brushes);
@@ -419,6 +433,32 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
     const auto& river = (vault.inherit.null() ?
                          vault.river :
                          vaults().get(vault.inherit).river);
+
+    const auto& room = (vault.inherit.null() ?
+                        vault.room :
+                        vaults().get(vault.inherit).room);
+
+    unsigned int roomw = state.rng.range(room.w1, room.w2);
+    unsigned int roomh = state.rng.range(room.h1, room.h2);
+
+    unsigned int picw = w;
+    unsigned int pich = h;
+    
+    w = std::max(picw, vault.transpose ? roomh : roomw);
+    h = std::max(pich, vault.transpose ? roomw : roomh);
+
+    if (w > picw)
+        ax += (w - picw) / 2;
+
+    if (h > pich)
+        ay += (h - pich) / 2;
+    
+    if (w > 0 && h > 0 && (ax >= w || ay >= h)) {
+        std::cerr << "Sanity error in vault anchor! " << ax << "," << ay << " "
+                  << w << "," << h << " : " << vault.tag.v << " " << vault.inherit.v << std::endl;
+        return;
+    }
+
 
     if (vault.placement == Vault::placement_t::packing) {
 
@@ -486,10 +526,30 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
     }
 
 
-    /*** Pre-drawn vault ***/
-    
+    /*** Pre-drawn vault (possibly in a room) ***/
+
+    if (w > picw || h > pich) {
+
+        for (unsigned int y = 0; y < h; ++y) {
+            for (unsigned int x = 0; x < w; ++x) {
+
+                const Vault::brush& b = vault_get_brush(brushes, room.brush);
+
+                unsigned int xi = xy.first  + x;
+                unsigned int yi = xy.second + y;
+
+                vaultstate.affected.insert(grid::pt(xi, yi));
+
+                vault_draw_point(xi, yi, b, state, vaultstate, vault.use_species_counts);
+            }
+        }
+    }
+        
     if (pic.size() > 0) {
-    
+
+        unsigned int offx = (w - picw) / 2;
+        unsigned int offy = (h - pich) / 2;
+        
         for (unsigned int y = 0; y < _h; ++y) {
             for (unsigned int x = 0; x < _w; ++x) {
 
@@ -500,8 +560,8 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
                 unsigned int c = line[x];
                 const Vault::brush& b = vault_get_brush(brushes, c);
 
-                unsigned int xi = xy.first  + (vault.transpose ? y : x);
-                unsigned int yi = xy.second + (vault.transpose ? x : y);
+                unsigned int xi = xy.first  + offx + (vault.transpose ? y : x);
+                unsigned int yi = xy.second + offy + (vault.transpose ? x : y);
 
                 vaultstate.affected.insert(grid::pt(xi, yi));
 
