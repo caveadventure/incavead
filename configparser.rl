@@ -104,6 +104,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
     damage::val_t dmgval;
 
+    mean_deviation_t meandev;
+
     maudit::glyph skin;
     maudit::glyph skin_b;
     maudit::glyph skin_c;
@@ -176,6 +178,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         string = '"' >start strdata '"';
 
+        mean_dev = real %{ meandev.mean = toreal(state.match); } ws '|' ws
+                   real %{ meandev.deviation = toreal(state.match); };
 
         colorname = 
             'black'   | 
@@ -275,10 +279,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_digging = 'digging' ws1 real %{ spe.digging = toreal(state.match); } ;
 
-        species_clumpsize = 'clumpsize' 
-            ws1 real %{ spe.clumpsize.mean = toreal(state.match); } 
-            ws1 real %{ spe.clumpsize.deviation = toreal(state.match); } 
-        ;
+        species_clumpsize = 'clumpsize' ws1 mean_dev %{ spe.clumpsize = meandev; };
 
         species_companion = 'companion' %{ spe.companion.push_back(Species::companion_t()); }
             ws1 real   %{ spe.companion.back().chance = toreal(state.match); }
@@ -348,8 +349,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_trail = 'trail' 
             ws1 tag  %{ spe.trail.terrain = tag_t(state.match, tagmem); } 
-            ws1 real %{ spe.trail.cost.mean = toreal(state.match); } 
-            ws1 real %{ spe.trail.cost.deviation = toreal(state.match); }
+            ws1 mean_dev %{ spe.trail.cost = meandev; } 
             ;
 
         species_steal = 'steal' ws1 tag %{ spe.steal = tag_t(state.match, tagmem); } ;
@@ -438,10 +438,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 number %{ des.cast_cloud.range = toint(state.match); }
             ;
 
-        design_gencount = 'gencount' 
-            ws1 real %{ des.gencount.mean = toreal(state.match); } 
-            ws1 real %{ des.gencount.deviation = toreal(state.match); } 
-        ;
+        design_gencount = 'gencount' ws1 mean_dev %{ des.gencount = meandev; };
 
         design_worth = 'worth' ws1 real %{ des.worth = toreal(state.match); };
 
@@ -461,8 +458,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
             ws1 real %{ des.luck.back().height = toreal(state.match); }
-            ws1 real %{ des.luck.back().v.mean = toreal(state.match); }
-            ws1 real %{ des.luck.back().v.deviation = toreal(state.match); }
+            ws1 mean_dev %{ des.luck.back().v = meandev; }
             ;
 
         design_hunger = 'hunger' ws1 real %{ des.hunger = toreal(state.match); };
@@ -523,16 +519,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         design_polymorph = 'polymorph' 
-            ws1 tag    %{ des.polymorph.species = tag_t(state.match, tagmem); }
-            ws1 real   %{ des.polymorph.turns.mean = toreal(state.match); }
-            ws1 real   %{ des.polymorph.turns.deviation = toreal(state.match); }
-            ws1 string %{ des.polymorph.msg = state.match; }
+            ws1 tag      %{ des.polymorph.species = tag_t(state.match, tagmem); }
+            ws1 mean_dev %{ des.polymorph.turns = meandev; }
+            ws1 string   %{ des.polymorph.msg = state.match; }
             ;
 
         design_fast = 'fast'
-            ws1 number %{ des.fast.slice = toint(state.match); }
-            ws1 real   %{ des.fast.turns.mean = toreal(state.match); }
-            ws1 real   %{ des.fast.turns.deviation = toreal(state.match); }
+            ws1 number   %{ des.fast.slice = toint(state.match); }
+            ws1 mean_dev %{ des.fast.turns = meandev; }
             ;
 
         design_lucky_free_apply = 'lucky_free_apply' %{ des.lucky_free_apply = true; };
@@ -749,8 +743,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         vault_line = 'l' ws1 string %{ vau.pic.push_back(state.match); } ;
 
         vault_cloud = 'cloud' ws1 number %{ vau.cloud.n = toint(state.match); }
-                      ws1 real %{ vau.cloud.mean = toreal(state.match); }
-                      ws1 real %{ vau.cloud.deviation = toreal(state.match); }
+                      ws1 mean_dev %{ vau.cloud.distrib = meandev; }
                       (ws1 '\'' any ${ vau.cloud.brushes.push_back(fc); } '\''
                        ws1 real %{ vau.cloud.chances.push_back(toreal(state.match)); } )+
                       ;
@@ -886,20 +879,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_number_random_vaults = 'number_random_vaults' ws1 number 
             %{ lev.number_random_vaults = toint(state.match); };
 
-        levelskin_number_monsters = 'number_monsters' 
-            ws1 real %{ lev.number_monsters.mean = toreal(state.match); }
-            ws1 real %{ lev.number_monsters.deviation = toreal(state.match); }
-            ;
+        levelskin_number_monsters = 'number_monsters' ws1 mean_dev %{ lev.number_monsters = meandev; };
 
-        levelskin_number_items = 'number_items' 
-            ws1 real %{ lev.number_items.mean = toreal(state.match); }
-            ws1 real %{ lev.number_items.deviation = toreal(state.match); }
-            ;
+        levelskin_number_items = 'number_items' ws1 mean_dev %{ lev.number_items = meandev; };
 
-        levelskin_number_features = 'number_features' 
-            ws1 real %{ lev.number_features.mean = toreal(state.match); }
-            ws1 real %{ lev.number_features.deviation = toreal(state.match); }
-            ;
+        levelskin_number_features = 'number_features' ws1 mean_dev %{ lev.number_features = meandev; };
 
         levelskin_name          = 'name'          ws1 string %{ lev.name = state.match; };
 
@@ -1023,8 +1007,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_flavor = 'flavor' (
             ws1 tag %{ flavor_tag = tag_t(state.match, tagmem); }
             ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].height = toreal(state.match); }
-            ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].mean = toreal(state.match); }
-            ws1 real %{ __constants__().flavor_moon_frequency[flavor_tag].deviation = toreal(state.match); }
+            ws1 mean_dev %{ __constants__().flavor_moon_frequency[flavor_tag].curve = meandev; }
             )+
             ;
 
@@ -1038,9 +1021,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_blindturns_to_radius = 'blindturns_to_radius' 
             ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
 
-        constant_treasure_chance = 'treasure_chance' 
-            ws1 real %{ __constants__().treasure_chance.mean = toreal(state.match); } 
-            ws1 real %{ __constants__().treasure_chance.deviation = toreal(state.match); } 
+        constant_treasure_chance = 'treasure_chance'
+            ws1 mean_dev %{ __constants__().treasure_chance = meandev; } 
         ;
 
         constant_max_ailments = 'max_ailments' ws1 number %{ __constants__().max_ailments = toint(state.match); };
@@ -1054,13 +1036,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         ;
 
         constant_bonus_a_items = 'bonus_a_items' 
-            ws1 real %{ __constants__().bonus_a_items.mean = toreal(state.match); } 
-            ws1 real %{ __constants__().bonus_a_items.deviation = toreal(state.match); } 
+            ws1 mean_dev %{ __constants__().bonus_a_items = meandev; } 
         ;
 
         constant_bonus_b_items = 'bonus_b_items' 
-            ws1 real %{ __constants__().bonus_b_items.mean = toreal(state.match); } 
-            ws1 real %{ __constants__().bonus_b_items.deviation = toreal(state.match); } 
+            ws1 mean_dev %{ __constants__().bonus_b_items = meandev; } 
         ;
 
         constant_starsigns = 'starsigns'

@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include <math.h>
-//#include <stdlib.h>
 
 #include "libmaudit/maudit.h"
 
@@ -180,16 +179,12 @@ void do_genmaps(int start, int end) {
                 const Levelskin& lev = levelskins().get(worldz);
                 state.rng.init(fixedseed);
 
-                std::vector<summons_t> summons;
-                std::vector<itemplace_t> itemplace;
-
-                std::vector<grid::pt> player_positions;
-                std::vector<vault_packing_t> vault_packing;
-
+                vault_state_t vaultstate;
+                
                 generate_or_read_cached(filename, state, lev, worldx, worldy, worldz,
                                         lev.get_vaults_level(worldz),
                                         [](const std::string& msg) { std::cout << msg << std::endl; },
-                                        summons, itemplace, player_positions, vault_packing);
+                                        vaultstate);
 
             }
         }

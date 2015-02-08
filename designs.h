@@ -47,13 +47,6 @@ struct Design {
 
     int attack_level;
 
-    struct mean_deviation_t {
-        double mean;
-        double deviation;
-        
-        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
-    };
-
     mean_deviation_t gencount;
 
     bool melee;

@@ -98,8 +98,8 @@ void Game::init(GameState& state, unsigned int address, unsigned int seed) {
                 const auto& f = i->second;
             
                 mult = 
-                    gaussian_function(f.height, f.mean, f.deviation, phase) +
-                    gaussian_function(f.height, f.mean, f.deviation, 1.0 - phase);
+                    gaussian_function(f.height, f.curve.mean, f.curve.deviation, phase) +
+                    gaussian_function(f.height, f.curve.mean, f.curve.deviation, 1.0 - phase);
             }
 
             int count = _count;

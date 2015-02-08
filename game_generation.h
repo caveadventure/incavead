@@ -43,10 +43,7 @@ void make_map(int worldx, int worldy, int worldz, GameState& state, const Levels
 
 inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource, 
                             unsigned int vaults_level, unsigned int number_vaults, Vault::type_t type,
-                            std::vector<summons_t>& summons,
-                            std::vector<itemplace_t>& itemplace,
-                            std::vector<grid::pt>& player_positions,
-                            std::vector<vault_packing_t>& vault_packing) {
+                            vault_state_t& vaultstate) {
 
     std::set<grid::pt> affected;
 
@@ -81,11 +78,11 @@ inline void generate_vaults(GameState& state, grid::Map::genmaps_t& ptsource,
             const Vault& v = vaults().get(vi.first);
 
             for (unsigned int ci = 0; ci < vi.second; ++ci) {
-                generate_vault(v, state, ptsource, summons, itemplace, affected, vault_packing, player_positions);
+                generate_vault(v, state, ptsource, vaultstate);
             }
         }
 
-        vault_generation_cleanup(state, affected);
+        vault_generation_cleanup(state, vaultstate.affected);
 
         ptsource.swap(grid::Map::genmaps_t(ptsource, state.grid));
     }
@@ -96,30 +93,23 @@ template <typename FUNC>
 inline grid::Map::genmaps_t
 generate_or_read_cached(const std::string& filename, GameState& state, const Levelskin& lev,
                         int worldx, int worldy, int worldz, unsigned int vaults_level,
-                        FUNC progressbar,
-                        std::vector<summons_t>& summons,
-                        std::vector<itemplace_t>& itemplace,
-                        std::vector<grid::pt>& player_positions,
-                        std::vector<vault_packing_t>& vault_packing) {
+                        FUNC progressbar, vault_state_t& vaultstate) {
 
     try {
 
         serialize::Source source(filename);
         serialize::read(source, state.grid);
         serialize::read(source, state.features);
-        serialize::read(source, summons);
-        serialize::read(source, itemplace);
-        serialize::read(source, player_positions);
-        serialize::read(source, vault_packing);
+        serialize::read(source, vaultstate.summons);
+        serialize::read(source, vaultstate.itemplace);
+        serialize::read(source, vaultstate.player_positions);
+        serialize::read(source, vaultstate.packed);
 
         return grid::Map::genmaps_t(state.grid);
         
     } catch (std::exception& e) {
         state.features.init();
-        summons.clear();
-        itemplace.clear();
-        player_positions.clear();
-        vault_packing.clear();
+        vaultstate = vault_state_t();
     }
 
     make_map(worldx, worldy, worldz, state, lev, progressbar);
@@ -148,8 +138,7 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
     {
         progressbar("Placing vaults...");
 
-        generate_vaults(state, maps, vaults_level, lev.number_fixed_vaults, Vault::type_t::FIXED,
-                        summons, itemplace, player_positions, vault_packing);
+        generate_vaults(state, maps, vaults_level, lev.number_fixed_vaults, Vault::type_t::FIXED, vaultstate);
     }
 
     {
@@ -161,10 +150,10 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
         serialize::Sink sink(filename);
         serialize::write(sink, state.grid);
         serialize::write(sink, state.features);
-        serialize::write(sink, summons);
-        serialize::write(sink, itemplace);
-        serialize::write(sink, player_positions);
-        serialize::write(sink, vault_packing);
+        serialize::write(sink, vaultstate.summons);
+        serialize::write(sink, vaultstate.itemplace);
+        serialize::write(sink, vaultstate.player_positions);
+        serialize::write(sink, vaultstate.packed);
     }
     
     return maps;
@@ -188,11 +177,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     unsigned int designs_level = lev.get_designs_level(p.worldz);
     unsigned int vaults_level  = lev.get_vaults_level(p.worldz);
 
-    std::vector<summons_t> summons;
-    std::vector<itemplace_t> itemplace;
-
-    std::vector<grid::pt> player_positions;
-    std::vector<vault_packing_t> vault_packing;
+    vault_state_t vaultstate;
 
     // Level-specific random seed that's always the same.
 
@@ -200,8 +185,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     grid::Map::genmaps_t maps = generate_or_read_cached(filename, state, lev,
                                                         p.worldx, p.worldy, p.worldz,
-                                                        vaults_level, progressbar,
-                                                        summons, itemplace, player_positions, vault_packing);
+                                                        vaults_level, progressbar, vaultstate);
 
     // //
 
@@ -250,14 +234,14 @@ void Game::generate(GameState& state, FUNC progressbar) {
         state.rng.init(semirandomseed);
 
         generate_vaults(state, maps, vaults_level, lev.number_semirandom_vaults, Vault::type_t::SEMIRANDOM,
-                        summons, itemplace, player_positions, vault_packing);
+                        vaultstate);
 
         // Initialize a known random sequence here!!
 
         state.rng.init(randomseed);
 
         generate_vaults(state, maps, vaults_level, lev.number_random_vaults, Vault::type_t::RANDOM,
-                        summons, itemplace, player_positions, vault_packing);
+                        vaultstate);
     }
 
 
@@ -370,7 +354,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place player.
 
-    if (player_positions.empty()) {
+    if (vaultstate.player_positions.empty()) {
 
         grid::pt xy;
         if (!maps.one_of_lowlands(state.rng, xy))
@@ -385,7 +369,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
         std::vector<grid::pt> pp;
 
-        for (const auto& xy : player_positions) {
+        for (const auto& xy : vaultstate.player_positions) {
 
             if (state.grid.is_walk(xy.first, xy.second)) {
                 pp.push_back(xy);
@@ -478,7 +462,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place non-random items.
     {
-        for (const auto& s : itemplace) {
+        for (const auto& s : vaultstate.itemplace) {
         
             tag_t item;
 
@@ -515,7 +499,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     {
         progressbar("Placing monsters...");
 
-        for (const auto& s : summons) {
+        for (const auto& s : vaultstate.summons) {
 
             switch (s.type) {
             case summons_t::type_t::SPECIFIC:

@@ -91,13 +91,6 @@ struct ConstantsBank {
 
     unsigned int max_ailments;
 
-    struct mean_deviation_t {
-        double mean;
-        double deviation;
-        
-        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
-    };
-
     mean_deviation_t treasure_chance;
 
     double monetary_supply_base;
@@ -107,10 +100,9 @@ struct ConstantsBank {
 
     struct flavor_moon_frequency_t {
         double height;
-        double mean;
-        double deviation;
+        mean_deviation_t curve;
 
-        flavor_moon_frequency_t() : height(0), mean(0), deviation(1) {}
+        flavor_moon_frequency_t() : height(0), curve(0, 1) {}
     };
 
     std::map<tag_t,flavor_moon_frequency_t> flavor_moon_frequency;

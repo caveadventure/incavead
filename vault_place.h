@@ -117,9 +117,37 @@ inline bool packing_placement(GameState& state, unsigned int w, unsigned int h,
 }
 
 
+struct vault_state_t {
+    std::vector<summons_t> summons;
+    std::vector<itemplace_t> itemplace;
+    std::set<grid::pt> affected;
+    std::vector<vault_packing_t> packed;
+    std::vector<grid::pt> player_positions;
+
+    void affect(GameState& state, const grid::pt& xy) {
+
+        for (const auto& v : state.neigh(xy)) {
+            affected.insert(state.neigh.mk(v, xy));
+        }
+
+        affected.insert(xy);
+    }
+};
+
+
+const Vault::brush& vault_get_brush(const Vault::brushes_t& brushes, unsigned char c) {
+
+    auto bi = brushes.find(c);
+
+    if (bi == brushes.end()) {
+        throw std::runtime_error("Invalid brush char: '" + std::string(1, c) + "'");
+    }
+
+    return bi->second;
+}
+
 inline void vault_draw_point(unsigned int xi, unsigned int yi, const Vault::brush& b,
-                             GameState& state, std::vector<summons_t>& summons,
-                             std::vector<itemplace_t>& itemplace, bool use_species_counts) {
+                             GameState& state, vault_state_t& vaultstate, bool use_species_counts) {
 
     if (!b.is_blank) {
 
@@ -148,15 +176,15 @@ inline void vault_draw_point(unsigned int xi, unsigned int yi, const Vault::brus
         break;
 
     case Vault::brush::design_t::type_t::SPECIFIC:
-        itemplace.emplace_back(xi, yi, itemplace_t::type_t::SPECIFIC, b.design.tag, 0);
+        vaultstate.itemplace.emplace_back(xi, yi, itemplace_t::type_t::SPECIFIC, b.design.tag, 0);
         break;
 
     case Vault::brush::design_t::type_t::LEVEL:
-        itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL, tag_t(), b.design.level);
+        vaultstate.itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL, tag_t(), b.design.level);
         break;
 
     case Vault::brush::design_t::type_t::LEVEL_ANY:
-        itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL_ANY, tag_t(), b.design.level);
+        vaultstate.itemplace.emplace_back(xi, yi, itemplace_t::type_t::LEVEL_ANY, tag_t(), b.design.level);
         break;
     }
             
@@ -171,28 +199,130 @@ inline void vault_draw_point(unsigned int xi, unsigned int yi, const Vault::brus
         break;
 
     case Vault::brush::species_t::type_t::SPECIFIC:
-        summons.emplace_back(xi, yi, summons_t::type_t::SPECIFIC, b.species.tag, 
-                             0, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        vaultstate.summons.emplace_back(xi, yi, summons_t::type_t::SPECIFIC, b.species.tag, 
+                                        0, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
         break;
 
     case Vault::brush::species_t::type_t::LEVEL:
-        summons.emplace_back(xi, yi, summons_t::type_t::LEVEL, b.species.tag, 
-                             b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        vaultstate.summons.emplace_back(xi, yi, summons_t::type_t::LEVEL, b.species.tag, 
+                                        b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
         break;
 
     case Vault::brush::species_t::type_t::GENUS:
-        summons.emplace_back(xi, yi, summons_t::type_t::GENUS, b.species.tag, 
-                             b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
+        vaultstate.summons.emplace_back(xi, yi, summons_t::type_t::GENUS, b.species.tag, 
+                                        b.species.level, (use_species_counts ? 1u : 0u), tag_t(), tag_t(), "");
         break;
     }
 }
 
 
+inline void vault_draw_cloud(GameState& state, vault_state_t& vaultstate,
+                             const grid::pt& xy, unsigned int ax, unsigned int ay,
+                             const Vault::brushes_t& brushes, const Vault::cloud_t& cloud,
+                             bool use_species_counts) {
+
+    std::unordered_set<grid::pt> used;
+
+    for (size_t i = 0; i < cloud.n; ++i) {
+
+        grid::pt cxy;
+
+        size_t j;
+        for (j = 0; j < 10; ++j) {
+
+            double xx = state.rng.gauss(cloud.distrib.mean, cloud.distrib.deviation);
+            double yy = state.rng.gauss(cloud.distrib.mean, cloud.distrib.deviation);
+
+            int xi = (int)(xy.first + ax) + xx;
+            int yi = (int)(xy.second + ay) + yy;
+
+            if (xi < 0 || yi < 0 || xi >= (int)state.grid.w || yi >= (int)state.grid.h)
+                continue;
+
+            cxy = grid::pt(xi, yi);
+
+            if (used.count(cxy) != 0)
+                continue;
+
+            used.insert(cxy);
+            break;
+        }
+
+        if (j >= 10)
+            continue;
+
+        std::discrete_distribution<size_t> d(cloud.chances.begin(), cloud.chances.end());
+        unsigned char c = cloud.brushes[d(state.rng.gen)];
+
+        const Vault::brush& b = vault_get_brush(brushes, c);
+
+        vault_draw_point(cxy.first, cxy.second, b, state, vaultstate, use_species_counts);
+
+        vaultstate.affect(state, cxy);
+    }
+}
+
+inline void vault_draw_blob(GameState& state, vault_state_t& vaultstate, grid::pt xy,
+                            const Vault::brushes_t& brushes, const Vault::blob_t& blob,
+                            bool use_species_counts) {
+
+    auto check_memfn = std::mem_fn(&grid::Map::is_floor);
+
+    switch (blob.placement) {
+
+    case Vault::placement_t::water:
+        check_memfn = std::mem_fn(&grid::Map::is_lake);
+        break;
+        
+    case Vault::placement_t::corner:
+        check_memfn = std::mem_fn(&grid::Map::is_corner);
+        break;
+
+    case Vault::placement_t::shoreline:
+        check_memfn = std::mem_fn(&grid::Map::is_shore);
+        break;
+
+    case Vault::placement_t::lowlands:
+        check_memfn = std::mem_fn(&grid::Map::is_lowlands);
+        break;
+        
+    default:
+        break;
+    }
+
+    std::unordered_set<grid::pt> used;
+
+    for (size_t i = 0; i < blob.n; ++i) {
+
+        std::vector<grid::pt> possibles;
+
+        for (const auto& v : state.neigh(xy)) {
+
+            grid::pt nxy = state.neigh.mk(v, xy);
+
+            if (check_memfn(state.grid, nxy.first, nxy.second) && used.count(nxy) == 0) {
+
+                possibles.push_back(nxy);
+            }
+        }
+
+        if (possibles.empty())
+            break;
+
+        xy = possibles[state.rng.n(possibles.size())];
+
+        used.insert(xy);
+
+        const Vault::brush& b = vault_get_brush(brushes, blob.brush);
+
+        vault_draw_point(xy.first, xy.second, b, state, vaultstate, use_species_counts);
+
+        vaultstate.affect(state, xy);
+    }
+}
+
 template <typename T>
-inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
-                           std::vector<summons_t>& summons, std::vector<itemplace_t>& itemplace,
-                           std::set<grid::pt>& affected, std::vector<vault_packing_t>& packed,
-                           std::vector<grid::pt>& player_positions) {
+inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, vault_state_t& vaultstate) {
 
     grid::pt xy;
 
@@ -229,10 +359,16 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
     const auto& blob = (vault.inherit.null() ?
                         vault.blob :
                         vaults().get(vault.inherit).blob);
-    
+
+    /*
+    const auto& river = (vault.inherit.null() ?
+                         vault.river :
+                         vaults().get(vault.inherit).river);
+    */
+
     if (vault.placement == Vault::placement_t::packing) {
 
-        if (!packing_placement(state, w, h, packed, xy)) {
+        if (!packing_placement(state, w, h, vaultstate.packed, xy)) {
             return;
         }
 
@@ -282,30 +418,22 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
     //
 
     if (_px >= 0 && _py >= 0) {
-        player_positions.push_back(grid::pt(xy.first + _px, xy.second +_py));
+        vaultstate.player_positions.push_back(grid::pt(xy.first + _px, xy.second +_py));
     }
 
     for (int i = -1; i <= (int)w; ++i) {
-        affected.insert(grid::pt(xy.first + i, xy.second - 1));
-        affected.insert(grid::pt(xy.first + i, xy.second + h));
+        vaultstate.affected.insert(grid::pt(xy.first + i, xy.second - 1));
+        vaultstate.affected.insert(grid::pt(xy.first + i, xy.second + h));
     }
 
     for (int i = 0; i < (int)h; ++i) {
-        affected.insert(grid::pt(xy.first - 1, xy.second + i));
-        affected.insert(grid::pt(xy.first + w, xy.second + i));
+        vaultstate.affected.insert(grid::pt(xy.first - 1, xy.second + i));
+        vaultstate.affected.insert(grid::pt(xy.first + w, xy.second + i));
     }
 
-    auto get_brush = [&brushes](unsigned char c) {
-        auto bi = brushes.find(c);
 
-        if (bi == brushes.end()) {
-            throw std::runtime_error("Invalid brush char: '" + std::string(1, c) + "'");
-        }
-
-        const Vault::brush& b = bi->second;
-        return b;
-    };
-
+    /*** Pre-drawn vault ***/
+    
     if (pic.size() > 0) {
     
         for (unsigned int y = 0; y < _h; ++y) {
@@ -316,126 +444,47 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource,
                     continue;
 
                 unsigned int c = line[x];
-                const Vault::brush& b = get_brush(c);
+                const Vault::brush& b = vault_get_brush(brushes, c);
 
                 unsigned int xi = xy.first  + (vault.transpose ? y : x);
                 unsigned int yi = xy.second + (vault.transpose ? x : y);
 
-                affected.insert(grid::pt(xi, yi));
+                vaultstate.affected.insert(grid::pt(xi, yi));
 
-                vault_draw_point(xi, yi, b, state, summons, itemplace, vault.use_species_counts);
+                vault_draw_point(xi, yi, b, state, vaultstate, vault.use_species_counts);
             }
         }
     }
 
+    /*** Cloud ***/
+    
     if (cloud.n > 0) {
 
-        std::unordered_set<grid::pt> used;
-
-        for (size_t i = 0; i < cloud.n; ++i) {
-
-            grid::pt cxy;
-
-            size_t j;
-            for (j = 0; j < 10; ++j) {
-
-                double xx = state.rng.gauss(cloud.mean, cloud.deviation);
-                double yy = state.rng.gauss(cloud.mean, cloud.deviation);
-
-                int xi = (int)(xy.first + ax) + xx;
-                int yi = (int)(xy.second + ay) + yy;
-
-                if (xi < 0 || yi < 0 || xi >= (int)state.grid.w || yi >= (int)state.grid.h)
-                    continue;
-
-                cxy = grid::pt(xi, yi);
-
-                if (used.count(cxy) != 0)
-                    continue;
-
-                used.insert(cxy);
-                break;
-            }
-
-            if (j >= 10)
-                continue;
-
-            std::discrete_distribution<size_t> d(cloud.chances.begin(), cloud.chances.end());
-            unsigned char c = cloud.brushes[d(state.rng.gen)];
-
-            const Vault::brush& b = get_brush(c);
-
-            vault_draw_point(cxy.first, cxy.second, b, state, summons, itemplace, vault.use_species_counts);
-
-            for (const auto& v : state.neigh(cxy)) {
-                affected.insert(state.neigh.mk(v, cxy));
-            }
-
-            affected.insert(cxy);
-        }
+        vault_draw_cloud(state, vaultstate, xy, ax, ay, brushes, cloud, vault.use_species_counts);
     }
 
+    /*** Blobs ***/
+    
     if (blob.n > 0) {
 
-        auto check_memfn = [](Vault::placement_t p) {
-            switch (p) {
+        vault_draw_blob(state, vaultstate, xy, brushes, blob, vault.use_species_counts);
+    }
 
-            case Vault::placement_t::floor:
-                return std::mem_fn(&grid::Map::is_floor);
+    /*** Rivers ***/
+    /*  
+    if (river.n > 0) {
 
-            case Vault::placement_t::water:
-                return std::mem_fn(&grid::Map::is_lake);
+        vault_draw_river(state, vaultstate, xy, river);
+        double angle = state.rng.uniform(0, 2*M_PI);
+        double volume = 1;
 
-            case Vault::placement_t::corner:
-                return std::mem_fn(&grid::Map::is_corner);
+        for (size_t i = 0; i < river.n; ++i) ;
+            
+        double xx = ::round(::cos(angle));
+        double yy = ::round(::sin(angle));
 
-            case Vault::placement_t::shoreline:
-                return std::mem_fn(&grid::Map::is_shore);
-
-            case Vault::placement_t::lowlands:
-                return std::mem_fn(&grid::Map::is_lowlands);
-
-            default:
-                return std::mem_fn(&grid::Map::is_floor);
-            }
-        }(blob.placement);
-
-
-        std::unordered_set<grid::pt> used;
-
-        for (size_t i = 0; i < blob.n; ++i) {
-
-            std::vector<grid::pt> possibles;
-
-            for (const auto& v : state.neigh(xy)) {
-
-                grid::pt nxy = state.neigh.mk(v, xy);
-
-                if (check_memfn(state.grid, nxy.first, nxy.second) && used.count(nxy) == 0) {
-
-                    possibles.push_back(nxy);
-                }
-            }
-
-            if (possibles.empty())
-                break;
-
-            xy = possibles[state.rng.n(possibles.size())];
-
-            used.insert(xy);
-
-            const Vault::brush& b = get_brush(blob.brush);
-
-            vault_draw_point(xy.first, xy.second, b, state, summons, itemplace, vault.use_species_counts);
-
-            for (const auto& v : state.neigh(xy)) {
-                affected.insert(state.neigh.mk(v, xy));
-            }
-
-            affected.insert(xy);
-        }
-
-    }    
+    }        
+    */
 }
 
 

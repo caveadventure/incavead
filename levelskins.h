@@ -36,13 +36,6 @@ struct Levelskin {
     unsigned int number_semirandom_vaults;
     unsigned int number_random_vaults;
 
-    struct mean_deviation_t {
-        double mean;
-        double deviation;
-        
-        mean_deviation_t(double m = 0.0, double d = 0.0) : mean(m), deviation(d) {}
-    };
-
     mean_deviation_t number_monsters;
     mean_deviation_t number_items;
     mean_deviation_t number_features;

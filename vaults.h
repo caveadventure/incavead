@@ -55,7 +55,9 @@ struct Vault {
         brush() : is_blank(false), is_walk(false), is_water(false) {}
     };
 
-    std::map<unsigned char, brush> brushes;
+    typedef std::map<unsigned char, brush> brushes_t;
+    brushes_t brushes;
+
     std::vector<std::string> pic;
 
     unsigned int ax;
@@ -95,12 +97,11 @@ struct Vault {
 
     struct cloud_t {
         size_t n;
-        double mean;
-        double deviation;
+        mean_deviation_t distrib;
         std::vector<double> chances;
         std::vector<unsigned char> brushes;
 
-        cloud_t() : n(0), mean(0), deviation(0) {}
+        cloud_t() : n(0) {}
     };
 
     cloud_t cloud;
