@@ -321,6 +321,62 @@ inline void vault_draw_blob(GameState& state, vault_state_t& vaultstate, grid::p
     }
 }
 
+inline void vault_draw_river(GameState& state, vault_state_t& vaultstate, double x, double y,
+                             const Vault::brushes_t& brushes, const Vault::river_t& river,
+                             double angle, double width, size_t length,
+                             bool use_species_counts) {
+
+    const Vault::brush& b = vault_get_brush(brushes, river.brush);
+
+    for (size_t i = 0; i < length; ++i) {
+
+        double ax = ::cos(angle);
+        double ay = ::sin(angle);
+
+        double o1x = ay;
+        double o1y = -ax;
+        double o2x = -ay;
+        double o2y = ax;
+
+        int fromx = ::round(x + o1x * width);
+        int fromy = ::round(y + o1y * width);
+        int tox = ::round(x + o2x * width);
+        int toy = ::round(y + o2y * width);
+
+        bresenham::Line line(fromx, fromy, tox, toy);
+
+        int px;
+        int py;
+
+        while (line.step(px, py)) {
+
+            while (px < 0) px += state.grid.w;
+            while (py < 0) py += state.grid.h;
+
+            px = px % state.grid.w;
+            py = py % state.grid.h;
+            
+            vault_draw_point(px, py, b, state, vaultstate, use_species_counts);
+        }
+
+        vault_draw_point(::round(x), ::round(y), b, state, vaultstate, use_species_counts);
+        
+        x += ax * 0.5;
+        y += ay * 0.5;
+
+        angle += state.rng.gauss(river.angle.mean, river.angle.deviation);
+        width += state.rng.gauss(river.width.mean, river.width.deviation);
+
+        if (width < 1)
+            width = 1;
+        
+        if (river.splitchance > 0 && state.rng.n(river.splitchance) == 0) {
+
+            vault_draw_river(state, vaultstate, x, y, brushes, river, angle, width, length-i, use_species_counts);
+        }
+    }
+}
+
 template <typename T>
 inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, vault_state_t& vaultstate) {
 
@@ -360,11 +416,9 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
                         vault.blob :
                         vaults().get(vault.inherit).blob);
 
-    /*
     const auto& river = (vault.inherit.null() ?
                          vault.river :
                          vaults().get(vault.inherit).river);
-    */
 
     if (vault.placement == Vault::placement_t::packing) {
 
@@ -471,20 +525,13 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
     }
 
     /*** Rivers ***/
-    /*  
+
     if (river.n > 0) {
 
-        vault_draw_river(state, vaultstate, xy, river);
-        double angle = state.rng.uniform(0, 2*M_PI);
-        double volume = 1;
-
-        for (size_t i = 0; i < river.n; ++i) ;
-            
-        double xx = ::round(::cos(angle));
-        double yy = ::round(::sin(angle));
-
+        vault_draw_river(state, vaultstate, xy.first, xy.second, brushes, river,
+                         state.rng.uniform(0.0, 2*M_PI), 1.0, river.n, vault.use_species_counts);
     }        
-    */
+
 }
 
 

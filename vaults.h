@@ -116,6 +116,18 @@ struct Vault {
 
     blob_t blob;
 
+    struct river_t {
+        size_t n;
+        unsigned char brush;
+        mean_deviation_t angle;
+        mean_deviation_t width;
+        unsigned int splitchance;
+
+        river_t() : n(0), brush(0), splitchance(0) {}
+    };
+
+    river_t river;
+    
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
               use_species_counts(false), type(type_t::FIXED) {}

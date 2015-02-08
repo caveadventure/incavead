@@ -760,6 +760,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                       ws1 '\'' any ${ vau.blob.brush = fc; } '\''
                       ;
 
+        vault_river = 'river' ws1 number %{ vau.river.n = toint(state.match); }
+                      ws1 mean_dev %{ vau.river.angle = meandev; }
+                      ws1 mean_dev %{ vau.river.width = meandev; }
+                      ws1 number %{ vau.river.splitchance = toint(state.match); }
+                      ws1 '\'' any ${ vau.river.brush = fc; } '\''
+                      ;
+
         vault_inherit = 'inherit' ws1 tag %{ vau.inherit = tag_t(state.match, tagmem); };
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
@@ -779,7 +786,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             (vault_count | vault_placement | vault_anchor | vault_brush | vault_line |
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
             vault_use_species_counts | vault_fixed | vault_semirandom | vault_random |
-            vault_cloud | vault_width | vault_height | vault_blob |
+            vault_cloud | vault_width | vault_height | vault_blob | vault_river |
             '}'
              ${ fret; })
             ;
