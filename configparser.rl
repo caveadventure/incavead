@@ -775,6 +775,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                      ws1 '\'' any ${ vau.room.brush = fc; } '\''
                      ;
 
+        vault_tunnel = 'tunnel' %{ vau.tunnel.enabled = true; }
+                       ws1 '\'' any ${ vau.tunnel.plain_brush = fc; } '\''
+                       ws1 '\'' any ${ vau.tunnel.b_brush = fc; } '\''
+                       ws1 '\'' any ${ vau.tunnel.a_brush = fc; } '\''
+                       ;
+
         vault_inherit = 'inherit' ws1 tag %{ vau.inherit = tag_t(state.match, tagmem); };
 
         vault_transpose = 'transpose' %{ vau.transpose = true; };
@@ -795,7 +801,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             vault_inherit | vault_transpose | vault_priority | vault_set_player |
             vault_use_species_counts | vault_fixed | vault_semirandom | vault_random |
             vault_cloud | vault_width | vault_height | vault_blob | vault_river |
-            vault_room | '}'
+            vault_room | vault_tunnel | '}'
              ${ fret; })
             ;
 
