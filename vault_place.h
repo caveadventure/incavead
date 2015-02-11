@@ -409,7 +409,11 @@ inline void vault_draw_tunnel(GameState& state, vault_state_t& vaultstate, grid:
 
     auto draw_line = [&](bool orient, bool neg,
                          unsigned int _xo, unsigned int _xd, unsigned int _yv,
-                         bool& ground, int& tstate) {
+                         std::list<grid::pt>& prevpt, bool& ground, int& tstate) {
+
+        const Vault::brush& brush_p = vault_get_brush(brushes, tunnel.plain_brush);
+        const Vault::brush& brush_b = vault_get_brush(brushes, tunnel.b_brush);
+        const Vault::brush& brush_a = vault_get_brush(brushes, tunnel.a_brush);
 
         for (unsigned int _xi = _xo; _xi <= _xd; ++_xi) {
 
@@ -417,27 +421,53 @@ inline void vault_draw_tunnel(GameState& state, vault_state_t& vaultstate, grid:
 
             bool next_ground = state.grid.is_walk(xi, yo);
 
-            unsigned char bc = tunnel.plain_brush;
+            auto b = std::cref(brush_p);
 
-            if (tstate == 2) {
-                bc = tunnel.a_brush;
-                --tstate;
-
-            } else if (tstate == 1) {
-                bc = tunnel.b_brush;
+            if (tstate == 1) {
+                b = std::cref(brush_b);
                 --tstate;
 
             } else if (ground != next_ground) {
-                bc = tunnel.b_brush;
-                tstate = 2;
+
+                auto ptli = prevpt.rbegin();
+
+                if (!ground) {
+
+                    if (ptli != prevpt.rend()) {
+
+                        vault_draw_point(ptli->first, ptli->second, brush_a, state, vaultstate, use_species_counts);
+                        ++ptli;
+                    }
+
+                    if (ptli != prevpt.rend()) {
+
+                        vault_draw_point(ptli->first, ptli->second, brush_b, state, vaultstate, use_species_counts);
+                    }
+
+                    b = std::cref(brush_b);
+
+                } else {
+
+                    if (ptli != prevpt.rend()) {
+
+                        vault_draw_point(ptli->first, ptli->second, brush_b, state, vaultstate, use_species_counts);
+                    }
+
+                    b = std::cref(brush_a);
+                    tstate = 1;
+                }
             }
 
             ground = next_ground;
 
-            const Vault::brush& b = vault_get_brush(brushes, bc);
             grid::pt tmp(orient ? xi : _yv, orient ? _yv : xi);
             vault_draw_point(tmp.first, tmp.second, b, state, vaultstate, use_species_counts);
             vaultstate.affect(state, tmp);
+
+            prevpt.push_back(tmp);
+
+            if (prevpt.size() > 2)
+                prevpt.pop_front();
         }
 
     };
@@ -445,30 +475,32 @@ inline void vault_draw_tunnel(GameState& state, vault_state_t& vaultstate, grid:
     
     if (xy == grid::pt(xo, yo) || xy2 == grid::pt(xo, yo)) {
 
+        std::list<grid::pt> tmp;
         bool ground = state.grid.is_walk(xo, yo);
         int tstate = 0;
 
         if (transpose) {
-            draw_line(false, false, yo,   yd, xo, ground, tstate);
-            draw_line(true,  false, xo+1, xd, yd, ground, tstate);
+            draw_line(false, false, yo,   yd, xo, tmp, ground, tstate);
+            draw_line(true,  false, xo+1, xd, yd, tmp, ground, tstate);
 
         } else {
-            draw_line(true,  false, xo,   xd, yo, ground, tstate);
-            draw_line(false, false, yo+1, yd, xd, ground, tstate);
+            draw_line(true,  false, xo,   xd, yo, tmp, ground, tstate);
+            draw_line(false, false, yo+1, yd, xd, tmp, ground, tstate);
         }
 
     } else {
 
+        std::list<grid::pt> tmp;
         bool ground = state.grid.is_walk(xo, yd);
         int tstate = 0;
 
         if (transpose) {
-            draw_line(false, true,  yo,   yd, xo, ground, tstate);
-            draw_line(true,  false, xo+1, xd, yo, ground, tstate);
+            draw_line(false, true,  yo,   yd, xo, tmp, ground, tstate);
+            draw_line(true,  false, xo+1, xd, yo, tmp, ground, tstate);
             
         } else {
-            draw_line(true,  false, xo, xd,   yd, ground, tstate);
-            draw_line(false, true,  yo, yd-1, xd, ground, tstate);
+            draw_line(true,  false, xo, xd,   yd, tmp, ground, tstate);
+            draw_line(false, true,  yo, yd-1, xd, tmp, ground, tstate);
         }
     }
 }
