@@ -139,6 +139,17 @@ struct Vault {
     };
 
     room_t room;
+
+    struct tunnel_t {
+        bool enabled;
+        unsigned char plain_brush;
+        unsigned char a_brush;
+        unsigned char b_brush;
+
+        tunnel_t() : enabled(false), plain_brush(0), a_brush(0), b_brush(0) {}
+    };
+
+    tunnel_t tunnel;
     
     Vault() : level(0), count(0), ax(0), ay(0), placement(placement_t::floor), 
               w(0), h(0), transpose(false), priority(0), px(-1), py(-1),
