@@ -397,6 +397,135 @@ inline void vault_draw_river(GameState& state, vault_state_t& vaultstate, double
     }
 }
 
+inline vault_draw_tunnel(GameState& state, vault_state_t& vaultstate, grid::pt xy, grid::pt xy2,
+                         const Vault::brushes_t& brushes, const Vault::tunnel_t& tunnel,
+                         bool transpose, bool use_species_counts) {
+
+
+    unsigned int xo = std::min(xy.first, xy2.first);
+    unsigned int xd = std::max(xy.first, xy2.first);
+    unsigned int yo = std::min(xy.second, xy2.second);
+    unsigned int yd = std::max(xy.second, xy2.second);
+
+    auto draw_line = [&](bool orient, bool neg,
+                         unsigned int _xo, unsigned int _xd, unsigned int _yv,
+                         bool& ground, int& state) {
+
+        for (unsigned int _xi = _xo; _xi <= _xd; ++_xi) {
+
+            unsigned int xi = (neg ? _xo + _xd - _xi : _xi);
+
+            bool next_ground = state.grid.is_walk(xi, yo);
+
+            unsigned char bc = tunnel.plain_brush;
+
+            if (state == 2) {
+                bc = tunnel.a_brush;
+                --state;
+
+            } else if (state == 1) {
+                bc = tunnel.b_brush;
+                --state;
+
+            } else if (ground != next_ground) {
+                bc = tunnel.b_brush;
+                state = 2;
+            }
+
+            ground = next_ground;
+
+            const Vault::brush& b = vault_get_brush(brushes, bc);
+            vault_draw_point(orient ? xi : _yv, orient ? _yv : xi, b, state, vaultstate, use_species_counts);
+        }
+
+    };
+    
+    
+    if (xy == grid::pt(xo, yo) || xy2 == grid::pt(xo, yo)) {
+
+        bool ground = state.grid.is_walk(xo, yo);
+        int state = 0;
+
+        if (transpose) {
+            draw_line(false, false, yo,   yd, xo, ground, state);
+            draw_line(true,  false, xo+1, xd, yd, ground, state);
+
+        } else {
+            draw_line(true,  false, xo,   xd, yo, ground, state);
+            draw_line(false, false, yo+1, yd, xd, ground, state);
+        }
+
+    } else {
+
+        bool ground = state.grid.is_walk(xo, yd);
+        int state = 0;
+
+        if (transpose) {
+            draw_line(false, true,  yo,   yd, xo, ground, state);
+            draw_line(true,  false, xo+1, xd, yo, ground, state);
+            
+        } else {
+            draw_line(true,  false, xo, xd,   yd, ground, state);
+            draw_line(false, true,  yo, yd-1, xd, ground, state);
+        }
+    }
+}
+
+template <typename T>
+inline bool get_vault_placement(GameState& state, T& ptsource, vault_state_t& vaultstate,
+                                unsigned int w, unsigned int h, unsigned int ax, unsigned int ay,
+                                Vault::placement_t placement, grid::pt& xy) {
+
+    if (placement == Vault::placement_t::packing) {
+
+        return packing_placement(state, w, h, vaultstate.packed, xy);
+
+    } else {
+
+        for (unsigned int i = 0; i < 10; ++i) {
+
+            switch (placement) {
+            case Vault::placement_t::floor:
+                if (!ptsource.one_of_floor(state.rng, xy)) return false;
+                break;
+            case Vault::placement_t::water:
+                if (!ptsource.one_of_lake(state.rng, xy)) return false;
+                break;
+            case Vault::placement_t::corner:
+                if (!ptsource.one_of_corner(state.rng, xy)) return false;
+                break;
+            case Vault::placement_t::shoreline:
+                if (!ptsource.one_of_shore(state.rng, xy)) return false;
+                break;
+            case Vault::placement_t::lowlands:
+                if (!ptsource.one_of_lowlands(state.rng, xy)) return false;
+                break;
+            default:
+                return false;
+            }
+
+            if ((int)xy.first  - (int)ax < 0 ||
+                (int)xy.second - (int)ay < 0)
+                continue;
+
+            xy.first -= ax;
+            xy.second -= ay;
+
+            if (xy.first  >= state.grid.w - w ||
+                xy.second >= state.grid.h - h)
+                continue;
+
+            if (i >= 9) {
+                return false;
+            }
+
+            break;
+        }
+    }
+
+    return true;
+}
+
 template <typename T>
 inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, vault_state_t& vaultstate) {
 
@@ -438,6 +567,10 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
                         vault.room :
                         vaults().get(vault.inherit).room);
 
+    const auto& tunnel = (vault.inherit.null() ?
+                          vault.tunnel :
+                          vaults().get(vault.inherit).tunnel);
+
     unsigned int roomw = state.rng.range(room.w1, room.w2);
     unsigned int roomh = state.rng.range(room.h1, room.h2);
 
@@ -459,55 +592,8 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
         return;
     }
 
-
-    if (vault.placement == Vault::placement_t::packing) {
-
-        if (!packing_placement(state, w, h, vaultstate.packed, xy)) {
-            return;
-        }
-
-    } else {
-
-        for (unsigned int i = 0; i < 10; ++i) {
-
-            switch (vault.placement) {
-            case Vault::placement_t::floor:
-                if (!ptsource.one_of_floor(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::water:
-                if (!ptsource.one_of_lake(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::corner:
-                if (!ptsource.one_of_corner(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::shoreline:
-                if (!ptsource.one_of_shore(state.rng, xy)) return;
-                break;
-            case Vault::placement_t::lowlands:
-                if (!ptsource.one_of_lowlands(state.rng, xy)) return;
-                break;
-            default:
-                return;
-            }
-
-            if ((int)xy.first  - (int)ax < 0 ||
-                (int)xy.second - (int)ay < 0)
-                continue;
-
-            xy.first -= ax;
-            xy.second -= ay;
-
-            if (xy.first  >= state.grid.w - w ||
-                xy.second >= state.grid.h - h)
-                continue;
-
-            if (i >= 9) {
-                return;
-            }
-
-            break;
-        }
-    }
+    if (!get_vault_placement(state, ptsource, vaultstate, w, h, ax, ay, vault.placement, xy))
+        return;
 
     //
 
@@ -592,6 +678,16 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
                          state.rng.uniform(0.0, 2*M_PI), 1.0, river.n, vault.use_species_counts);
     }        
 
+    if (tunnel.enabled) {
+
+        grid::pt xy2;
+
+        if (!get_vault_placement(state, ptsource, vaultstate, w, h, ax, ay, vault.placement, xy2))
+            return;
+
+        vault_draw_tunnel(state, vaultstate, xy, xy2, brushes, tunnel, vault.transpose, vault.use_species_counts);
+    }
+    
 }
 
 
