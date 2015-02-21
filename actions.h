@@ -172,7 +172,11 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
             return;
         }
 
-        if (!t.sensor_toggle.first.null()) {
+        if (t.sensor_toggle.size() > 0) {
+
+            if (t.uncharge.sensor) {
+                state.features.uncharge(nx, ny, state.render);
+            }
             
             for (const auto& nn : state.neigh(neighbors::pt(nx, ny))) {
 
@@ -182,11 +186,10 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
                 features::Feature feat2;
                 if (state.features.get(nnx, nny, feat2)) {
 
-                    if (feat2.tag == t.sensor_toggle.first) {
-                        state.features.set(nnx, nny, t.sensor_toggle.second, state.render);
+                    const auto& tmp = t.sensor_toggle.find(feat2.tag);
 
-                    } else if (feat2.tag == t.sensor_toggle.second) {
-                        state.features.set(nnx, nny, t.sensor_toggle.first, state.render);
+                    if (tmp != t.sensor_toggle.end()) {
+                        state.features.set(nnx, nny, tmp->second, state.render);
                     }
                 }
             }

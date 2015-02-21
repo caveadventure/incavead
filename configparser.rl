@@ -121,6 +121,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     tag_t flavor_tag;
     tag_t ach_tag;
     tag_t ail_tag;
+    tag_t tmp_tag;
     unsigned int starsign_n;
 
     ui_symbols_t* ui_syms = NULL;
@@ -630,7 +631,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_uncharge_flag = ('attack' %{ ter.uncharge.attack = true; } ) |
                                 ('use'    %{ ter.uncharge.use = true; }    ) |
                                 ('move'   %{ ter.uncharge.move = true; }   ) |
-                                ('bump'   %{ ter.uncharge.bump = true; }   ) ;
+                                ('bump'   %{ ter.uncharge.bump = true; }   ) |
+                                ('sensor' %{ ter.uncharge.sensor = true; } ) ;
 
         terrain_uncharge = 'uncharge' ws1 (ws terrain_uncharge_flag)* ;
 
@@ -649,8 +651,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_view_radius = 'view_radius' ws1 number %{ ter.view_radius = toint(state.match); } ;
 
         terrain_sensor_toggle = 'sensor_toggle' 
-            ws1 tag %{ ter.sensor_toggle.first = tag_t(state.match, tagmem); }
-            ws1 tag %{ ter.sensor_toggle.second = tag_t(state.match, tagmem); }
+            ws1 tag %{ tmp_tag = tag_t(state.match, tagmem); }
+            ws1 tag %{ ter.sensor_toggle[tmp_tag] = tag_t(state.match, tagmem); }
             ;
 
         terrain_preserve = 'preserve' %{ ter.preserve = true; } ;

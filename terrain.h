@@ -59,8 +59,9 @@ struct Terrain {
         bool move;
         bool use;
         bool bump;
+        bool sensor;
 
-        uncharge_t() : attack(false), move(false), use(false), bump(false) {}
+        uncharge_t() : attack(false), move(false), use(false), bump(false), sensor(false) {}
     };
 
     uncharge_t uncharge;
@@ -95,7 +96,7 @@ struct Terrain {
 
     banking_t banking;
 
-    std::pair<tag_t, tag_t> sensor_toggle;
+    std::map<tag_t, tag_t> sensor_toggle;
 
     bool preserve;
 
