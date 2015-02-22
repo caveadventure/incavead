@@ -709,7 +709,7 @@ inline void generate_vault(const Vault& vault, GameState& state, T& ptsource, va
     if (river.n > 0) {
 
         vault_draw_river(state, vaultstate, xy.first, xy.second, brushes, river,
-                         state.rng.uniform(0.0, 2*M_PI), 1.0, river.n, vault.use_species_counts);
+                         state.rng.uniform(0.0, 2*3.141592653589793), 1.0, river.n, vault.use_species_counts);
     }        
 
     if (tunnel.enabled) {
