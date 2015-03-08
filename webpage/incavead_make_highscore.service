@@ -2,6 +2,6 @@
 Description=Generate incavead highscore table
 
 [Service]
-Type=oneshot
+Type=simple
 ExecStart=/srv/http/make_highscore.sh
 User=http
