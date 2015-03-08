@@ -1,0 +1,7 @@
+[Unit]
+Description=Generate incavead highscore table
+
+[Service]
+Type=oneshot
+ExecStart=/srv/http/make_highscore.sh
+User=http
