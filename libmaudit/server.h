@@ -42,7 +42,7 @@ public:
         }
     }
 
-    client_socket(int _fd) : compressor(8, 4096), compression(false), fd(_fd) {
+    client_socket(int _fd) : compressor(lz77::DEFAULT_SEARCHLEN, 8192), compression(false), fd(_fd) {
 
         buff.resize(buffsize);
         buffi = buff.end();
