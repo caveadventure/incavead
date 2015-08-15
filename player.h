@@ -2,88 +2,6 @@
 #define __PLAYER_H
 
 
-struct stat_t {
-    double val;
-        
-    stat_t() : val(3.0) {}
-
-    void inc(double v) {
-        val += v;
-        if (val > 3) val = 3;
-        else if (val < -3) val = -3;
-    }
-
-    void dec(double v) {
-        val -= v;
-        if (val < -3) val = -3;
-        else if (val > 3) val = 3;
-    }
-};
-
-struct shielded_a_stat_t : stat_t {
-
-    double shield;
-
-    shielded_a_stat_t() : stat_t(), shield(0) {}
-
-    void dec(double v) {
-
-        if (shield > 0 && v > 0) {
-            double sm = std::min(shield, v);
-
-            shield -= sm;
-            v -= sm;
-        }
-
-        stat_t::dec(v);
-    }
-};
-
-struct shielded_b_stat_t : stat_t {
-
-    double shield;
-
-    shielded_b_stat_t() : stat_t(), shield(0) {}
-
-    double buff(double v) {
-
-        double _v = ::fabs(v);
-
-        if (_v < shield) {
-            shield -= _v;
-            return 0;
-
-        } else {
-            _v = _v - shield;
-            shield = 0;
-
-            if (v < 0)
-                _v = -_v;
-
-            return _v;
-        }
-    }
-
-    void inc(double v) {
-
-        v = buff(v);
-
-        if (v != 0) {
-            stat_t::inc(v);
-        }
-    }
-
-    void dec(double v) {
-
-        v = buff(v);
-
-        if (v != 0) {
-            stat_t::dec(v);
-        }
-    }
-};
-
-
 struct Player {
 
     unsigned int px;
@@ -102,6 +20,9 @@ struct Player {
 
     unsigned int level;
 
+    pstats::stats_t stats;
+
+    //
     shielded_a_stat_t health;
     stat_t food;
     shielded_b_stat_t karma;
@@ -112,6 +33,7 @@ struct Player {
     unsigned int stun;
     unsigned int fear;
     unsigned int rest;
+    //
     
     struct dig_state_t {
         unsigned int x;
@@ -200,6 +122,7 @@ struct Player {
     struct banking_state_t {
         double assets;
         double sell_margin;
+        tag_t shield_stat;
         double shield_bonus;
         double money_curse;
         tag_t item;
@@ -449,17 +372,7 @@ struct reader<Player> {
         serialize::read(s, p.worldz);
         serialize::read(s, p.followers);
         serialize::read(s, p.level);
-        serialize::read(s, p.health.val);
-        serialize::read(s, p.health.shield);
-        serialize::read(s, p.food.val);
-        serialize::read(s, p.karma.val);
-        serialize::read(s, p.karma.shield);
-        serialize::read(s, p.luck.val);
-        serialize::read(s, p.sleep);
-        serialize::read(s, p.blind);
-        serialize::read(s, p.stun);
-        serialize::read(s, p.fear);
-        serialize::read(s, p.rest);
+        serialize::read(s, p.stats);
         serialize::read(s, p.dig.x);
         serialize::read(s, p.dig.y);
         serialize::read(s, p.dig.h);
@@ -478,6 +391,7 @@ struct reader<Player> {
         serialize::read(s, p.look.rangemax);
         serialize::read(s, p.banking.assets);
         serialize::read(s, p.banking.sell_margin);
+        serialize::read(s, p.banking.shield_stat);
         serialize::read(s, p.banking.shield_bonus);
         serialize::read(s, p.banking.money_curse);
         serialize::read(s, p.banking.item);
@@ -516,17 +430,7 @@ struct writer<Player> {
         serialize::write(s, p.worldz);
         serialize::write(s, p.followers);
         serialize::write(s, p.level);
-        serialize::write(s, p.health.val);
-        serialize::write(s, p.health.shield);
-        serialize::write(s, p.food.val);
-        serialize::write(s, p.karma.val);
-        serialize::write(s, p.karma.shield);
-        serialize::write(s, p.luck.val);
-        serialize::write(s, p.sleep);
-        serialize::write(s, p.blind);
-        serialize::write(s, p.stun);
-        serialize::write(s, p.fear);
-        serialize::write(s, p.rest);
+        serialize::write(s, p.stats);
         serialize::write(s, p.dig.x);
         serialize::write(s, p.dig.y);
         serialize::write(s, p.dig.h);
@@ -545,6 +449,7 @@ struct writer<Player> {
         serialize::write(s, p.look.rangemax);
         serialize::write(s, p.banking.assets);
         serialize::write(s, p.banking.sell_margin);
+        serialize::write(s, p.banking.shield_stat);
         serialize::write(s, p.banking.shield_bonus);
         serialize::write(s, p.banking.money_curse);
         serialize::write(s, p.banking.item);

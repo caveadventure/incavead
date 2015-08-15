@@ -16,27 +16,22 @@ struct Damage {
 
         damage_to_turns_t(int s = 0, int o = 0) : scale(s), offset(o) {}
 
-        inline unsigned int operator()(double v) const {
+        inline unsigned int get(double v) const {
             int n = (v * scale) - offset;
             return std::max(0, n);
         }
     };
 
-    damage_to_turns_t sleepturns;
-    damage_to_turns_t stunturns;
-    damage_to_turns_t blindturns;
-    damage_to_turns_t fearturns;
+    std::unordered_map<tag_t,damage_to_turns_t> inc_counts;
+
+    std::vector<tag_t> dec_stats;
+    std::vector<tag_t> inc_stats;
 
     double threshold;
 
-    bool heavenly;
-    bool hellish;
-    bool cancellation;
-    bool vampiric;
-    bool hunger;
-    bool unluck;
-    std::pair<tag_t,tag_t> polymorph;
-    bool health;
+    std::pair<tag_t,double> karmic_scale;
+
+    tag_t polymorph;
 
     damage_to_turns_t player_poly;
 
@@ -81,9 +76,7 @@ struct Damage {
 
     tag_t ally;
 
-    Damage() : threshold(0), heavenly(false), hellish(false), cancellation(false), vampiric(false),
-               hunger(false), unluck(false), health(false)
-        {}
+    Damage() : threshold(0) {}
 };
 
 struct DamageBank {
@@ -171,7 +164,7 @@ struct defenses_t {
         }
     }
 
-    double get(const tag_t& t) const {
+    double get(tag_t t) const {
 
         auto i = defenses.find(t);
 

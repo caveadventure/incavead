@@ -87,6 +87,7 @@ struct Terrain {
     struct banking_t {
         double buy_margin;
         double sell_margin;
+        tag_t shield_stat;
         double shield_bonus;
         double money_curse;
         double gives_change;

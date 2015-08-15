@@ -20,6 +20,7 @@
 
 ////
 
+#include "pstats.h"
 #include "damage.h"
 
 #include "constants.h"

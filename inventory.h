@@ -261,13 +261,9 @@ struct inventory_t {
         return ret;
     }
 
-    void process_inventory(double moon_angle, double& inc_luck, double& inc_hunger, double& inc_shield) {
+    void process_inventory(double moon_angle,std::map<tag_t, std::pair<double,double> >& inc_stat) {
 
-        inc_luck = 0;
-        inc_hunger = 0;
-        inc_shield = 0;
-
-        double hunger_coeff = 0;
+        std::map<tag_t,double> smul;
 
         auto i = stuff.begin();
 
@@ -287,22 +283,36 @@ struct inventory_t {
                 it.count += dp.change_count;
             }
 
-            for (const auto& l : dp.luck) {
-                inc_luck = std::max(inc_luck, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
+            for (const auto& l : dp.tickstat_moon) {
+
+                double& x = inc_stat[l.stat].first;
+                x = std::max(x, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
             }
 
-            // Hack, 'count_is_only_one' does not apply.
-            inc_hunger += (dp.hunger * it.count);
+            for (const auto& l : dp.tickstat) {
 
-            hunger_coeff = std::max(hunger_coeff, dp.other_hunger_multiplier);
+                double& x = inc_stat[l.stat];
 
-            inc_shield += dp.shield;
+                unsigned int amul = (dp.apply_count ? it.count : 1);
+
+                x.first += l.add * amul;
+                x.second += l.shield * amul;
+
+                if (l.mul != 1) {
+
+                    if (smul.count(l.stat) == 0) {
+                        smul[l.stat] = l.mul;
+                    } else {
+                        smul[l.stat] *= l.mul;
+                    }
+                }
+            }
 
             ++i;
         }
 
-        if (hunger_coeff > 1) {
-            inc_hunger *= hunger_coeff;
+        for (const auto& i : smul) {
+            inc_stat[i.first] *= i.second;
         }
     }
 

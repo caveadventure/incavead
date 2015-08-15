@@ -9,7 +9,9 @@ inline bool purchase_protection(Player& p, GameState& state, double cost) {
     double shield_bonus = p.banking.shield_bonus * deflation * cost;
     double money_curse = p.banking.money_curse * cost;
 
-    if (shield_bonus <= 0 || p.health.shield >= constants().health_shield_max)
+    pstats::stat_t& sstat = p.stats.s(p.banking.shield_stat);
+
+    if (shield_bonus <= 0 || sstat.shield >= sstat.shield_max)
         return true;
 
     items::Item money;
@@ -18,15 +20,15 @@ inline bool purchase_protection(Player& p, GameState& state, double cost) {
 
     double xcost = cost;
 
-    if (p.health.shield + shield_bonus >= constants().health_shield_max) {
+    if (sstat.shield + shield_bonus >= sstat.shield_max) {
 
-        shield_bonus = constants().health_shield_max - p.health.shield;
+        shield_bonus = sstat.shield_max - sstat.shield;
         xcost = shield_bonus / (p.banking.shield_bonus * deflation);
         money_curse = p.banking.money_curse * xcost;
     }
 
     if (shield_bonus > 0) {
-        p.health.shield += shield_bonus;
+        sstat.do_shield(shield_bonus, false, true);
         state.render.do_message("Your body glows with a shiny gold aura.");
 
         ++(state.ticks);
@@ -340,6 +342,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     tag_t money_slot = constants().money_slot;
 
     p.banking.sell_margin = bank.sell_margin;
+    p.banking.shield_stat = bank.shield_stat;
     p.banking.shield_bonus = bank.shield_bonus;
     p.banking.money_curse = bank.money_curse;
     p.banking.gives_change = bank.gives_change;
@@ -391,10 +394,13 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     if (assets >= constants().min_money_value) {
         msg += "  \2d\1) Deposit to an account.\n";
 
-        if (bank.shield_bonus > 0 &&
-            p.health.shield < constants().health_shield_max) {
+        if (bank.shield_bonus > 0) {
+            pstats::stat_t& sstat = p.stats.s(bank.shield_stat);
 
-            msg += "  \2p\1) Purchase divine protection.\n";
+            if (sstat.shield < sstat.shield_max) {
+
+                msg += "  \2p\1) Purchase divine protection.\n";
+            }
         }
 
         if (bank.sell_margin > 0) {

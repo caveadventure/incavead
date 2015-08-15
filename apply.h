@@ -99,7 +99,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (d.action_name.size() > 0) {
         state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
     }
-
+    
     if (!d.attacks.empty()) {
 
         damage::defenses_t defenses;
@@ -108,48 +108,30 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         defend(p, defenses, p.get_computed_level(state.rng), d, state);
     }
 
-    if (d.heal > 0) {
+    for (const auto& v : d.inc_stat) {
 
-        p.health.inc(d.heal);
-        state.render.do_message("You feel better.");
-        ret = true;
-    } 
+        if (v.val != 0) {
 
-    if (d.feed > 0) {
+            p.stats.s(v.tag).inc(v.val);
 
-        p.food.inc(d.feed);
+            if (v.msg.size() > 0)
+                state.render.do_message(v.msg);
 
-        ret = true;
-    } 
-
-    if (d.heal_blind) {
-
-        if (p.blind > 0) {
-            p.blind = 0;
-            state.render.do_message("You can see again!", true);
+            ret = true;
         }
-
-        ret = true;
     }
 
-    if (d.heal_stun) {
+    for (const auto& v : d.inc_scount) {
 
-        if (p.stun > 0) {
-            p.stun = 0;
-            state.render.do_message("You feel more stable.");
+        if (v.val != 0) {
+
+            bool full = p.stats.c(v.tag).inc(v.val);
+
+            const std::string& m = (full ? v.msg_b : v.msg_a);
+
+            if (m.size() > 0)
+                state.render.do_message(m);
         }
-
-        ret = true;
-    }
-
-    if (d.heal_fear) {
-
-        if (p.fear > 0) {
-            p.fear = 0;
-            state.render.do_message("You feel a surge of courage!");
-        }
-
-        ret = true;
     }
 
     if (d.heal_unluck) {
@@ -175,16 +157,6 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         p.polymorph.turns = 0;
         state.render.do_message("You return to your original form.", true);
         state.render.invalidate(p.px, p.py);
-        ret = true;
-    }
-
-    if (d.karma != 0) {
-        p.karma.inc(d.karma);
-        ret = true;
-    }
-
-    if (d.consume_luck != 0) {
-        p.luck.inc(d.consume_luck);
         ret = true;
     }
 

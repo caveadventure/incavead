@@ -127,25 +127,17 @@ struct Grid {
     };
 
     struct hud_line {
-        std::string label;
-        color_t labelcolor;
         enum numtype_t { SIGNED, UNSIGNED };
         numtype_t numtype;
         int npips;
-        char pipstyle[2];
-        color_t pipcolor[2];
+        std::string label;
+        skin lskin;
+        skin pskin;
+        skin nskin;
 
-        hud_line(const std::string& l, color_t lc,
-                 numtype_t nt, int np,
-                 char s[2],
-                 color_t c[2]) : 
-            label(l), labelcolor(lc), numtype(nt), npips(np)
-            {
-                pipstyle[0] = s[0];
-                pipstyle[1] = s[1];
-                pipcolor[0] = c[0];
-                pipcolor[1] = c[1];
-            }
+        hud_line(numtype_t nt, int np, const std::string& l,
+                 const skin& ls, const skin& ps, const skin& ns) : 
+            numtype(nt), npips(np), label(l), lskin(ls), pskin(ps), nskin(ns) {}
     };
 
     unsigned int w;
@@ -386,8 +378,8 @@ private:
         l += ": ";
 
         for (unsigned char c : l) {
+            *hudi = line.lskin;
             hudi->text = c;
-            hudi->fore = line.labelcolor;
             ++hudi;
         }
 
@@ -396,10 +388,9 @@ private:
             for (int i = 0; i < 6; ++i) {
 
                 if (i < line.npips) {
-                    hudi->text = line.pipstyle[0];
-                    hudi->fore = line.pipcolor[0];
+                    *hudi = line.pskin;
                 } else {
-                    hudi->fore = black_color;
+                    *hudi = skin();
                 }
 
                 ++hudi;
@@ -410,10 +401,9 @@ private:
             for (int i = -3; i < 0; ++i) {
 
                 if (i >= line.npips) {
-                    hudi->text = line.pipstyle[0];
-                    hudi->fore = line.pipcolor[0];
+                    *hudi = line.nskin;
                 } else {
-                    hudi->fore = black_color;
+                    *hudi = skin();
                 }
 
                 ++hudi;
@@ -422,10 +412,9 @@ private:
             for (int i = 0; i < 3; ++i) {
 
                 if (i < line.npips) {
-                    hudi->text = line.pipstyle[1];
-                    hudi->fore = line.pipcolor[1];
+                    *hudi = line.pskin;
                 } else {
-                    hudi->fore = black_color;
+                    *hudi = skin();
                 }
 
                 ++hudi;
@@ -858,25 +847,17 @@ public:
     }
 
 
-    void push_hud_line(const std::string& label, color_t labelcolor,
-                       unsigned int npips, char style_, color_t color_) {
+    void push_hud_line(unsigned int npips, const std::string& label,
+                       const skin& lskin, const skin& pskin) {
 
-
-        char style[2] = { style_, style_ };
-        color_t color[2] = { color_, color_ };
-
-        hud_pips.emplace_back(label, labelcolor, hud_line::UNSIGNED, npips, style, color);
+        hud_pips.emplace_back(hud_line::UNSIGNED, npips, label, lskin, pskin, pskin);
     }
 
 
-    void push_hud_line(const std::string& label, color_t labelcolor,
-                       int npips, char nstyle, char pstyle,
-                       color_t ncolor, color_t pcolor) {
+    void push_hud_line(int npips, const std::string& label,
+                       const skin& lskin, const skin& pskin, const skin& nskin) {
 
-        char style[2] = { nstyle, pstyle };
-        color_t color[2] = { ncolor, pcolor };
-
-        hud_pips.emplace_back(label, labelcolor, hud_line::SIGNED, npips, style, color);
+        hud_pips.emplace_back(hud_line::SIGNED, npips, label, lskin, pskin, nskin);
     }
 
 

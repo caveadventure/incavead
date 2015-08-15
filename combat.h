@@ -18,17 +18,11 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
-inline void karmic_damage_scale(bool positive, double karma, double penance, double& dmg) {
+inline void karmic_damage_scale(double scale, double karma, double penance, double& dmg) {
 
-    double kk = karma;
+    double kk = std::max(karma * scale, penance);
 
-    if (!positive) {
-        kk = -kk;
-    }
-
-    kk = std::min(kk, -penance);
-
-    if (kk < 0) {
+    if (kk > 0) {
         double factor = (kk)/2;
         factor = factor * factor;
 
@@ -94,10 +88,8 @@ inline void monster_kill(Player& p, GameState& state, const monsters::pt& mxy, m
 inline bool attack_damage_monster(const damage::val_t& v, 
                                   const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
-                                  double& totdamage, double& totmagic, double& totsleep, double& totstun, 
-                                  double& totfear, double& totblind, double& totpoly,
-                                  std::set<tag_t>& types,
-                                  bool& mortal) {
+                                  std::map<tag_t,double>& stathits,
+                                  std::set<tag_t>& types, bool& did_poly) {
 
     double dmg = v.val;
 
@@ -113,72 +105,54 @@ inline bool attack_damage_monster(const damage::val_t& v,
         !dam.flags.player(false)) 
         return false;
 
-    if (dam.heavenly) {
+    if (dam.karmic_scale.second != 0) {
 
-        karmic_damage_scale(true, -s.karma, 0, dmg);
-
-    } else if (dam.hellish) {
-
-        karmic_damage_scale(false, -s.karma, 0, dmg);
+        karmic_damage_scale(dam.karmic_scale.second, mon.stats.gets(dam.karmic_scale.first), 0, dmg);
     }
 
     if (dmg <= dam.threshold)
         return false;
 
-    unsigned int sleepturns = dam.sleepturns(dmg);
-    unsigned int stunturns = dam.stunturns(dmg);
-    unsigned int fearturns = dam.fearturns(dmg);
-    unsigned int blindturns = dam.blindturns(dmg);
-    unsigned int polyturns = dam.player_poly(dmg);
+    for (const auto& i : dam.inc_counts) {
 
-    if (sleepturns > 0) {
-        mon.sleep += sleepturns;
-        totsleep += sleepturns;
+        unsigned int turns = i.second.get(dmg);
+
+        if (turns > 0) {
+            mon.stats.cinc(i.first, turns);
+            stathits[i.first] += dmg;
+        }
     }
 
-    if (blindturns > 0) {
-        mon.blind += blindturns;
-        totblind += blindturns;
+    for (const tag_t& i : dam.dec_stats) {
+
+        bool kill = mon.stats.sinc(i.first, -dmg);
+        stathits[i.first] += dmg;
+
+        if (kill) {
+            types.insert(v.type);
+        }
     }
 
-    if (stunturns > 0) {
-        mon.stun += stunturns;
-        totstun += stunturns;
+    for (const tag_t& i : dam.inc_stats) {
+
+        p.stats.sinc(i.first, dmg);
     }
 
-    if (fearturns > 0) {
-        mon.fear += fearturns;
-        totfear += fearturns;
-    }
-
+    unsigned int polyturns = dam.player_poly.get(dmg);
+    
     if (polyturns > 0) {
 
         p.polymorph.species = mon.tag;
         p.polymorph.turns = polyturns;
-        p.sleep = mon.sleep;
-        p.blind = mon.blind;
-        p.health.val = mon.health;
+        p.stats = mon.stats;
 
         state.render.invalidate(p.px, p.py);
-
-        totpoly += polyturns;
+        did_poly = true;
     }
 
-    if (dam.cancellation) {
-        mon.magic -= dmg;
-        totmagic += dmg;
-    }
+    if (!dam.polymorph.null()) {
 
-    if (!dam.polymorph.first.null()) {
-
-        //
-        auto tmp = dam.polymorph;
-
-        if (s.karma < 0 || s.flags.undead) {
-            mon.tag = tmp.second;
-        } else {
-            mon.tag = tmp.first;
-        }
+        mon.tag = dam.polymorph;
 
         state.render.invalidate(mxy.first, mxy.second);
     }
@@ -188,27 +162,6 @@ inline bool attack_damage_monster(const damage::val_t& v,
         mon.ally = dam.ally;
         state.render.invalidate(mxy.first, mxy.second);
     }
-
-    if (dam.health || dam.vampiric) {
-
-        if (dam.vampiric) {
-
-            p.health.inc(dmg);
-        }
-
-        mon.health -= dmg;
-        totdamage += dmg;
-
-        if (dmg >= 2.8) {
-            mortal = true;
-        }
-
-        types.insert(v.type);
-    }
-
-    // dam.hunger, dam.unluck:
-    // Monsters don't feel hunger and don't have luck.
-    // They also cannot be infected.
 
     return true;
 }
@@ -232,34 +185,25 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
         return false;
     }
 
-    double totdamage = 0.0;
-    double totmagic = 0.0;
-    double totsleep = 0.0;
-    double totstun = 0.0;
-    double totfear = 0.0;
-    double totblind = 0.0;
-    double totpoly = 0.0;
-    bool mortal = false;
-
+    std::map<tag_t,double> stathits;
     std::set<tag_t> types;
+    bool did_poly;
 
     bool ret = false;
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, 
-                                         totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
-                                         types, mortal);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types, did_poly);
 
         if (tmp)
             ret = true;
     }
 
-    if (totpoly > 0) {
+    if (did_poly) {
         state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
-    if (mon.health <= -3) {
+    if (types.size() > 0 && mon.stats.crit()) {
 
         monster_kill(p, state, mxy, mon, s, track_kills, types);
     }

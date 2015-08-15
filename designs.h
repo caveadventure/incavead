@@ -25,10 +25,26 @@ struct Design {
 
     unsigned int stackrange;
 
-    double heal;
-    double feed;
-    double karma;
-    double consume_luck;
+    struct inc_stat_t {
+        tag_t stat;
+        double val;
+        std::string msg;
+
+        inc_stat_t() : val(0) {}
+    };
+
+    std::vector<inc_stat_t> inc_stat;
+
+    struct inc_scount_t {
+        tag_t stat;
+        int val;
+        std::string msg_a;
+        std::string msg_b;
+
+        inc_scount_t() : val(0) {}
+    };
+
+    std::vector<inc_scount_t> inc_scount;
 
     bool usable;
     bool use_for_free;
@@ -93,20 +109,28 @@ struct Design {
 
     permafeat_t place_permafeat;
 
-    struct luck_t {
+    struct tickstat_moon_t {
+        tag_t stat;
         double height;
         mean_deviation_t v;
 
-        luck_t() : height(0), v(0, 1) {}
+        tickstat_moon_t() : height(0), v(0, 1) {}
     };
 
-    std::vector<luck_t> luck;
+    std::vector<tickstat_moon_t> tickstat_moon;
 
-    double hunger;
-    double other_hunger_multiplier;
+    struct tickstat_t {
+        tag_t stat;
+        double add;
+        double mul;
+        double shield;
+        bool apply_count;
 
-    double shield;
+        tickstat_t() : add(0.0), mul(1.0), shield(0.0), apply_count(true) {}
+    };
 
+    std::vector<tickstat_t> tickstat;
+    
     struct spell_t {
         tag_t ca_tag;
         std::string name;
@@ -125,13 +149,10 @@ struct Design {
     } wishing;
 
     bool magic_mapping;
-
-    bool heal_blind;
+    
     bool heal_unluck;
     bool heal_ailments;
     bool heal_polymorph;
-    bool heal_stun;
-    bool heal_fear;
 
     std::string action_name;
 
@@ -200,11 +221,11 @@ struct Design {
     bool label_spot;
 
     Design() : level(0), count(0), bonus_a_count(0), bonus_b_count(0), count_is_only_one(false), stackrange(0), 
-               heal(0), feed(0), karma(0), consume_luck(0), usable(false), use_for_free(false), destructible(false), 
+               usable(false), use_for_free(false), destructible(false), 
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 
-               descend(0), safe_descend(0), worth(0), is_lit(false), hunger(0), other_hunger_multiplier(0), 
-               shield(0), count_is_rcode(false), wishing(NO_WISH), magic_mapping(false), heal_blind(false), 
-               heal_unluck(false), heal_ailments(false), heal_polymorph(false), heal_stun(false), heal_fear(false),
+               descend(0), safe_descend(0), worth(0), is_lit(false), count_is_rcode(false), wishing(NO_WISH),
+               magic_mapping(false), 
+               heal_unluck(false), heal_ailments(false), heal_polymorph(false), 
                forbid_wish(false), change_count(0), lucky_free_apply(false), label_spot(false)
         {}
     

@@ -563,17 +563,15 @@ void Game::process_world(GameState& state,
         }
     }
 
-
-    double inc_luck;
-    double inc_hunger;
-    double inc_shield;
+    std::map<tag_t, std::pair<double,double> > inc_stat;
         
-    p.inv.process_inventory(state.moon.pi.phase_n, inc_luck, inc_hunger, inc_shield);
+    p.inv.process_inventory(state.moon.pi.phase_n, inc_stat); 
 
-    p.luck.inc(inc_luck);
+    for (const auto& i : inc_stat) {
+        auto& z = p.stats.s(i.first);
 
-    if (p.health.shield < consts.health_shield_max) {
-        p.health.shield += inc_shield;
+        z.inc(i.second.first);
+        z.do_shield(i.second.second);
     }
 
     p.food.dec(hunger_rate + inc_hunger);
@@ -581,7 +579,7 @@ void Game::process_world(GameState& state,
     {
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        if (!ls.damage_terrain.null() && p.health.val > -3.0) {
+        if (!ls.damage_terrain.null()) {
 
             // HACK. Assume player level is always 0.
             // This is how it should be when the damage is actually coming from 

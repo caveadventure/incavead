@@ -220,76 +220,80 @@ void Game::drawing_context(mainloop::drawing_context_t& ctx, const GameState& st
     }
 }
 
-void draw_one_stat(GameState& state, const stat_t& s, const std::string& name) {
+void draw_one_stat(GameState& state, const pstats::stat_t& s, tag_t st, const pstats::Labels& psl) {
 
-    double v = s.val;
-    int vp = 0;
+    auto z = psl.labels.find(st);
 
-    if (v > 2) vp = 3;
-    else if (v > 1) vp = 2;
-    else if (v > 0) vp = 1;
-    else if (v < -2) vp = -3;
-    else if (v < -1) vp = -2;
-    else if (v < 0) vp = -1;
+    if (z == psl.labels.end())
+        return;
+    
+    double v = 3.0 * (2 * s.val - s.max - s.min) / (s.max - s.min);
 
-    if (v != 0) {
-        state.render.push_hud_line(name, maudit::color::dim_green,
-                                   vp, '-', '+',
-                                   maudit::color::dim_red, maudit::color::dim_green);
-    }
+    if (v == 0.0)
+        return;
+
+    int vp = std::lround(v);
+
+    const auto& zs = z->second;
+    
+    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin], zs.nskin[n_skin]);
+}
+
+void draw_one_shield(GameState& state, const pstats::stat_t& s, tag_t st, const pstats::Labels& psl) {
+
+    if (s.val == 0)
+        return;
+
+    auto z = psl.shield_labels.find(st);
+
+    if (z == psl.shield_labels.end())
+        return;
+
+    double v = (6u * s.shield) / s.shield_max;
+    int vp = std::lround(vp); 
+
+    if (vp <= 1)
+        vp = 1;
+
+    const auto& zs = z->second;
+
+    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin]);
+}
+
+void draw_one_count(GameState& state, const pstats::count_t& s, tag_t st, const pstats::Labels& psl) {
+
+    if (s.val == 0)
+        return;
+
+    auto z = psl.labels.find(st);
+
+    if (z == psl.labels.end())
+        return;
+
+    unsigned int v = (6u * s.val) / s.max;
+
+    if (v == 0)
+        ++v;
+
+    const auto& zs = z->second;
+
+    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], (state.ticks & 1 ? zs.pskin[n_skin] : zs.nskin[n_skin]));
 }
 
 void Game::draw_hud(GameState& state) {
 
-    draw_one_stat(state, p.health, "Health");
-    draw_one_stat(state, p.food,   "Food");
-    draw_one_stat(state, p.karma,  "Karma");
-
-    if (p.luck.val > 0.1 || p.luck.val < -0.1) {
-        draw_one_stat(state, p.luck, "Luck");
-    }
-
-    if (p.health.shield > 0) {
-        state.render.push_hud_line("Shield", maudit::color::dim_green,
-                                   std::min((unsigned int)(p.health.shield + 1), 6u),
-                                   '*',
-                                   maudit::color::bright_yellow);
-    }
+    const pstats::Labels& psl = pstats::labels();
     
-    if (p.karma.shield > 0) {
-        state.render.push_hud_line("Penance", maudit::color::dim_red,
-                                   std::min((unsigned int)(p.karma.shield + 1), 6u),
-                                   '*',
-                                   maudit::color::bright_yellow);
+    for (const auto& i : p.stats.stats) {
+        draw_one_stat(state, i->second, i->first, psl);
+        draw_one_shield(state, i->second, i->first, psl);
     }
 
-    if (p.sleep > 0) {
-        state.render.push_hud_line("Sleep", maudit::color::bright_red,
-                                   std::min(p.sleep / 15 + 1, (unsigned int)6), 
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
+    for (const auto& i : p.stats.counts) {
+        draw_one_count(state, i->second, i->first, psl);
     }
 
-    if (p.blind > 0) {
-        state.render.push_hud_line("Blind", maudit::color::bright_red,
-                                   std::min(p.blind / constants().blindturns_to_radius + 1, (unsigned int)6), 
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
-    }
-
-    if (p.stun > 0) {
-        state.render.push_hud_line("Stunned", maudit::color::bright_red,
-                                   std::min(p.stun / 15 + 1, (unsigned int)6), 
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
-    }
-
-    if (p.fear > 0) {
-        state.render.push_hud_line("Scared", maudit::color::bright_red,
-                                   std::min(p.fear / 15 + 1, (unsigned int)6), 
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_red : maudit::color::bright_black));
-    }
+    
 
     if (p.digging) {
 

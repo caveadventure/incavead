@@ -13,22 +13,15 @@ struct Monster {
     size_t serial;
     tag_t tag;
 
-    double health;
-    double magic;
-    unsigned int sleep;
-    unsigned int stun;
-    unsigned int blind;
-    unsigned int fear;
+    pstats::stats stats;
     bool did_attack;
     bool hidden;
     tag_t ally;
 
-    Monster() : serial(0), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false),
-                hidden(false) {}
+    Monster() : serial(0), did_attack(false), hidden(false) {}
 
     Monster(tag_t _tag, size_t ser, tag_t a) : 
-        serial(ser), tag(_tag), health(3.0), magic(3.0), sleep(0), stun(0), blind(0), fear(0), did_attack(false),
-        hidden(false), ally(a)
+        serial(ser), tag(_tag), did_attack(false), hidden(false), ally(a)
         {}
 
     bool null() const {
@@ -47,12 +40,7 @@ struct reader<monsters::Monster> {
     void read(Source& s, monsters::Monster& m) {
         serialize::read(s, m.serial);
         serialize::read(s, m.tag);
-        serialize::read(s, m.health);
-        serialize::read(s, m.magic);
-        serialize::read(s, m.sleep);
-        serialize::read(s, m.stun);
-        serialize::read(s, m.blind);
-        serialize::read(s, m.fear);
+        serialize::read(s, m.stats);
         serialize::read(s, m.did_attack);
         serialize::read(s, m.hidden);
         serialize::read(s, m.ally);
@@ -64,12 +52,7 @@ struct writer<monsters::Monster> {
     void write(Sink& s, const monsters::Monster& m) {
         serialize::write(s, m.serial);
         serialize::write(s, m.tag);
-        serialize::write(s, m.health);
-        serialize::write(s, m.magic);
-        serialize::write(s, m.sleep);
-        serialize::write(s, m.stun);
-        serialize::write(s, m.blind);
-        serialize::write(s, m.fear);
+        serialize::write(s, m.stats);
         serialize::write(s, m.did_attack);
         serialize::write(s, m.hidden);
         serialize::write(s, m.ally);
