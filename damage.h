@@ -22,14 +22,19 @@ struct Damage {
         }
     };
 
-    std::unordered_map<tag_t,damage_to_turns_t> inc_counts;
+    std::vector< std::pair<tag_t,damage_to_turns_t> > inc_counts;
 
     std::vector<tag_t> dec_stats;
     std::vector<tag_t> inc_stats;
 
-    double threshold;
+    std::vector<tag_t> transfer_stats;
 
-    std::pair<tag_t,double> karmic_scale;
+    double threshold;
+    double levelup_threshold;
+
+    bool visible_damage;
+
+    std::vector< std::pair<tag_t,double> > karmic_scale;
 
     tag_t polymorph;
 
@@ -72,11 +77,11 @@ struct Damage {
     msg_t melee_msg;
     msg_t env_msg;
 
-    tag_t infect;
+    std::pair<tag_t,tag_t> infect;
 
     tag_t ally;
 
-    Damage() : threshold(0) {}
+    Damage() : threshold(0), levelup_threshold(0), visible_damage(false) {}
 };
 
 struct DamageBank {

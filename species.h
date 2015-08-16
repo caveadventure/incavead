@@ -39,7 +39,7 @@ struct Species {
     tag_t tag;
     std::string name;
     skins skin;
-    
+
     unsigned int level;
     unsigned int count;
 
@@ -48,11 +48,13 @@ struct Species {
     tag_t genus;
 
     std::string descr;
-    
+
     habitat_t habitat;
     ai_t ai;
     idle_ai_t idle_ai;
     move_t move;
+
+    pstats::stats stats;
 
     double digging;
     
@@ -137,8 +139,6 @@ struct Species {
     };
 
     flags_t flags;
-
-    double karma;
 
     struct blast_t {
         double chance;

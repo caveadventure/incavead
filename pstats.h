@@ -23,6 +23,12 @@ struct Stat {
 
     bool critical;
 
+    tag_t chain_pos;
+    tag_t chain_neg;
+
+    std::string monster_hit_msg;
+    std::string player_hit_msg;
+
     Stat() : min(-3), max(3), cmax(1000), critical(false) {}
 };
 
@@ -98,6 +104,18 @@ struct stat_t {
 
         return (s.critical && val == s.min);
     }
+
+    bool chain(double& v, const Stat& s) {
+
+        if (val > s.min) {
+            double sgn = (v > 0) - (v < 0);
+            double nv = std::min(sgn*v, val - s.min);
+            v -= sgn*nv;
+            val -= nv;
+        }
+
+        return (s.critical && val == s.min);
+    }
 };
 
 
@@ -105,8 +123,22 @@ struct stats_t {
 
     std::unordered_map<tag_t,stat_t> stats;
     std::unordered_map<tag_t,count_t> counts;
-
+    
     bool sinc(tag_t t, double v) {
+
+        const Stat& st = ::stats().get(t);
+
+        if (v > 0 && !t.chain_pos.null()) {
+
+            if (stats[t.chain_pos].chain(v, ::stats().get(t.chain_pos)))
+                return true;
+        }
+
+        if (v < 0 && !t.chain_neg.null()) {
+
+            if (stats[t.chain_neg].chain(v, ::stats().get(t.chain_neg)))
+                return true;
+        }
 
         return stats[t].inc(v, ::stats().get(t));
     }

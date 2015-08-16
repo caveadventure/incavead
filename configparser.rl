@@ -1182,42 +1182,38 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         damage_name = 'name' ws1 string %{ dam.name = state.match; } ;
 
-        damage_sleepturns = 'sleepturns' 
-            ws1 snumber %{ dam.sleepturns.scale = toint(state.match); }
-            ws1 snumber %{ dam.sleepturns.offset = toint(state.match); } ;
+        damage_inc_counts = 'inc_count' %{ dam.inc_counts.resize(dam.inc_counts.size() + 1); }
+            ws1 tag %{ dam.inc_counts.back().first = tag_t(state.match, tagmem); }
+            ws1 snumber %{ dam.inc_counts.back().second.scale = toint(state.match); }
+            ws1 snumber %{ dam.inc_counts.back().second.offset = toint(state.match); }
+            ;
 
-        damage_stunturns = 'stunturns' 
-            ws1 snumber %{ dam.stunturns.scale = toint(state.match); }
-            ws1 snumber %{ dam.stunturns.offset = toint(state.match); } ;
+        damage_dec_stat = 'dec_stat' ws1 tag %{ dam.dec_stats.push_back(tag_t(state.match, tagmem)); };
 
-        damage_blindturns = 'blindturns' 
-            ws1 snumber %{ dam.blindturns.scale = toint(state.match); }
-            ws1 snumber %{ dam.blindturns.offset = toint(state.match); } ;
+        damage_inc_stat = 'inc_stat' ws1 tag %{ dam.inc_stats.push_back(tag_t(state.match, tagmem)); };
 
-        damage_fearturns = 'fearturns' 
-            ws1 snumber %{ dam.fearturns.scale = toint(state.match); }
-            ws1 snumber %{ dam.fearturns.offset = toint(state.match); } ;
+        damage_transfer_stat = 'transfer_stat' ws1 tag %{ dam.transfer_stats.push_back(tag_t(state.match, tagmem)); };
+
+        damage_threshold = 'threshold' ws1 real %{ dam.threshold = toreal(state.match); } ;
+
+        damage_levelup_threshold = 'levelup_threshold' ws1 real %{ dam.levelup_threshold = toreal(state.match); };
+
+        damage_visible_damage = 'visible_damage' %{ dam.visible_damage = true; };
+
+        damage karmic_scale = 'karmic_scale %{ dam.karmic_scale.resize(dam.karmic_scale.size() + 1); }
+            ws1 tag  %{ dam.karmic_scale.back().first = tag_t(state.match, tagmem); }
+            ws1 real %{ dam.karmic_scale.back().second = toreal(state.match); }
+            ;
+
+        damage_polymorph    = 'polymorph' ws1 tag %{ dam.polymorph = tag_t(state.match, tagmem); } ;        
 
         damage_player_poly = 'player_poly' 
             ws1 snumber %{ dam.player_poly.scale = toint(state.match); }
             ws1 snumber %{ dam.player_poly.offset = toint(state.match); } ;
 
-        damage_threshold = 'threshold' ws1 real %{ dam.threshold = toreal(state.match); } ;
-
-        damage_heavenly     = 'heavenly'     %{ dam.heavenly = true; } ;
-        damage_hellish      = 'hellish'      %{ dam.hellish = true; } ;
-        damage_cancellation = 'cancellation' %{ dam.cancellation = true; } ;
-        damage_vampiric     = 'vampiric'     %{ dam.vampiric = true; } ;
-        damage_hunger       = 'hunger'       %{ dam.hunger = true; } ;
-        damage_unluck       = 'unluck'       %{ dam.unluck = true; } ;
-        damage_health       = 'health'       %{ dam.health = true; } ;
-
-        damage_polymorph    = 'polymorph'
-            ws1 tag %{ dam.polymorph.first = tag_t(state.match, tagmem); }
-            ws1 tag %{ dam.polymorph.second = tag_t(state.match, tagmem); }
-            ;
-
-        damage_infect = 'infect' ws1 tag %{ dam.infect = tag_t(state.match, tagmem); };
+        damage_infect = 'infect'
+            ws1 tag %{ dam.infect.first = tag_t(state.match, tagmem); }
+            ws1 tag %{ dam.infect.second = tag_t(state.match, tagmem); } ;
 
         damage_ally   = 'ally'   ws1 tag %{ dam.ally = tag_t(state.match, tagmem); };
 
@@ -1241,12 +1237,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         damage_one_data =
-            (damage_name | damage_sleepturns | damage_stunturns | damage_blindturns | damage_fearturns |
-            damage_threshold | damage_heavenly | damage_hellish | damage_cancellation |
-            damage_vampiric | damage_hunger | damage_unluck | damage_polymorph | damage_health | 
-            damage_infect | damage_eyeless | damage_undead | damage_animal | damage_plant | damage_player |
-            damage_robot | damage_magic | damage_melee_msg | damage_env_msg | damage_player_poly |
-            damage_cosmic | damage_ally |
+            (damage_name | damage_inc_counts | damage_dec_stat | damage_inc_stat | damage_transfer_stat |
+            damage_threshold | damage_levelup_threshold | damage_visible_damage | damage_karmic_scale |
+            damage_polymorph | damage_player_poly | damage_infect | damage_ally |
+            damage_eyeless | damage_undead | damage_animal | damage_plant | damage_player |
+            damage_robot | damage_magic | damage_melee_msg | damage_env_msg | 
+            damage_cosmic | 
             '}' ${ fret; })
             ;
 

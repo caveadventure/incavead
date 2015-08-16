@@ -18,9 +18,9 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
-inline void karmic_damage_scale(double scale, double karma, double penance, double& dmg) {
+inline void karmic_damage_scale(double scale, double karma, double& dmg) {
 
-    double kk = std::max(karma * scale, penance);
+    double kk = karma * scale;
 
     if (kk > 0) {
         double factor = (kk)/2;
@@ -89,7 +89,8 @@ inline bool attack_damage_monster(const damage::val_t& v,
                                   const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   std::map<tag_t,double>& stathits,
-                                  std::set<tag_t>& types, bool& did_poly) {
+                                  std::set<tag_t>& types, bool& did_poly, bool& did_level,
+                                  double& visible_damage) {
 
     double dmg = v.val;
 
@@ -105,13 +106,23 @@ inline bool attack_damage_monster(const damage::val_t& v,
         !dam.flags.player(false)) 
         return false;
 
-    if (dam.karmic_scale.second != 0) {
+    if (dam.karmic_scale.size() > 0) {
+        double mk = 0;
 
-        karmic_damage_scale(dam.karmic_scale.second, mon.stats.gets(dam.karmic_scale.first), 0, dmg);
+        for (const auto& i : dam.karmic_scale) {
+
+            mk = std::max(mk, karmic_damage_scale(i.second, mon.stats.gets(i.first), dmg));
+        }
+
+        dmg = mk;
     }
-
+   
     if (dmg <= dam.threshold)
         return false;
+
+    if (dam.visible_damage) {
+        visible_damage += dmg;
+    }
 
     for (const auto& i : dam.inc_counts) {
 
@@ -125,8 +136,8 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
     for (const tag_t& i : dam.dec_stats) {
 
-        bool kill = mon.stats.sinc(i.first, -dmg);
-        stathits[i.first] += dmg;
+        bool kill = mon.stats.sinc(i, -dmg);
+        stathits[i] += dmg;
 
         if (kill) {
             types.insert(v.type);
@@ -135,7 +146,12 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
     for (const tag_t& i : dam.inc_stats) {
 
-        p.stats.sinc(i.first, dmg);
+        p.stats.sinc(i, dmg);
+    }
+
+    for (const tag_t& i : dam.transfer_stats) {
+
+        p.stats.sinc(i, -mon.stats.gets(i) * dmg);
     }
 
     unsigned int polyturns = dam.player_poly.get(dmg);
@@ -153,6 +169,7 @@ inline bool attack_damage_monster(const damage::val_t& v,
     if (!dam.polymorph.null()) {
 
         mon.tag = dam.polymorph;
+        mon.stats = species().get(mon.tag).stats;
 
         state.render.invalidate(mxy.first, mxy.second);
     }
@@ -161,6 +178,11 @@ inline bool attack_damage_monster(const damage::val_t& v,
         
         mon.ally = dam.ally;
         state.render.invalidate(mxy.first, mxy.second);
+    }
+
+    if (dam.levelup_threshold > 0 && dmg > dam.levelup_threshold) {
+
+        did_level = true;
     }
 
     return true;
@@ -187,13 +209,16 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     std::map<tag_t,double> stathits;
     std::set<tag_t> types;
-    bool did_poly;
+    bool did_poly = false;
+    bool did_level = false;
+    double visible_damage = 0;
 
     bool ret = false;
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types, did_poly);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types,
+                                         did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
@@ -236,54 +261,38 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         return true;
     }
 
-    double totdamage = 0.0;
-    double totmagic = 0.0;
-    double totsleep = 0.0;
-    double totstun = 0.0;
-    double totfear = 0.0;
-    double totblind = 0.0;
-    double totpoly = 0.0;
-    bool mortal = false;
-
+    std::map<tag_t,double> stathits;
     std::set<tag_t> types;
+    bool did_poly = false;
+    bool did_level = false;
+    double visible_damage = 0;
 
     bool ret = false;
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, 
-                                         totdamage, totmagic, totsleep, totstun, totfear, totblind, totpoly,
-                                         types, mortal);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types,
+                                         did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
     }
 
-    p.karma.inc(s.karma * totdamage);
+    for (const auto& i : stathits) {
 
-    if (totsleep > 0) {
-        state.render.do_message(nlp::message("%s falls asleep.", s));
+        const Stat& s = stats().get(i.first);
+
+        if (i.first > 0 && s.monster_hit_msg.size() > 0)
+            state.render.do_message(nlp::message(s.monster_hit_msg, s));
     }
 
-    if (totstun > 0) {
-        state.render.do_message(nlp::message("%s is stunned.", s));
-    }
-
-    if (totfear > 0) {
-        state.render.do_message(nlp::message("%s flees in terror.", s));
-    }
-
-    if (totblind > 0) {
-        state.render.do_message(nlp::message("%s is blinded.", s));
-    }
-
-    if (totpoly > 0) {
+    if (did_poly) {
         state.render.do_message(nlp::message("You polymorph into %s!", s), true);
     }
 
     bool allow_gain_level = (!s.flags.plant && p.polymorph.species.null());
 
-    if (mon.health <= -3) {
+    if (types.size() > 0 && mon.stats.crit()) {
 
         if (s.flags.plant || s.flags.robot) {
             state.render.do_message(nlp::message("You destroyed %s.", s));
@@ -298,12 +307,12 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             p.level = species_level;
 
             // Don't gain a level twice.
-            mortal = false;
+            did_level = false;
             
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
 
-    } else if (!quiet && totdamage > 0) {
+    } else if (!quiet && visible_damage > 0) {
 
         if (s.flags.plant) {
             state.render.do_message(nlp::message("You smash %s.", s));
@@ -311,19 +320,19 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         } else if (s.flags.robot) {
             state.render.do_message(nlp::message("You damage %s.", s));
 
-        } else if (totdamage < 0.1) {
+        } else if (visible_damage < 0.1) {
             state.render.do_message(nlp::message("You almost miss %s.", s));
 
-        } else if (totdamage < 0.5) {
+        } else if (visible_damage < 0.5) {
             state.render.do_message(nlp::message("You hit %s.", s));
 
-        } else if (totdamage < 1.0) {
+        } else if (visible_damage < 1.0) {
             state.render.do_message(nlp::message("You wound %s.", s));
 
-        } else if (totdamage < 2.0) {
+        } else if (visible_damage < 2.0) {
             state.render.do_message(nlp::message("You heavily wound %s.", s));
 
-        } else if (totdamage < 2.8) {
+        } else if (visible_damage < 2.8) {
             state.render.do_message(nlp::message("You critically wound %s.", s));
 
         } else {
@@ -331,17 +340,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         }
     }
 
-    if (totmagic > 0.5) {
-
-        if (mon.magic <= -3) {
-            state.render.do_message(nlp::message("%s is magically cancelled.", s));
-
-        } else {
-            state.render.do_message(nlp::message("%s is showered in sparkles.", s));
-        }
-    }
-
-    if (species_level >= p.level && mortal && allow_gain_level) {
+    if (species_level >= p.level && did_level && allow_gain_level) {
 
         p.level = species_level+1;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
@@ -385,18 +384,26 @@ inline void defend_message(GameState& state, const ConstantsBank::ailment_t& a, 
     state.render.do_message(nlp::message(msg.str, a), msg.important);
 }
 
+inline bool defend_sinc_stats(monsters::Monster& mon, tag_t stat, double v) {
+    return mon.stats.sinc(stat, v);
+}
 
-template <typename S>
-inline double defend(Player& p, 
-                     const damage::defenses_t& defenses, unsigned int plevel, 
-                     const damage::attacks_t& attacks, unsigned int alevel, 
-                     GameState& state, const std::string& attacker_name, bool env,
-                     const S& s, size_t& n) {
+inline bool defend_sinc_stats(int, tag_t, double) {
+    return false;
+}
 
-    double vamp = 0;
+
+template <typename S, typename T>
+inline bool defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const damage::attacks_t& attacks, unsigned int alevel, 
+                   GameState& state, const std::string& attacker_name, bool env,
+                   const S& s, T mon, size_t& n) {
+
+    bool ret = false;
 
     if (attacks.empty())
-        return vamp;
+        return ret;
 
     damage::attacks_t attack_res;
 
@@ -411,7 +418,7 @@ inline double defend(Player& p,
             defend_message(state, s, msg);
         }
 
-        return vamp;
+        return ret;
     }
 
     p.attacker = attacker_name;
@@ -450,14 +457,14 @@ inline double defend(Player& p,
         }
 
 
+        if (dam.karmic_scale.size() > 0) {
+            double mk = 0;
+            
+            for (const auto& i : dam.karmic_scale) {
+                mk = std::max(mk, karmic_damage_scale(i.second, p.stats.get(i.first), dmg));
+            }
 
-        if (dam.heavenly) {
-
-            karmic_damage_scale(true, p.karma.val, p.karma.shield, dmg);
-
-        } else if (dam.hellish) {
-
-            karmic_damage_scale(false, p.karma.val, p.karma.shield, dmg);
+            dmg = mk;
         }
 
         if (dmg <= dam.threshold)
@@ -465,55 +472,47 @@ inline double defend(Player& p,
 
         n++;
 
-        unsigned int sleepturns = dam.sleepturns(dmg);
-        unsigned int blindturns = dam.blindturns(dmg);
-        unsigned int stunturns = dam.stunturns(dmg);
-        unsigned int fearturns = dam.fearturns(dmg);
+        for (const auto& i : dam.inc_counts) {
 
-        // 
+            unsigned int turns = i.second.get(dmg);
 
-        if (sleepturns > 0) {
-            p.sleep += sleepturns;
+            if (turns > 0) {
+                p.stats.cinc(i.first, turns);
+            }
         }
 
-        if (blindturns > 0) {
-            p.blind += blindturns;
+        for (const tag_t& i : dam.dec_stats) {
+
+            p.stats.sinc(i, -dmg);
         }
 
-        if (stunturns > 0) {
-            p.stun += stunturns;
+        for (const tag_t& i : dam.inc_stats) {
+
+            defend_sinc_stats(mon, i, dmg);
         }
 
-        if (fearturns > 0) {
-            p.fear += fearturns;
+        for (const tag_t& i : dam.transfer_stats) {
+
+            defend_sinc_stats(mon, -p.stats.gets(i) * dmg);
         }
 
-        if (!dam.polymorph.first.null()) {
-            p.health.dec(6.0);
+        // HACK!
+        if (!dam.polymorph.null()) {
+
+            p.dead = true;
         }
 
-        if (dam.hunger) {
-            p.food.dec(dmg);
-        } 
+        if (!dam.infect.first.null()) {
 
-        if (dam.unluck) {
-            p.luck.dec(dmg);
-        }
-
-        if (dam.health || dam.vampiric) {
-            p.health.dec(dmg);
-        }
-
-        if (!dam.infect.null()) {
-
-            auto i = constants().ailments.find(dam.infect);
+            auto i = constants().ailments.find(dam.infect.first);
 
             if (i == constants().ailments.end())
                 throw std::runtime_error("Sanity error: unknown ailment in damage " + dam.name);
 
-            p.add_ailment(state.rng, dam.infect, i->second.triggers);
+            p.add_ailment(state.rng, dam.infect.first, i->second.triggers);
 
-            vamp = -6.0;
+            if (defend_sinc_stats(mon, dam.infect.second, -dmg))
+                ret = true;
         }
 
         if (env) {
@@ -527,24 +526,25 @@ inline double defend(Player& p,
         handle_post_defend(p, state);
     }
 
-    return vamp;
+    return ret;
 }
 
-inline double defend(Player& p, 
-                     const damage::defenses_t& defenses, unsigned int plevel, 
-                     const Species& s, const damage::attacks_t& attacks,
-                     GameState& state, bool friendly_fire = false) {
+inline bool defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Species& s, monsters::Monster& mon, const damage::attacks_t& attacks,
+                   GameState& state, bool friendly_fire = false) {
 
     size_t tmp;
-    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s, tmp);
+    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s,
+                  std::ref(mon), tmp);
 }
 
-inline double defend(Player& p, 
-                     const damage::defenses_t& defenses, unsigned int plevel, 
-                     const Species& s,
-                     GameState& state, bool friendly_fire = false) {
-    
-    return defend(p, defenses, plevel, s, s.attacks, state, friendly_fire);
+inline bool defend(Player& p, 
+                   const damage::defenses_t& defenses, unsigned int plevel, 
+                   const Species& s, monsters::Monster& mon, 
+                   GameState& state, bool friendly_fire = false) {
+
+    return defend(p, defenses, plevel, s, mon, s.attacks, state, friendly_fire);
 }
 
 
@@ -555,7 +555,7 @@ inline void defend(Player& p,
                    GameState& state) {
 
     size_t tmp;
-    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t, tmp);
+    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t, 1234, tmp);
 }
 
 inline void defend(Player& p, 
@@ -566,7 +566,7 @@ inline void defend(Player& p,
     unsigned int level = (d.attack_level >= 0 ? d.attack_level : d.level);
 
     size_t tmp;
-    defend(p, defenses, plevel, d.attacks, level, state, d.name, true, d, tmp);
+    defend(p, defenses, plevel, d.attacks, level, state, d.name, true, d, 1234, tmp);
 }
 
 inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
@@ -577,7 +577,7 @@ inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameSta
     size_t tmp = 0;
 
     defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, 
-           ailment.name, true, ailment, tmp);
+           ailment.name, true, ailment, 1234, tmp);
 
     return tmp;
 }
