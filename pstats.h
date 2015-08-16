@@ -29,7 +29,9 @@ struct Stat {
     std::string monster_hit_msg;
     std::string player_hit_msg;
 
-    Stat() : min(-3), max(3), cmax(1000), critical(false) {}
+    bool hidden;
+
+    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false) {}
 };
 
 struct StatsBank {

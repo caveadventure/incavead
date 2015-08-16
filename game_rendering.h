@@ -220,54 +220,29 @@ void Game::drawing_context(mainloop::drawing_context_t& ctx, const GameState& st
     }
 }
 
-void draw_one_stat(GameState& state, const pstats::stat_t& s, tag_t st, const pstats::Labels& psl) {
+void draw_one_stat(GameState& state, tag_t s) {
 
-    auto z = psl.labels.find(st);
+    const Stat& st = stats().get(s);
+    double val = p.stats.gets(s);
 
-    if (z == psl.labels.end())
+    if (st.hidden && val <= st.min)
         return;
-    
-    double v = 3.0 * (2 * s.val - s.max - s.min) / (s.max - s.min);
 
-    if (v == 0.0)
-        return;
+    double v = 3.0 * (2 * val - st.max - st.min) / (st.max - st.min);
 
     int vp = std::lround(v);
 
-    const auto& zs = z->second;
+    const auto& zs = st.label;
     
     state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin], zs.nskin[n_skin]);
 }
 
-void draw_one_shield(GameState& state, const pstats::stat_t& s, tag_t st, const pstats::Labels& psl) {
+void draw_one_count(GameState& state, tag_t s) {
 
-    if (s.val == 0)
-        return;
+    const Stat& st = stats().get(s);
+    double val = p.stats.getc(s);
 
-    auto z = psl.shield_labels.find(st);
-
-    if (z == psl.shield_labels.end())
-        return;
-
-    double v = (6u * s.shield) / s.shield_max;
-    int vp = std::lround(vp); 
-
-    if (vp <= 1)
-        vp = 1;
-
-    const auto& zs = z->second;
-
-    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin]);
-}
-
-void draw_one_count(GameState& state, const pstats::count_t& s, tag_t st, const pstats::Labels& psl) {
-
-    if (s.val == 0)
-        return;
-
-    auto z = psl.labels.find(st);
-
-    if (z == psl.labels.end())
+    if (st.hidden && val == 0)
         return;
 
     unsigned int v = (6u * s.val) / s.max;
@@ -275,25 +250,23 @@ void draw_one_count(GameState& state, const pstats::count_t& s, tag_t st, const 
     if (v == 0)
         ++v;
 
-    const auto& zs = z->second;
+    const auto& zs = st.label;
 
     state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], (state.ticks & 1 ? zs.pskin[n_skin] : zs.nskin[n_skin]));
 }
 
 void Game::draw_hud(GameState& state) {
 
-    const pstats::Labels& psl = pstats::labels();
-    
-    for (const auto& i : p.stats.stats) {
-        draw_one_stat(state, i->second, i->first, psl);
-        draw_one_shield(state, i->second, i->first, psl);
+    const auto& hso = constants().hud_stats_order;
+    const auto& hco = constants().hud_counts_order;
+
+    for (const tag_t& i : hso) {
+        draw_one_stat(state, i);
     }
 
-    for (const auto& i : p.stats.counts) {
-        draw_one_count(state, i->second, i->first, psl);
+    for (const tag_t& i : hco) {
+        draw_one_count(state, i);
     }
-
-    
 
     if (p.digging) {
 

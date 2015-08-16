@@ -23,7 +23,7 @@ struct Player {
 
     pstats::stats_t stats;
 
-    //
+    /* //
     shielded_a_stat_t health;
     stat_t food;
     shielded_b_stat_t karma;
@@ -34,7 +34,7 @@ struct Player {
     unsigned int stun;
     unsigned int fear;
     unsigned int rest;
-    //
+    */ //
     
     struct dig_state_t {
         unsigned int x;
@@ -123,15 +123,15 @@ struct Player {
     struct banking_state_t {
         double assets;
         double sell_margin;
-        tag_t shield_stat;
-        double shield_bonus;
+        tag_t bonus_stat;
+        double stat_bonus;
         double money_curse;
         tag_t item;
         unsigned int item_count;
         double item_price;
         double gives_change;
 
-        banking_state_t() : assets(0), sell_margin(1.0), shield_bonus(0), money_curse(0), 
+        banking_state_t() : assets(0), sell_margin(1.0), stat_bonus(0), money_curse(0), 
                             item_count(0), item_price(0), gives_change(0) {}
     };
 
@@ -393,8 +393,8 @@ struct reader<Player> {
         serialize::read(s, p.look.rangemax);
         serialize::read(s, p.banking.assets);
         serialize::read(s, p.banking.sell_margin);
-        serialize::read(s, p.banking.shield_stat);
-        serialize::read(s, p.banking.shield_bonus);
+        serialize::read(s, p.banking.bonus_stat);
+        serialize::read(s, p.banking.stat_bonus);
         serialize::read(s, p.banking.money_curse);
         serialize::read(s, p.banking.item);
         serialize::read(s, p.banking.item_count);
@@ -452,8 +452,8 @@ struct writer<Player> {
         serialize::write(s, p.look.rangemax);
         serialize::write(s, p.banking.assets);
         serialize::write(s, p.banking.sell_margin);
-        serialize::write(s, p.banking.shield_stat);
-        serialize::write(s, p.banking.shield_bonus);
+        serialize::write(s, p.banking.bonus_stat);
+        serialize::write(s, p.banking.stat_bonus);
         serialize::write(s, p.banking.money_curse);
         serialize::write(s, p.banking.item);
         serialize::write(s, p.banking.item_count);

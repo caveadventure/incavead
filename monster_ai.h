@@ -559,17 +559,12 @@ inline bool move_monster_main(Player& p, GameState& state,
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        double vamp = defend(p, defenses, p.get_computed_level(state.rng), s, state);
+        bool dead = defend(p, defenses, p.get_computed_level(state.rng), s, state);
 
-        if (vamp != 0) {
+        if (dead && m.stats.crit()) {
 
-            if (m.health + vamp <= -3.0) {
-                do_die = true;
-                return true;
-            }
-            
-            m.health += vamp; 
-            m.health = std::min(3.0, m.health);
+            do_die = true;
+            return true;
         }
 
         return false;

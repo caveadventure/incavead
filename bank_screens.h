@@ -6,12 +6,13 @@ inline bool purchase_protection(Player& p, GameState& state, double cost) {
 
     double deflation = finance::supply().get_rate();
 
-    double shield_bonus = p.banking.shield_bonus * deflation * cost;
+    double stat_bonus = p.banking.stat_bonus * deflation * cost;
     double money_curse = p.banking.money_curse * cost;
 
-    pstats::stat_t& sstat = p.stats.s(p.banking.shield_stat);
+    double sstat = p.stats.gets(p.banking.bonus_stat);
+    double ssmax = stats().get(p.banking.bonus_stat).max;
 
-    if (shield_bonus <= 0 || sstat.shield >= sstat.shield_max)
+    if (stat_bonus <= 0 || sstat >= ssmax)
         return true;
 
     items::Item money;
@@ -20,15 +21,15 @@ inline bool purchase_protection(Player& p, GameState& state, double cost) {
 
     double xcost = cost;
 
-    if (sstat.shield + shield_bonus >= sstat.shield_max) {
+    if (sstat + stat_bonus >= ssmax) {
 
-        shield_bonus = sstat.shield_max - sstat.shield;
-        xcost = shield_bonus / (p.banking.shield_bonus * deflation);
+        stat_bonus = ssmax - sstat;
+        xcost = stat_bonus / (p.banking.stat_bonus * deflation);
         money_curse = p.banking.money_curse * xcost;
     }
 
-    if (shield_bonus > 0) {
-        sstat.do_shield(shield_bonus, false, true);
+    if (stat_bonus > 0) {
+        p.stats.sinc(p.banking.bonus_stat, stat_bonus);
         state.render.do_message("Your body glows with a shiny gold aura.");
 
         ++(state.ticks);
@@ -342,8 +343,8 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     tag_t money_slot = constants().money_slot;
 
     p.banking.sell_margin = bank.sell_margin;
-    p.banking.shield_stat = bank.shield_stat;
-    p.banking.shield_bonus = bank.shield_bonus;
+    p.banking.bonus_stat = bank.bonus_stat;
+    p.banking.stat_bonus = bank.stat_bonus;
     p.banking.money_curse = bank.money_curse;
     p.banking.gives_change = bank.gives_change;
 
@@ -394,10 +395,9 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
     if (assets >= constants().min_money_value) {
         msg += "  \2d\1) Deposit to an account.\n";
 
-        if (bank.shield_bonus > 0) {
-            pstats::stat_t& sstat = p.stats.s(bank.shield_stat);
+        if (bank.stat_bonus > 0) {
 
-            if (sstat.shield < sstat.shield_max) {
+            if (p.stats.gets(bank.bonus_stat) < stats().get(bank.bonus_stat).max) {
 
                 msg += "  \2p\1) Purchase divine protection.\n";
             }
@@ -467,7 +467,7 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
         if (state.features.get(p.px, p.py, feat)) {
 
             const Terrain& t = terrain().get(feat.tag);
-            if (t.banking.sell_margin > 0 || t.banking.shield_bonus > 0) {
+            if (t.banking.sell_margin > 0 || t.banking.stat_bonus > 0) {
 
                 state.features.x_unset(p.px, p.py, feat.tag, state.render);
             }

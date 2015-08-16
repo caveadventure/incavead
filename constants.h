@@ -45,8 +45,6 @@ struct ConstantsBank {
     
     unsigned int uniques_timeout;
 
-    double health_shield_max;
-
     double min_money_value;
 
     std::vector<ui_symbols_t> ui_symbols;
@@ -121,6 +119,9 @@ struct ConstantsBank {
     starsigns_t starsigns;
 
     unsigned int ai_radius;
+
+    std::vector<tag_t> hud_stats_order;
+    std::vector<tag_t> hud_counts_order;
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 

@@ -622,8 +622,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_banking = 'banking' 
             ws1 real   %{ ter.banking.buy_margin = toreal(state.match); }
-            ws1 real   %{ ter.banking.sell_margin = toreal(state.match); } 
-            ws1 real   %{ ter.banking.shield_bonus = toreal(state.match); }
+            ws1 real   %{ ter.banking.sell_margin = toreal(state.match); }
+            ws1 tag    %{ ter.banking.bonus_stat = tag_t(state.match, tagmem); }
+            ws1 real   %{ ter.banking.stat_bonus = toreal(state.match); }
             ws1 real   %{ ter.banking.money_curse = toreal(state.match); } 
             ws1 real   %{ ter.banking.gives_change = toreal(state.match); }
             ;
@@ -1076,6 +1077,14 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_ai_radius = 'ai_radius' ws1 number %{ __constants__().ai_radius = toint(state.match); };
 
+        constant_hud_stats_order = 'hud_stats' (
+            ws1 tag %{ __constants__().hud_stats_order.push_back(tag_t(state.match, tagmem)); }
+            )+ ;
+
+        constant_hud_stats_order = 'hud_counts' (
+            ws1 tag %{ __constants__().hud_counts_order.push_back(tag_t(state.match, tagmem)); }
+            )+ ;
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
@@ -1088,7 +1097,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | 
-                       constant_starsigns | constant_ai_radius
+                       constant_starsigns | constant_ai_radius | constant_hud_stats_order | constant_hud_counts_order
                        ;
 
         constant = 'constant' ws1 one_constant ws ';';
