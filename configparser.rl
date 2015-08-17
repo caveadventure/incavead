@@ -425,6 +425,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
              ws1 string %{ des.inc_count.back().msg_b = state.match; })?
              ;
 
+        design_zero_stat = 'zero_stat' %{ des.zero_stat.push_back(Design::zero_stat_t()); }
+            ws1 tag %{ des.zero_stat.back().tag = tag_t(state.match, tagmem); }
+            (ws1 string %{ des.zero_stat.back().msg = state.match; })?
+            ;
+
         design_use_for_free = 'use_for_free' %{ des.use_for_free = true; };
         design_destructible = 'destructible' %{ des.destructible = true; };
 
@@ -565,7 +570,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_action_name | design_flavor | design_take_summon |
             design_heal_ailments | design_heal_polymorph | 
-            design_forbid_wish | design_change_count | design_inc_stat | design_inc_count |
+            design_forbid_wish | design_change_count | design_inc_stat | design_inc_count | design_zero_stat |
             design_starsign | design_summon | design_polymorph | design_fast | 
             design_monster_raised | design_raise_monsters | design_charm | design_label_spot |
             '}'

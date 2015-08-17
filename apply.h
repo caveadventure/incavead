@@ -134,11 +134,13 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         }
     }
 
-    if (d.heal_unluck) {
+    for (const auto& v : d.zero_stat) {
 
-        if (p.luck.val < 0) {
-            p.luck.val = 0;
-            state.render.do_message("You lucky stiff.");
+        if (p.stats.stats[v.tag] < 0) {
+            p.stats.stats[v.tag] = 0;
+
+            if (v.msg.size() > 0)
+                state.render.do_message(v.msg);
         }
         
         ret = true;

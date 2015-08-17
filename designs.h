@@ -41,10 +41,17 @@ struct Design {
         std::string msg_a;
         std::string msg_b;
 
-        inc_scount_t() : val(0) {}
+        inc_count_t() : val(0) {}
     };
 
     std::vector<inc_count_t> inc_count;
+
+    struct zero_stat_t {
+        tag_t stat;
+        std::string msg;
+    };
+
+    std::vector<zero_stat_t> zero_stat;
 
     bool usable;
     bool use_for_free;
@@ -129,7 +136,7 @@ struct Design {
     };
 
     std::vector<tickstat_t> tickstat;
-    
+
     struct spell_t {
         tag_t ca_tag;
         std::string name;
