@@ -405,16 +405,25 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_attack     = 'attack'     ws1 damage_val %{ des.attacks.add(dmgval); } ;
         design_defense    = 'defense'    ws1 damage_val %{ des.defenses.add(dmgval); } ;
         design_stackrange = 'stackrange' ws1 number     %{ des.stackrange = toint(state.match); };
-        design_heal       = 'heal'       ws1 real       %{ des.heal = toreal(state.match); };
-        design_feed       = 'feed'       ws1 real       %{ des.feed = toreal(state.match); };
-        design_karma      = 'karma'      ws1 real       %{ des.karma = toreal(state.match); };
-        design_consume_luck  = 'consume_luck' ws1 real  %{ des.consume_luck = toreal(state.match); };
         design_usable     = 'usable'                    %{ des.usable = true; };
         design_melee      = 'melee'                     %{ des.melee = true; };
         design_throwrange = 'throwrange' ws1 number     %{ des.throwrange = toint(state.match); };
         design_lightradius = 'lightradius' ws1 number   %{ des.lightradius = toint(state.match); };
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
         design_descend    = 'descend' ws1 snumber       %{ des.descend = toint(state.match); };
+
+        design_inc_stat = 'inc_stat' %{ des.inc_stat.resize(des.inc_stat.size() + 1); }
+            ws1 tag  %{ des.inc_stat.back().tag = tag_t(state.match, tagmem); }
+            ws1 real %{ des.inc_stat.back().val = toreal(state.match); }
+            (ws1 string %{ des.inc_stat.back().msg = state.match; })?
+            ;
+
+        design_inc_count = 'inc_count' %{ des.inc_count.resize(des.inc_count.size() + 1); }
+            ws1 tag %{ des.inc_count.back().tag = tag_t(state.match, tagmem); }
+            ws1 snumber %{ des.inc_count.back().val = toint(state.match); }
+            (ws1 string %{ des.inc_count.back().msg_a = state.match; }
+             ws1 string %{ des.inc_count.back().msg_b = state.match; })?
+             ;
 
         design_use_for_free = 'use_for_free' %{ des.use_for_free = true; };
         design_destructible = 'destructible' %{ des.destructible = true; };
@@ -457,11 +466,19 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_place_permafloor = 'place_permafloor'
             ws1 (ws design_place_permafloor_flag)*;
 
-        design_luck = 'luck' %{ des.luck.push_back(Design::luck_t()); }
-            ws1 real %{ des.luck.back().height = toreal(state.match); }
-            ws1 mean_dev %{ des.luck.back().v = meandev; }
+        design_tickstat_moon = 'tickstat_moon' %{ des.tickstat_moon.push_back(Design::tickstat_moon_t()); }
+            ws1 tag  %{ des.tickstat_moon.back().stat = tag_t(state.match, tagmem); }
+            ws1 real %{ des.tickstat_moon.back().height = toreal(state.match); }
+            ws1 mean_dev %{ des.tickstat_moon.back().v = meandev; }
             ;
 
+        design_tickstat = 'tickstat' %{ des.tickstat.push_back(Design::tickstat_t()); }
+            ws1 tag %{ des.tickstat.back().stat = tag_t(state.match, tagmem); }
+            ws1 real %{ des.tickstat.back().add = toreal(state.match); }
+            ws1 real %{ des.tickstat.back().mul = toreal(state.match); }
+            (ws1 'apply_count' %{ des.tickstat.back().apply_count = true; })?
+            ;
+            
         design_hunger = 'hunger' ws1 real %{ des.hunger = toreal(state.match); };
 
         design_other_hunger_multiplier = 'other_hunger_multiplier' 
@@ -489,12 +506,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_magic_mapping = 'magic_mapping' %{ des.magic_mapping = true; };
 
-        design_heal_blind     = 'heal_blind'     %{ des.heal_blind = true; };
-        design_heal_unluck    = 'heal_unluck'    %{ des.heal_unluck = true; };
         design_heal_ailments  = 'heal_ailments'  %{ des.heal_ailments = true; };
         design_heal_polymorph = 'heal_polymorph' %{ des.heal_polymorph = true; };
-        design_heal_stun      = 'heal_stun'      %{ des.heal_stun = true; };
-        design_heal_fear      = 'heal_fear'      %{ des.heal_fear = true; };
 
         design_action_name = 'action_name' ws1 string %{ des.action_name = state.match; };
 
@@ -530,8 +543,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 mean_dev %{ des.fast.turns = meandev; }
             ;
 
-        design_lucky_free_apply = 'lucky_free_apply' %{ des.lucky_free_apply = true; };
-
         design_monster_raised = 'monster_raised' ws1 tag %{ des.monster_raised = tag_t(state.match, tagmem); };
         design_raise_monsters = 'raise_monsters' ws1 tag %{ des.raise_monsters = tag_t(state.match, tagmem); };
 
@@ -544,18 +555,18 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
-            design_attack | design_defense | design_stackrange | design_heal | design_usable | design_destructible |
-            design_throwrange | design_blast | design_attack_level | design_gencount | design_melee | design_feed | 
-            design_karma | design_luck | design_lightradius | design_digging | design_descend | design_blink | 
+            design_attack | design_defense | design_stackrange | design_usable | design_destructible |
+            design_throwrange | design_blast | design_attack_level | design_gencount | design_melee | 
+            design_tickstat_moon | design_lightradius | design_digging | design_descend | design_blink | 
             design_cast_cloud | design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
-            design_place_permafeat | design_place_permafloor | design_consume_luck | design_hunger | 
-            design_other_hunger_multiplier | design_dowsing | design_use_for_free |
+            design_place_permafeat | design_place_permafloor | design_tickstat |
+            design_dowsing | design_use_for_free |
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
-            design_heal_blind | design_heal_unluck | design_action_name | design_flavor | design_take_summon |
-            design_heal_ailments | design_heal_polymorph | design_heal_stun | design_heal_fear |
-            design_forbid_wish | design_change_count |
-            design_starsign | design_summon | design_polymorph | design_fast | design_lucky_free_apply |
+            design_action_name | design_flavor | design_take_summon |
+            design_heal_ailments | design_heal_polymorph | 
+            design_forbid_wish | design_change_count | design_inc_stat | design_inc_count |
+            design_starsign | design_summon | design_polymorph | design_fast | 
             design_monster_raised | design_raise_monsters | design_charm | design_label_spot |
             '}'
             ${ fret; })

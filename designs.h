@@ -35,7 +35,7 @@ struct Design {
 
     std::vector<inc_stat_t> inc_stat;
 
-    struct inc_scount_t {
+    struct inc_count_t {
         tag_t stat;
         int val;
         std::string msg_a;
@@ -44,7 +44,7 @@ struct Design {
         inc_scount_t() : val(0) {}
     };
 
-    std::vector<inc_scount_t> inc_scount;
+    std::vector<inc_count_t> inc_count;
 
     bool usable;
     bool use_for_free;
@@ -123,10 +123,9 @@ struct Design {
         tag_t stat;
         double add;
         double mul;
-        double shield;
         bool apply_count;
 
-        tickstat_t() : add(0.0), mul(1.0), shield(0.0), apply_count(true) {}
+        tickstat_t() : add(0.0), mul(1.0), apply_count(true) {}
     };
 
     std::vector<tickstat_t> tickstat;
@@ -150,7 +149,6 @@ struct Design {
 
     bool magic_mapping;
     
-    bool heal_unluck;
     bool heal_ailments;
     bool heal_polymorph;
 
@@ -204,8 +202,6 @@ struct Design {
 
     fast_t fast;
 
-    bool lucky_free_apply;
-
     tag_t monster_raised;
 
     tag_t raise_monsters;
@@ -225,8 +221,8 @@ struct Design {
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 
                descend(0), safe_descend(0), worth(0), is_lit(false), count_is_rcode(false), wishing(NO_WISH),
                magic_mapping(false), 
-               heal_unluck(false), heal_ailments(false), heal_polymorph(false), 
-               forbid_wish(false), change_count(0), lucky_free_apply(false), label_spot(false)
+               heal_ailments(false), heal_polymorph(false), 
+               forbid_wish(false), change_count(0), label_spot(false)
         {}
     
 };

@@ -112,7 +112,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         if (v.val != 0) {
 
-            p.stats.s(v.tag).inc(v.val);
+            p.stats.sinc(v.tag, v.val);
 
             if (v.msg.size() > 0)
                 state.render.do_message(v.msg);
@@ -121,11 +121,11 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         }
     }
 
-    for (const auto& v : d.inc_scount) {
+    for (const auto& v : d.inc_count) {
 
         if (v.val != 0) {
 
-            bool full = p.stats.c(v.tag).inc(v.val);
+            bool drained = p.stats.cinc(v.tag, v.val);
 
             const std::string& m = (full ? v.msg_b : v.msg_a);
 

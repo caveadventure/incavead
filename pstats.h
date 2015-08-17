@@ -85,10 +85,12 @@ struct count_t {
             v = -val;
         }
 
+        unsigned int prev = val;
+
         val += v;
         if (val > s.cmax) val = s.cmax;
 
-        return (val == 0);
+        return (val == 0 && prev != 0);
     }
 };
 

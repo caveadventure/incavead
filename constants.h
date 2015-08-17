@@ -125,7 +125,7 @@ struct ConstantsBank {
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
-                      health_shield_max(0), min_money_value(0.01), max_celauto_cells(1000),
+                      min_money_value(0.01), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
                       blindturns_to_radius(10),
                       max_ailments(6u),

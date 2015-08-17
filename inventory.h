@@ -261,7 +261,7 @@ struct inventory_t {
         return ret;
     }
 
-    void process_inventory(double moon_angle,std::map<tag_t, std::pair<double,double> >& inc_stat) {
+    void process_inventory(double moon_angle,std::map<tag_t, double>& inc_stat) {
 
         std::map<tag_t,double> smul;
 
@@ -283,20 +283,23 @@ struct inventory_t {
                 it.count += dp.change_count;
             }
 
-            for (const auto& l : dp.tickstat_moon) {
+            if (dp.tickstat_moon.size() > 0) {
 
-                double& x = inc_stat[l.stat].first;
-                x = std::max(x, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
+                std::map<tag_t,double> tsm = 0;
+
+                for (const auto& l : dp.tickstat_moon) {
+                    double& tmp = tsm[l.stat];
+                    tmp = std::max(tmp, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
+                }
+
+                for (const auto& i : tsm) {
+                    inc_stat[i.first] += i.second;
+                }
             }
 
             for (const auto& l : dp.tickstat) {
 
-                double& x = inc_stat[l.stat];
-
-                unsigned int amul = (dp.apply_count ? it.count : 1);
-
-                x.first += l.add * amul;
-                x.second += l.shield * amul;
+                inc_stat[l.stat] += l.add * (dp.apply_count ? it.count : 1);
 
                 if (l.mul != 1) {
 
