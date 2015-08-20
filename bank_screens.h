@@ -2,15 +2,15 @@
 #define __BANK_SCREENS_H
 
 
-inline bool purchase_protection(Player& p, GameState& state, double cost) {
+inline bool purchase_protection(Player& p, GameState& state, double cost, const Terrain::banking_t& bank) {
 
     double deflation = finance::supply().get_rate();
 
-    double stat_bonus = p.banking.stat_bonus * deflation * cost;
-    double money_curse = p.banking.money_curse * cost;
+    double stat_bonus = bank.stat_bonus * deflation * cost;
+    double money_curse = bank.money_curse * cost;
 
-    double sstat = p.stats.gets(p.banking.bonus_stat);
-    double ssmax = stats().get(p.banking.bonus_stat).max;
+    double sstat = p.stats.gets(bank.bonus_stat);
+    double ssmax = stats().get(bank.bonus_stat).max;
 
     if (stat_bonus <= 0 || sstat >= ssmax)
         return true;
@@ -24,12 +24,12 @@ inline bool purchase_protection(Player& p, GameState& state, double cost) {
     if (sstat + stat_bonus >= ssmax) {
 
         stat_bonus = ssmax - sstat;
-        xcost = stat_bonus / (p.banking.stat_bonus * deflation);
-        money_curse = p.banking.money_curse * xcost;
+        xcost = stat_bonus / (bank.stat_bonus * deflation);
+        money_curse = bank.money_curse * xcost;
     }
 
     if (stat_bonus > 0) {
-        p.stats.sinc(p.banking.bonus_stat, stat_bonus);
+        p.stats.sinc(bank.bonus_stat, stat_bonus);
         state.render.do_message("Your body glows with a shiny gold aura.");
 
         ++(state.ticks);
@@ -214,7 +214,7 @@ inline bool handle_input_text(Player& p, GameState& state, maudit::keypress k) {
     return false;
 }
 
-inline void show_banking_buy_item_menu(Player& p, GameState& state) {
+inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
 
     tag_t item = find_existing_item_search(state, p.input.s, false);
 
@@ -246,7 +246,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state) {
         count = std::max(count, std::min((unsigned int)std::stoul(nums), d.stackrange));
     }
 
-    double price = finance::supply().get_price(d) * count * p.banking.sell_margin;
+    double price = finance::supply().get_price(d) * count * bank.sell_margin;
 
     std::string msg;
 
@@ -332,7 +332,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
     return false;
 }
 
-inline std::string show_banking_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
+inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain, const Terrain::banking_t& bank) {
 
     const auto& money = constants().money;
 
@@ -342,11 +342,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
     tag_t money_slot = constants().money_slot;
 
-    p.banking.sell_margin = bank.sell_margin;
-    p.banking.bonus_stat = bank.bonus_stat;
-    p.banking.stat_bonus = bank.stat_bonus;
-    p.banking.money_curse = bank.money_curse;
-    p.banking.gives_change = bank.gives_change;
+    p.banking.terrain = terrain;
 
     double& assets = p.banking.assets;
     assets = 0;
@@ -417,13 +413,15 @@ inline std::string show_banking_menu(Player& p, GameState& state, const Terrain:
 
 inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k) {
 
+    const Terrain::banking_t& bank = terrain().get(p.banking.terrain).banking;
+
     bool valid = true;
     
     switch ((screens_t)state.window_stack.back().type) {
 
     case screens_t::bank_main:
         if (handle_input_banking_main(p, state, k)) {
-            valid = purchase_protection(p, state, p.banking.assets);
+            valid = purchase_protection(p, state, p.banking.assets, bank);
         }
         break;
 
@@ -443,7 +441,7 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
 
     case screens_t::bank_buy:
         if (handle_input_text(p, state, k)) {
-            show_banking_buy_item_menu(p, state);
+            show_banking_buy_item_menu(p, state, bank);
         }
         break;
 
@@ -464,13 +462,9 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
     if (!valid) {
 
         features::Feature feat;
-        if (state.features.get(p.px, p.py, feat)) {
+        if (state.features.get(p.px, p.py, feat) && p.banking.terrain == feat.tag) {
 
-            const Terrain& t = terrain().get(feat.tag);
-            if (t.banking.sell_margin > 0 || t.banking.stat_bonus > 0) {
-
-                state.features.x_unset(p.px, p.py, feat.tag, state.render);
-            }
+            state.features.x_unset(p.px, p.py, feat.tag, state.render);
         }
     }
 }

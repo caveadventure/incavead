@@ -10,20 +10,14 @@ void do_player_input(GameState& state, Player& p, const std::string& prompt, int
     p.state = Player::INPUTTING;
 }
 
-void do_player_wish(GameState& state, Player& p, bool special) {
+void do_player_wish(GameState& state, Player& p) {
 
     do_player_input(state, p, "Wish for what: >>> ");
-    p.state |= Player::WISHING;
-
-    if (special) {
-        p.state |= Player::SPECIAL_WISH;
-    }
 }
 
 void do_player_label(GameState& state, Player& p, int limit) {
 
     do_player_input(state, p, "Write what: >>> ", limit);
-    p.state |= Player::LABELLING;
 }
 
 void move_player(const Player& p, GameState& state) {
@@ -357,6 +351,33 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
     const Terrain& t = terrain().get(feat.tag);
 
+    if (t.wishing) {
+
+        bool ok = false;
+
+        if (p.state & Player::TERRAIN_STEP2) {
+
+            bool special = (t.wishing == Terrain::SPECIAL_WISH);
+
+            ok = (special ? 
+                  special_wish(state, p, p.input.s) :
+                  simple_wish(state, p, p.input.s));
+
+            p.state &= ~(Player::TERRAIN_STEP2);
+        }
+
+        if (ok) {
+
+            ++(state.ticks);
+
+        } else {
+
+            do_player_wish(state, p);
+            p.state |= Player::TERRAIN_STEP2;
+            return;
+        }
+    }
+
     if (t.uncharge.use) {
         state.features.uncharge(p.px, p.py, state.render);
     }
@@ -389,7 +410,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
     if (t.banking.sell_margin > 0 || t.banking.stat_bonus > 0) {
 
-        state.push_window(show_banking_menu(p, state, t.banking), screens_t::bank_main);
+        state.push_window(show_banking_menu(p, state, feat.tag, t.banking), screens_t::bank_main);
         return;
     }
 
@@ -498,18 +519,6 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
         state.render.do_message(nlp::message("You need a specific kind of item for %s.", t));
         return;
     }
-
-
-    if (t.wishing) {
-        if (t.wishing == Terrain::SPECIAL_WISH) {
-            do_player_wish(state, p, true);
-        } else {
-            do_player_wish(state, p, false);
-        }
-
-        return;
-    }
-
 
     state.render.do_message("There is nothing here to use.");
 }

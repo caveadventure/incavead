@@ -889,13 +889,17 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
     switch (k.letter) {
 
     case '@':
-        p.health.shield += 1000;
+    {
+        tag_mem_t tagmem;
+        p.stats.sinc(tag_t("shield", tagmem), 1000);
         break;
-
+    }
     case '2':
-        p.health.shield = 0;
+    {
+        tag_mem_t tagmem;
+        p.stats.stats[tag_t("shield", tagmem)].val = 0;
         break;
-
+    }
     case '$':
         state.render.do_message(nlp::message("Monetary base: %d", finance::supply().get_base()));
         break;
@@ -1231,36 +1235,37 @@ void Game::handle_input(GameState& state, GameOptions& options,
 
         if (!handle_input_input(state, p.input.s, p.input.limit, k)) {
 
-            if (p.state & Player::WISHING) {
+            p.state &= ~(Player::INPUTTING);
 
-                bool special = (p.state & Player::SPECIAL_WISH);
-                bool ok = (special ? 
-                           special_wish(state, p, p.input.s) :
-                           simple_wish(state, p, p.input.s));
+        } else {
 
-                if (!ok) {
-
-                    do_player_wish(state, p, special);
-                    return;
-
-                } else {
-                    ++(state.ticks);
-                }
-
-            } else if (p.state & Player::LABELLING) {
-
-                state.features.label(p.px, p.py, p.input.s);
-                permafeats::features().add(p, p.input.s);
-                
-            } else if (p.state & Player::SELFNOTE) {
-                state.render.do_message(">>> " + p.input.s);
-            }
-
-            p.state = Player::MAIN;
+            return;
         }
+    }
 
+    // //
+
+    if (p.state & Player::TERRAIN_STEP2) {
+
+        use_terrain(p, state, regen, done, dead);
+        p.state = Player::MAIN;
         return;
     }
+
+    if (p.state & Player::DESIGN_STEP2) {
+
+        apply_item(p, p.inv.selected_slot, state, regen);
+        p.state = Player::MAIN;
+        return;
+    }
+
+    if (p.state & Player::SELFNOTE) {
+        state.render.do_message(">>> " + p.input.s);
+        p.state = Player::MAIN;
+        return;
+    }
+
+    // //
 
     if (p.state & Player::LOOKING) {
 

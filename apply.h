@@ -82,9 +82,53 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     const Design& d = designs().get(tmp.tag);
 
+    bool ret = false;
+
     if (!d.usable) 
         return false;
-        
+
+    if (d.wishing || d.label_spot) {
+
+        bool ok = false;
+
+        if (p.state & Player::DESIGN_STEP2) {
+
+            if (d.wishing) {
+                bool special = (d.wishing == Design::SPECIAL_WISH);
+
+                ok = (special ? 
+                      special_wish(state, p, p.input.s) :
+                      simple_wish(state, p, p.input.s));
+
+            } else  if (d.label_spot) {
+
+                state.features.label(p.px, p.py, p.input.s);
+                permafeats::features().add(p, p.input.s);
+                ok = true;
+            }
+
+            p.state &= ~(Player::DESIGN_STEP2);
+        }
+
+        if (ok) {
+            ret = true;
+
+        } else {
+
+            if (d.wishing) {
+                do_player_wish(state, p);
+
+            } else if (d.label_spot) {
+                // HACK!
+                // Hardcoded constants!
+                do_player_label(state, p, 38);
+            }
+
+            p.state |= Player::DESIGN_STEP2;
+            return;
+        }
+    }
+
     // Dowsing rods are permanent.
     if (d.flags.dowsing) {
         state.render.do_message(dowsing_message(p, state));
@@ -93,8 +137,6 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     if (!p.inv.take(slot, tmp, 1))
         return false;
-
-    bool ret = false;
 
     if (d.action_name.size() > 0) {
         state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
@@ -235,16 +277,6 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ret = true;
     }
 
-    if (d.wishing) {
-        if (d.wishing == Design::SPECIAL_WISH) {
-            do_player_wish(state, p, true);
-        } else {
-            do_player_wish(state, p, false);
-        }
-
-        ret = true;
-    }
-
     if (d.magic_mapping) {
 
         for (const auto& f : state.features.feats) {
@@ -355,14 +387,6 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         p.get_defense(defenses);
 
         defend(p, defenses, p.get_computed_level(state.rng), d, state);
-    }
-
-    if (d.label_spot) {
-
-        // HACK!
-        // Hardcoded constants!
-        do_player_label(state, p, 38);
-        ret = true;
     }
 
     if (ret && !d.use_for_free) {

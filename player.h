@@ -78,14 +78,13 @@ struct Player {
     static const unsigned int DIGGING        = 0x40;
     static const unsigned int DEBUG          = 0x80;
     static const unsigned int INPUTTING      = 0x100;
-    static const unsigned int WISHING        = 0x200;
-    static const unsigned int SPECIAL_WISH   = 0x400;
+    static const unsigned int TERRAIN_STEP2  = 0x200;
+    static const unsigned int DESIGN_STEP2   = 0x400;
     static const unsigned int QUITTING       = 0x800;
     static const unsigned int SELFNOTE       = 0x1000;
     static const unsigned int CLOUDING       = 0x2000;
     static const unsigned int P_CLOUDING     = 0x4000;
     static const unsigned int P_BLASTING     = 0x8000;
-    static const unsigned int LABELLING      = 0x10000;
 
     unsigned int state;
 
@@ -121,18 +120,13 @@ struct Player {
     look_state_t look;
 
     struct banking_state_t {
+        tag_t terrain;
         double assets;
-        double sell_margin;
-        tag_t bonus_stat;
-        double stat_bonus;
-        double money_curse;
         tag_t item;
         unsigned int item_count;
         double item_price;
-        double gives_change;
 
-        banking_state_t() : assets(0), sell_margin(1.0), stat_bonus(0), money_curse(0), 
-                            item_count(0), item_price(0), gives_change(0) {}
+        banking_state_t() : assets(0), item_count(0), item_price(0) {}
     };
 
     banking_state_t banking;
@@ -391,15 +385,11 @@ struct reader<Player> {
         serialize::read(s, p.look.target);
         serialize::read(s, p.look.rangemin);
         serialize::read(s, p.look.rangemax);
+        serialize::read(s, p.banking.terrain);
         serialize::read(s, p.banking.assets);
-        serialize::read(s, p.banking.sell_margin);
-        serialize::read(s, p.banking.bonus_stat);
-        serialize::read(s, p.banking.stat_bonus);
-        serialize::read(s, p.banking.money_curse);
         serialize::read(s, p.banking.item);
         serialize::read(s, p.banking.item_count);
         serialize::read(s, p.banking.item_price);
-        serialize::read(s, p.banking.gives_change);
         serialize::read(s, p.spells);
         serialize::read(s, p.uniques_disabled);
         serialize::read(s, p.dungeon_unique_series);
@@ -450,15 +440,11 @@ struct writer<Player> {
         serialize::write(s, p.look.target);
         serialize::write(s, p.look.rangemin);
         serialize::write(s, p.look.rangemax);
+        serialize::write(s, p.banking.terrain);
         serialize::write(s, p.banking.assets);
-        serialize::write(s, p.banking.sell_margin);
-        serialize::write(s, p.banking.bonus_stat);
-        serialize::write(s, p.banking.stat_bonus);
-        serialize::write(s, p.banking.money_curse);
         serialize::write(s, p.banking.item);
         serialize::write(s, p.banking.item_count);
         serialize::write(s, p.banking.item_price);
-        serialize::write(s, p.banking.gives_change);
         serialize::write(s, p.spells);
         serialize::write(s, p.uniques_disabled);
         serialize::write(s, p.dungeon_unique_series);
