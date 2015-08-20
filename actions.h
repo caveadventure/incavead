@@ -382,6 +382,19 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
         state.features.uncharge(p.px, p.py, state.render);
     }
 
+    for (const auto& v : t.inc_stat) {
+
+        if (v.val != 0) {
+
+            p.stats.sinc(v.tag, v.val);
+
+            if (v.msg.size() > 0)
+                state.render.do_message(v.msg);
+
+            ret = true;
+        }
+    }
+
     if (!t.victory_item.null()) {
 
         const Design& d_victory = designs().get(t.victory_item);

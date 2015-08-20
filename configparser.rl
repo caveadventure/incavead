@@ -672,6 +672,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ ter.sensor_toggle[tmp_tag] = tag_t(state.match, tagmem); }
             ;
 
+        terrain_inc_stat = 'inc_stat' %{ ter.inc_stat.resize(des.inc_stat.size() + 1); }
+            ws1 tag  %{ ter.inc_stat.back().tag = tag_t(state.match, tagmem); }
+            ws1 real %{ ret.inc_stat.back().val = toreal(state.match); }
+            (ws1 string %{ ter.inc_stat.back().msg = state.match; })?
+            ;
+
         terrain_preserve = 'preserve' %{ ter.preserve = true; } ;
 
         terrain_message = 'message' ws1 string %{ ter.message = state.match; } ;
@@ -682,7 +688,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             terrain_decay | terrain_attack | terrain_attack_level | terrain_sticky |
             terrain_charges | terrain_grant_spell | terrain_is_lit | terrain_is_lightsource | terrain_air |
             terrain_victory_item | terrain_safebox | terrain_banking |
-            terrain_uncharge | terrain_crafting | terrain_wish | terrain_important |
+            terrain_uncharge | terrain_crafting | terrain_wish | terrain_important | terrain_inc_stat |
             terrain_view_radius | terrain_sensor_toggle | terrain_preserve | terrain_message |
             '}' 
             ${ fret; })

@@ -831,14 +831,7 @@ inline bool simple_wish(GameState& state, Player& p, const std::string& wish) {
     if (wish.empty())
         return true;
 
-    bool ok = find_existing_item(state, p.px, p.py, wish);
-
-    if (ok) {
-        p.karma.shield = 6;
-        p.luck.dec(6);
-    }
-
-    return ok;
+    return find_existing_item(state, p.px, p.py, wish);
 }
 
 inline bool special_wish(GameState& state, Player& p, const std::string& wish) {
