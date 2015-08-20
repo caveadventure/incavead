@@ -1103,7 +1103,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ __constants__().hud_stats_order.push_back(tag_t(state.match, tagmem)); }
             )+ ;
 
-        constant_hud_stats_order = 'hud_counts' (
+        constant_hud_counts_order = 'hud_counts' (
             ws1 tag %{ __constants__().hud_counts_order.push_back(tag_t(state.match, tagmem)); }
             )+ ;
 
@@ -1231,7 +1231,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         damage_visible_damage = 'visible_damage' %{ dam.visible_damage = true; };
 
-        damage karmic_scale = 'karmic_scale %{ dam.karmic_scale.resize(dam.karmic_scale.size() + 1); }
+        damage_karmic_scale = 'karmic_scale' %{ dam.karmic_scale.resize(dam.karmic_scale.size() + 1); }
             ws1 tag  %{ dam.karmic_scale.back().first = tag_t(state.match, tagmem); }
             ws1 real %{ dam.karmic_scale.back().second = toreal(state.match); }
             ;
