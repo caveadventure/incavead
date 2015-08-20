@@ -171,6 +171,7 @@ struct Design {
     take_summon_t take_summon;
 
     bool forbid_wish;
+    bool forbid_buy;
 
     int change_count;
 
@@ -229,7 +230,7 @@ struct Design {
                descend(0), safe_descend(0), worth(0), is_lit(false), count_is_rcode(false), wishing(NO_WISH),
                magic_mapping(false), 
                heal_ailments(false), heal_polymorph(false), 
-               forbid_wish(false), change_count(0), label_spot(false)
+               forbid_wish(false), forbid_buy(false), change_count(0), label_spot(false)
         {}
     
 };

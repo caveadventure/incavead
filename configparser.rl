@@ -524,6 +524,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         design_forbid_wish = 'forbid_wish' %{ des.forbid_wish = true; };
+        design_forbid_buy  = 'forbid_buy'  %{ des.forbid_buy = true; };
 
         design_change_count = 'change_count' ws1 snumber %{ des.change_count = toint(state.match); };
 
@@ -569,7 +570,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_action_name | design_flavor | design_take_summon |
-            design_heal_ailments | design_heal_polymorph | 
+            design_heal_ailments | design_heal_polymorph | design_forbid_buy |
             design_forbid_wish | design_change_count | design_inc_stat | design_inc_count | design_zero_stat |
             design_starsign | design_summon | design_polymorph | design_fast | 
             design_monster_raised | design_raise_monsters | design_charm | design_label_spot |

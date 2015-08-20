@@ -216,7 +216,7 @@ inline bool handle_input_text(Player& p, GameState& state, maudit::keypress k) {
 
 inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrain::banking_t& bank) {
 
-    tag_t item = find_existing_item_search(state, p.input.s, false);
+    tag_t item = find_existing_item_search(state, p.input.s, false, true);
 
     if (item.null()) {
 

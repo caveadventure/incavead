@@ -690,7 +690,7 @@ inline size_t longest_common_subsequence(const std::string& a, const std::string
 }
 
 
-inline tag_t find_existing_item_search(GameState& state, const std::string& name, bool forbid_luck = true) {
+inline tag_t find_existing_item_search(GameState& state, const std::string& name, bool wished, bool bought) {
 
     const auto& data = state.designs_counts.data;
 
@@ -704,10 +704,10 @@ inline tag_t find_existing_item_search(GameState& state, const std::string& name
             const Design& _design = designs().get(j.first);
 
             // HACK
-            if (forbid_luck && (_design.luck.size() > 0 || _design.consume_luck > 0))
+            if (bought && _design.forbid_buy)
                 continue;
 
-            if (_design.forbid_wish)
+            if (wished && _design.forbid_wish)
                 continue;
 
             size_t lcs = longest_common_subsequence(_design.name, name);
@@ -761,7 +761,7 @@ inline void find_existing_item_make(GameState& state, unsigned int px, unsigned 
 
 inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
 
-    tag_t d = find_existing_item_search(state, name);
+    tag_t d = find_existing_item_search(state, name, true, false);
 
     if (d.null()) {
         state.render.do_message("Strange. Nothing happened.");
