@@ -494,8 +494,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_other_hunger_multiplier = 'other_hunger_multiplier' 
             ws1 real %{ des.other_hunger_multiplier = toreal(state.match); };
 
-        design_shield = 'shield' ws1 real %{ des.shield = toreal(state.match); };
-
         design_enable_spells = 'enable_spells' %{ des.flags.enable_spells = true; };
         design_random_spell  = 'random_spell'  %{ des.flags.random_spell = true; };
 
@@ -572,7 +570,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_cast_cloud | design_worth | design_safe_descend | design_is_lit | design_count_is_only_one |
             design_place_permafeat | design_place_permafloor | design_tickstat |
             design_dowsing | design_use_for_free |
-            design_shield | design_enable_spells | design_grant_spell | design_count_is_rcode |
+            design_enable_spells | design_grant_spell | design_count_is_rcode |
             design_random_spell | design_genocide | design_wish | design_magic_mapping |
             design_action_name | design_flavor | design_take_summon |
             design_heal_ailments | design_heal_polymorph | design_forbid_buy |
@@ -1019,9 +1017,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_player_skin = 'player_skin' ws1 skin %{ __constants__().player_skin.set(SKINS); } ;
 
-        constant_health_shield_max = 'health_shield_max' 
-            ws1 real %{ __constants__().health_shield_max = toreal(state.match); };
-
         constant_min_money_value = 'min_money_value'
             ws1 real %{ __constants__().min_money_value = toreal(state.match); };
 
@@ -1120,7 +1115,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_slot | constant_player_skin |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
-                       constant_health_shield_max | constant_min_money_value | constant_max_celauto_cells |
+                       constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
