@@ -72,6 +72,8 @@ void init_statics() {
 
     tag_mem_t tagmem;
 
+    configparser::parse_config("stats.cfg", tagmem);
+
     configparser::parse_config("species.cfg", tagmem);
 
     configparser::parse_config("designs.cfg", tagmem);

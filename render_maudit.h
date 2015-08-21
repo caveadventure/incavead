@@ -850,6 +850,9 @@ public:
     void push_hud_line(unsigned int npips, const std::string& label,
                        const skin& lskin, const skin& pskin) {
 
+        if (npips == 0)
+            ++npips;
+
         hud_pips.emplace_back(hud_line::UNSIGNED, npips, label, lskin, pskin, pskin);
     }
 

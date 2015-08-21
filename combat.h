@@ -137,7 +137,10 @@ inline bool attack_damage_monster(const damage::val_t& v,
     for (const tag_t& i : dam.dec_stats) {
 
         bool kill = mon.stats.sinc(i, -dmg);
-        stathits[i] += dmg;
+
+        if (dmg > 0) {
+            stathits[i] += dmg;
+        }
 
         if (kill) {
             types.insert(v.type);
@@ -282,7 +285,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
         const Stat& s = stats().get(i.first);
 
-        if (i.first > 0 && s.monster_hit_msg.size() > 0)
+        if (s.monster_hit_msg.size() > 0)
             state.render.do_message(nlp::message(s.monster_hit_msg, s));
     }
 

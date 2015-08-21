@@ -27,11 +27,11 @@ struct Stat {
     tag_t chain_neg;
 
     std::string monster_hit_msg;
-    std::string player_hit_msg;
 
     bool hidden;
+    bool progressbar;
 
-    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false) {}
+    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true) {}
 };
 
 struct StatsBank {
@@ -67,7 +67,7 @@ inline const StatsBank& stats() {
     return __stats__();
 }
 
-inline void init_stats_copy(const Stats& t) {
+inline void init_stat_copy(const Stat& t) {
     __stats__().copy(t);
 }
 

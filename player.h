@@ -188,10 +188,7 @@ struct Player {
                current_wx(0), current_wy(0), current_wz(0), level(0), dead(false),
                sleep(0), blind(0), stun(0), fear(0), rest(0), digging(false), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
-        {
-            karma.val = 0;
-            luck.val = 0;
-        }
+        {}
 
     void track_kill(tag_t genus, GameState& state) {
 

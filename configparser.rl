@@ -67,6 +67,10 @@ inline void init_damage(const Damage& d) {
     init_damage_copy(d);
 }
 
+inline void init_stat(const Stat& s) {
+    init_stat_copy(s);
+}
+
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
 }
@@ -101,6 +105,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     CelAuto cel;
     Levelskin lev;
     Damage dam;
+    Stat sta;
 
     damage::val_t dmgval;
 
@@ -1291,10 +1296,53 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             %{ init_damage(dam); }
             ;
 
+        ####
+
+        stat_label = 'label'
+            ws1 string %{ sta.label.label = state.match; }
+            ws1 skin   %{ sta.label.lskin.set(SKINS); } ;
+
+        stat_mark = 'mark'
+            ws1 skin %{ sta.label.pskin.set(SKINS); }
+            (ws1 skin %{ sta.label.nskin.set(SKINS); sta.progressbar = false; })? ;
+
+        stat_limits = 'limits'
+            ws1 real %{ sta.min = toreal(state.match); }
+            ws1 real %{ sta.max = toreal(state.match); } ;
+
+        stat_max = 'max' ws1 number %{ sta.cmax = toint(state.match); } ;
+
+        stat_critical = 'critical' %{ sta.critical = true; } ;
+        stat_hidden = 'hidden' %{ sta.hidden = true; } ;
+
+        stat_chain_pos = 'chain_pos' ws1 tag %{ sta.chain_pos = tag_t(state.match, tagmem); } ;
+        stat_chain_neg = 'chain_neg' ws1 tag %{ sta.chain_neg = tag_t(state.match, tagmem); } ;
+
+        stat_monster_hit_msg = 'monster_hit_msg' ws1 string %{ sta.monster_hit_msg = state.match; };
+
+        stat_one_data =
+            (stat_label | stat_mark | stat_limits | stat_max | stat_critical | stat_hidden |
+            stat_chain_pos | stat_chain_neg | stat_monster_hit_msg |
+            '}' ${ fret; })
+            ;
+
+        one_stat := (ws stat_one_data ws ';')+
+            ;
+
+        stat_tag = tag %{ sta.tag = tag_t(state.match, tagmem); }
+        ;
+
+        stat = 
+            'stat' %{ sta = Stat(); }
+            ws1 stat_tag ws
+            '{' ${fcall one_stat;}
+            %{ init_stat(sta); }
+            ;
+
         ###
 
         entry = species | design | terrain | vault | celauto | levelskin | constant | 
-                achievement | ailment | ui_syms | damage;
+                achievement | ailment | ui_syms | damage | stat;
             
       main := (ws entry)+ ws ;
         

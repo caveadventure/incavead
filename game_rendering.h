@@ -228,13 +228,25 @@ void draw_one_stat(GameState& state, tag_t s) {
     if (st.hidden && val <= st.min)
         return;
 
-    double v = 3.0 * (2 * val - st.max - st.min) / (st.max - st.min);
+    double v;
+
+    if (st.progressbar) {
+        v = 6.0 * (val - st.min) / (st.max - st.min);
+
+    } else {
+        v = 3.0 * (2 * val - st.max - st.min) / (st.max - st.min);
+    }
 
     int vp = std::lround(v);
 
     const auto& zs = st.label;
-    
-    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin], zs.nskin[n_skin]);
+
+    if (st.progressbar) {
+        state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin]);
+
+    } else {
+        state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], zs.pskin[n_skin], zs.nskin[n_skin]);
+    }
 }
 
 void draw_one_count(GameState& state, tag_t s) {
@@ -246,9 +258,6 @@ void draw_one_count(GameState& state, tag_t s) {
         return;
 
     unsigned int v = (6u * s.val) / s.max;
-
-    if (v == 0)
-        ++v;
 
     const auto& zs = st.label;
 
