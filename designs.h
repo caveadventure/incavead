@@ -224,6 +224,16 @@ struct Design {
     
     bool label_spot;
 
+    struct lucky_free_apply_t {
+        tag_t stat;
+        double threshold;
+        double factor;
+
+        lucky_free_apply_t() : threshold(0), factor(0) {}
+    };
+
+    lucky_free_apply_t lucky_free_apply;
+
     Design() : level(0), count(0), bonus_a_count(0), bonus_b_count(0), count_is_only_one(false), stackrange(0), 
                usable(false), use_for_free(false), destructible(false), 
                throwrange(0), attack_level(-1), gencount(1, 0), melee(false), lightradius(0), digging(0), 

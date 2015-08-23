@@ -562,6 +562,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_label_spot = 'label_spot' %{ des.label_spot = true; };
 
+        design_lucky_free_apply = 'lucky_free_apply'
+            ws1 tag  %{ des.lucky_free_apply.stat = tag_t(state.match, tagmem); }
+            ws1 real %{ des.lucky_free_apply.threshold = toreal(state.match); }
+            ws1 real %{ des.lucky_free_apply.factor = toreal(state.match); }
+            ;
+
         design_one_data = 
             (design_count | design_bonus_a | design_bonus_b | design_name | design_skin | design_slot | design_descr | 
             design_attack | design_defense | design_stackrange | design_usable | design_destructible |
@@ -575,7 +581,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             design_action_name | design_flavor | design_take_summon |
             design_heal_ailments | design_heal_polymorph | design_forbid_buy |
             design_forbid_wish | design_change_count | design_inc_stat | design_inc_count | design_zero_stat |
-            design_starsign | design_summon | design_polymorph | design_fast | 
+            design_starsign | design_summon | design_polymorph | design_fast | design_lucky_free_apply |
             design_monster_raised | design_raise_monsters | design_charm | design_label_spot |
             '}'
             ${ fret; })

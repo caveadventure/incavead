@@ -394,11 +394,14 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         ++(state.ticks);
     }
 
-    if (d.lucky_free_apply && p.luck.val > 1.0) {
+    if (!d.lucky_free_apply.stat.null()) {
 
-        double chance = 1.0 - (1.0 / p.luck.val);
+        const auto& lfa = d.lucky_free_apply;
 
-        if (state.rng.uniform(0.0, 1.0) < chance) {
+        double x = p.stats.gets(lfa.stat);
+        double chance = lfa.threshold + (lfa.factor / x);
+
+        if (chance > 0 && chance < 1 && state.rng.uniform(0.0, 1.0) < chance) {
             ret = false;
         }
     }
