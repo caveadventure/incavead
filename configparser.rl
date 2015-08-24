@@ -564,8 +564,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         design_lucky_free_apply = 'lucky_free_apply'
             ws1 tag  %{ des.lucky_free_apply.stat = tag_t(state.match, tagmem); }
-            ws1 real %{ des.lucky_free_apply.threshold = toreal(state.match); }
             ws1 real %{ des.lucky_free_apply.factor = toreal(state.match); }
+            ws1 real %{ des.lucky_free_apply.threshold = toreal(state.match); }
             ;
 
         design_one_data = 
@@ -1114,6 +1114,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ __constants__().hud_counts_order.push_back(tag_t(state.match, tagmem)); }
             )+ ;
 
+        constant_luck_stat = 'luck_stat'
+            ws1 tag  %{ __constants__().luck.stat = tag_t(state.match, tagmem); }
+            ws1 real %{ __constants__().luck.factor = toreal(state.match); }
+            ws1 real %{ __constants__().luck.threshold = toreal(state.match); }
+            ;
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
@@ -1125,7 +1131,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
                        constant_blindturns_to_radius | constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
-                       constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | 
+                       constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | constant_luck_stat |
                        constant_starsigns | constant_ai_radius | constant_hud_stats_order | constant_hud_counts_order
                        ;
 

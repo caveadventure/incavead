@@ -240,41 +240,7 @@ struct Player {
             return species().get(polymorph.species).get_computed_level();
         }
 
-        unsigned int _lev = std::min(level, constants().player_level_cap);
-
-        if (luck.val == 0)
-            return _lev;
-
-        bool neg = (luck.val < 0);
-        double l = ::fabs(luck.val);
-
-        // Warning, magic numbers.
-        double p = (0.9 / l);
-
-        if (p > 1.0)
-            return _lev;
-
-        int fudge = rng.geometric(p);
-
-        if (neg) {
-
-            fudge = -std::max(-fudge, (int)(-l - 3));
-
-            luck.dec(fudge);
-
-            if (fudge > (int)_lev)
-                return 0;
-
-            return _lev - fudge;
-
-        } else {
-
-            fudge = std::min(fudge, (int)(l + 3));
-
-            luck.dec(fudge);
-
-            return _lev + fudge;
-        }
+        return std::min(level, constants().player_level_cap);
     }
 
     void get_attack(damage::attacks_t& out) const {

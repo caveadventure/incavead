@@ -33,6 +33,34 @@ inline void karmic_damage_scale(double scale, double karma, double& dmg) {
     }
 }
 
+inline void luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, double threshold, unsigned int& level) {
+
+    double v = stats.gets(stat);
+
+    double denom = v + threshold;
+
+    if (denom == 0)
+        return;
+
+    double p = factor / denom;
+    double pv = ::fabs(p);
+
+    if (pv <= 0 || pv >= 1)
+        return;
+
+    bool neg = (pv < 0);
+
+    unsigned int fudge = rng.geometric(pv);
+
+    if (neg) {
+        level -= std::max(level, fudge);
+
+    } else {
+        level += fudge;
+        stats.sinc(-fudge / factor);
+    }
+}
+
 
 inline void roll_attack(rnd::Generator& rng,
                         const damage::defenses_t& defenses, unsigned int dlevel,
@@ -253,6 +281,13 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
         return false;
     }
 
+    const auto& luck = constants().luck;
+
+    if (!luck.stat.null()) {
+
+        luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel);
+    }
+
     damage::attacks_t attack_res;
     roll_attack(state.rng, s.defenses, s.get_computed_level()+1, attacks, plevel+1, attack_res);
 
@@ -407,6 +442,13 @@ inline bool defend(Player& p,
 
     if (attacks.empty())
         return ret;
+
+    const auto& luck = constants().luck;
+
+    if (!luck.stat.null()) {
+
+        luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel);
+    }
 
     damage::attacks_t attack_res;
 

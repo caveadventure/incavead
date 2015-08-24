@@ -226,10 +226,10 @@ struct Design {
 
     struct lucky_free_apply_t {
         tag_t stat;
-        double threshold;
         double factor;
+        double threshold;
 
-        lucky_free_apply_t() : threshold(0), factor(0) {}
+        lucky_free_apply_t() : factor(1), threshold(0) {}
     };
 
     lucky_free_apply_t lucky_free_apply;

@@ -123,6 +123,16 @@ struct ConstantsBank {
     std::vector<tag_t> hud_stats_order;
     std::vector<tag_t> hud_counts_order;
 
+    struct luck_stat_t {
+        tag_t stat;
+        double factor;
+        double threshold;
+
+        luck_stat_t() : factor(1), threshold(0) {}
+    };
+
+    luck_stat_t luck;
+
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
                       min_money_value(0.01), max_celauto_cells(1000),

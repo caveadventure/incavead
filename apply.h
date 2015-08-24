@@ -399,10 +399,15 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         const auto& lfa = d.lucky_free_apply;
 
         double x = p.stats.gets(lfa.stat);
-        double chance = lfa.threshold + (lfa.factor / x);
+        double denom = x + lfa.threshold;
 
-        if (chance > 0 && chance < 1 && state.rng.uniform(0.0, 1.0) < chance) {
-            ret = false;
+        if (denom != 0) {
+
+            double chance = lfa.factor / denom;
+
+            if (chance > 0 && chance < 1 && state.rng.uniform(0.0, 1.0) > chance) {
+                ret = false;
+            }
         }
     }
 
