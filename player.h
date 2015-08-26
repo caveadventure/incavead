@@ -4,6 +4,8 @@
 
 struct Player {
 
+    const Species& species;
+
     unsigned int px;
     unsigned int py;
 
@@ -54,7 +56,7 @@ struct Player {
         polymorph_t() : turns(0) {}
     };
 
-    polymorph_t polymorph;
+    unsigned int polymorph_turns;
 
     size_t polymorph_ability;
 
@@ -184,11 +186,23 @@ struct Player {
 
     seen_monsters_t seen_monsters;
 
-    Player() : px(0), py(0), worldx(0), worldy(0), worldz(-1), 
+    Player() : species(species().get(constants().player_species)),
+               px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(0), dead(false),
+               stats(species.stats),
                sleep(0), blind(0), stun(0), fear(0), rest(0), digging(false), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {}
+
+    const Species& get_speciestag() {
+
+        return (polymorph.species.null() ? constants().player_species : polymorph.species);
+    }
+
+    const Species& get_species() {
+
+        return (polymorph.species.null() ? species : species().get(polymorph.species));
+    }
 
     void track_kill(tag_t genus, GameState& state) {
 
@@ -303,7 +317,9 @@ namespace serialize {
 template <>
 struct reader<Terrain::spell_t> {
     void read(Source& s, Terrain::spell_t& sp) {
-        serialize::read(s, sp.karma_bound);
+        serialize::read(s, sp.stat);
+        serialize::read(s, sp.stat_min);
+        serialize::read(s, sp.stat_max);
         serialize::read(s, sp.ca_tag);
         serialize::read(s, sp.name);
         serialize::read(s, sp.timeout);
@@ -313,7 +329,9 @@ struct reader<Terrain::spell_t> {
 template <>
 struct writer<Terrain::spell_t> {
     void write(Sink& s, const Terrain::spell_t& sp) {
-        serialize::write(s, sp.karma_bound);
+        serialize::write(s, sp.stat);
+        serialize::write(s, sp.stat_min);
+        serialize::write(s, sp.stat_max);
         serialize::write(s, sp.ca_tag);
         serialize::write(s, sp.name);
         serialize::write(s, sp.timeout);

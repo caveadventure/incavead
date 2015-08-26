@@ -10,6 +10,8 @@ struct ConstantsBank {
     size_t max_permafeats;
     size_t max_bones;
 
+    tag_t player_species;
+
     double hunger_rate;
     double starvation_damage;
 
@@ -70,8 +72,6 @@ struct ConstantsBank {
     std::map<tag_t, std::string> genus_names;
 
     size_t achievement_trigger_rate;
-
-    skins player_skin;
 
     unsigned int blindturns_to_radius;
 

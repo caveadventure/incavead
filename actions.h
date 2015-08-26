@@ -86,47 +86,40 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
     if (nx < 0 || ny < 0) 
         return;
 
-    tag_t poly = p.polymorph.species;
+    const Species& pspecies = p.get_species();
 
-    if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)) ||
-        !state.grid.is_walk(nx, ny))
+    if (!state.neigh.linked(neighbors::pt(p.px, p.py), neighbors::pt(nx, ny)))
         return;
 
-    if (!poly.null()) {
+    if (pspecies.digging > 0 && !state.grid.is_walk(nx, ny)) {
 
-        const Species& s = species().get(poly);
-
-        if (s.digging > 0 && !state.grid.is_walk(nx, ny)) {
-
-            if (!digging_step(state, nx, ny, s.digging)) {
-                state.render.do_message("You remove some of the rock.");
-                return;
-            }
+        if (!digging_step(state, nx, ny, pspecies.digging)) {
+            state.render.do_message("You remove some of the rock.");
+            return;
         }
+    }
 
-        switch (s.move) {
+    switch (pspecies.move) {
 
-        case Species::move_t::floor:
-            if (!state.grid.is_floor(nx, ny)) return;
-            break;
+    case Species::move_t::floor:
+        if (!state.grid.is_floor(nx, ny)) return;
+        break;
                 
-        case Species::move_t::water:
-            if (!state.grid.is_water(nx, ny)) return;
-            break;
+    case Species::move_t::water:
+        if (!state.grid.is_water(nx, ny)) return;
+        break;
 
-        case Species::move_t::corner:
-            if (!state.grid.is_corner(nx, ny)) return;
-            break;
+    case Species::move_t::corner:
+        if (!state.grid.is_corner(nx, ny)) return;
+        break;
 
-        case Species::move_t::shoreline:
-            if (!state.grid.is_shore(nx, ny)) return;
-            break;
+    case Species::move_t::shoreline:
+        if (!state.grid.is_shore(nx, ny)) return;
+        break;
             
-        default:
-            if (!state.grid.is_walk(nx, ny)) return;
-            break;
-        }
-
+    default:
+        if (!state.grid.is_walk(nx, ny)) return;
+        break;
     }
 
     monsters::Monster& mon = state.monsters.get(nx, ny);
@@ -147,12 +140,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
         return;
     }
 
-    bool terrain_immune = false;
-
-    if (!poly.null()) {
-
-        terrain_immune = species().get(poly).flags.terrain_immune;
-    }
+    bool terrain_immune = pspecies.flags.terrain_immune;
 
 
     features::Feature feat;

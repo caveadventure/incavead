@@ -620,10 +620,7 @@ inline bool start_throw_item(Player& p, tag_t slot, GameState& state) {
 
 inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.blast.size())
         return false;
@@ -637,10 +634,7 @@ inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, 
 
 inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.blast.size())
         return false;
@@ -680,10 +674,7 @@ inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
 
 inline bool end_poly_cloud(Player& p, size_t i, unsigned int x, unsigned int y, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.cast_cloud.size())
         return false;
@@ -697,10 +688,7 @@ inline bool end_poly_cloud(Player& p, size_t i, unsigned int x, unsigned int y, 
 
 inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.cast_cloud.size())
         return false;
@@ -730,10 +718,7 @@ inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
 
 inline bool summon_poly(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.summon.size())
         return false;
@@ -754,7 +739,7 @@ inline bool summon_poly(Player& p, size_t i, GameState& state) {
     }
 
     size_t n = state.monsters.summon(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                     p.px, p.py, p.px, p.py, c.speciestag, 1, false, p.polymorph.species);
+                                     p.px, p.py, p.px, p.py, c.speciestag, 1, false, p.get_speciestag());
 
     ++(state.ticks);
 
@@ -763,10 +748,7 @@ inline bool summon_poly(Player& p, size_t i, GameState& state) {
 
 inline bool spawn_poly(Player& p, size_t i, GameState& state) {
 
-    if (p.polymorph.species.null())
-        return false;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     if (i >= s.spawns.size())
         return false;
@@ -787,7 +769,7 @@ inline bool spawn_poly(Player& p, size_t i, GameState& state) {
     }
 
     size_t n = state.monsters.summon_any(state.neigh, state.rng, state.grid, state.species_counts, state.render, 
-                                         p.px, p.py, p.px, p.py, c.level, 1, p.polymorph.species);
+                                         p.px, p.py, p.px, p.py, c.level, 1, p.get_speciestag());
 
     ++(state.ticks);
 

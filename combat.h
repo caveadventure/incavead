@@ -474,33 +474,17 @@ inline bool defend(Player& p,
 
         const Damage& dam = damages().get(v.type);
 
-        if (p.polymorph.species.null()) {
+        const Species& sp = p.get_species();
 
-            if (!dam.flags.robot(false) || 
-                !dam.flags.undead(false) ||
-                !dam.flags.animal(false) ||
-                !dam.flags.plant(false) ||
-                !dam.flags.magic(false) ||
-                !dam.flags.eyeless(false) ||
-                !dam.flags.cosmic(false) ||
-                !dam.flags.player(true)) 
-                continue;
-
-        } else {
-
-            const Species& sp = species().get(p.polymorph.species);
-
-            if (!dam.flags.robot(sp.flags.robot) || 
-                !dam.flags.undead(sp.flags.undead) ||
-                !dam.flags.animal(sp.flags.animal) ||
-                !dam.flags.plant(sp.flags.plant) ||
-                !dam.flags.magic(sp.flags.magic) ||
-                !dam.flags.eyeless(sp.flags.eyeless) ||
-                !dam.flags.cosmic(sp.flags.cosmic) ||
-                !dam.flags.player(false)) 
-                continue;
-        }
-
+        if (!dam.flags.robot(sp.flags.robot) || 
+            !dam.flags.undead(sp.flags.undead) ||
+            !dam.flags.animal(sp.flags.animal) ||
+            !dam.flags.plant(sp.flags.plant) ||
+            !dam.flags.magic(sp.flags.magic) ||
+            !dam.flags.eyeless(sp.flags.eyeless) ||
+            !dam.flags.cosmic(sp.flags.cosmic) ||
+            !dam.flags.player(sp.flags.player)) 
+            continue;
 
         if (dam.karmic_scale.size() > 0) {
             double mk = 0;
@@ -528,7 +512,8 @@ inline bool defend(Player& p,
 
         for (const tag_t& i : dam.dec_stats) {
 
-            p.stats.sinc(i, -dmg);
+            if (p.stats.sinc(i, -dmg))
+                p.dead = true;
         }
 
         for (const tag_t& i : dam.inc_stats) {
@@ -540,6 +525,9 @@ inline bool defend(Player& p,
 
             defend_sinc_stats(mon, -p.stats.gets(i) * dmg);
         }
+
+        if (p.dead && !p.stats.crit())
+            p.dead = false;
 
         // HACK!
         if (!dam.polymorph.null()) {

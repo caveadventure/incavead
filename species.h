@@ -131,10 +131,12 @@ struct Species {
         bool eyeless;
         bool cosmic;
         bool stealthy;
+        bool player;
         
         flags_t() : 
             undead(false), animal(false), magic(false), plant(false), robot(false), 
-            terrain_immune(false), eyeless(false), cosmic(false), stealthy(false)
+            terrain_immune(false), eyeless(false), cosmic(false), stealthy(false),
+            player(false)
             {}
     };
 
@@ -176,7 +178,7 @@ struct Species {
     tag_t ally;
 
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), digging(0), range(0), clumpsize(), flags(), karma(0), hunger_rate(NAN) {}
+                move(move_t::walk), digging(0), range(0), clumpsize(), flags(), hunger_rate(NAN) {}
 
 
     unsigned int get_computed_level() const {

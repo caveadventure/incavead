@@ -319,10 +319,7 @@ std::string show_spells(const Player& p, const GameState& state) {
         ++z;
     }
 
-    if (p.polymorph.species.null())
-        return m;
-
-    const Species& s = species().get(p.polymorph.species);
+    const Species& s = p.get_species();
 
     for (const auto& pb : s.blast) {
 
@@ -414,34 +411,31 @@ void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
         ++(state.ticks);
     }
 
-    if (!p.polymorph.species.null()) {
+    const Species& s = p.get_species();
 
-        const Species& s = species().get(p.polymorph.species);
+    size_t x = z - size3;
 
-        size_t x = z - size3;
+    size_t size1 = s.blast.size();
+    size_t size2 = size1 + s.cast_cloud.size();
+    size_t size3 = size2 + s.summon.size();
+    size_t size4 = size3 + s.spawns.size();
 
-        size_t size1 = s.blast.size();
-        size_t size2 = size1 + s.cast_cloud.size();
-        size_t size3 = size2 + s.summon.size();
-        size_t size4 = size3 + s.spawns.size();
+    if (x < size1) {
 
-        if (x < size1) {
+        start_poly_blast(p, x, state);
 
-            start_poly_blast(p, x, state);
+    } else if (x < size2) {
 
-        } else if (x < size2) {
+        start_poly_cloud(p, x - size1, state);
 
-            start_poly_cloud(p, x - size1, state);
+    } else if (x < size3) {
 
-        } else if (x < size3) {
+        summon_poly(p, x - size2, state);
 
-            summon_poly(p, x - size2, state);
+    } else if (x < size4) {
 
-        } else if (x < size4) {
-
-            spawn_poly(p, x - size3, state);
-        }
-    }            
+        spawn_poly(p, x - size3, state);
+    }
 
     state.window_stack.pop_back();
 }
@@ -984,9 +978,13 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
 
     case 'z':
     {
+        tag_mem_t tagmem;
+
         for (const auto& c : celautos().bank) {
             Terrain::spell_t s;
-            s.karma_bound = 0;
+            s.stat = tag_t("karma", tagmem);
+            s.stat_min = -3;
+            s.stat_max = 3;
             s.ca_tag = c.first;
             s.timeout = 9999;
             s.name = c.second.debug_name;

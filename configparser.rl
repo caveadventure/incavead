@@ -281,7 +281,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_range       = 'range'       ws1 number     %{ spe.range = toint(state.match); } ;
         species_attack      = 'attack'      ws1 damage_val %{ spe.attacks.add(dmgval); } ;
         species_defense     = 'defense'     ws1 damage_val %{ spe.defenses.add(dmgval); } ;
-        species_karma       = 'karma'       ws1 real       %{ spe.karma = toreal(state.match); } ;
+
+        species_stat = 'stat'
+            ws1 tag  %{ tmp_tag = tag_t(state.match, tagmem); }
+            ws1 real %{ spe.stats.stats[tmp_tag] = toreal(state.match); } ;
 
         species_digging = 'digging' ws1 real %{ spe.digging = toreal(state.match); } ;
 
@@ -346,6 +349,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_plant  = 'plant'  %{ spe.flags.plant = true; } ;
         species_robot  = 'robot'  %{ spe.flags.robot = true; } ;
         species_cosmic = 'cosmic' %{ spe.flags.cosmic = true; } ;
+        species_player = 'player' %{ spe.flags.player = true; } ;
 
         species_stealthy = 'stealthy' %{ spe.flags.stealthy = true; } ;
 
@@ -375,8 +379,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_companion | species_attack | species_defense | species_drop | species_drop_random |
             species_cast_cloud | species_summon | species_death_summon | species_spawn | 
             species_animal | species_undead | species_magic | species_plant |
-            species_robot | species_cosmic | species_terrain_immune | species_eyeless |
-            species_karma | species_blast | species_true_level | species_trail | species_steal |
+            species_robot | species_cosmic | species_terrain_immune | species_eyeless | species_player |
+            species_stat | species_blast | species_true_level | species_trail | species_steal |
             species_morph | species_hunger_rate | species_ally | species_stealthy | species_digging |
             '}'
             ${ fret; })
@@ -1023,7 +1027,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         constant_uniques_timeout = 'uniques_timeout' ws1 number %{ __constants__().uniques_timeout = toint(state.match); };
 
-        constant_player_skin = 'player_skin' ws1 skin %{ __constants__().player_skin.set(SKINS); } ;
+        constant_player_species = 'player_species' ws1 tag %{ __constants__().player_species = tag_t(state.match, tagmem); } ;
 
         constant_min_money_value = 'min_money_value'
             ws1 real %{ __constants__().min_money_value = toreal(state.match); };
@@ -1126,7 +1130,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_hunger_rate | constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
                        constant_bad_grave | constant_ghost |
-                       constant_slot | constant_player_skin |
+                       constant_slot | constant_player_species |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_min_money_value | constant_max_celauto_cells |

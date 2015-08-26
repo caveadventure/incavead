@@ -544,14 +544,14 @@ void Game::process_world(GameState& state,
     }
 
     for (std::vector<Terrain::spell_t>::iterator si = p.spells.begin(); si != p.spells.end(); ) {
-        double k = p.karma.val;
         auto& sp = *si;
+        double k = p.stats.gets(sp.stat);
 
-        if (sp.karma_bound < 0 && k > sp.karma_bound) {
-            sp.timeout -= (k - sp.karma_bound);
+        if (k > sp.stat_max) {
+            sp.timeout -= (k - sp.stat_max);
 
-        } else if (sp.karma_bound > 0 && k < sp.karma_bound) {
-            sp.timeout -= (sp.karma_bound - k);
+        } else if (k < sp.stat_min) {
+            sp.timeout -= (sp.stat_min - k);
         }
 
         if (sp.timeout <= 0) {
