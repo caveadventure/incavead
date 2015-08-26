@@ -40,12 +40,14 @@ struct Terrain {
     unsigned int charges;
 
     struct spell_t {
-        double karma_bound;
+        tag_t stat;
+        double stat_min;
+        double stat_max;
         tag_t ca_tag;
         std::string name;
         double timeout;
 
-        spell_t() : karma_bound(0), timeout(0) {}
+        spell_t() : stat_min(0), stat_max(0), timeout(0) {}
     };
 
     spell_t grant_spell;

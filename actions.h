@@ -468,9 +468,9 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
     if (t.grant_spell.timeout > 0) {
 
         const auto& sp = t.grant_spell;
+        double v = p.stats.gets(t.stat);
 
-        if ((sp.karma_bound < 0 && p.karma.val <= sp.karma_bound) ||
-            (sp.karma_bound > 0 && p.karma.val >= sp.karma_bound)) {
+        if (v >= sp.stat_min && v <= sp.stat_max) {
 
             for (const auto& i : p.spells) {
                 if (i.name == sp.name) {

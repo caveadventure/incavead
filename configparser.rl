@@ -641,8 +641,10 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         terrain_victory_item = 'victory_item' ws1 tag %{ ter.victory_item = tag_t(state.match, tagmem); } ;
 
         terrain_grant_spell = 'grant_spell'
+            ws1 tag    %{ ter.grant_spell.stat = tag_t(state.match, tagmem); }
+            ws1 real   %{ ter.grant_spell.stat_min = toral(state.match); }
+            ws1 real   %{ ter.grant_spell.stat_max = toral(state.match); }
             ws1 tag    %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
-            ws1 real   %{ ter.grant_spell.karma_bound = toreal(state.match); }
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
 
