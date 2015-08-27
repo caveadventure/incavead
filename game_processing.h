@@ -415,20 +415,7 @@ void Game::process_world(GameState& state,
         );
 
 
-    bool terrain_immune = false;
-    double hunger_rate = consts.hunger_rate;
-
-    if (!p.polymorph.species.null()) {
-
-        const Species& s = species().get(p.polymorph.species);
-
-        terrain_immune = s.flags.terrain_immune;
-
-        if (std::isfinite(s.hunger_rate)) {
-            hunger_rate = s.hunger_rate;
-        }
-    }
-
+    bool terrain_immune = p.get_species().flags.terrain_immune;
 
     features::Feature feat;
     if (!terrain_immune && state.features.get(p.px, p.py, feat)) {
@@ -563,15 +550,13 @@ void Game::process_world(GameState& state,
         }
     }
 
-    std::map<tag_t, double> inc_stat;
+    std::map<tag_t, double> inc_stat = p.get_species().inc_stat;
         
     p.inv.process_inventory(state.moon.pi.phase_n, inc_stat); 
 
     for (const auto& i : inc_stat) {
         p.stats.sinc(i.first, i.second);
     }
-
-    p.food.dec(hunger_rate + inc_hunger);
 
     {
         const Levelskin& ls = levelskins().get(p.worldz);
@@ -620,7 +605,7 @@ void Game::process_world(GameState& state,
         p.health.dec(consts.starvation_damage);
     }
 
-    if (p.health.val <= -3.0) {
+    if (p.dead) {
 
         std::string code = rcode::encode(game_seed);
 

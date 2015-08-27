@@ -173,12 +173,12 @@ struct Species {
 
     morph_t morph;
 
-    double hunger_rate;
+    std::map<tag_t, double> inc_stat;
 
     tag_t ally;
 
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
-                move(move_t::walk), digging(0), range(0), clumpsize(), flags(), hunger_rate(NAN) {}
+                move(move_t::walk), digging(0), range(0), clumpsize(), flags() {}
 
 
     unsigned int get_computed_level() const {

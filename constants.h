@@ -12,7 +12,6 @@ struct ConstantsBank {
 
     tag_t player_species;
 
-    double hunger_rate;
     double starvation_damage;
 
     tag_t grave;
@@ -134,7 +133,7 @@ struct ConstantsBank {
     luck_stat_t luck;
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
-                      hunger_rate(0), starvation_damage(0), uniques_timeout(0), 
+                      starvation_damage(0), uniques_timeout(0), 
                       min_money_value(0.01), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
                       blindturns_to_radius(10),

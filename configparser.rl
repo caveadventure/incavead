@@ -369,7 +369,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ spe.morph.chance = toreal(state.match); }
             ;
 
-        species_hunger_rate = 'hunger_rate' ws1 real %{ spe.hunger_rate = toreal(state.match); };
+        species_inc_stat = 'inc_stat'
+            ws1 tag  %{ tmp_tag = tag_t(state.match, tagmem); }
+            ws1 real %{ spe.inc_stat[tmp_tag] += toreal(state.match); };
 
         species_ally = 'ally' ws1 tag %{ spe.ally = tag_t(state.match, tagmem); };
 
@@ -381,7 +383,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             species_animal | species_undead | species_magic | species_plant |
             species_robot | species_cosmic | species_terrain_immune | species_eyeless | species_player |
             species_stat | species_blast | species_true_level | species_trail | species_steal |
-            species_morph | species_hunger_rate | species_ally | species_stealthy | species_digging |
+            species_morph | species_inc_stat | species_ally | species_stealthy | species_digging |
             '}'
             ${ fret; })
             ;
@@ -492,11 +494,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ des.tickstat.back().mul = toreal(state.match); }
             (ws1 'apply_count' %{ des.tickstat.back().apply_count = true; })?
             ;
-            
-        design_hunger = 'hunger' ws1 real %{ des.hunger = toreal(state.match); };
-
-        design_other_hunger_multiplier = 'other_hunger_multiplier' 
-            ws1 real %{ des.other_hunger_multiplier = toreal(state.match); };
 
         design_enable_spells = 'enable_spells' %{ des.flags.enable_spells = true; };
         design_random_spell  = 'random_spell'  %{ des.flags.random_spell = true; };
@@ -1009,9 +1006,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_max_permafeats = 'max_permafeats' ws1 number %{ __constants__().max_permafeats = toint(state.match); };
         constant_max_bones      = 'max_bones'      ws1 number %{ __constants__().max_bones = toint(state.match); };
 
-        constant_hunger_rate       = 'hunger_rate'       
-            ws1 real %{ __constants__().hunger_rate = toreal(state.match); };
-
         constant_starvation_damage = 'starvation_damage' 
             ws1 real %{ __constants__().starvation_damage = toreal(state.match); };
 
@@ -1127,7 +1121,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         one_constant = constant_max_permafeats | constant_max_bones |
-                       constant_hunger_rate | constant_starvation_damage |
+                       constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
                        constant_bad_grave | constant_ghost |
                        constant_slot | constant_player_species |
