@@ -25,6 +25,11 @@ struct Player {
 
     pstats::stats_t stats;
 
+    double blind;
+    bool stun;
+    bool fear;
+    bool sleep;
+    
     /* //
     shielded_a_stat_t health;
     stat_t food;
@@ -190,7 +195,7 @@ struct Player {
                px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(species.level), dead(false),
                stats(species.stats),
-               sleep(0), blind(0), stun(0), fear(0), rest(0), digging(false), polymorph_ability(0), state(MAIN), 
+               blind(0.0), stun(false), fear(false), sleep(false), digging(false), polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {}
 
@@ -350,6 +355,10 @@ struct reader<Player> {
         serialize::read(s, p.level);
         serialize::read(s, p.dead);
         serialize::read(s, p.stats);
+        serialize::read(s, p.blind);
+        serialize::read(s, p.stun);
+        serialize::read(s, p.fear);
+        serialize::read(s, p.sleep);
         serialize::read(s, p.dig.x);
         serialize::read(s, p.dig.y);
         serialize::read(s, p.dig.h);
@@ -405,6 +414,10 @@ struct writer<Player> {
         serialize::write(s, p.level);
         serialize::write(s, p.dead);
         serialize::write(s, p.stats);
+        serialize::write(s, p.blind);
+        serialize::write(s, p.stun);
+        serialize::write(s, p.fear);
+        serialize::write(s, p.sleep);
         serialize::write(s, p.dig.x);
         serialize::write(s, p.dig.y);
         serialize::write(s, p.dig.h);

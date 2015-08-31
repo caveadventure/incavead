@@ -583,7 +583,7 @@ void Game::process_world(GameState& state,
 
     for (const auto& i : p.stats.stats) {
 
-        const Stat& st = ::stats().get(t);
+        const Stat& st = stats().get(t);
 
         if (!st.ailment.null() && i.second.val <= st.min && !p.dead) {
 
@@ -596,16 +596,24 @@ void Game::process_world(GameState& state,
         }
     }
 
-    if (p.blind > 0) {
-        --(p.blind);
+    for (const auto& i : p.stats.counts) {
+
+        p.stats.cinc(i.first, -1);
     }
 
-    if (p.stun > 0) {
-        --(p.stun);
-    }
+    p.blind = 0;
+    p.stun = false;
+    p.fear = false;
+    p.sleep = false;
 
-    if (p.fear > 0) {
-        --(p.fear);
+    for (const auto& i : p.stats.counts) {
+
+        const Stat& st = stats().get(t);
+
+        if (st.blind) p.blind = (double)i->second.val / (double)st.cmax;
+        if (st.stun)  p.stun = true;
+        if (st.fear)  p.fear = true;
+        if (st.sleep) p.sleep = true;
     }
 
     if (p.polymorph.turns > 0) {
@@ -621,27 +629,8 @@ void Game::process_world(GameState& state,
         --(p.fast.turns);
     }
 
-    if (p.dead) {
-
-        std::string code = rcode::encode(game_seed);
-
-        state.render.do_message("You are dead. (Press space to exit.)", true);
-        state.render.do_message(nlp::message("Replay code: %s", code), true);
-        dead = true;
-        done = true;
-        return;
-    }
-
-    if (p.sleep > 0) {
+    if (p.sleep) {
         ++(state.ticks);
-        --(p.sleep);
-        do_draw = true;
-        return;
-    }
-
-    if (p.rest > 0) {
-        ++(state.ticks);
-        --(p.rest);
         do_draw = true;
         return;
     }
@@ -652,6 +641,17 @@ void Game::process_world(GameState& state,
         do_draw = true;            
 
         do_digging_step(p, state);
+    }
+
+    if (p.dead) {
+
+        std::string code = rcode::encode(game_seed);
+
+        state.render.do_message("You are dead. (Press space to exit.)", true);
+        state.render.do_message(nlp::message("Replay code: %s", code), true);
+        dead = true;
+        done = true;
+        return;
     }
 }
 

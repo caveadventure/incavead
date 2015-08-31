@@ -72,8 +72,6 @@ struct ConstantsBank {
 
     size_t achievement_trigger_rate;
 
-    unsigned int blindturns_to_radius;
-
     struct ailment_t {
         damage::attacks_t attacks;
         unsigned int level;
@@ -136,7 +134,6 @@ struct ConstantsBank {
                       starvation_damage(0), uniques_timeout(0), 
                       min_money_value(0.01), max_celauto_cells(1000),
                       achievement_trigger_rate(15),
-                      blindturns_to_radius(10),
                       max_ailments(6u),
                       monetary_supply_base(1e6),
                       player_level_cap(12),

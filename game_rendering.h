@@ -181,7 +181,7 @@ unsigned int get_lightradius(const Player& p, const GameState& state) {
     }
 
     if (p.blind > 0) {
-        r = std::max(1, r - static_cast<int>(p.blind / constants().blindturns_to_radius) - 1);
+        r = std::max(1, (int)(r * (1.0 - p.blind)));
     }
 
     return r;

@@ -1071,9 +1071,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         constant_achievement_trigger_rate = 'achievement_trigger_rate' 
             ws1 number %{ __constants__().achievement_trigger_rate = toint(state.match); } ;
 
-        constant_blindturns_to_radius = 'blindturns_to_radius' 
-            ws1 number %{ __constants__().blindturns_to_radius = toint(state.match); } ;
-
         constant_treasure_chance = 'treasure_chance'
             ws1 mean_dev %{ __constants__().treasure_chance = meandev; } 
         ;
@@ -1129,7 +1126,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
-                       constant_blindturns_to_radius | constant_treasure_chance |
+                       constant_treasure_chance |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | constant_luck_stat |
                        constant_starsigns | constant_ai_radius | constant_hud_stats_order | constant_hud_counts_order
@@ -1329,9 +1326,15 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         stat_ailment = 'ailment' ws1 tag %{ sta.ailment = tag_t(state.match, tagmem); } ;
 
+        stat_blind = 'blind' %{ sta.blind = true; };
+        stat_stun  = 'stun'  %{ sta.stun = true; };
+        stat_fear  = 'fear'  %{ sta.fear = true; };
+        stat_sleep = 'sleep' %{ sta.sleep = true; };
+
         stat_one_data =
             (stat_label | stat_mark | stat_limits | stat_max | stat_critical | stat_hidden |
             stat_chain_pos | stat_chain_neg | stat_monster_hit_msg | stat_ailment |
+            stat_blind | stat_stun | stat_fear | stat_sleep |
             '}' ${ fret; })
             ;
 

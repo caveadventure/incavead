@@ -33,7 +33,12 @@ struct Stat {
 
     tag_t ailment;
 
-    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true) {}
+    bool blind;
+    bool stun;
+    bool fear;
+    bool sleep;
+
+    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true), blind(false), stun(false), fear(false), sleep(false) {}
 };
 
 struct StatsBank {
@@ -151,7 +156,12 @@ struct stats_t {
 
     bool cinc(tag_t t, int v) {
 
-        return counts[t].inc(v, ::stats().get(t));
+        bool ret = counts[t].inc(v, ::stats().get(t));
+
+        if (ret)
+            counts.erase(t);
+
+        return ret;
     }
 
     double gets(tag_t t) {

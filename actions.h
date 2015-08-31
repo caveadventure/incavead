@@ -63,13 +63,13 @@ bool run_away(Player& p, GameState& state, size_t n_skin);
 
 void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fear = true) {
 
-    if (do_fear && p.fear > 0) {
+    if (do_fear && p.fear) {
 
         if (run_away(p, state, n_skin))
             return;
     }
 
-    if (p.stun > 0) {
+    if (p.stun) {
 
         if (dx != 0 && state.rng.range(0, 2) == 0) {
             dx = -dx;
