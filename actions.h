@@ -132,8 +132,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
         damage::attacks_t attacks;
         p.get_attack(attacks);
 
-        if (attack_from_player(p, attacks, p.get_computed_level(state.rng), state, 
-                               monsters::pt(nx, ny), mon, false)) {
+        if (attack_from_player(p, attacks, p.get_computed_level(), state, monsters::pt(nx, ny), mon, false)) {
             ++(state.ticks);
         }
 

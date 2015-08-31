@@ -918,7 +918,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         levelskin_floor8        = 'floor8'        ws1 skin   %{ lev.floor8.set(SKINS); };
         levelskin_lightradius   = 'lightradius'   ws1 number %{ lev.lightradius = toint(state.match); };
         levelskin_lightradius_max = 'lightradius_max' ws1 number %{ lev.lightradius_max = toint(state.match); };
-        levelskin_damage_terrain  = 'damage_terrain'  ws1 tag    %{ lev.damage_terrain = tag_t(state.match, tagmem); };
+        levelskin_ailment       = 'ailment'       ws1 tag    %{ lev.ailment = tag_t(state.match, tagmem); };
 
         levelskin_exclusive_monsters = 'exclusive_monsters' %{ lev.exclusive_monsters = true; };
         levelskin_exclusive_items    = 'exclusive_items'    %{ lev.exclusive_items = true; };
@@ -972,7 +972,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             levelskin_water_wall | levelskin_floor1 | levelskin_floor2 |
             levelskin_floor3 | levelskin_floor4 | levelskin_floor5 |
             levelskin_floor6 | levelskin_floor7 | levelskin_floor8 |
-            levelskin_lightradius | levelskin_lightradius_max | levelskin_damage_terrain |
+            levelskin_lightradius | levelskin_lightradius_max | levelskin_ailment |
             levelskin_exclusive_monsters | levelskin_exclusive_items | levelskin_no_phase_level |
             levelskin_species_level | levelskin_designs_level | levelskin_vaults_level |
             levelskin_number_fixed_vaults | levelskin_number_semirandom_vaults | levelskin_number_random_vaults |
@@ -1327,9 +1327,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         stat_monster_hit_msg = 'monster_hit_msg' ws1 string %{ sta.monster_hit_msg = state.match; };
 
+        stat_ailment = 'ailment' ws1 tag %{ sta.ailment = tag_t(state.match, tagmem); } ;
+
         stat_one_data =
             (stat_label | stat_mark | stat_limits | stat_max | stat_critical | stat_hidden |
-            stat_chain_pos | stat_chain_neg | stat_monster_hit_msg |
+            stat_chain_pos | stat_chain_neg | stat_monster_hit_msg | stat_ailment |
             '}' ${ fret; })
             ;
 

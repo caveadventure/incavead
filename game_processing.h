@@ -22,6 +22,15 @@ void add_ailments(Player& p, GameState& state) {
         auto a = ailments.begin();
         while (na > 0) {
             ++a;
+
+            if (a->second.triggers == 0) {
+
+                if (a == ailments.end())
+                    a = ailments.begin();
+
+                continue;
+            }
+
             --na;
         }
 
@@ -427,7 +436,7 @@ void Game::process_world(GameState& state,
             damage::defenses_t defenses;
             p.get_defense(defenses);
 
-            defend(p, defenses, p.get_computed_level(state.rng), t, state);
+            defend(p, defenses, p.get_computed_level(), t, state);
 
             if (t.uncharge.attack) {
                 state.features.uncharge(p.px, p.py, state.render);
@@ -561,16 +570,29 @@ void Game::process_world(GameState& state,
     {
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        if (!ls.damage_terrain.null() && !p.dead) {
+        if (!ls.ailment.null() && !p.dead) {
 
-            // HACK. Assume player level is always 0.
-            // This is how it should be when the damage is actually coming from 
-            // the environment itself.
+            auto a = constants().ailments.find(ls.ailment);
 
-            damage::defenses_t defenses;
-            p.get_defense(defenses);
+            if (a == constants().ailments.end())
+                throw std::runtime_error("Unknown ailment in levelskin.");
 
-            defend(p, defenses, 0, terrain().get(ls.damage_terrain), state);
+            defend(p, a->second, state);
+        }
+    }
+
+    for (const auto& i : p.stats.stats) {
+
+        const Stat& st = ::stats().get(t);
+
+        if (!st.ailment.null() && i.second.val <= st.min && !p.dead) {
+
+            auto a = constants().ailments.find(st.ailment);
+
+            if (a == constants().ailments.end())
+                throw std::runtime_error("Unknown ailment in stats description.");
+
+            defend(p, a->second, state);
         }
     }
 
@@ -597,12 +619,6 @@ void Game::process_world(GameState& state,
 
     if (p.fast.turns > 0) {
         --(p.fast.turns);
-    }
-
-    if (p.food.val <= -3.0 && p.health.val > -3.0) {
-        state.render.do_message("You desperately need something to eat!", true);
-        p.attacker = "starvation";
-        p.health.dec(consts.starvation_damage);
     }
 
     if (p.dead) {

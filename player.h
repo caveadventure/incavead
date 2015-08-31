@@ -247,7 +247,7 @@ struct Player {
         return level;
     }
 
-    unsigned int get_computed_level(rnd::Generator& rng) {
+    unsigned int get_computed_level() {
 
         if (!polymorph.species.null()) {
 

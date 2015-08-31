@@ -31,6 +31,8 @@ struct Stat {
     bool hidden;
     bool progressbar;
 
+    tag_t ailment;
+
     Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true) {}
 };
 

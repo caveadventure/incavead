@@ -19,7 +19,7 @@ struct Levelskin {
     unsigned int lightradius;
     unsigned int lightradius_max;
 
-    tag_t damage_terrain;
+    tag_t ailment;
 
     int level;
 

@@ -147,7 +147,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), d, state);
+        defend(p, defenses, p.get_computed_level(), d, state);
     }
 
     for (const auto& v : d.inc_stat) {
@@ -386,7 +386,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), d, state);
+        defend(p, defenses, p.get_computed_level(), d, state);
     }
 
     if (ret && !d.use_for_free) {
@@ -446,7 +446,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), d, state);
+        defend(p, defenses, p.get_computed_level(), d, state);
 
     } else {
 
@@ -454,7 +454,7 @@ inline void blast_process_point(Player& p, GameState& state, const Design& d,
 
         if (!mon.null()) {
 
-            unsigned int lev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level(state.rng));
+            unsigned int lev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level());
 
             attack_from_player(p, d.attacks, lev, state, monsters::pt(_x, _y), mon, false);
         }
@@ -589,7 +589,7 @@ inline bool end_throw_item(Player& p, tag_t slot, unsigned int lx, unsigned int 
             
         double v2 = std::max(0.0, (v-1) / d.throwrange);
 
-        unsigned int ilev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level(state.rng));
+        unsigned int ilev = (d.attack_level >= 0 ? d.attack_level : p.get_computed_level());
 
         unsigned int lev = (1 - v2) * ilev;
 

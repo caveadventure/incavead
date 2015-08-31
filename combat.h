@@ -609,7 +609,7 @@ inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameSta
 
     size_t tmp = 0;
 
-    defend(p, defenses, p.get_computed_level(state.rng), ailment.attacks, ailment.level, state, 
+    defend(p, defenses, /*p.get_computed_level(state.rng)*/ 0, ailment.attacks, ailment.level, state, 
            ailment.name, true, ailment, 1234, tmp);
 
     return tmp;

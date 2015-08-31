@@ -37,7 +37,7 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(state.rng), s, attacks, state, friendly_fire);
+        defend(p, defenses, p.get_computed_level(), s, attacks, state, friendly_fire);
 
     } else {
 
@@ -559,7 +559,7 @@ inline bool move_monster_main(Player& p, GameState& state,
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        bool dead = defend(p, defenses, p.get_computed_level(state.rng), s, state);
+        bool dead = defend(p, defenses, p.get_computed_level(), s, state);
 
         if (dead && m.stats.crit()) {
 
