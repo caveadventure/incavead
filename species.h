@@ -157,6 +157,7 @@ struct Species {
 
     struct trail_t {
         tag_t terrain;
+        tag_t stat;
         mean_deviation_t cost;
     };
 

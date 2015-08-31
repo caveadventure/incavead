@@ -358,7 +358,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         species_eyeless = 'eyeless' %{ spe.flags.eyeless = true; } ;
 
         species_trail = 'trail' 
-            ws1 tag  %{ spe.trail.terrain = tag_t(state.match, tagmem); } 
+            ws1 tag  %{ spe.trail.terrain = tag_t(state.match, tagmem); }
+            ws1 tag  %{ spe.trail.stat = tag_t(state.match, tagmem); }
             ws1 mean_dev %{ spe.trail.cost = meandev; } 
             ;
 

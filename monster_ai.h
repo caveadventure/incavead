@@ -269,7 +269,7 @@ inline bool move_monster_main(Player& p, GameState& state,
     }
 
 
-    if (m.health <= -3) {
+    if (m.dead) {
 
         if (!s.death_summon.null()) {
             summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::SPECIFIC,
@@ -559,13 +559,7 @@ inline bool move_monster_main(Player& p, GameState& state,
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        bool dead = defend(p, defenses, p.get_computed_level(), s, state);
-
-        if (dead && m.stats.crit()) {
-
-            do_die = true;
-            return true;
-        }
+        defend(p, defenses, p.get_computed_level(), s, state);
 
         return false;
     }
@@ -575,8 +569,10 @@ inline bool move_monster_main(Player& p, GameState& state,
 
         double c = state.rng.gauss(s.trail.cost.mean, s.trail.cost.deviation);
 
-        if (c != 0) {
-            m.health -= c;
+        if (c != 0 && m.stats.sinc(s.trail.stat, c)) {
+
+            do_die = true;
+            return true;
         }
     }
 
@@ -646,14 +642,14 @@ inline int conflict_monster(Player& p, GameState& state,
         }
     };
 
-    if (ma.health <= -3) {
+    if (ma.dead) {
 
         do_message(state, mxya, ma, sa);
 
         ret |= 2;
     }
 
-    if (mb.health <= -3) {
+    if (mb.dead) {
 
         do_message(state, mxyb, mb, sb);
 

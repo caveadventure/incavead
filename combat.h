@@ -262,6 +262,7 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     if (types.size() > 0 && mon.stats.crit()) {
 
         monster_kill(p, state, mxy, mon, s, track_kills, types);
+        mon.dead = true;
     }
 
     return ret;
@@ -349,6 +350,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             
             state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
         }
+
+        mon.dead = true;
 
     } else if (!quiet && visible_damage > 0) {
 
