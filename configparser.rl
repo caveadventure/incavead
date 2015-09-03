@@ -376,12 +376,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_ally = 'ally' ws1 tag %{ spe.ally = tag_t(state.match, tagmem); };
 
+        species_magic_cost = 'magic_cost'
+            ws1 tag  %{ spe.magic_cost.stat = tag_t(state.match, tagmem); }
+            ws1 real %{ spe.magic_cost.cost = toreal(state.match); };
+
         species_one_data = 
             (species_count | species_name | species_skin | species_habitat | species_ai |
             species_genus | species_descr | species_idle_ai | species_move | species_range | species_clumpsize |
             species_companion | species_attack | species_defense | species_drop | species_drop_random |
             species_cast_cloud | species_summon | species_death_summon | species_spawn | 
-            species_animal | species_undead | species_magic | species_plant |
+            species_animal | species_undead | species_magic | species_plant | species_magic_cost |
             species_robot | species_cosmic | species_terrain_immune | species_eyeless | species_player |
             species_stat | species_blast | species_true_level | species_trail | species_steal |
             species_morph | species_inc_stat | species_ally | species_stealthy | species_digging |
@@ -1118,10 +1122,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().luck.threshold = toreal(state.match); }
             ;
 
+        constant_rest_stat = 'rest_stat' ws1 tag %{ __constants__().rest_stat = tag_t(state.match, tagmem); };
+
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
-                       constant_bad_grave | constant_ghost |
+                       constant_bad_grave | constant_ghost | constant_rest_stat |
                        constant_slot | constant_player_species |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
@@ -1332,10 +1338,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         stat_fear  = 'fear'  %{ sta.fear = true; };
         stat_sleep = 'sleep' %{ sta.sleep = true; };
 
+        stat_cancellable = 'cancellable' %{ sta.cancellable = true; };
+
         stat_one_data =
             (stat_label | stat_mark | stat_limits | stat_max | stat_critical | stat_hidden |
             stat_chain_pos | stat_chain_neg | stat_monster_hit_msg | stat_ailment |
-            stat_blind | stat_stun | stat_fear | stat_sleep |
+            stat_blind | stat_stun | stat_fear | stat_sleep | stat_cancellable |
             '}' ${ fret; })
             ;
 

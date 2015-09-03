@@ -33,20 +33,20 @@ inline void karmic_damage_scale(double scale, double karma, double& dmg) {
     }
 }
 
-inline void luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, double threshold, unsigned int& level) {
+inline bool luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, double threshold, unsigned int& level) {
 
     double v = stats.gets(stat);
 
     double denom = v + threshold;
 
     if (denom == 0)
-        return;
+        return false;
 
     double p = factor / denom;
     double pv = ::fabs(p);
 
     if (pv <= 0 || pv >= 1)
-        return;
+        return false;
 
     bool neg = (pv < 0);
 
@@ -54,10 +54,11 @@ inline void luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, 
 
     if (neg) {
         level -= std::max(level, fudge);
+        return false;
 
     } else {
         level += fudge;
-        stats.sinc(-fudge / factor);
+        return stats.sinc(-fudge / factor);
     }
 }
 
@@ -177,12 +178,18 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
     for (const tag_t& i : dam.inc_stats) {
 
-        p.stats.sinc(i, dmg);
+        if (p.stats.sinc(i, dmg)) {
+
+            types.insert(v.type);
+        }
     }
 
     for (const tag_t& i : dam.transfer_stats) {
 
-        p.stats.sinc(i, -mon.stats.gets(i) * dmg);
+        if (p.stats.sinc(i, -mon.stats.gets(i) * dmg)) {
+
+            types.insert(v.type);
+        }
     }
 
     unsigned int polyturns = dam.player_poly.get(dmg);
@@ -286,7 +293,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     if (!luck.stat.null()) {
 
-        luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel);
+        if (luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel))
+            mon.dead = true;
     }
 
     damage::attacks_t attack_res;
@@ -393,6 +401,9 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
 inline void handle_post_defend(Player& p, GameState& state) {
 
+    p.stats.cancel();
+
+    /*
     if (p.digging) {
         state.render.do_message("You stop digging.");
         p.digging = false;
@@ -402,6 +413,7 @@ inline void handle_post_defend(Player& p, GameState& state) {
         state.render.do_message("You stop resting.");
         p.rest = 0;
     }
+    */
 }
 
 
@@ -435,22 +447,21 @@ inline bool defend_sinc_stats(int, tag_t, double) {
 
 
 template <typename S, typename T>
-inline bool defend(Player& p, 
+inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const damage::attacks_t& attacks, unsigned int alevel, 
                    GameState& state, const std::string& attacker_name, bool env,
                    const S& s, T mon, size_t& n) {
 
-    bool ret = false;
-
     if (attacks.empty())
-        return ret;
+        return;
 
     const auto& luck = constants().luck;
 
     if (!luck.stat.null()) {
 
-        luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel);
+        if (luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel))
+            p.dead = true;
     }
 
     damage::attacks_t attack_res;
@@ -466,7 +477,7 @@ inline bool defend(Player& p,
             defend_message(state, s, msg);
         }
 
-        return ret;
+        return;
     }
 
     p.attacker = attacker_name;
@@ -521,20 +532,20 @@ inline bool defend(Player& p,
 
         for (const tag_t& i : dam.inc_stats) {
 
-            defend_sinc_stats(mon, i, dmg);
+            if (defend_sinc_stats(mon, i, dmg))
+                mon.dead = true;
         }
 
         for (const tag_t& i : dam.transfer_stats) {
 
-            defend_sinc_stats(mon, -p.stats.gets(i) * dmg);
+            if (defend_sinc_stats(mon, -p.stats.gets(i) * dmg))
+                mon.dead = true;
         }
-
-        if (p.dead && !p.stats.crit())
-            p.dead = false;
 
         // HACK!
         if (!dam.polymorph.null()) {
 
+            p.stats.die();
             p.dead = true;
         }
 
@@ -548,7 +559,7 @@ inline bool defend(Player& p,
             p.add_ailment(state.rng, dam.infect.first, i->second.triggers);
 
             if (defend_sinc_stats(mon, dam.infect.second, -dmg))
-                ret = true;
+                mon.dead = true;
         }
 
         if (env) {
@@ -561,26 +572,24 @@ inline bool defend(Player& p,
     if (n > 0) {
         handle_post_defend(p, state);
     }
-
-    return ret;
 }
 
-inline bool defend(Player& p, 
+inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Species& s, monsters::Monster& mon, const damage::attacks_t& attacks,
                    GameState& state, bool friendly_fire = false) {
 
     size_t tmp;
-    return defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s,
-                  std::ref(mon), tmp);
+    defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s,
+           std::ref(mon), tmp);
 }
 
-inline bool defend(Player& p, 
+inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Species& s, monsters::Monster& mon, 
                    GameState& state, bool friendly_fire = false) {
 
-    return defend(p, defenses, plevel, s, mon, s.attacks, state, friendly_fire);
+    defend(p, defenses, plevel, s, mon, s.attacks, state, friendly_fire);
 }
 
 

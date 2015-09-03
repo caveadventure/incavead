@@ -130,6 +130,8 @@ struct ConstantsBank {
 
     luck_stat_t luck;
 
+    tag_t rest_stat;
+
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       starvation_damage(0), uniques_timeout(0), 
                       min_money_value(0.01), max_celauto_cells(1000),

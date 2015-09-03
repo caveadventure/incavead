@@ -282,13 +282,6 @@ void Game::draw_hud(GameState& state) {
                                    '+', 
                                    (state.ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
     }
-
-    if (p.rest > 0) {
-        state.render.push_hud_line("Resting", maudit::color::dim_green,
-                                   std::min(p.rest / 16 + 1, (unsigned int)6), 
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::dim_green : maudit::color::bright_black));
-    }
 }
 
 

@@ -38,7 +38,10 @@ struct Stat {
     bool fear;
     bool sleep;
 
-    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true), blind(false), stun(false), fear(false), sleep(false) {}
+    bool cancellable;
+
+    Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true),
+             blind(false), stun(false), fear(false), sleep(false), cancellable(false) {}
 };
 
 struct StatsBank {
@@ -154,6 +157,11 @@ struct stats_t {
         return stats[t].inc(v, ::stats().get(t));
     }
 
+    bool is_min(tag_t t) {
+        const Stat& st = ::stats().get(t);
+        return (stats[t].val <= st.min);
+    }
+
     bool cinc(tag_t t, int v) {
 
         bool ret = counts[t].inc(v, ::stats().get(t));
@@ -176,13 +184,62 @@ struct stats_t {
 
         for (const auto& i : stats) {
 
-            const Stat& st = ::stats().get(t);
+            const Stat& st = ::stats().get(i.first);
 
             if (st.critical && i.second.val <= st.min)
                 return true;
         }
 
         return false;
+    }
+
+    void die() {
+
+        for (auto& i : stats) {
+
+            const Stat& st = ::stats().get(i.first);
+
+            if (st.critical)
+                i.second.val = st.min;
+        }
+    }
+
+    void cancel() {
+
+        for (auto& i : counts) {
+
+            const Stat& st = ::stats().get(i.first);
+
+            if (st.cancellable)
+                i.second.val = 0;
+        }
+
+        clean();
+    }
+
+    void tick() {
+        bool del = false;
+
+        for (auto& i : counts) {
+            if (i.second.inc(-1, ::stats().get(i.first)))
+                del = true;
+        }
+
+        if (del)
+            clean();
+    }
+
+    void clear() {
+        std::vector<tag_t> x;
+
+        for (auto& i : counts) {
+            if (i.second.val == 0)
+                x.push_back(i.first);
+        }
+
+        for (tag_t t : x) {
+            counts.erase(t);
+        }
     }
 };
 

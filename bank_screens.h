@@ -29,7 +29,9 @@ inline bool purchase_protection(Player& p, GameState& state, double cost, const 
     }
 
     if (stat_bonus > 0) {
-        p.stats.sinc(bank.bonus_stat, stat_bonus);
+        if (p.stats.sinc(bank.bonus_stat, stat_bonus))
+            p.dead = true;
+
         state.render.do_message("Your body glows with a shiny gold aura.");
 
         ++(state.ticks);

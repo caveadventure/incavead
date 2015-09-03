@@ -564,8 +564,14 @@ void Game::process_world(GameState& state,
     p.inv.process_inventory(state.moon.pi.phase_n, inc_stat); 
 
     for (const auto& i : inc_stat) {
-        p.stats.sinc(i.first, i.second);
+
+        if (p.stats.sinc(i.first, i.second))
+            p.dead = true;
     }
+
+    if (p.dead && !p.stats.crit())
+        p.dead = false;
+
 
     {
         const Levelskin& ls = levelskins().get(p.worldz);
@@ -596,10 +602,7 @@ void Game::process_world(GameState& state,
         }
     }
 
-    for (const auto& i : p.stats.counts) {
-
-        p.stats.cinc(i.first, -1);
-    }
+    p.stats.tick();
 
     p.blind = 0;
     p.stun = false;

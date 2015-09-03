@@ -178,6 +178,15 @@ struct Species {
 
     tag_t ally;
 
+    struct cost_t {
+        tag_t stat;
+        double cost;
+
+        cost_t() : cost(0) {}
+    };
+
+    cost_t magic_cost;
+
     Species() : level(0), count(0), true_level(-1), habitat(habitat_t::walk), ai(ai_t::none), idle_ai(idle_ai_t::none),
                 move(move_t::walk), digging(0), range(0), clumpsize(), flags() {}
 

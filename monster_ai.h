@@ -73,8 +73,17 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
                              const monsters::pt& target, unsigned int dist2, bool is_player, tag_t ally,
                              const monsters::pt& mxy, monsters::Monster& m, const Species& s) {
 
-    if (m.magic <= -3.0 || m.fear > 0) 
-        return false;
+    if (!s.magic_cost.stat.null()) {
+
+        if (m.stats.sinc(s.magic_cost.stat, -s.magic_cost.cost)) {
+
+            m.dead = true;
+            return true;
+        }
+
+        if (m.stats.is_min(s.magic_cost.stat))
+            return false;
+    }
                     
     if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
         return false;
@@ -292,24 +301,30 @@ inline bool move_monster_main(Player& p, GameState& state,
         return false;
     }
 
+    //
 
-    if (m.sleep > 0) {
-        --(m.sleep);
+    mon.stats.tick();
+
+    double blind = 0;
+    bool stun = false;
+    bool fear = false;
+    bool sleep = false;
+
+    for (const auto& i : mon.stats.counts) {
+
+        const Stat& st = stats().get(t);
+
+        if (st.blind) blind = (double)i->second.val / (double)st.cmax;
+        if (st.stun)  stun = true;
+        if (st.fear)  fear = true;
+        if (st.sleep) sleep = true;
+    }
+
+    if (sleep)
         return false;
-    }
 
-    if (m.stun > 0) {
-        --(m.stun);
-    }
-
-    if (m.fear > 0) {
-        --(m.fear);
-    }
-
-    if (m.blind > 0) {
-        range = std::max(0, (int)range - static_cast<int>(m.blind / constants().blindturns_to_radius) - 1);
-
-        --(m.blind);
+    if (blind > 0) {
+        range = std::max(0, (int)(range * (1.0 - blind)));
     }
 
 
@@ -453,7 +468,8 @@ inline bool move_monster_main(Player& p, GameState& state,
 
                 // We found a target.
 
-                if (do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
+                if (!fear &&&
+                    do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
  
                     return false;
                 }
@@ -468,7 +484,7 @@ inline bool move_monster_main(Player& p, GameState& state,
 
                 } else {
 
-                    if (m.fear > 0) {
+                    if (fear) {
 
                         find_furthest(possible_xy, beeline_xy, target, nxy);
 
@@ -506,7 +522,7 @@ inline bool move_monster_main(Player& p, GameState& state,
         nxy = possible_xy[state.rng.n(possible_xy.size())];
     }
 
-    if (m.stun > 0) {
+    if (stun) {
         
         if (mxy.first != nxy.first && state.rng.range(0, 2) == 0) {
             nxy.first = mxy.first + mxy.first - nxy.first;

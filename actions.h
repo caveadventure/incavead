@@ -373,7 +373,8 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
         if (v.val != 0) {
 
-            p.stats.sinc(v.tag, v.val);
+            if (p.stats.sinc(v.tag, v.val))
+                p.dead = true;
 
             if (v.msg.size() > 0)
                 state.render.do_message(v.msg);

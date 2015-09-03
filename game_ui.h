@@ -739,7 +739,7 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         break;
 
     case 'R':
-        p.rest += 100;
+        p.stats.sinc(constants().rest_stat, 100);
         ++(state.ticks);
         break;
         
