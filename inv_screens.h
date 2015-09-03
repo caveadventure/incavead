@@ -27,7 +27,7 @@ inline std::string select_inv_item(inventory_t& inv, tag_t slot) {
     }
 
     if (d.destructible) {
-        window += nlp::message("  \2D)\1 Destroy this item.\n");
+        window += nlp::message("  \2X)\1 Destroy this item.\n");
     }
 
     if (d.throwrange > 0) {

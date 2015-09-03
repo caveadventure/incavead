@@ -52,7 +52,6 @@ struct Player {
     };
 
     dig_state_t dig;
-    bool digging;
 
     struct polymorph_t {
         tag_t species;
@@ -195,7 +194,7 @@ struct Player {
                px(0), py(0), worldx(0), worldy(0), worldz(-1), 
                current_wx(0), current_wy(0), current_wz(0), level(species.level), dead(false),
                stats(species.stats),
-               blind(0.0), stun(false), fear(false), sleep(false), digging(false),
+               blind(0.0), stun(false), fear(false), sleep(false), 
                polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {}
@@ -363,7 +362,6 @@ struct reader<Player> {
         serialize::read(s, p.dig.x);
         serialize::read(s, p.dig.y);
         serialize::read(s, p.dig.h);
-        serialize::read(s, p.digging);
         serialize::read(s, p.polymorph.species);
         serialize::read(s, p.polymorph.turns);
         serialize::read(s, p.polymorph_ability);
@@ -422,7 +420,6 @@ struct writer<Player> {
         serialize::write(s, p.dig.x);
         serialize::write(s, p.dig.y);
         serialize::write(s, p.dig.h);
-        serialize::write(s, p.digging);
         serialize::write(s, p.polymorph.species);
         serialize::write(s, p.polymorph.turns);
         serialize::write(s, p.polymorph_ability);

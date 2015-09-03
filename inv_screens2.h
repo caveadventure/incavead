@@ -44,7 +44,7 @@ inline bool handle_input_inv_item(Player& p, GameState& state,
         state.window_stack.clear();
         return true;
 
-    } else if (k.letter == 'D' && destroy_item(p, p.inv.selected_slot)) {
+    } else if (k.letter == 'X' && destroy_item(p, p.inv.selected_slot)) {
         
         ++(state.ticks);
         state.window_stack.clear();

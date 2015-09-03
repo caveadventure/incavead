@@ -269,19 +269,6 @@ void Game::draw_hud(GameState& state) {
     for (const tag_t& i : hco) {
         draw_one_count(state, i);
     }
-
-    if (p.digging) {
-
-        double q = state.grid._get(p.dig.x, p.dig.y);
-
-        q = ((q + 10) / 3.0) + 1.0;
-        q = std::max(1.0, std::min(q, 6.0));
-
-        state.render.push_hud_line("Tunnel", maudit::color::dim_green,
-                                   q,
-                                   '+', 
-                                   (state.ticks & 1 ? maudit::color::bright_blue : maudit::color::dim_blue));
-    }
 }
 
 

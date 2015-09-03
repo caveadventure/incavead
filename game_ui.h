@@ -1200,10 +1200,11 @@ void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny
 
     state.render.do_message("You start digging.");
 
-    p.digging = true;
     p.dig.x = nx;
     p.dig.y = ny;
     p.dig.h = state.grid.get(nx, ny);
+
+    p.stats.cinc(constants().digging_stat, 1 + ((p.dig.h + 10) / p.inv.get_digging()));
 }
 
 void Game::handle_input(GameState& state, GameOptions& options,

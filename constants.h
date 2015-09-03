@@ -131,6 +131,7 @@ struct ConstantsBank {
     luck_stat_t luck;
 
     tag_t rest_stat;
+    tag_t digging_stat;
 
     ConstantsBank() : max_permafeats(150), max_bones(1000),
                       starvation_damage(0), uniques_timeout(0), 
