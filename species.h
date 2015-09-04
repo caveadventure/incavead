@@ -54,7 +54,7 @@ struct Species {
     idle_ai_t idle_ai;
     move_t move;
 
-    pstats::stats stats;
+    pstats::stats_t stats;
 
     double digging;
     

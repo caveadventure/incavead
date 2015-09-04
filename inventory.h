@@ -285,7 +285,7 @@ struct inventory_t {
 
             if (dp.tickstat_moon.size() > 0) {
 
-                std::map<tag_t,double> tsm = 0;
+                std::map<tag_t,double> tsm;
 
                 for (const auto& l : dp.tickstat_moon) {
                     double& tmp = tsm[l.stat];
@@ -299,7 +299,7 @@ struct inventory_t {
 
             for (const auto& l : dp.tickstat) {
 
-                inc_stat[l.stat] += l.add * (dp.apply_count ? it.count : 1);
+                inc_stat[l.stat] += l.add * (l.apply_count ? it.count : 1);
 
                 if (l.mul != 1) {
 

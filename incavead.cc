@@ -42,6 +42,7 @@
 #include "nlp.h"
 
 
+#include "pstats_serialize.h"
 #include "gamestate.h"
 
 #include "mainloop_net.h"

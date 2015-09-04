@@ -1,6 +1,7 @@
 #ifndef __PSTATS_H
 #define __PSTATS_H
 
+#include <vector>
 #include <unordered_map>
 
 struct Stat {
@@ -91,7 +92,7 @@ struct count_t {
 
     bool inc(int v, const Stat& s) {
 
-        if (v < 0 && -v > val) {
+        if (v < 0 && -v > (int)val) {
             v = -val;
         }
 
@@ -142,15 +143,15 @@ struct stats_t {
 
         const Stat& st = ::stats().get(t);
 
-        if (v > 0 && !t.chain_pos.null()) {
+        if (v > 0 && !st.chain_pos.null()) {
 
-            if (stats[t.chain_pos].chain(v, ::stats().get(t.chain_pos)))
+            if (stats[st.chain_pos].chain(v, ::stats().get(st.chain_pos)))
                 return true;
         }
 
-        if (v < 0 && !t.chain_neg.null()) {
+        if (v < 0 && !st.chain_neg.null()) {
 
-            if (stats[t.chain_neg].chain(v, ::stats().get(t.chain_neg)))
+            if (stats[st.chain_neg].chain(v, ::stats().get(st.chain_neg)))
                 return true;
         }
 
@@ -229,7 +230,7 @@ struct stats_t {
             clean();
     }
 
-    void clear() {
+    void clean() {
         std::vector<tag_t> x;
 
         for (auto& i : counts) {
@@ -240,55 +241,6 @@ struct stats_t {
         for (tag_t t : x) {
             counts.erase(t);
         }
-    }
-};
-
-}
-
-
-namespace serialize {
-
-template <>
-struct reader<pstats::stat_t> {
-    void read(Source& s, pstats::stat_t& sp) {
-        serialize::read(s, sp.val);
-    }
-};
-
-template <>
-struct writer<pstats::stat_t> {
-    void write(Sink& s, const pstats::stat_t& sp) {
-        serialize::write(s, sp.val);
-    }
-};
-
-template <>
-struct reader<pstats::count_t> {
-    void read(Source& s, pstats::count_t& sp) {
-        serialize::read(s, sp.val);
-    }
-};
-
-template <>
-struct writer<pstats::count_t> {
-    void write(Sink& s, const pstats::count_t& sp) {
-        serialize::write(s, sp.val);
-    }
-};
-
-template <>
-struct reader<pstats::stats_t> {
-    void read(Source& s, pstats::stats_t& sp) {
-        serialize::read(s, sp.stats);
-        serialize::read(s, sp.counts);
-    }
-};
-
-template <>
-struct writer<pstats::stats_t> {
-    void write(Sink& s, const pstats::stats_t& sp) {
-        serialize::write(s, sp.stats);
-        serialize::write(s, sp.counts);
     }
 };
 

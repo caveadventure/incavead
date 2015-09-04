@@ -284,7 +284,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         species_stat = 'stat'
             ws1 tag  %{ tmp_tag = tag_t(state.match, tagmem); }
-            ws1 real %{ spe.stats.stats[tmp_tag] = toreal(state.match); } ;
+            ws1 real %{ spe.stats.stats[tmp_tag].val = toreal(state.match); } ;
 
         species_digging = 'digging' ws1 real %{ spe.digging = toreal(state.match); } ;
 
@@ -429,20 +429,20 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_descend    = 'descend' ws1 snumber       %{ des.descend = toint(state.match); };
 
         design_inc_stat = 'inc_stat' %{ des.inc_stat.resize(des.inc_stat.size() + 1); }
-            ws1 tag  %{ des.inc_stat.back().tag = tag_t(state.match, tagmem); }
+            ws1 tag  %{ des.inc_stat.back().stat = tag_t(state.match, tagmem); }
             ws1 real %{ des.inc_stat.back().val = toreal(state.match); }
             (ws1 string %{ des.inc_stat.back().msg = state.match; })?
             ;
 
         design_inc_count = 'inc_count' %{ des.inc_count.resize(des.inc_count.size() + 1); }
-            ws1 tag %{ des.inc_count.back().tag = tag_t(state.match, tagmem); }
+            ws1 tag %{ des.inc_count.back().stat = tag_t(state.match, tagmem); }
             ws1 snumber %{ des.inc_count.back().val = toint(state.match); }
             (ws1 string %{ des.inc_count.back().msg_a = state.match; }
              ws1 string %{ des.inc_count.back().msg_b = state.match; })?
              ;
 
         design_zero_stat = 'zero_stat' %{ des.zero_stat.push_back(Design::zero_stat_t()); }
-            ws1 tag %{ des.zero_stat.back().tag = tag_t(state.match, tagmem); }
+            ws1 tag %{ des.zero_stat.back().stat = tag_t(state.match, tagmem); }
             (ws1 string %{ des.zero_stat.back().msg = state.match; })?
             ;
 
@@ -648,8 +648,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         terrain_grant_spell = 'grant_spell'
             ws1 tag    %{ ter.grant_spell.stat = tag_t(state.match, tagmem); }
-            ws1 real   %{ ter.grant_spell.stat_min = toral(state.match); }
-            ws1 real   %{ ter.grant_spell.stat_max = toral(state.match); }
+            ws1 real   %{ ter.grant_spell.stat_min = toreal(state.match); }
+            ws1 real   %{ ter.grant_spell.stat_max = toreal(state.match); }
             ws1 tag    %{ ter.grant_spell.ca_tag = tag_t(state.match, tagmem); } 
             ws1 real   %{ ter.grant_spell.timeout = toreal(state.match); }
             ws1 string %{ ter.grant_spell.name = state.match; } ;
@@ -691,8 +691,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ;
 
         terrain_inc_stat = 'inc_stat' %{ ter.inc_stat.resize(des.inc_stat.size() + 1); }
-            ws1 tag  %{ ter.inc_stat.back().tag = tag_t(state.match, tagmem); }
-            ws1 real %{ ret.inc_stat.back().val = toreal(state.match); }
+            ws1 tag  %{ ter.inc_stat.back().stat = tag_t(state.match, tagmem); }
+            ws1 real %{ ter.inc_stat.back().val = toreal(state.match); }
             (ws1 string %{ ter.inc_stat.back().msg = state.match; })?
             ;
 

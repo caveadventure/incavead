@@ -13,7 +13,7 @@ struct Monster {
     size_t serial;
     tag_t tag;
 
-    pstats::stats stats;
+    pstats::stats_t stats;
     bool did_attack;
     bool hidden;
     tag_t ally;

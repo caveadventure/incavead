@@ -4,7 +4,7 @@
 
 struct Player {
 
-    const Species& species;
+    const Species& _species;
 
     unsigned int px;
     unsigned int py;
@@ -60,7 +60,7 @@ struct Player {
         polymorph_t() : turns(0) {}
     };
 
-    unsigned int polymorph_turns;
+    polymorph_t polymorph;
 
     size_t polymorph_ability;
 
@@ -190,10 +190,10 @@ struct Player {
 
     seen_monsters_t seen_monsters;
 
-    Player() : species(species().get(constants().player_species)),
+    Player() : _species(species().get(constants().player_species)),
                px(0), py(0), worldx(0), worldy(0), worldz(-1), 
-               current_wx(0), current_wy(0), current_wz(0), level(species.level), dead(false),
-               stats(species.stats),
+               current_wx(0), current_wy(0), current_wz(0), level(_species.level), dead(false),
+               stats(_species.stats),
                blind(0.0), stun(false), fear(false), sleep(false), 
                polymorph_ability(0), state(MAIN), 
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
@@ -206,7 +206,7 @@ struct Player {
 
     const Species& get_species() {
 
-        return (polymorph.species.null() ? species : species().get(polymorph.species));
+        return (polymorph.species.null() ? _species : species().get(polymorph.species));
     }
 
     void track_kill(tag_t genus, GameState& state) {
