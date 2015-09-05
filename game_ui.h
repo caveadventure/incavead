@@ -48,7 +48,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                     const auto& gp = state.render._get(xx, yy);
 
                     if (xx == p.px && yy == p.py) {
-                        charz = constants().player_skin[0].get_text();
+                        charz = p.get_species().skin[0].get_text();
                         intensity = 3;
                     }
 
@@ -415,9 +415,9 @@ void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
 
     size_t x = z - size3;
 
-    size_t size1 = s.blast.size();
-    size_t size2 = size1 + s.cast_cloud.size();
-    size_t size3 = size2 + s.summon.size();
+    size1 = s.blast.size();
+    size2 = size1 + s.cast_cloud.size();
+    size3 = size2 + s.summon.size();
     size_t size4 = size3 + s.spawns.size();
 
     if (x < size1) {
@@ -1001,12 +1001,16 @@ void handle_input_debug(Player& p, GameState& state, bool& regen, maudit::keypre
                                 "sed quia non numquam eius modi tempora incidunt.");
         break;
 
+    case 'w':
+        do_player_wish(state, p);
+        return;
+
     case 'I':
-        do_player_wish(state, p, false);
+        simple_wish(state, p, p.input.s);
         break;
 
     case 'O':
-        do_player_wish(state, p, true);
+        special_wish(state, p, p.input.s);
         break;
 
     case 'l':

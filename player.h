@@ -199,12 +199,12 @@ struct Player {
                uniques_disabled(false), dungeon_unique_series(0), money_curse(0), num_replay_codes(0)
         {}
 
-    const Species& get_speciestag() {
+    tag_t get_speciestag() const {
 
         return (polymorph.species.null() ? constants().player_species : polymorph.species);
     }
 
-    const Species& get_species() {
+    const Species& get_species() const {
 
         return (polymorph.species.null() ? _species : species().get(polymorph.species));
     }

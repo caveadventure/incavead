@@ -336,6 +336,8 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
         return;
     }
 
+    bool wished = false;
+
     const Terrain& t = terrain().get(feat.tag);
 
     if (t.wishing) {
@@ -356,6 +358,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
         if (ok) {
 
             ++(state.ticks);
+            wished = true;
 
         } else {
 
@@ -373,15 +376,16 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
         if (v.val != 0) {
 
-            if (p.stats.sinc(v.tag, v.val))
+            if (p.stats.sinc(v.stat, v.val))
                 p.dead = true;
 
             if (v.msg.size() > 0)
                 state.render.do_message(v.msg);
-
-            ret = true;
         }
     }
+
+    if (wished)
+        return;
 
     if (!t.victory_item.null()) {
 
@@ -456,7 +460,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
     if (t.grant_spell.timeout > 0) {
 
         const auto& sp = t.grant_spell;
-        double v = p.stats.gets(t.stat);
+        double v = p.stats.gets(sp.stat);
 
         if (v >= sp.stat_min && v <= sp.stat_max) {
 

@@ -288,7 +288,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
     }
 }
 
-inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypress k) {
+inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypress k, const Terrain::banking_t& bank) {
 
     switch (k.letter) {
     case 'w':
@@ -322,7 +322,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
         break;
 
     case 'c':
-        give_small_change(p, state, p.banking.gives_change);
+        give_small_change(p, state, bank.gives_change);
         state.window_stack.clear();
         break;
 
@@ -422,7 +422,7 @@ inline void handle_input_banking(Player& p, GameState& state, maudit::keypress k
     switch ((screens_t)state.window_stack.back().type) {
 
     case screens_t::bank_main:
-        if (handle_input_banking_main(p, state, k)) {
+        if (handle_input_banking_main(p, state, k, bank)) {
             valid = purchase_protection(p, state, p.banking.assets, bank);
         }
         break;

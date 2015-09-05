@@ -18,11 +18,12 @@ struct Monster {
     bool hidden;
     tag_t ally;
     bool dead;
+    bool sleep;
 
-    Monster() : serial(0), did_attack(false), hidden(false), dead(false) {}
+    Monster() : serial(0), did_attack(false), hidden(false), dead(false), sleep(false) {}
 
     Monster(tag_t _tag, size_t ser, tag_t a) : 
-        serial(ser), tag(_tag), did_attack(false), hidden(false), ally(a), dead(false)
+        serial(ser), tag(_tag), did_attack(false), hidden(false), ally(a), dead(false), sleep(false)
         {}
 
     bool null() const {
@@ -46,6 +47,7 @@ struct reader<monsters::Monster> {
         serialize::read(s, m.hidden);
         serialize::read(s, m.ally);
         serialize::read(s, m.dead);
+        serialize::read(s, m.sleep);
     }
 };
 
@@ -59,6 +61,7 @@ struct writer<monsters::Monster> {
         serialize::write(s, m.hidden);
         serialize::write(s, m.ally);
         serialize::write(s, m.dead);
+        serialize::write(s, m.sleep);
     }
 };
 

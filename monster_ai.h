@@ -28,7 +28,7 @@ inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigne
                              });
 }
 
-inline void monster_blast_process_point(Player& p, GameState& state, const Species& s,
+inline void monster_blast_process_point(Player& p, GameState& state, const Species& s, monsters::Monster& mon,
                                         unsigned int _x, unsigned int _y, const damage::attacks_t& attacks,
                                         bool friendly_fire) {
 
@@ -37,7 +37,7 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(), s, attacks, state, friendly_fire);
+        defend(p, defenses, p.get_computed_level(), s, mon, attacks, state, friendly_fire);
 
     } else {
 
@@ -50,20 +50,20 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
     }
 }
 
-inline void do_monster_blast(Player& p, GameState& state, const Species& s, 
+inline void do_monster_blast(Player& p, GameState& state, const Species& s, monsters::Monster& mon,
                              unsigned int tx, unsigned int ty, unsigned int rad, 
                              const damage::attacks_t& attacks, bool friendly_fire = false) {
 
     if (rad == 0) {
 
-        monster_blast_process_point(p, state, s, tx, ty, attacks, friendly_fire);
+        monster_blast_process_point(p, state, s, mon, tx, ty, attacks, friendly_fire);
 
     } else {
 
         state.render.draw_circle(tx, ty, rad, s.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
-                                     monster_blast_process_point(p, state, s, _x, _y, attacks, friendly_fire);
+                                     monster_blast_process_point(p, state, s, mon, _x, _y, attacks, friendly_fire);
                                  });
     }
 }
@@ -141,7 +141,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
         double v = state.rng.gauss(0.0, 1.0);
         if (v <= b.chance) continue;
 
-        do_monster_blast(p, state, s, target.first, target.second, b.radius, b.attacks);
+        do_monster_blast(p, state, s, m, target.first, target.second, b.radius, b.attacks);
         return true;
     }
 
@@ -269,11 +269,14 @@ inline bool move_monster_main(Player& p, GameState& state,
     {
         const Levelskin& ls = levelskins().get(p.worldz);
 
-        if (!ls.damage_terrain.null()) {
+        if (!ls.ailment.null()) {
 
-            const Terrain& t = terrain().get(ls.damage_terrain);
+            auto a = constants().ailments.find(ls.ailment);
 
-            attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, false, true);
+            if (a == constants().ailments.end())
+                throw std::runtime_error("Unknown ailment in levelskin.");
+
+            attack_from_env(p, a->second.attacks, a->second.level, state, mxy, m, false, true);
         }
     }
 
@@ -303,24 +306,24 @@ inline bool move_monster_main(Player& p, GameState& state,
 
     //
 
-    mon.stats.tick();
+    m.stats.tick();
 
     double blind = 0;
     bool stun = false;
     bool fear = false;
-    bool sleep = false;
+    m.sleep = false;
 
-    for (const auto& i : mon.stats.counts) {
+    for (const auto& i : m.stats.counts) {
 
-        const Stat& st = stats().get(t);
+        const Stat& st = stats().get(i.first);
 
-        if (st.blind) blind = (double)i->second.val / (double)st.cmax;
+        if (st.blind) blind = (double)i.second.val / (double)st.cmax;
         if (st.stun)  stun = true;
         if (st.fear)  fear = true;
-        if (st.sleep) sleep = true;
+        if (st.sleep) m.sleep = true;
     }
 
-    if (sleep)
+    if (m.sleep)
         return false;
 
     if (blind > 0) {
@@ -468,7 +471,7 @@ inline bool move_monster_main(Player& p, GameState& state,
 
                 // We found a target.
 
-                if (!fear &&&
+                if (!fear &&
                     do_monster_magic(p, state, summons, target, maxd2, enemy_is_player, enemy_ally, mxy, m, s)) {
  
                     return false;
@@ -575,7 +578,7 @@ inline bool move_monster_main(Player& p, GameState& state,
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(), s, state);
+        defend(p, defenses, p.get_computed_level(), s, m, state);
 
         return false;
     }

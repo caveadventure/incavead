@@ -589,7 +589,7 @@ void Game::process_world(GameState& state,
 
     for (const auto& i : p.stats.stats) {
 
-        const Stat& st = stats().get(t);
+        const Stat& st = stats().get(i.first);
 
         if (!st.ailment.null() && i.second.val <= st.min && !p.dead) {
 
@@ -611,9 +611,9 @@ void Game::process_world(GameState& state,
 
     for (const auto& i : p.stats.counts) {
 
-        const Stat& st = stats().get(t);
+        const Stat& st = stats().get(i.first);
 
-        if (st.blind) p.blind = (double)i->second.val / (double)st.cmax;
+        if (st.blind) p.blind = (double)i.second.val / (double)st.cmax;
         if (st.stun)  p.stun = true;
         if (st.fear)  p.fear = true;
         if (st.sleep) p.sleep = true;
@@ -820,7 +820,7 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
         p.uniques_disabled = true;
 
         // TODO Really this is just a way to hardcode a value.
-        made.count = 0.5/_design.hunger;
+        made.count = 10000 * _design.change_count;
     }
 
     state.items.place(px, py, made, state.render);

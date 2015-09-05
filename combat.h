@@ -18,7 +18,7 @@ inline double roll_attack(rnd::Generator& rng,
     return std::max(a - d, 0.0);
 }
 
-inline void karmic_damage_scale(double scale, double karma, double& dmg) {
+inline double karmic_damage_scale(double scale, double karma, double dmg) {
 
     double kk = karma * scale;
 
@@ -31,9 +31,12 @@ inline void karmic_damage_scale(double scale, double karma, double& dmg) {
     } else {
         dmg = 0;
     }
+
+    return dmg;
 }
 
-inline bool luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, double threshold, unsigned int& level) {
+inline bool luck_level_scale(rnd::Generator& rng, pstats::stats_t& stats, tag_t stat,
+                             double factor, double threshold, unsigned int& level) {
 
     double v = stats.gets(stat);
 
@@ -58,7 +61,7 @@ inline bool luck_level_scale(pstats::stats_t& stats, tag_t stat, double factor, 
 
     } else {
         level += fudge;
-        return stats.sinc(-fudge / factor);
+        return stats.sinc(stat, -fudge / factor);
     }
 }
 
@@ -293,7 +296,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     if (!luck.stat.null()) {
 
-        if (luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel))
+        if (luck_level_scale(state.rng, p.stats, luck.stat, luck.factor, luck.threshold, plevel))
             mon.dead = true;
     }
 
@@ -327,10 +330,10 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     for (const auto& i : stathits) {
 
-        const Stat& s = stats().get(i.first);
+        const Stat& st = stats().get(i.first);
 
-        if (s.monster_hit_msg.size() > 0)
-            state.render.do_message(nlp::message(s.monster_hit_msg, s));
+        if (st.monster_hit_msg.size() > 0)
+            state.render.do_message(nlp::message(st.monster_hit_msg, s));
     }
 
     if (did_poly) {
@@ -437,12 +440,14 @@ inline void defend_message(GameState& state, const ConstantsBank::ailment_t& a, 
     state.render.do_message(nlp::message(msg.str, a), msg.important);
 }
 
-inline bool defend_sinc_stats(monsters::Monster& mon, tag_t stat, double v) {
-    return mon.stats.sinc(stat, v);
+inline void defend_sinc_stats(monsters::Monster& mon, tag_t stat, double v) {
+
+    if (mon.stats.sinc(stat, v)) {
+        mon.dead = true;
+    }
 }
 
-inline bool defend_sinc_stats(int, tag_t, double) {
-    return false;
+inline void defend_sinc_stats(int, tag_t, double) {
 }
 
 
@@ -460,7 +465,7 @@ inline void defend(Player& p,
 
     if (!luck.stat.null()) {
 
-        if (luck_level_scale(p.stats, luck.stat, luck.factor, luck.threshold, plevel))
+        if (luck_level_scale(state.rng, p.stats, luck.stat, luck.factor, luck.threshold, plevel))
             p.dead = true;
     }
 
@@ -504,7 +509,7 @@ inline void defend(Player& p,
             double mk = 0;
             
             for (const auto& i : dam.karmic_scale) {
-                mk = std::max(mk, karmic_damage_scale(i.second, p.stats.get(i.first), dmg));
+                mk = std::max(mk, karmic_damage_scale(i.second, p.stats.gets(i.first), dmg));
             }
 
             dmg = mk;
@@ -532,14 +537,12 @@ inline void defend(Player& p,
 
         for (const tag_t& i : dam.inc_stats) {
 
-            if (defend_sinc_stats(mon, i, dmg))
-                mon.dead = true;
+            defend_sinc_stats(mon, i, dmg);
         }
 
         for (const tag_t& i : dam.transfer_stats) {
 
-            if (defend_sinc_stats(mon, -p.stats.gets(i) * dmg))
-                mon.dead = true;
+            defend_sinc_stats(mon, i, -p.stats.gets(i) * dmg);
         }
 
         // HACK!
@@ -558,8 +561,7 @@ inline void defend(Player& p,
 
             p.add_ailment(state.rng, dam.infect.first, i->second.triggers);
 
-            if (defend_sinc_stats(mon, dam.infect.second, -dmg))
-                mon.dead = true;
+            defend_sinc_stats(mon, dam.infect.second, -dmg);
         }
 
         if (env) {

@@ -125,7 +125,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
             }
 
             p.state |= Player::DESIGN_STEP2;
-            return;
+            return true;
         }
     }
 
@@ -154,7 +154,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         if (v.val != 0) {
 
-            if (p.stats.sinc(v.tag, v.val))
+            if (p.stats.sinc(v.stat, v.val))
                 p.dead = true;
 
             if (v.msg.size() > 0)
@@ -168,7 +168,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         if (v.val != 0) {
 
-            bool drained = p.stats.cinc(v.tag, v.val);
+            bool drained = p.stats.cinc(v.stat, v.val);
 
             const std::string& m = (drained ? v.msg_a : v.msg_b);
 
@@ -179,8 +179,9 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     for (const auto& v : d.zero_stat) {
 
-        if (p.stats.stats[v.tag] < 0) {
-            p.stats.stats[v.tag] = 0;
+        double vp = p.stats.gets(v.stat);
+        if (vp < 0) {
+            p.stats.sinc(v.stat, -vp);
 
             if (v.msg.size() > 0)
                 state.render.do_message(v.msg);
@@ -628,7 +629,8 @@ inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, 
 
     const auto& b = s.blast[i];
 
-    do_monster_blast(p, state, s, x, y, b.radius, b.attacks, true);
+    monsters::Monster tmpmon;
+    do_monster_blast(p, state, s, tmpmon, x, y, b.radius, b.attacks, true);
 
     return true;
 }

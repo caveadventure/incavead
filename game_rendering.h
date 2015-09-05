@@ -213,7 +213,7 @@ void Game::drawing_context(mainloop::drawing_context_t& ctx, const GameState& st
     }
 }
 
-void draw_one_stat(GameState& state, tag_t s) {
+void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
 
     const Stat& st = stats().get(s);
     double val = p.stats.gets(s);
@@ -242,7 +242,7 @@ void draw_one_stat(GameState& state, tag_t s) {
     }
 }
 
-void draw_one_count(GameState& state, tag_t s) {
+void draw_one_count(Player& p, GameState& state, tag_t s, size_t n_skin) {
 
     const Stat& st = stats().get(s);
     double val = p.stats.getc(s);
@@ -250,11 +250,11 @@ void draw_one_count(GameState& state, tag_t s) {
     if (st.hidden && val == 0)
         return;
 
-    unsigned int v = (6u * s.val) / s.max;
+    unsigned int v = (6u * val) / st.max;
 
     const auto& zs = st.label;
 
-    state.render.push_hud_line(vp, zs.label, zs.lskin[n_skin], (state.ticks & 1 ? zs.pskin[n_skin] : zs.nskin[n_skin]));
+    state.render.push_hud_line(v, zs.label, zs.lskin[n_skin], (state.ticks & 1 ? zs.pskin[n_skin] : zs.nskin[n_skin]));
 }
 
 void Game::draw_hud(GameState& state) {
@@ -263,11 +263,11 @@ void Game::draw_hud(GameState& state) {
     const auto& hco = constants().hud_counts_order;
 
     for (const tag_t& i : hso) {
-        draw_one_stat(state, i);
+        draw_one_stat(p, state, i, n_skin);
     }
 
     for (const tag_t& i : hco) {
-        draw_one_count(state, i);
+        draw_one_count(p, state, i, n_skin);
     }
 }
 
