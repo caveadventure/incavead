@@ -71,6 +71,10 @@ inline void init_stat(const Stat& s) {
     init_stat_copy(s);
 }
 
+inline void init_count(const Count& s) {
+    init_count_copy(s);
+}
+
 inline void add_color(maudit::color& c, unsigned int i) {
     c = (maudit::color)((uint32_t)c + i);
 }
@@ -106,6 +110,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     Levelskin lev;
     Damage dam;
     Stat sta;
+    Count cou;
 
     damage::val_t dmgval;
 
@@ -1322,8 +1327,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ sta.min = toreal(state.match); }
             ws1 real %{ sta.max = toreal(state.match); } ;
 
-        stat_max = 'max' ws1 number %{ sta.cmax = toint(state.match); } ;
-
         stat_critical = 'critical' %{ sta.critical = true; } ;
         stat_hidden = 'hidden' %{ sta.hidden = true; } ;
 
@@ -1334,17 +1337,9 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         stat_ailment = 'ailment' ws1 tag %{ sta.ailment = tag_t(state.match, tagmem); } ;
 
-        stat_blind = 'blind' %{ sta.blind = true; };
-        stat_stun  = 'stun'  %{ sta.stun = true; };
-        stat_fear  = 'fear'  %{ sta.fear = true; };
-        stat_sleep = 'sleep' %{ sta.sleep = true; };
-
-        stat_cancellable = 'cancellable' %{ sta.cancellable = true; };
-
         stat_one_data =
-            (stat_label | stat_mark | stat_limits | stat_max | stat_critical | stat_hidden |
+            (stat_label | stat_mark | stat_limits | stat_critical | stat_hidden |
             stat_chain_pos | stat_chain_neg | stat_monster_hit_msg | stat_ailment |
-            stat_blind | stat_stun | stat_fear | stat_sleep | stat_cancellable |
             '}' ${ fret; })
             ;
 
@@ -1361,10 +1356,53 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             %{ init_stat(sta); }
             ;
 
+        ####
+
+        count_label = 'label'
+            ws1 string %{ cou.label.label = state.match; }
+            ws1 skin   %{ cou.label.lskin.set(SKINS); } ;
+
+        count_mark = 'mark'
+            ws1 skin %{ cou.label.pskin.set(SKINS); }
+            ws1 skin %{ cou.label.nskin.set(SKINS); } ;
+
+        count_max = 'max' ws1 number %{ cou.cmax = toint(state.match); } ;
+
+        count_hidden = 'hidden' %{ cou.hidden = true; } ;
+
+        count_monster_hit_msg = 'monster_hit_msg' ws1 string %{ cou.monster_hit_msg = state.match; };
+
+        count_blind = 'blind' %{ cou.blind = true; };
+        count_stun  = 'stun'  %{ cou.stun = true; };
+        count_fear  = 'fear'  %{ cou.fear = true; };
+        count_sleep = 'sleep' %{ cou.sleep = true; };
+
+        count_cancellable = 'cancellable' %{ cou.cancellable = true; };
+
+        count_one_data =
+            (count_label | count_mark | count_max | count_hidden |
+            count_monster_hit_msg | 
+            count_blind | count_stun | count_fear | count_sleep | count_cancellable |
+            '}' ${ fret; })
+            ;
+
+        one_count := (ws count_one_data ws ';')+
+            ;
+
+        count_tag = tag %{ cou.tag = tag_t(state.match, tagmem); }
+        ;
+
+        count = 
+            'count' %{ cou = Count(); }
+            ws1 count_tag ws
+            '{' ${fcall one_count;}
+            %{ init_count(cou); }
+            ;
+
         ###
 
         entry = species | design | terrain | vault | celauto | levelskin | constant | 
-                achievement | ailment | ui_syms | damage | stat;
+                achievement | ailment | ui_syms | damage | stat | count;
             
       main := (ws entry)+ ws ;
         

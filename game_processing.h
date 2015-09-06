@@ -611,12 +611,12 @@ void Game::process_world(GameState& state,
 
     for (const auto& i : p.stats.counts) {
 
-        const Stat& st = stats().get(i.first);
+        const Count& ct = counts().get(i.first);
 
-        if (st.blind) p.blind = (double)i.second.val / (double)st.cmax;
-        if (st.stun)  p.stun = true;
-        if (st.fear)  p.fear = true;
-        if (st.sleep) p.sleep = true;
+        if (ct.blind) p.blind = (double)i.second.val / (double)ct.cmax;
+        if (ct.stun)  p.stun = true;
+        if (ct.fear)  p.fear = true;
+        if (ct.sleep) p.sleep = true;
     }
 
     if (p.polymorph.turns > 0) {

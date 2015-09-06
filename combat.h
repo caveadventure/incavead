@@ -121,6 +121,7 @@ inline bool attack_damage_monster(const damage::val_t& v,
                                   const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
                                   std::map<tag_t,double>& stathits,
+                                  std::map<tag_t,unsigned int>& counthits,
                                   std::set<tag_t>& types, bool& did_poly, bool& did_level,
                                   double& visible_damage) {
 
@@ -162,7 +163,7 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
         if (turns > 0) {
             mon.stats.cinc(i.first, turns);
-            stathits[i.first] += dmg;
+            counthits[i.first] += turns;
         }
     }
 
@@ -249,6 +250,7 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     }
 
     std::map<tag_t,double> stathits;
+    std::map<tag_t,unsigned int> counthits;
     std::set<tag_t> types;
     bool did_poly = false;
     bool did_level = false;
@@ -258,8 +260,8 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types,
-                                         did_poly, did_level, visible_damage);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, counthits,
+                                         types, did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
@@ -312,6 +314,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     std::map<tag_t,double> stathits;
+    std::map<tag_t,unsigned int> counthits;
     std::set<tag_t> types;
     bool did_poly = false;
     bool did_level = false;
@@ -321,8 +324,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, types,
-                                         did_poly, did_level, visible_damage);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, counthits,
+                                         types, did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
@@ -334,6 +337,14 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
         if (st.monster_hit_msg.size() > 0)
             state.render.do_message(nlp::message(st.monster_hit_msg, s));
+    }
+
+    for (const auto& i : counthits) {
+
+        const Count& ct = counts().get(i.first);
+
+        if (ct.monster_hit_msg.size() > 0)
+            state.render.do_message(nlp::message(ct.monster_hit_msg, s));
     }
 
     if (did_poly) {

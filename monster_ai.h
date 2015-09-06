@@ -315,12 +315,12 @@ inline bool move_monster_main(Player& p, GameState& state,
 
     for (const auto& i : m.stats.counts) {
 
-        const Stat& st = stats().get(i.first);
+        const Count& ct = counts().get(i.first);
 
-        if (st.blind) blind = (double)i.second.val / (double)st.cmax;
-        if (st.stun)  stun = true;
-        if (st.fear)  fear = true;
-        if (st.sleep) m.sleep = true;
+        if (ct.blind) blind = (double)i.second.val / (double)ct.cmax;
+        if (ct.stun)  stun = true;
+        if (ct.fear)  fear = true;
+        if (ct.sleep) m.sleep = true;
     }
 
     if (m.sleep)

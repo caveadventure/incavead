@@ -244,15 +244,15 @@ void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
 
 void draw_one_count(Player& p, GameState& state, tag_t s, size_t n_skin) {
 
-    const Stat& st = stats().get(s);
+    const Count& ct = counts().get(s);
     double val = p.stats.getc(s);
 
-    if (st.hidden && val == 0)
+    if (ct.hidden && val == 0)
         return;
 
-    unsigned int v = (6u * val) / st.max;
+    unsigned int v = (6u * val) / ct.cmax;
 
-    const auto& zs = st.label;
+    const auto& zs = ct.label;
 
     state.render.push_hud_line(v, zs.label, zs.lskin[n_skin], (state.ticks & 1 ? zs.pskin[n_skin] : zs.nskin[n_skin]));
 }

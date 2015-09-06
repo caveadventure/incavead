@@ -45,11 +45,42 @@ struct Stat {
              blind(false), stun(false), fear(false), sleep(false), cancellable(false) {}
 };
 
+struct Count {
+
+    tag_t tag;
+
+    struct label_t {
+        std::string label;
+        skins lskin;
+        skins pskin;
+        skins nskin;
+    };
+
+    label_t label;
+
+    unsigned int cmax;
+
+    std::string monster_hit_msg;
+
+    bool hidden;
+
+    bool blind;
+    bool stun;
+    bool fear;
+    bool sleep;
+
+    bool cancellable;
+
+    Count() : cmax(1000), hidden(true), blind(false), stun(false), fear(false), sleep(false),
+              cancellable(false) {}
+};
+
+template <typename T>
 struct StatsBank {
 
-    std::unordered_map<tag_t,Stat> stats;
+    std::unordered_map<tag_t,T> stats;
 
-    void copy(const Stat& t) {
+    void copy(const T& t) {
 
         if (stats.count(t.tag) != 0) {
             throw std::runtime_error("Duplicate pstat tag: " + t.label.label);
@@ -58,7 +89,7 @@ struct StatsBank {
         stats[t.tag] = t;
     }
 
-    const Stat& get(tag_t tag) const {
+    const T& get(tag_t tag) const {
         auto i = stats.find(tag);
 
         if (i == stats.end()) {
@@ -69,17 +100,26 @@ struct StatsBank {
     }
 };
 
-inline StatsBank& __stats__() {
-    static StatsBank ret;
+template <typename T>
+inline StatsBank<T>& __stats__() {
+    static StatsBank<T> ret;
     return ret;
 }
 
-inline const StatsBank& stats() {
-    return __stats__();
+inline const StatsBank<Stat>& stats() {
+    return __stats__<Stat>();
 }
 
 inline void init_stat_copy(const Stat& t) {
-    __stats__().copy(t);
+    __stats__<Stat>().copy(t);
+}
+
+inline const StatsBank<Count>& counts() {
+    return __stats__<Count>();
+}
+
+inline void init_count_copy(const Count& t) {
+    __stats__<Count>().copy(t);
 }
 
 namespace pstats {
@@ -90,7 +130,7 @@ struct count_t {
 
     count_t() : val(0) {}
 
-    bool inc(int v, const Stat& s) {
+    bool inc(int v, const Count& s) {
 
         if (v < 0 && -v > (int)val) {
             v = -val;
@@ -165,7 +205,7 @@ struct stats_t {
 
     bool cinc(tag_t t, int v) {
 
-        bool ret = counts[t].inc(v, ::stats().get(t));
+        bool ret = counts[t].inc(v, ::counts().get(t));
 
         if (ret)
             counts.erase(t);
@@ -209,9 +249,9 @@ struct stats_t {
 
         for (auto& i : counts) {
 
-            const Stat& st = ::stats().get(i.first);
+            const Count& ct = ::counts().get(i.first);
 
-            if (st.cancellable)
+            if (ct.cancellable)
                 i.second.val = 0;
         }
 
@@ -222,7 +262,7 @@ struct stats_t {
         bool del = false;
 
         for (auto& i : counts) {
-            if (i.second.inc(-1, ::stats().get(i.first)))
+            if (i.second.inc(-1, ::counts().get(i.first)))
                 del = true;
         }
 
