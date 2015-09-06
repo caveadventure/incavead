@@ -28,6 +28,7 @@ struct Stat {
     tag_t chain_neg;
 
     std::string monster_hit_msg;
+    std::string status_min_msg;
 
     bool hidden;
     bool progressbar;
@@ -61,6 +62,7 @@ struct Count {
     unsigned int cmax;
 
     std::string monster_hit_msg;
+    std::string status_msg;
 
     bool hidden;
 
@@ -198,9 +200,10 @@ struct stats_t {
         return stats[t].inc(v, ::stats().get(t));
     }
 
-    bool is_min(tag_t t) {
+    bool is_min(tag_t t) const {
         const Stat& st = ::stats().get(t);
-        return (stats[t].val <= st.min);
+        auto i = stats.find(t);
+        return ((i != stats.end() ? i->second.val : 0.0) <= st.min);
     }
 
     bool cinc(tag_t t, int v) {

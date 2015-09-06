@@ -1335,10 +1335,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         stat_monster_hit_msg = 'monster_hit_msg' ws1 string %{ sta.monster_hit_msg = state.match; };
 
+        stat_status_min_msg = 'status_min_msg' ws1 string %{ sta.status_min_msg = state.match; };
+
         stat_ailment = 'ailment' ws1 tag %{ sta.ailment = tag_t(state.match, tagmem); } ;
 
         stat_one_data =
-            (stat_label | stat_mark | stat_limits | stat_critical | stat_hidden |
+            (stat_label | stat_mark | stat_limits | stat_critical | stat_hidden | stat_status_min_msg |
             stat_chain_pos | stat_chain_neg | stat_monster_hit_msg | stat_ailment |
             '}' ${ fret; })
             ;
@@ -1372,6 +1374,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         count_monster_hit_msg = 'monster_hit_msg' ws1 string %{ cou.monster_hit_msg = state.match; };
 
+        count_status_msg = 'status_msg' ws1 string %{ cou.status_msg = state.match; };
+
         count_blind = 'blind' %{ cou.blind = true; };
         count_stun  = 'stun'  %{ cou.stun = true; };
         count_fear  = 'fear'  %{ cou.fear = true; };
@@ -1381,7 +1385,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         count_one_data =
             (count_label | count_mark | count_max | count_hidden |
-            count_monster_hit_msg | 
+            count_monster_hit_msg | count_status_msg |
             count_blind | count_stun | count_fear | count_sleep | count_cancellable |
             '}' ${ fret; })
             ;
@@ -1442,6 +1446,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         (void)ConfigParser_en_one_celauto;
         (void)ConfigParser_en_one_levelskin;
         (void)ConfigParser_en_one_damage;
+        (void)ConfigParser_en_one_stat;
+        (void)ConfigParser_en_one_count;
         (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {

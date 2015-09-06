@@ -321,6 +321,9 @@ std::string show_spells(const Player& p, const GameState& state) {
 
     const Species& s = p.get_species();
 
+    if (!s.magic_cost.stat.null() && p.stats.is_min(s.magic_cost.stat))
+        return m;
+
     for (const auto& pb : s.blast) {
 
         m += nlp::message("   \2%c\1) %S%s\n", z, pb.name, 
@@ -412,6 +415,17 @@ void handle_input_spells(Player& p, GameState& state, maudit::keypress k) {
     }
 
     const Species& s = p.get_species();
+
+    if (!s.magic_cost.stat.null()) {
+
+        if (p.stats.is_min(s.magic_cost.stat)) {
+            state.window_stack.pop_back();
+            return;
+        }
+
+        if (p.stats.sinc(s.magic_cost.stat, -s.magic_cost.cost))
+            p.dead = true;
+    }
 
     size_t x = z - size3;
 

@@ -218,45 +218,50 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
         std::vector<std::string> state;
 
-        if (mon.sleep > 0) {
-            state.push_back("sleeping");
-        }
-
-        if (mon.blind > 0) {
-            state.push_back("blinded");
-        }
-
-        if (mon.stun > 0) {
-            state.push_back("stunned");
-        }
-
-        if (mon.fear > 0) {
-            state.push_back("afraid");
-        }
-
-        if (mon.magic <= -3.0) {
-            state.push_back("cancelled");
-        }
-
         if (!mon.ally.null()) {
             state.push_back("ally");
         }
 
+        for (const auto& i : mon.stats.counts) {
+
+            const Count& ct = counts().get(i.first);
+
+            if (ct.status_msg.size() > 0)
+                state.push_back(ct.status_msg);
+        }
+
+        double health = 1.0;
+
+        for (const auto& i : mon.stats.stats) {
+
+            const Stat& st = stats().get(i.first);
+
+            if (st.status_min_msg.size() > 0 &&
+                mon.stats.is_min(i.first)) {
+
+                state.push_back(st.status_min_msg);
+            }
+
+            if (st.critical) {
+                health = std::min(health, (i.second.val - st.min) / (st.min - st.min));
+            }
+        }
+
         if (s.flags.robot) {
 
-            if (mon.health < -2) {
+            if (health < 0.1666) {
                 state.push_back("badly damaged");
-            } else if (mon.health < 0) {
+            } else if (health < 0.5) {
                 state.push_back("damaged");
-            } else if (mon.health < 1.5) {
+            } else if (health < 0.75) {
                 state.push_back("slightly damaged");
             }
 
         } else if (!s.flags.plant) {
 
-            if (mon.health < -2) {
+            if (health < 0.1666) {
                 state.push_back("badly wounded");
-            } else if (mon.health < 0) {
+            } else if (health < 0.5) {
                 state.push_back("wounded");
             }
         }
