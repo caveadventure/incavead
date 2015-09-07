@@ -18243,6 +18243,8 @@ _again:
         (void)ConfigParser_en_one_celauto;
         (void)ConfigParser_en_one_levelskin;
         (void)ConfigParser_en_one_damage;
+        (void)ConfigParser_en_one_stat;
+        (void)ConfigParser_en_one_count;
         (void)ConfigParser_en_main;
 
         if (state.cs == ConfigParser_error) {
