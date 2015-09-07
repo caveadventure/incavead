@@ -344,7 +344,7 @@ void do_digging_step(Player& p, GameState& state) {
     if (height < -10) {
         height = -10;
 
-        p.stats.counts.erase(constants().digging_stat);
+        p.stats.counts.erase(constants().digging_count);
         state.render.do_message("Digging done.");
 
         finish_digging(p, state, p.dig.x, p.dig.y, p.dig.h);
@@ -638,7 +638,7 @@ void Game::process_world(GameState& state,
         return;
     }
     
-    if (p.stats.counts.count(constants().digging_stat) != 0) {
+    if (p.stats.counts.count(constants().digging_count) != 0) {
 
         ++(state.ticks);
         do_draw = true;            

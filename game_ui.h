@@ -753,7 +753,7 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         break;
 
     case 'R':
-        p.stats.sinc(constants().rest_stat, 100);
+        p.stats.cinc(constants().rest_count, 100);
         ++(state.ticks);
         break;
         
@@ -1222,7 +1222,7 @@ void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny
     p.dig.y = ny;
     p.dig.h = state.grid.get(nx, ny);
 
-    p.stats.cinc(constants().digging_stat, 1 + ((p.dig.h + 10) / p.inv.get_digging()));
+    p.stats.cinc(constants().digging_count, 1 + ((p.dig.h + 10) / p.inv.get_digging()));
 }
 
 void Game::handle_input(GameState& state, GameOptions& options,

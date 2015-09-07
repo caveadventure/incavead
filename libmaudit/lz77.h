@@ -105,7 +105,7 @@ enum {
     DEFAULT_BLOCKSIZE = 64*1024,
     SHORTRUN_BITS = 3,
     SHORTRUN_MAX = (1 << SHORTRUN_BITS),
-    MIN_RUN = 5
+    MIN_RUN = 3 // 5
 };
 
 
@@ -460,14 +460,14 @@ struct decompress_t {
 
     // Utility function: decode variable-length-coded unsigned integers.
 
-    bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& ret) {
+    bool pop_vlq_uint(const unsigned char*& i, const unsigned char* e, size_t& res) {
 
         while (1) {
 
             if (i == e)
                 return false;
 
-            unsigned char c = *i;
+            size_t c = *i;
 
             if ((c & 0x80) == 0) {
                 state.vlq_num |= (c << state.vlq_off);
@@ -479,7 +479,7 @@ struct decompress_t {
             ++i;
         }
 
-        ret = state.vlq_num;
+        res = state.vlq_num;
         state.vlq_num = 0;
         state.vlq_off = 0;
 

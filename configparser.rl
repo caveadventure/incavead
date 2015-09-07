@@ -1127,19 +1127,19 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 real %{ __constants__().luck.threshold = toreal(state.match); }
             ;
 
-        constant_rest_stat = 'rest_stat' ws1 tag %{ __constants__().rest_stat = tag_t(state.match, tagmem); };
-        constant_digging_stat = 'digging_stat' ws1 tag %{ __constants__().digging_stat = tag_t(state.match, tagmem); };
+        constant_rest_count = 'rest_count' ws1 tag %{ __constants__().rest_count = tag_t(state.match, tagmem); };
+        constant_digging_count = 'digging_count' ws1 tag %{ __constants__().digging_count = tag_t(state.match, tagmem); };
 
         one_constant = constant_max_permafeats | constant_max_bones |
                        constant_starvation_damage |
                        constant_grave | constant_money | constant_pit | 
-                       constant_bad_grave | constant_ghost | constant_rest_stat |
+                       constant_bad_grave | constant_ghost | constant_rest_count |
                        constant_slot | constant_player_species |
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_min_money_value | constant_max_celauto_cells |
                        constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
-                       constant_treasure_chance | constant_digging_stat |
+                       constant_treasure_chance | constant_digging_count |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | constant_luck_stat |
                        constant_starsigns | constant_ai_radius | constant_hud_stats_order | constant_hud_counts_order

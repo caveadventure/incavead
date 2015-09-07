@@ -218,7 +218,7 @@ void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
     const Stat& st = stats().get(s);
     double val = p.stats.gets(s);
 
-    if (st.hidden && val <= st.min)
+    if (st.hidden && val == 0)
         return;
 
     double v;
@@ -231,6 +231,14 @@ void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
     }
 
     int vp = std::lround(v);
+
+    if (vp == 0) {
+        if (v < 0) {
+            --vp;
+        } else {
+            ++vp;
+        }
+    }
 
     const auto& zs = st.label;
 

@@ -132,7 +132,7 @@ struct count_t {
 
     count_t() : val(0) {}
 
-    bool inc(int v, const Count& s) {
+    bool inc(int v, const Count& s, bool levelcheck = false) {
 
         if (v < 0 && -v > (int)val) {
             v = -val;
@@ -143,7 +143,7 @@ struct count_t {
         val += v;
         if (val > s.cmax) val = s.cmax;
 
-        return (val == 0 && prev != 0);
+        return (val == 0 && (levelcheck || prev != 0));
     }
 };
 
@@ -221,7 +221,8 @@ struct stats_t {
     }
 
     unsigned int getc(tag_t t) {
-        return counts[t].val;
+        auto i = counts.find(t);
+        return (i != counts.end() ? i->second.val : 0);
     }
 
     bool crit() const {
@@ -265,7 +266,7 @@ struct stats_t {
         bool del = false;
 
         for (auto& i : counts) {
-            if (i.second.inc(-1, ::counts().get(i.first)))
+            if (i.second.inc(-1, ::counts().get(i.first)), true)
                 del = true;
         }
 
