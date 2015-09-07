@@ -433,13 +433,13 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
         design_digging    = 'digging' ws1 real          %{ des.digging = toreal(state.match); };
         design_descend    = 'descend' ws1 snumber       %{ des.descend = toint(state.match); };
 
-        design_inc_stat = 'inc_stat' %{ des.inc_stat.resize(des.inc_stat.size() + 1); }
+        design_inc_stat = 'inc_stat' %{ des.inc_stat.push_back(Design::inc_stat_t()); }
             ws1 tag  %{ des.inc_stat.back().stat = tag_t(state.match, tagmem); }
             ws1 real %{ des.inc_stat.back().val = toreal(state.match); }
             (ws1 string %{ des.inc_stat.back().msg = state.match; })?
             ;
 
-        design_inc_count = 'inc_count' %{ des.inc_count.resize(des.inc_count.size() + 1); }
+        design_inc_count = 'inc_count' %{ des.inc_count.push_back(Design::inc_count_t()); }
             ws1 tag %{ des.inc_count.back().stat = tag_t(state.match, tagmem); }
             ws1 snumber %{ des.inc_count.back().val = toint(state.match); }
             (ws1 string %{ des.inc_count.back().msg_a = state.match; }
@@ -695,7 +695,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             ws1 tag %{ ter.sensor_toggle[tmp_tag] = tag_t(state.match, tagmem); }
             ;
 
-        terrain_inc_stat = 'inc_stat' %{ ter.inc_stat.resize(des.inc_stat.size() + 1); }
+        terrain_inc_stat = 'inc_stat' %{ ter.inc_stat.push_back(Terrain::inc_stat_t()); }
             ws1 tag  %{ ter.inc_stat.back().stat = tag_t(state.match, tagmem); }
             ws1 real %{ ter.inc_stat.back().val = toreal(state.match); }
             (ws1 string %{ ter.inc_stat.back().msg = state.match; })?
