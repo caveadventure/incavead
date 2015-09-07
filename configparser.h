@@ -16372,7 +16372,7 @@ _match:
 	break;
 	case 150:
 #line 436 "configparser.rl"
-	{ des.inc_stat.resize(des.inc_stat.size() + 1); }
+	{ des.inc_stat.push_back(Design::inc_stat_t()); }
 	break;
 	case 151:
 #line 437 "configparser.rl"
@@ -16388,7 +16388,7 @@ _match:
 	break;
 	case 154:
 #line 442 "configparser.rl"
-	{ des.inc_count.resize(des.inc_count.size() + 1); }
+	{ des.inc_count.push_back(Design::inc_count_t()); }
 	break;
 	case 155:
 #line 443 "configparser.rl"
@@ -16908,7 +16908,7 @@ _match:
 	break;
 	case 284:
 #line 698 "configparser.rl"
-	{ ter.inc_stat.resize(des.inc_stat.size() + 1); }
+	{ ter.inc_stat.push_back(Terrain::inc_stat_t()); }
 	break;
 	case 285:
 #line 699 "configparser.rl"
