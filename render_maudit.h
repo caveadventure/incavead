@@ -379,7 +379,7 @@ private:
 
         for (unsigned char c : l) {
             *hudi = line.lskin;
-            hudi->text = c;
+            hudi->set_text(c);
             ++hudi;
         }
 
@@ -404,6 +404,7 @@ private:
                     *hudi = line.nskin;
                 } else {
                     *hudi = skin();
+                    //hudi->set_text(" ");
                 }
 
                 ++hudi;
@@ -411,10 +412,11 @@ private:
 
             for (int i = 0; i < 3; ++i) {
 
-                if (i < line.npips) {
+                if (i <= line.npips) {
                     *hudi = line.pskin;
                 } else {
                     *hudi = skin();
+                    //hudi->set_text(" ");
                 }
 
                 ++hudi;

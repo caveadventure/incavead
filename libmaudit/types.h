@@ -50,6 +50,11 @@ struct glyph {
         text = get_sym(c.c_str(), c.size());
     }
 
+    void set_text(unsigned char c) {
+        char tmp[2] = { c, '\0' };
+        text = get_sym(tmp, 1);
+    }
+
     const char* get_text() const {
         return (const char*)(&text);
     }

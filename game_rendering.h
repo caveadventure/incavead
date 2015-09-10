@@ -230,14 +230,10 @@ void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
         v = 3.0 * (2 * val - st.max - st.min) / (st.max - st.min);
     }
 
-    int vp = std::lround(v);
+    int vp = v;
 
-    if (vp == 0) {
-        if (v < 0) {
-            --vp;
-        } else {
-            ++vp;
-        }
+    if (v < 0) {
+        --vp;
     }
 
     const auto& zs = st.label;
