@@ -383,6 +383,8 @@ private:
             ++hudi;
         }
 
+        skin tmp(".", color_t::dim_black, color_t::dim_black);
+
         if (line.numtype == hud_line::UNSIGNED) {
 
             for (int i = 0; i < 6; ++i) {
@@ -390,7 +392,7 @@ private:
                 if (i < line.npips) {
                     *hudi = line.pskin;
                 } else {
-                    *hudi = skin();
+                    *hudi = tmp;
                 }
 
                 ++hudi;
@@ -403,8 +405,7 @@ private:
                 if (i >= line.npips) {
                     *hudi = line.nskin;
                 } else {
-                    *hudi = skin();
-                    //hudi->set_text(" ");
+                    *hudi = tmp;
                 }
 
                 ++hudi;
@@ -416,7 +417,6 @@ private:
                     *hudi = line.pskin;
                 } else {
                     *hudi = skin();
-                    //hudi->set_text(" ");
                 }
 
                 ++hudi;
