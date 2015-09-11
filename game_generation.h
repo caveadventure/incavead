@@ -489,7 +489,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
             if (!item.null()) {
 
-                if (!state.grid.is_walk(i.xy.first, i.xy.second))
+                if (!state.grid.is_walk(s.x, s.y))
                     continue;
 
                 state.items.place(s.x, s.y,
