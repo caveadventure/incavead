@@ -1405,8 +1405,12 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ###
 
+        include = 'include' ws1 string %{ parse_config(state.match, tagmem); } ws ';';
+
+        ###
+
         entry = species | design | terrain | vault | celauto | levelskin | constant | 
-                achievement | ailment | ui_syms | damage | stat | count;
+                achievement | ailment | ui_syms | damage | stat | count | include;
             
       main := (ws entry)+ ws ;
         

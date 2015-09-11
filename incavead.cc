@@ -73,25 +73,7 @@ void init_statics() {
 
     tag_mem_t tagmem;
 
-    configparser::parse_config("stats.cfg", tagmem);
-
-    configparser::parse_config("species.cfg", tagmem);
-
-    configparser::parse_config("designs.cfg", tagmem);
-
-    configparser::parse_config("terrain.cfg", tagmem);
-
-    configparser::parse_config("vaults.cfg", tagmem);
-
-    configparser::parse_config("celauto.cfg", tagmem);
-
-    configparser::parse_config("levelskins.cfg", tagmem);
-
-    configparser::parse_config("constants.cfg", tagmem);
-
-    configparser::parse_config("damage.cfg", tagmem);
-
-    configparser::parse_config("howto.cfg", tagmem);
+    configparser::parse_config("game.cfg", tagmem);
 
     ////
 }
