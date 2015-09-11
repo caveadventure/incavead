@@ -289,10 +289,13 @@ struct inventory_t {
 
                 for (const auto& l : dp.tickstat_moon) {
                     double& tmp = tsm[l.stat];
+                    std::cout << "~ bef: " << tmp << std::endl;
                     tmp = std::max(tmp, gaussian_function(l.height, l.v.mean, l.v.deviation, moon_angle));
+                    std::cout << "~ aft: " << tmp << std::endl;
                 }
 
                 for (const auto& i : tsm) {
+                    std::cout << "~ set: " << i.second << std::endl;
                     inc_stat[i.first] += i.second;
                 }
             }

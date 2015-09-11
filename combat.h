@@ -51,9 +51,14 @@ inline bool luck_level_scale(rnd::Generator& rng, pstats::stats_t& stats, tag_t 
     if (pv <= 0 || pv >= 1)
         return false;
 
-    bool neg = (pv < 0);
+    std::cout << " ==luck== " << factor << " " << threshold << " " << denom
+              << " " << v << " " << p << " " << pv << std::endl;
+
+    bool neg = (v < 0);
 
     unsigned int fudge = rng.geometric(pv);
+
+    std::cout << "LUCK fudge: " << fudge << std::endl;
 
     if (neg) {
         level -= std::max(level, fudge);
@@ -61,7 +66,7 @@ inline bool luck_level_scale(rnd::Generator& rng, pstats::stats_t& stats, tag_t 
 
     } else {
         level += fudge;
-        return stats.sinc(stat, -fudge / factor);
+        return stats.sinc(stat, fudge / -factor);
     }
 }
 
