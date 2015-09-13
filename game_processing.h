@@ -624,6 +624,7 @@ void Game::process_world(GameState& state,
 
         if (p.polymorph.turns == 0) {
             p.polymorph.species = tag_t();
+            p.stats = p.get_species().stats;
             state.render.invalidate(p.px, p.py);
         }
     }

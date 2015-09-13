@@ -20,13 +20,15 @@ inline double roll_attack(rnd::Generator& rng,
 
 inline double karmic_damage_scale(double scale, double karma, double dmg) {
 
-    double kk = karma * scale;
+    std::cout << "K_D_S: " << scale << " " << karma << " " << dmg << std::endl;
 
-    if (kk > 0) {
-        double factor = (kk)/2;
-        factor = factor * factor;
+    double k = karma * scale;
 
-        dmg *= factor;
+    if (k > 0) {
+        k = k + 1;
+        k = k * k * k;
+
+        dmg *= k;
 
     } else {
         dmg = 0;
@@ -144,17 +146,25 @@ inline bool attack_damage_monster(const damage::val_t& v,
         !dam.flags.player(false)) 
         return false;
 
+    std::cout << "~dmg~ " << dmg << std::endl;
+
     if (dam.karmic_scale.size() > 0) {
         double mk = 0;
 
-        for (const auto& i : dam.karmic_scale) {
+        for (const auto& i : mon.stats.stats) {
+            std::cout << " .stat. " << i.first.v << " " << i.second.val << std::endl;
+        }
 
+        for (const auto& i : dam.karmic_scale) {
+            std::cout << "Karmic before: " << mk << " " << i.first.v << std::endl;
             mk = std::max(mk, karmic_damage_scale(i.second, mon.stats.gets(i.first), dmg));
+            std::cout << "Karmic after: " << mk << std::endl;
         }
 
         dmg = mk;
     }
-   
+
+    std::cout << "DAM " << dmg << " " << dam.threshold << std::endl;
     if (dmg <= dam.threshold)
         return false;
 
@@ -412,6 +422,10 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
         p.level = species_level+1;
         state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
+    }
+
+    if (!ret) {
+        state.render.do_message("You try to attack but do no damage.");
     }
 
     return ret;

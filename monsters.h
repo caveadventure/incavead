@@ -24,7 +24,9 @@ struct Monster {
 
     Monster(tag_t _tag, size_t ser, tag_t a) : 
         serial(ser), tag(_tag), did_attack(false), hidden(false), ally(a), dead(false), sleep(false)
-        {}
+        {
+            stats = species().get(tag).stats;
+        }
 
     bool null() const {
         return tag.null();
