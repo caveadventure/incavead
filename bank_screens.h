@@ -32,7 +32,7 @@ inline bool purchase_protection(Player& p, GameState& state, double cost, const 
         if (p.stats.sinc(bank.bonus_stat, stat_bonus))
             p.dead = true;
 
-        state.render.do_message("Your body glows with a shiny gold aura.");
+        state.render.do_message("Your body glows with a shiny gold aura."_m);
 
         ++(state.ticks);
     }
@@ -42,7 +42,7 @@ inline bool purchase_protection(Player& p, GameState& state, double cost, const 
     }
 
     if (give_change(state, p.px, p.py, cost - xcost)) {
-        state.render.do_message("Please keep the change.");
+        state.render.do_message("Please keep the change."_m);
     }
 
     bool valid = true;
@@ -50,7 +50,7 @@ inline bool purchase_protection(Player& p, GameState& state, double cost, const 
     finance::supply().purchase(tag_t(), xcost, valid);
 
     if (!valid) {
-        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+        state.render.do_message("Thank you for your patronage. We are now closed for business."_m, true);
     }
     
     return valid;
@@ -66,7 +66,7 @@ inline bool purchase_item(Player& p, GameState& state) {
     unsigned int trucount = state.designs_counts.take(pitem);
 
     if (trucount == 0) {
-        state.render.do_message("Strange. Nothing happened.");
+        state.render.do_message("Strange. Nothing happened."_m);
         return true;
     }
 
@@ -80,7 +80,7 @@ inline bool purchase_item(Player& p, GameState& state) {
     ++(state.ticks);
 
     if (give_change(state, p.px, p.py, p.banking.assets - p.banking.item_price)) {
-        state.render.do_message("Please keep the change.");
+        state.render.do_message("Please keep the change."_m);
     }
 
     bool valid = true;
@@ -99,7 +99,7 @@ inline bool purchase_item(Player& p, GameState& state) {
     }
 
     if (!valid) {
-        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+        state.render.do_message("Thank you for your patronage. We are now closed for business."_m, true);
     }
 
     return valid;
@@ -121,11 +121,11 @@ inline bool account_deposit(Player& p, GameState& state, unsigned int account) {
 
     if (!valid) {
 
-        state.render.do_message("Thank you for your patronage. We are now closed for business.", true);
+        state.render.do_message("Thank you for your patronage. We are now closed for business."_m, true);
 
     } else {
 
-        state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM.", b));
+        state.render.do_message(nlp::message("Thank you for your patronage. Your account balance: %f $ZM."_m, b));
     }
 
     ++(state.ticks);
@@ -140,10 +140,10 @@ inline bool account_withdraw(Player& p, GameState& state, unsigned int account) 
     double sum = finance::supply().withdraw(account, valid);
 
     if (give_change(state, p.px, p.py, sum) && valid) {
-        state.render.do_message(nlp::message("%f $ZM withdrawn. Enjoy your newfound wealth.", sum));
+        state.render.do_message(nlp::message("%f $ZM withdrawn. Enjoy your newfound wealth."_m, sum));
 
     } else {
-        state.render.do_message("This account is empty, sorry.");
+        state.render.do_message("This account is empty, sorry."_m);
     }
 
     ++(state.ticks);
@@ -224,7 +224,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
 
         //state.window_stack.clear();
         state.window_stack.pop_back();
-        state.push_window("No such item exists. Please try again.", screens_t::messages);
+        state.push_window("No such item exists. Please try again."_map, screens_t::messages);
         return;
     }
 
@@ -254,7 +254,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
 
     if (price < constants().min_money_value) {
         msg = nlp::message("\n"
-                           "Sorry, but \3%s\1 is not currently for sale.",
+                           "Sorry, but \3%s\1 is not currently for sale."_m,
                            nlp::count(), d, count);
 
         //state.window_stack.clear();
@@ -265,19 +265,19 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
     } else {
         msg = nlp::message("\n"
                            "Your assets: \2%f\1 $ZM.\n"
-                           "Quote for \3%s\1: \2%f\1 $ZM.\n\n", 
+                           "Quote for \3%s\1: \2%f\1 $ZM.\n\n"_m, 
                            p.banking.assets, nlp::count(), d, count, price);
     }
 
     if (p.banking.assets < price) {
-        msg += "You cannot afford this item, sorry.";
+        msg += "You cannot afford this item, sorry."_map;
 
         //state.window_stack.clear();
         state.window_stack.pop_back();
         state.push_window(msg, screens_t::messages);
 
     } else {
-        msg += "  \2y\1) Yes, I agree to buy this item.\n";
+        msg += "  \2y\1) Yes, I agree to buy this item.\n"_map;
 
         p.banking.item = item;
         p.banking.item_price = price;
@@ -293,7 +293,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
     switch (k.letter) {
     case 'w':
         p.input.s.clear();
-        state.push_window("\2Input your account's PIN code (three digits)\1: \3", 
+        state.push_window("\2Input your account's PIN code (three digits)\1: \3"_map, 
                           screens_t::bank_withdrawal);
         break;
 
@@ -302,7 +302,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
             state.window_stack.pop_back(); 
         } else {
             p.input.s.clear();
-            state.push_window("\2Choose a PIN code for your account (three digits)\1: \3",
+            state.push_window("\2Choose a PIN code for your account (three digits)\1: \3"_map,
                               screens_t::bank_deposit);
         }
         break;
@@ -317,7 +317,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
             state.window_stack.pop_back(); 
         } else {
             p.input.s.clear();
-            state.push_window("\2Buy what (enter the name)\1: \3", screens_t::bank_buy);
+            state.push_window("\2Buy what (enter the name)\1: \3"_map, screens_t::bank_buy);
         }
         break;
 
@@ -339,7 +339,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
     const auto& money = constants().money;
 
     if (money.empty()) {
-        return "Sorry, money doesn't exist yet.";
+        return "Sorry, money doesn't exist yet."_map;
     }
 
     tag_t money_slot = constants().money_slot;
@@ -349,7 +349,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
     double& assets = p.banking.assets;
     assets = 0;
 
-    std::string msg = "\2Welcome.\n\n";
+    std::string msg = "\2Welcome to Frobozz Bank.\n\n"_map;
 
     items::Item vi;
     if (p.inv.get(money_slot, vi)) {
@@ -361,7 +361,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
         if (money.count(vi.tag) != 0) {
             assets = liq.worth * count;
 
-            msg += nlp::message("Your liquid assets: \2%f\1 $ZM.\n", assets);
+            msg += nlp::message("Your liquid assets: \2%f\1 $ZM.\n"_m, assets);
 
         } else {
 
@@ -370,43 +370,43 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
             if (assets < 0) {
                 assets = 0;
 
-                msg += nlp::message("You have no liquid assets. (Suspected countefeit goods: %s)\n", 
+                msg += nlp::message("You have no liquid assets. (Suspected countefeit goods: %s)\n"_m, 
                                     nlp::count(), liq, vi.count);
 
             } else if (assets == 0) {
-                msg += nlp::message("You have no liquid assets.\n");
+                msg += nlp::message("You have no liquid assets.\n"_m);
 
             } else {
-                msg += nlp::message("Your liquid assets: \2%f\1 $ZM. (%S)\n", 
+                msg += nlp::message("Your liquid assets: \2%f\1 $ZM. (%S)\n"_m, 
                                     assets, nlp::count(), liq, vi.count);
             }
         }
 
     } else {
-        msg += nlp::message("You have no liquid assets.\n");
+        msg += nlp::message("You have no liquid assets.\n"_m);
     }
     
-    msg += "\nPlease choose:\n\n";
+    msg += "\nPlease choose:\n\n"_map;
 
-    msg += "  \2w\1) Withdraw from an account.\n";
+    msg += "  \2w\1) Withdraw from an account.\n"_map;
 
     if (assets >= constants().min_money_value) {
-        msg += "  \2d\1) Deposit to an account.\n";
+        msg += "  \2d\1) Deposit to an account.\n"_map;
 
         if (bank.stat_bonus > 0) {
 
             if (p.stats.gets(bank.bonus_stat) < stats().get(bank.bonus_stat).max) {
 
-                msg += "  \2p\1) Purchase divine protection.\n";
+                msg += "  \2p\1) Purchase divine protection.\n"_map;
             }
         }
 
         if (bank.sell_margin > 0) {
-            msg += "  \2i\1) Buy an item.\n";
+            msg += "  \2i\1) Buy an item.\n"_map;
         }
 
         if (bank.gives_change > 0) {
-            msg += "  \2c\1) Exchange assets for coins.\n";
+            msg += "  \2c\1) Exchange assets for coins.\n"_map;
         }
     }
 

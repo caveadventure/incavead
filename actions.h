@@ -12,12 +12,12 @@ void do_player_input(GameState& state, Player& p, const std::string& prompt, int
 
 void do_player_wish(GameState& state, Player& p) {
 
-    do_player_input(state, p, "Wish for what: >>> ");
+    do_player_input(state, p, "Wish for what: >>> "_map);
 }
 
 void do_player_label(GameState& state, Player& p, int limit) {
 
-    do_player_input(state, p, "Write what: >>> ", limit);
+    do_player_input(state, p, "Write what: >>> "_map, limit);
 }
 
 void move_player(const Player& p, GameState& state) {
@@ -29,11 +29,11 @@ void move_player(const Player& p, GameState& state) {
         state.items.get(p.px, p.py, 0, item);
         const Design& d = designs().get(item.tag);
 
-        state.render.do_message(nlp::message("You see %s.", nlp::count(), d, item.count));
+        state.render.do_message(nlp::message("You see %s."_m, nlp::count(), d, item.count));
 
     } else if (nstack > 1) {
 
-        state.render.do_message(nlp::message("You see %d items here.", nstack));
+        state.render.do_message(nlp::message("You see %d items here."_m, nstack));
 
     } else {
         features::Feature feat;
@@ -45,14 +45,14 @@ void move_player(const Player& p, GameState& state) {
                 std::string label = state.features.label(p.px, p.py);
 
                 if (label.size() > 0) {
-                    state.render.do_message(nlp::message("\"%s\"", label));
+                    state.render.do_message(nlp::message("\"%s\""_m, label));
 
                 } else {
-                    state.render.do_message(nlp::message("\"%s\"", t.message));
+                    state.render.do_message(nlp::message("\"%s\""_m, t.message));
                 }
 
             } else if (t.name.size() > 0) {
-                state.render.do_message(nlp::message("There is %s here.", t));
+                state.render.do_message(nlp::message("There is %s here."_m, t));
             }
         }
     }
@@ -94,7 +94,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
     if (pspecies.digging > 0 && !state.grid.is_walk(nx, ny)) {
 
         if (!digging_step(state, nx, ny, pspecies.digging)) {
-            state.render.do_message("You remove some of the rock.");
+            state.render.do_message("You remove some of the rock."_m);
             return;
         }
     }
@@ -198,7 +198,7 @@ void move(Player& p, GameState& state, int dx, int dy, size_t n_skin, bool do_fe
         const Terrain& t = terrain().get(feat.tag);
 
         if (t.sticky) {
-            state.render.do_message("You are stuck!");
+            state.render.do_message("You are stuck!"_m);
 
             if (t.uncharge.move) {
                 state.features.uncharge(p.px, p.py, state.render);
@@ -299,14 +299,14 @@ std::string tombstone_text(const Player& p) {
 
     if (!bones::bones().get(p, bone)) {
 
-        return "\n\nHm, this tombstone is blank...";
+        return "\n\nHm, this tombstone is blank..."_map;
     }
 
     if (bone.name.name.empty())
-        bone.name.name = "anonymous";
+        bone.name.name = "anonymous"_map;
 
     if (bone.cause.name.empty())
-        bone.cause.name = "unnatural causes";
+        bone.cause.name = "unnatural causes"_map;
 
     return nlp::message(constants().tombstone_text,
                         bone.name,
@@ -332,7 +332,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
     features::Feature feat;
     if (!state.features.get(p.px, p.py, feat)) {
-        state.render.do_message("There is nothing here to use.");
+        state.render.do_message("There is nothing here to use."_m);
         return;
     }
 
@@ -395,11 +395,11 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
         if (p.inv.take(d_victory.slot, vi)) {
 
-            state.render.do_message("Congratulations! (press space to close window)", true);
-            state.render.do_message(" ~*~   You win the game!   ~*~ ", true);
+            state.render.do_message("Congratulations! (press space to close window)"_m, true);
+            state.render.do_message(" ~*~   You win the game!   ~*~ "_m, true);
 
             // HACK!
-            p.attacker = "VICTORY";
+            p.attacker = "VICTORY"_map;
             done = true;
             dead = true;
 
@@ -422,9 +422,9 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
     if (t.stairs != 0) {
 
         if (t.stairs > 0) {
-            state.render.do_message("You climb down the hole.");
+            state.render.do_message("You climb down the hole."_m);
         } else {
-            state.render.do_message("You are magically teleported!");
+            state.render.do_message("You are magically teleported!"_m);
         }
 
         p.worldz += t.stairs;
@@ -440,7 +440,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
     if (t.tunnel_x != 0 || t.tunnel_y != 0) {
 
-        state.render.do_message("You climb into the tunnel.");
+        state.render.do_message("You climb into the tunnel."_m);
         p.worldx += t.tunnel_x;
         p.worldy += t.tunnel_y;
 
@@ -466,16 +466,16 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
             for (const auto& i : p.spells) {
                 if (i.name == sp.name) {
-                    state.render.do_message("Nothing happens.");
+                    state.render.do_message("Nothing happens."_m);
                     return;
                 }
             }
 
             p.spells.push_back(sp);
-            state.render.do_message(nlp::message("You are granted the power of %s.", sp.name), true);
+            state.render.do_message(nlp::message("You are granted the power of %s."_m, sp.name), true);
 
         } else {
-            state.render.do_message("You want nothing to do with this vile thing.");
+            state.render.do_message("You want nothing to do with this vile thing."_m);
         }
 
         return;
@@ -506,7 +506,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
 
                 if (leftover && tmp.tag == c.to) {
 
-                    state.render.do_message("Nothing happens...");
+                    state.render.do_message("Nothing happens..."_m);
 
                 } else {
 
@@ -521,11 +521,11 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
             }
         }
 
-        state.render.do_message(nlp::message("You need a specific kind of item for %s.", t));
+        state.render.do_message(nlp::message("You need a specific kind of item for %s."_m, t));
         return;
     }
 
-    state.render.do_message("There is nothing here to use.");
+    state.render.do_message("There is nothing here to use."_m);
 }
 
 void rest(GameState& state) {

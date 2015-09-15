@@ -143,11 +143,11 @@ struct Main {
         unsigned int seed;
 
         {
-            window += "\n\3Do you want to enter a replay code? (Y/N)\2";
+            window += "\n\3Do you want to enter a replay code? (Y/N)\2"_map;
             maudit::keypress k = state.render.draw_window(screen, window);
 
             if (k.letter == 'Y' || k.letter == 'y') {
-                window += "\n\3Enter a replay code (case insensitive):\2 ";
+                window += "\n\3Enter a replay code (case insensitive):\2 "_map;
                 enter_text(window, code, false);
 
                 seed = rcode::decode<unsigned int>(code) & 0xFFFFFFFF;
@@ -206,7 +206,7 @@ struct Main {
         if (spectator::screens<SCREEN>().get_messages(screen, messages)) {
 
             for (const std::string& msg : messages) {
-                state.render.do_message("Chat message: " + msg, true);
+                state.render.do_message("Chat message: "_map + msg, true);
             }
 
             messages.clear();
@@ -356,13 +356,13 @@ struct Main {
         window += 
             "\n\1The name and passcode will identify your savefile.\n"
             "If a name/passcode combination doesn't exist, then a new savefile will be created.\n"
-            "\n\3Enter your name:\2 ";
+            "\n\3Enter your name:\2 "_map;
 
         enter_text(window, name, false);
 
         if (!singleplayer) {
 
-            window += "\n\3Enter a passcode:\2 ";
+            window += "\n\3Enter a passcode:\2 "_map;
             enter_text(window, pass, true);
         }        
 

@@ -160,14 +160,14 @@ FULL    - 0.1
 
 inline std::string phase_string(PHASE p) {
     switch (p) {
-    case NEW: return "new";
-    case WAXING_CRESCENT: return "waxing crescent";
-    case FIRST_QUARTER: return "first quarter";
-    case WAXING_GIBBOUS: return "waxing gibbous";
-    case FULL: return "full";
-    case WANING_GIBBOUS: return "waning gibbous";
-    case LAST_QUARTER: return "last quarter";
-    case WANING_CRESCENT: return "waning crescent";
+    case NEW: return "new"_map;
+    case WAXING_CRESCENT: return "waxing crescent"_map;
+    case FIRST_QUARTER: return "first quarter"_map;
+    case WAXING_GIBBOUS: return "waxing gibbous"_map;
+    case FULL: return "full"_map;
+    case WANING_GIBBOUS: return "waning gibbous"_map;
+    case LAST_QUARTER: return "last quarter"_map;
+    case WANING_CRESCENT: return "waning crescent"_map;
     }
     return "error";
 }

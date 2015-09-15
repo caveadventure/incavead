@@ -158,7 +158,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
         cast_cloud(state, target.first, target.second, c.radius, c.terraintag);
 
         if (state.render.is_in_fov(mxy.first, mxy.second)) 
-            state.render.do_message(nlp::message("%s casts %s!", s, c.name));
+            state.render.do_message(nlp::message("%s casts %s!"_m, s, c.name));
 
         return true;
     }
@@ -555,7 +555,7 @@ inline bool move_monster_main(Player& p, GameState& state,
 
         if (digging_step(state, nxy.first, nxy.second, s.digging)) {
 
-            state.render.do_message("You hear a loud crashing noise.");
+            state.render.do_message("You hear a loud crashing noise."_m);
 
         } else {
             return false;
@@ -577,7 +577,7 @@ inline bool move_monster_main(Player& p, GameState& state,
             items::Item tmp;
             if (p.inv.take(s.steal, tmp)) {
 
-                state.render.do_message(nlp::message("%S disappears in a puff of smoke.", s), true);
+                state.render.do_message(nlp::message("%S disappears in a puff of smoke."_m, s), true);
 
                 do_die = true;
                 return true;
@@ -663,12 +663,12 @@ inline int conflict_monster(Player& p, GameState& state,
 
         if (state.render.is_in_fov(mxy.first, mxy.second)) {
 
-            std::string verb = (s.flags.robot || s.flags.plant ? "destroyed" : "killed");
+            std::string verb = (s.flags.robot || s.flags.plant ? "destroyed"_map : "killed"_map);
 
             if (m.ally.null()) {
-                state.render.do_message(nlp::message("%S is %s.", s, verb));
+                state.render.do_message(nlp::message("%S is %s."_m, s, verb));
             } else {
-                state.render.do_message(nlp::message("%S ally is %s!", s, verb));
+                state.render.do_message(nlp::message("%S ally is %s!"_m, s, verb));
             }
         }
     };

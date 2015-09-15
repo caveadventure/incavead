@@ -219,7 +219,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         std::vector<std::string> state;
 
         if (!mon.ally.null()) {
-            state.push_back("ally");
+            state.push_back("ally"_map);
         }
 
         for (const auto& i : mon.stats.counts) {
@@ -244,28 +244,27 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
 
             if (st.critical) {
                 health = std::min(health, (i.second.val - st.min) / (st.max - st.min));
-                std::cout << "  [" << health << "] " << (i.second.val - st.max) / (st.min - st.min) << std::endl;
             }
         }
 
         if (s.flags.robot) {
 
             if (health < 0.1666) {
-                state.push_back("badly damaged");
+                state.push_back("badly damaged"_map);
             } else if (health < 0.5) {
-                state.push_back("damaged");
+                state.push_back("damaged"_map);
             } else if (health < 0.9) {
-                state.push_back("slightly damaged");
+                state.push_back("slightly damaged"_map);
             }
 
         } else if (!s.flags.plant) {
 
             if (health < 0.1666) {
-                state.push_back("badly wounded");
+                state.push_back("badly wounded"_map);
             } else if (health < 0.5) {
-                state.push_back("wounded");
+                state.push_back("wounded"_map);
             } else if (health < 0.9) {
-                state.push_back("lightly wounded");
+                state.push_back("lightly wounded"_map);
             }
         }
 
@@ -287,7 +286,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         }
 
     } else if (n > 1) {
-        msg = nlp::message(" %d items", n);
+        msg = nlp::message(" %d items"_m, n);
 
     } else if (n == 1 && state.items.get(x, y, 0, itm)) {
             
@@ -308,7 +307,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         }            
 
     } else if (x == px && y == py) {
-        msg = " This is you";
+        msg = " This is you"_map;
 
     } else {
         ok = false;
@@ -320,11 +319,11 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         bool water = state.grid.is_water(x, y);
 
         if (!walk) {
-            msg = " rock";
+            msg = " rock"_map;
         } else if (water) {
-            msg = " water";
+            msg = " water"_map;
         } else {
-            msg = " floor";
+            msg = " floor"_map;
         }
     }
 
@@ -342,7 +341,7 @@ inline void start_look_target(unsigned int& pstate, Player::look_state_t& look, 
     //center_draw_text(state.render, px, py-3, state.fullwidth,
     //                 "Use <TAB> or arrow keys to select target, '.' to fire");
 
-    state.render.do_message("Use <TAB> or arrow keys to select target, '.' to fire", false, true);
+    state.render.do_message("Use <TAB> or arrow keys to select target, '.' to fire"_m, false, true);
 
     handle_input_looking(pstate, look, px, py, state, '\t');
 }
@@ -359,7 +358,7 @@ inline void start_look_plain(unsigned int& pstate, Player::look_state_t& look, u
     //center_draw_text(state.render, px, py-3, state.fullwidth,
     //                 "Use arrow keys to look around; <TAB> to cycle targets");
 
-    state.render.do_message("Use arrow keys to look around; <TAB> to cycle targets", false, true);
+    state.render.do_message("Use arrow keys to look around; <TAB> to cycle targets"_m, false, true);
 }
 
 inline void start_look_cycle(unsigned int& pstate, Player::look_state_t& look, unsigned int px, unsigned int py,

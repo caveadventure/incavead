@@ -18,28 +18,28 @@ inline std::string select_inv_item(inventory_t& inv, tag_t slot) {
                           "\n"
                           "%s\n"
                           "\n"
-                          "  \2d\1) Drop.\n",
+                          "  \2d\1) Drop.\n"_m,
                           nlp::count(), d, tmp.count,
                           d.descr);
 
     if (d.usable) {
-        window += nlp::message("  \2a)\1 Apply or use this item.\n");
+        window += nlp::message("  \2a)\1 Apply or use this item.\n"_m);
     }
 
     if (d.destructible) {
-        window += nlp::message("  \2X)\1 Destroy this item.\n");
+        window += nlp::message("  \2X)\1 Destroy this item.\n"_m);
     }
 
     if (d.throwrange > 0) {
-        window += nlp::message("  \2t)\1 Throw item.\n");
+        window += nlp::message("  \2t)\1 Throw item.\n"_m);
     }
 
     if (d.blast.radius > 0 || d.blast.range > 0 || d.cast_cloud.radius > 0 || d.cast_cloud.range > 0) {
-        window += nlp::message("  \2f)\1 Fire.\n");
+        window += nlp::message("  \2f)\1 Fire.\n"_m);
     }
 
     if (d.digging > 0) {
-        window += nlp::message("  \2D)\1 Tunnel into rock.\n");
+        window += nlp::message("  \2D)\1 Tunnel into rock.\n"_m);
     }
 
     inv.selected_slot = slot;
@@ -63,12 +63,12 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
                           "\3%S\1: (on the floor)\n"
                           "\n"
                           "%s\n"
-                          "\n",
+                          "\n"_m,
                           nlp::count(), d, tmp.count,
                           d.descr);
 
     if (inv.slots.count(d.slot) != 0) {
-        window += "  \2t\1) Take.\n";
+        window += "  \2t\1) Take.\n"_map;
     }
 
     inv.selected_floor_item = z;
@@ -85,9 +85,9 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
     if (p.worldx != 0 || p.worldy != 0) {
         static const std::string tunnels[3][3] = {
-            { "due NW", "due W", "due SW" },
-            { "due N", "", "due S" },
-            { "due NE", "due E", "due SE" } };
+            { "due NW"_map, "due W"_map, "due SW"_map },
+            { "due N"_map,  ""_map,      "due S"_map },
+            { "due NE"_map, "due E"_map, "due SE"_map } };
 
 
         level_name += ", ";
@@ -105,13 +105,13 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
                      dlevel >= -9 ? " " : "");
 
     std::string poly = (p.polymorph.species.null() ? std::string() :
-                        nlp::message("(in the form of \2%s\1)", species().get(p.polymorph.species)));
+                        nlp::message("(in the form of \2%s\1)"_m, species().get(p.polymorph.species)));
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level:%s%d  %s\n"
                      "  Dungeon level:  %s%d  (%s)    (phase of the moon: %s)\n"
                      "\n"
-                     "\2Inventory:\n",
+                     "\2Inventory:\n"_m,
                      pad1, plevel, poly, pad2, dlevel, level_name, moon_phase);
 
     for (const auto& slotk : p.inv.slot_keys) {
@@ -125,7 +125,7 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
         const Design& d = designs().get(tmp.tag);
 
-        m += nlp::message("   %s: \2%c\1) %S\n", 
+        m += nlp::message("   %s: \2%c\1) %S\n"_m, 
                           slot.label,
                           slot.letter,
                           nlp::count(), d, tmp.count);
@@ -141,13 +141,13 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
         const Design& d = designs().get(ii.second.tag);
 
-        m += nlp::message("   %s:    \1%S\n", 
+        m += nlp::message("   %s:    \1%S\n"_m, 
                           slot.label, nlp::count(), d, ii.second.count);
     }
         
 
     m += nlp::message("\n"
-                      "\2Floor items:\n");
+                      "\2Floor items:\n"_m);
 
     size_t nz = items.stack_size(p.px, p.py);
     char letter = '1';
@@ -161,13 +161,13 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
         const Design& d = designs().get(tmp.tag);
 
-        m += nlp::message("            \2%c\1) %S\n",
+        m += nlp::message("            \2%c\1) %S\n"_m,
                           letter,
                           nlp::count(), d, tmp.count);
         ++letter;
 
         if (letter == '9') {
-            m += "               \1(There are more items here in the pile.)\n";
+            m += "               \1(There are more items here in the pile.)\n"_map;
             break;
         }
     }

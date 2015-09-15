@@ -5,35 +5,35 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
     p.overmap.scale = scale;
 
-    std::string ret = "\2The overview map. Use '+' and '-' to zoom in and out.\n\n";
+    std::string ret = "\2The overview map. Use '+' and '-' to zoom in and out.\n\n"_map;
 
     std::string level_name = levelskins().get(p.worldz).name;
 
     if (p.worldx != 0 || p.worldy != 0) {
         static const std::string tunnels[3][3] = {
-            { "due NW", "due W", "due SW" },
-            { "due N", "", "due S" },
-            { "due NE", "due E", "due SE" } };
+            { "due NW"_map, "due W"_map, "due SW"_map },
+            { "due N"_map,  ""_map,      "due S"_map },
+            { "due NE"_map, "due E"_map, "due SE"_map } };
 
 
         level_name += ", ";
         level_name += tunnels[p.worldx+1][p.worldy+1];
     }
 
-    ret += nlp::message("\1Dungeon level %d (%s), %s moon.\n\n\3",
+    ret += nlp::message("\1Dungeon level %d (%s), %s moon.\n\n\3"_m,
                         p.worldz+1, level_name, state.moon.pi.phase_str);
 
     for (unsigned int y = 0; y < state.render.h; y += scale) {
         for (unsigned int x = 0; x < state.render.w; x += scale) {
 
-            std::string charz = " ";
+            std::string charz = " "_map;
             unsigned int intensity = 0;
 
             if (x == 0 || y == 0 || 
                 x >= state.render.w - scale ||
                 y >= state.render.h - scale) {
 
-                charz = ".";
+                charz = "."_map;
             }
 
             for (unsigned int yi = 0; yi < scale; ++yi) {
@@ -69,8 +69,8 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
                         if (t.is_lit || gp.is_lit) {
                             charz = t.skin[0].get_text();
 
-                            if (charz == " ")
-                                charz = ".";
+                            if (charz == " "_map)
+                                charz = "."_map;
 
                             intensity = 1;
                         }
@@ -82,7 +82,7 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
             ret += charz;
         }
 
-        ret += "\n\3";
+        ret += "\n\3"_map;
     }
 
     return ret;
@@ -91,10 +91,10 @@ std::string show_overmap(Player& p, const GameState& state, size_t scale = 12) {
 
 std::string show_victory(const Player& p, const GameState& state) {
 
-    std::string ret = "\n\2Status of the \3Ring of Power:\1\n\n";
+    std::string ret = "\n\2Status of the \3Ring of Power:\1\n\n"_map;
 
     if (p.uniques_disabled) {
-        ret += "Indeterminate status due to wishing.\n";
+        ret += "Indeterminate status due to wishing.\n"_map;
         return ret;
     }
 
@@ -120,7 +120,7 @@ std::string show_victory(const Player& p, const GameState& state) {
         }
 
         if (found) {
-            ret += "Found somewhere on this level.\n";
+            ret += "Found somewhere on this level.\n"_map;
 
         } else {
 
@@ -133,17 +133,17 @@ std::string show_victory(const Player& p, const GameState& state) {
             }
 
             if (inv) {
-                ret += "In your inventory.\n";
+                ret += "In your inventory.\n"_map;
                 found = true;
             }
         }
 
         if (!found) {
             if (placetime == 0 || tdiff >= (time_t)timeout) {
-                ret += "Ready to regenerate on dungeon level\2 1\1.";
+                ret += "Ready to regenerate on dungeon level\2 1\1."_map;
 
             } else {
-                ret += "Destroyed and not yet ready to regenerate.\n";
+                ret += "Destroyed and not yet ready to regenerate.\n"_map;
             }
         }
 
@@ -152,35 +152,35 @@ std::string show_victory(const Player& p, const GameState& state) {
         const auto& wk = levels.back();
 
         static const std::string tunnels[3][3] = {
-            { "follow a tunnel due north-west",
-              "follow a tunnel due west", 
-              "follow a tunnel due south-west" },
-            { "follow a tunnel due north",
-              "main branch", 
-              "follow a tunnel due south" },
-            { "follow a tunnel due north-east",
-              "follow a tunnel due east", 
-              "follow a tunnel due south-east" } };
+            { "follow a tunnel due north-west"_map,
+              "follow a tunnel due west"_map, 
+              "follow a tunnel due south-west"_map },
+            { "follow a tunnel due north"_map,
+              "main branch"_map, 
+              "follow a tunnel due south"_map },
+            { "follow a tunnel due north-east"_map,
+              "follow a tunnel due east"_map, 
+              "follow a tunnel due south-east"_map } };
 
         if (wk.worldy < -1 || wk.worldy > 1 || wk.worldx < -1 || wk.worldy > 1)
             throw std::runtime_error("Sanity error in worldkey");
 
         tdiff /= 60;
-        std::string units = "minutes";
+        std::string units = "minutes"_map;
 
         if (tdiff > 1440) {
             tdiff /= 1440;
-            units = "days";
+            units = "days"_map;
 
         } else if (tdiff > 60) {
             tdiff /= 60;
-            units = "hours";
+            units = "hours"_map;
         }
 
-        ret += nlp::message("Found somewhere on dungeon level \2%d\1 (\2%s\1).\n", 
+        ret += nlp::message("Found somewhere on dungeon level \2%d\1 (\2%s\1).\n"_map, 
                             wk.worldz+1, tunnels[wk.worldx+1][wk.worldy+1]);
 
-        ret += nlp::message("It has been there for \2%d %s\1.\n", tdiff, units);
+        ret += nlp::message("It has been there for \2%d %s\1.\n"_map, tdiff, units);
     }
 
     return ret;
@@ -194,11 +194,11 @@ std::string show_stats(const Player& p) {
 
     if (!polytag.null()) {
 
-        ret = nlp::message("\n\2Character level:\1 %d    (in the form of \2%s\1)\n", p.get_level()+1,
+        ret = nlp::message("\n\2Character level:\1 %d    (in the form of \2%s\1)\n"_m, p.get_level()+1,
                            species().get(polytag));
 
     } else {
-        ret = nlp::message("\n\2Character level:\1 %d\n", p.get_level()+1);
+        ret = nlp::message("\n\2Character level:\1 %d\n"_m, p.get_level()+1);
     }
 
     damage::attacks_t att;
@@ -206,11 +206,11 @@ std::string show_stats(const Player& p) {
 
     if (att.attacks.empty()) {
 
-        ret += "\n\2You have no attack capabilities.\1\n\n";
+        ret += "\n\2You have no attack capabilities.\1\n\n"_map;
 
     } else {
 
-        ret += "\n\2Your attack capabilities:\1\n\n";
+        ret += "\n\2Your attack capabilities:\1\n\n"_map;
 
         for (const auto& i : att.attacks) {
 
@@ -224,7 +224,7 @@ std::string show_stats(const Player& p) {
             if (s.size() < 25) 
                 s += std::string(25 - s.size(), ' ');
 
-            ret += nlp::message("  \1%S\2: %d\n", s, i.val);
+            ret += nlp::message("  \1%S\2: %d\n"_m, s, i.val);
         }
     }
 
@@ -233,11 +233,11 @@ std::string show_stats(const Player& p) {
 
     if (def.defenses.empty()) {
 
-        ret += "\n\2You have no defense capabilities.\1\n\n";
+        ret += "\n\2You have no defense capabilities.\1\n\n"_map;
 
     } else {
 
-        ret += "\n\2Your defense capabilities:\1\n\n";
+        ret += "\n\2Your defense capabilities:\1\n\n"_map;
 
         for (const auto& i : def.defenses) {
 
@@ -251,19 +251,19 @@ std::string show_stats(const Player& p) {
             if (s.size() < 25) 
                 s += std::string(25 - s.size(), ' ');
 
-            ret += nlp::message("  \1%S\2: %d\n", s, i.second);
+            ret += nlp::message("  \1%S\2: %d\n"_m, s, i.second);
         }
     }
 
     auto j = constants().starsigns.names.find(p.starsign.sign);
 
-    std::string sign(j == constants().starsigns.names.end() ? "Unnamed" : j->second);
+    std::string sign(j == constants().starsigns.names.end() ? "Unnamed"_map : j->second);
 
-    ret += nlp::message("\n\2Your starsign:\1 %d-%S\n\n", p.starsign.day, sign);
+    ret += nlp::message("\n\2Your starsign:\1 %d-%S\n\n"_m, p.starsign.day, sign);
 
 
     if (p.ailments.size() > 0) {
-        ret += "\n\nYour degenerative ailments:\n\n";
+        ret += "\n\nYour degenerative ailments:\n\n"_map;
 
         std::map<std::string, std::pair<size_t,size_t> > ails;
 
@@ -280,9 +280,9 @@ std::string show_stats(const Player& p) {
         for (const auto& a : ails) {
             size_t n = a.second.first / a.second.second;
             if (n <= 1) {
-                ret += nlp::message("  \2%S\1\n", a.first);
+                ret += nlp::message("  \2%S\1\n"_m, a.first);
             } else {
-                ret += nlp::message("  \2%S\1 (x\2%d\1)\n", a.first, n);
+                ret += nlp::message("  \2%S\1 (x\2%d\1)\n"_m, a.first, n);
             }
         }
     }
@@ -298,24 +298,24 @@ std::string show_spells(const Player& p, const GameState& state) {
 
     std::string m;
 
-    m = "\2Your arcane powers:\n\n";
+    m = "\2Your arcane powers:\n\n"_map;
 
     char z = 'a';
     for (const auto& sp : p_spells) {
 
-        m += nlp::message("   \2%c\1) %S\n", z, sp);
+        m += nlp::message("   \2%c\1) %S\n"_m, z, sp);
         ++z;
     }
 
     for (const auto& sp : i_spells) {
 
-        m += nlp::message("   \2%c\1) %S\n", z, sp);
+        m += nlp::message("   \2%c\1) %S\n"_m, z, sp);
         ++z;
     }
 
     for (const auto& rp : r_spells) {
 
-        m += nlp::message("   \2%c\1) Labeled '%s'\n", z, rcode::magick_encode(rp));
+        m += nlp::message("   \2%c\1) Labeled '%s'\n"_m, z, rcode::magick_encode(rp));
         ++z;
     }
 
@@ -326,29 +326,29 @@ std::string show_spells(const Player& p, const GameState& state) {
 
     for (const auto& pb : s.blast) {
 
-        m += nlp::message("   \2%c\1) %S%s\n", z, pb.name, 
-                          ((state.ticks % pb.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) %S%s\n"_m, z, pb.name, 
+                          ((state.ticks % pb.turns) == 0 ? std::string() : std::string(" \2(not ready)\1"_map)));
         ++z;
     }
 
     for (const auto& pc : s.cast_cloud) {
 
-        m += nlp::message("   \2%c\1) %S%s\n", z, pc.name, 
-                          ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) %S%s\n"_m, z, pc.name, 
+                          ((state.ticks % pc.turns) == 0 ? std::string() : std::string(" \2(not ready)\1"_map)));
         ++z;
     }
 
     for (const auto& ps : s.summon) {
 
-        m += nlp::message("   \2%c\1) Summon %s%s\n", z, species().get(ps.speciestag),
-                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) Summon %s%s\n"_m, z, species().get(ps.speciestag),
+                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1"_map)));
         ++z;
     }
 
     for (const auto& ps : s.spawns) {
 
-        m += nlp::message("   \2%c\1) Summon level %d monster%s\n", z, ps.level,
-                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1")));
+        m += nlp::message("   \2%c\1) Summon level %d monster%s\n"_m, z, ps.level,
+                          ((state.ticks % ps.turns) == 0 ? std::string() : std::string(" \2(not ready)\1"_map)));
         ++z;
     }
         
@@ -361,14 +361,14 @@ std::string show_options(GameState& state, GameOptions& options) {
 
     ret += "\n";
 
-    ret += "\2a\1) Always center view on player:    \3";
-    ret += (options.center_view ? "Yes\n" : "No\n");
+    ret += "\2a\1) Always center view on player:    \3"_map;
+    ret += (options.center_view ? "Yes\n"_map : "No\n"_map);
 
-    ret += "\2b\1) Don't fade colors with distance: \3";
-    ret += (options.no_fade_colors ? "Yes\n" : "No\n");
+    ret += "\2b\1) Don't fade colors with distance: \3"_map;
+    ret += (options.no_fade_colors ? "Yes\n"_map : "No\n"_map);
 
-    ret += "\2c\1) Color theme in menus:            \3";
-    ret += (state.render.ui_symbol_index ? "Black\n" : "Blue\n");
+    ret += "\2c\1) Color theme in menus:            \3"_map;
+    ret += (state.render.ui_symbol_index ? "Black\n"_map : "Blue\n"_map);
 
     return ret;
 }
@@ -483,7 +483,7 @@ std::string show_achievements(const Player& p) {
         }
     }
 
-    std::string ret = "\nEnemies defeated:\n\n";
+    std::string ret = "\nEnemies defeated:\n\n"_map;
 
     const auto& names = constants().genus_names;
 
@@ -517,11 +517,11 @@ std::string show_achievements(const Player& p) {
             }
 
             if (r->second.first) {
-                s += " \3Achievement unlocked!\1";
+                s += " \3Achievement unlocked!\1"_map;
             }
 
             if (r->second.second != 0) {
-                s += nlp::message(" (%d needed to unlock)", r->second.second);
+                s += nlp::message(" (%d needed to unlock)"_m, r->second.second);
             }
         }
 
@@ -535,7 +535,7 @@ std::string show_achievements(const Player& p) {
 
 std::string show_monsters(const Player& p, const GameState& state) {
 
-    std::string ret = "\nKnown enemies:\n";
+    std::string ret = "\nKnown enemies:\n"_map;
 
     for(auto t = p.seen_monsters.timeline.rbegin(); t != p.seen_monsters.timeline.rend(); ++t) {
 
@@ -575,53 +575,53 @@ std::string show_monsters(const Player& p, const GameState& state) {
 
             nlp::parsed_name pn(i->second);
 
-            ret += nlp::message("\n\3%S\1: \2%s\1 of level \2%d\1.", s, pn.make(1, false), s.get_computed_level() + 1);
+            ret += nlp::message("\n\3%S\1: \2%s\1 of level \2%d\1."_m, s, pn.make(1, false), s.get_computed_level() + 1);
 
         } else {
 
-            ret += nlp::message("\n\3%S\1: level \2%d\1.", s, s.get_computed_level() + 1);
+            ret += nlp::message("\n\3%S\1: level \2%d\1."_m, s, s.get_computed_level() + 1);
         }
 
         if (!s.ally.null()) {
-            ret += " \2It is usually friendly.\1";
+            ret += " \2It is usually friendly.\1"_map;
         }
 
         if (s.count == 0) {
-            ret += " (\2Exceedingly rare, ";
+            ret += " (\2Exceedingly rare, "_map;
 
         } else if (s.count <= 5) {
-            ret += " (\2Rare, ";
+            ret += " (\2Rare, "_map;
 
         } else if (s.count <= 10) {
-            ret += " (\2Uncommon, ";
+            ret += " (\2Uncommon, "_map;
 
         } else if (s.count <= 20) {
-            ret += " (\2Common, ";
+            ret += " (\2Common, "_map;
 
         } else {
-            ret += " (\2Very common, ";
+            ret += " (\2Very common, "_map;
         }
 
         if (danger >= 3) {
-            ret += "epically dangerous.\1)";
+            ret += "epically dangerous.\1)"_map;
 
         } else if (danger >= 2.5) {
-            ret += "terribly dangerous.\1)";
+            ret += "terribly dangerous.\1)"_map;
 
         } else if (danger >= 1.7) {
-            ret += "highly dangerous.\1)";
+            ret += "highly dangerous.\1)"_map;
 
         } else if (danger >= 0.8) {
-            ret += "dangerous.\1)";
+            ret += "dangerous.\1)"_map;
 
         } else if (danger >= 0.6) {
-            ret += "slightly dangerous.\1)";
+            ret += "slightly dangerous.\1)"_map;
 
         } else if (danger >= 0.4) {
-            ret += "mostly harmless.\1)";
+            ret += "mostly harmless.\1)"_map;
 
         } else {
-            ret += "harmless.\1)";
+            ret += "harmless.\1)"_map;
         }
 
         if (s.descr.size() > 0) {
@@ -680,7 +680,7 @@ std::string help_text() {
         "  \1s\1 :            (Same as '>'.)\n"
         "  \2q\1 :          Move away from the monsters in view. (Optimal direction is chosen automatically.)\n"
         "  \2,\1 :          Examine the first item laying on the floor.\n"
-        "  \2R\1 :          Stand still for 100 turns.\n"
+        "  \2R\1 :          Stand still for 100 turns.\n"_map
         ;
 
     for (const auto& shortcut : constants().shortcuts) {
@@ -703,12 +703,12 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
 
     switch (k.letter) {
     case 'Q':
-        state.render.do_message("Are you sure you want to commit suicide? (Press 'Y' if you are.)", true);
+        state.render.do_message("Are you sure you want to commit suicide? (Press 'Y' if you are.)"_m, true);
         p.state |= Player::QUITTING;
         break;
 
     case 'S':
-        state.render.do_message("Your game has been saved. (Press space to exit.)", true);
+        state.render.do_message("Your game has been saved. (Press space to exit.)"_m, true);
         done = true;
         dead = false;
         break;
@@ -764,7 +764,7 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
 
     case ',':
         if (state.items.stack_size(p.px, p.py) == 0) {
-            state.render.do_message("There are no items here.");
+            state.render.do_message("There are no items here."_m);
 
         } else {
             state.push_window(select_floor_item(p.inv, state.items, p.px, p.py, 0), screens_t::floor_item);
@@ -820,7 +820,7 @@ void handle_input_main(Player& p, GameState& state, GameOptions& options,
         break;
 
     case '\"':
-        do_player_input(state, p, ">>> ");
+        do_player_input(state, p, ">>> "_map);
         p.state |= Player::SELFNOTE;
         break;
 
@@ -1216,7 +1216,7 @@ void handle_input_options(GameState& state, GameOptions& options, maudit::keypre
 
 void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny) {
 
-    state.render.do_message("You start digging.");
+    state.render.do_message("You start digging."_m);
 
     p.dig.x = nx;
     p.dig.y = ny;
@@ -1237,9 +1237,9 @@ void Game::handle_input(GameState& state, GameOptions& options,
     if (p.state & Player::QUITTING) {
         if (k.letter == 'y' || k.letter == 'Y') {
 
-            state.render.do_message("See you later. (Press space to exit.)");
+            state.render.do_message("See you later. (Press space to exit.)"_m);
 
-            p.attacker = "suicide";
+            p.attacker = "suicide"_map;
             done = true;
             dead = true;
             return;
@@ -1277,7 +1277,7 @@ void Game::handle_input(GameState& state, GameOptions& options,
     }
 
     if (p.state & Player::SELFNOTE) {
-        state.render.do_message(">>> " + p.input.s);
+        state.render.do_message(">>> "_map + p.input.s);
         p.state = Player::MAIN;
         return;
     }
@@ -1337,7 +1337,7 @@ void Game::handle_input(GameState& state, GameOptions& options,
                 }
 
                 if (!ok) {
-                    state.render.do_message("You cannot dig here.");
+                    state.render.do_message("You cannot dig here."_m);
 
                 } else {
                     start_digging(p, state, nx, ny);
@@ -1347,7 +1347,7 @@ void Game::handle_input(GameState& state, GameOptions& options,
             } else {
 
                 if (state.grid.is_walk(nx, ny)) {
-                    state.render.do_message("There is nothing to dig there.");
+                    state.render.do_message("There is nothing to dig there."_m);
 
                 } else {
                     start_digging(p, state, nx, ny);
@@ -1426,7 +1426,7 @@ void Game::goodbye_message(GameState& state, FUNC println) {
 
     println("");
     println("");
-    println("Highscore table:");
+    println("Highscore table:"_map);
     println("");
 
     scores.by_plev();
@@ -1443,21 +1443,21 @@ void Game::goodbye_message(GameState& state, FUNC println) {
                            pad = " ";
 
                        if (victory) {
-                           line1 = nlp::message("%s%d) %S, a glorious victor of level %d.", pad, n, name, plev+1);
-                           line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM.",
+                           line1 = nlp::message("%s%d) %S, a glorious victor of level %d."_m, pad, n, name, plev+1);
+                           line2 = nlp::message("    Last seen on level %d. Net worth: %d $ZM."_m,
                                                 dlev+1, worth);
 
                        } else {
-                           line1 = nlp::message("%s%d) %S, level %d.", pad, n, name, plev+1);
-                           line2 = nlp::message("    Killed on level %d by %s. Net worth: %d $ZM.",  
+                           line1 = nlp::message("%s%d) %S, level %d."_m, pad, n, name, plev+1);
+                           line2 = nlp::message("    Killed on level %d by %s. Net worth: %d $ZM."_m,  
                                                 dlev+1, cause, worth);
                        }
 
                        if (rcodes == 1) {
-                           line1 += nlp::message(" (Replay codes were used once.)");
+                           line1 += nlp::message(" (Replay codes were used once.)"_m);
 
                        } else if (rcodes > 1) {
-                           line1 += nlp::message(" (Replay codes were used %d times.)", rcodes);
+                           line1 += nlp::message(" (Replay codes were used %d times.)"_m, rcodes);
                        }
 
                        println(line1);
@@ -1465,7 +1465,7 @@ void Game::goodbye_message(GameState& state, FUNC println) {
                        println("");
                    });
 
-    println("(Press any key)");
+    println("(Press any key)"_map);
 
 }
 

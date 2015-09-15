@@ -20,8 +20,6 @@ inline double roll_attack(rnd::Generator& rng,
 
 inline double karmic_damage_scale(double scale, double karma, double dmg) {
 
-    std::cout << "K_D_S: " << scale << " " << karma << " " << dmg << std::endl;
-
     double k = karma * scale;
 
     if (k > 0) {
@@ -53,14 +51,9 @@ inline bool luck_level_scale(rnd::Generator& rng, pstats::stats_t& stats, tag_t 
     if (pv <= 0 || pv >= 1)
         return false;
 
-    std::cout << " ==luck== " << factor << " " << threshold << " " << denom
-              << " " << v << " " << p << " " << pv << std::endl;
-
     bool neg = (v < 0);
 
     unsigned int fudge = rng.geometric(pv);
-
-    std::cout << "LUCK fudge: " << fudge << std::endl;
 
     if (neg) {
         level -= std::max(level, fudge);
@@ -165,25 +158,16 @@ inline bool attack_damage_monster(const damage::val_t& v,
         !dam.flags.player(false)) 
         return false;
 
-    std::cout << "~dmg~ " << dmg << std::endl;
-
     if (dam.karmic_scale.size() > 0) {
         double mk = 0;
 
-        for (const auto& i : mon.stats.stats) {
-            std::cout << " .stat. " << i.first.v << " " << i.second.val << std::endl;
-        }
-
         for (const auto& i : dam.karmic_scale) {
-            std::cout << "Karmic before: " << mk << " " << i.first.v << std::endl;
             mk = std::max(mk, karmic_damage_scale(i.second, mon.stats.gets(i.first), dmg));
-            std::cout << "Karmic after: " << mk << std::endl;
         }
 
         dmg = mk;
     }
 
-    std::cout << "DAM " << dmg << " " << dam.threshold << std::endl;
     if (dmg <= dam.threshold)
         return false;
 
@@ -297,7 +281,7 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
     }
 
     if (did_poly) {
-        state.render.do_message(nlp::message("You polymorph into %s!", s), true);
+        state.render.do_message(nlp::message("You polymorph into %s!"_m, s), true);
     }
 
     if (types.size() > 0 && mon.stats.crit()) {
@@ -319,7 +303,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     unsigned int species_level = s.get_computed_level();
 
     if (attacks.empty()) {
-        state.render.do_message("You can't attack without a weapon!", true);
+        state.render.do_message("You can't attack without a weapon!"_m, true);
         return false;
     }
 
@@ -337,7 +321,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     if (attack_res.empty()) {
 
         if (!quiet)
-            state.render.do_message(nlp::message("You attack %s but do no damage.", s));
+            state.render.do_message(nlp::message("You attack %s but do no damage."_m, s));
 
         return true;
     }
@@ -377,7 +361,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     if (did_poly) {
-        state.render.do_message(nlp::message("You polymorph into %s!", s), true);
+        state.render.do_message(nlp::message("You polymorph into %s!"_m, s), true);
     }
 
     bool allow_gain_level = (!s.flags.plant && p.polymorph.species.null());
@@ -385,9 +369,9 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     if (types.size() > 0 && mon.stats.crit()) {
 
         if (s.flags.plant || s.flags.robot) {
-            state.render.do_message(nlp::message("You destroyed %s.", s));
+            state.render.do_message(nlp::message("You destroyed %s."_m, s));
         } else {
-            state.render.do_message(nlp::message("You killed %s.", s));
+            state.render.do_message(nlp::message("You killed %s."_m, s));
         }
 
         monster_kill(p, state, mxy, mon, s, true, types);
@@ -399,7 +383,7 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
             // Don't gain a level twice.
             did_level = false;
             
-            state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
+            state.render.do_message(nlp::message("You gained level %d!"_m, p.level+1), true);
         }
 
         mon.dead = true;
@@ -407,39 +391,39 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     } else if (!quiet && visible_damage > 0) {
 
         if (s.flags.plant) {
-            state.render.do_message(nlp::message("You smash %s.", s));
+            state.render.do_message(nlp::message("You smash %s."_m, s));
 
         } else if (s.flags.robot) {
-            state.render.do_message(nlp::message("You damage %s.", s));
+            state.render.do_message(nlp::message("You damage %s."_m, s));
 
         } else if (visible_damage < 0.1) {
-            state.render.do_message(nlp::message("You almost miss %s.", s));
+            state.render.do_message(nlp::message("You almost miss %s."_m, s));
 
         } else if (visible_damage < 0.5) {
-            state.render.do_message(nlp::message("You hit %s.", s));
+            state.render.do_message(nlp::message("You hit %s."_m, s));
 
         } else if (visible_damage < 1.0) {
-            state.render.do_message(nlp::message("You wound %s.", s));
+            state.render.do_message(nlp::message("You wound %s."_m, s));
 
         } else if (visible_damage < 2.0) {
-            state.render.do_message(nlp::message("You heavily wound %s.", s));
+            state.render.do_message(nlp::message("You heavily wound %s."_m, s));
 
         } else if (visible_damage < 2.8) {
-            state.render.do_message(nlp::message("You critically wound %s.", s));
+            state.render.do_message(nlp::message("You critically wound %s."_m, s));
 
         } else {
-            state.render.do_message(nlp::message("You mortally wound %s.", s));
+            state.render.do_message(nlp::message("You mortally wound %s."_m, s));
         }
     }
 
     if (species_level >= p.level && did_level && allow_gain_level) {
 
         p.level = species_level+1;
-        state.render.do_message(nlp::message("You gained level %d!", p.level+1), true);
+        state.render.do_message(nlp::message("You gained level %d!"_m, p.level+1), true);
     }
 
     if (!ret) {
-        state.render.do_message("You try to attack but do no damage.");
+        state.render.do_message("You try to attack but do no damage."_m);
     }
 
     return ret;
@@ -512,7 +496,7 @@ inline void defend(Player& p,
     if (attack_res.empty()) {
 
         if (!env) {
-            Damage::msg_t msg("%s attacks but does no damage.");
+            Damage::msg_t msg("%s attacks but does no damage."_map);
             defend_message(state, s, msg);
         }
 

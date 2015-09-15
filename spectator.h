@@ -411,7 +411,7 @@ void choose_and_watch(SCREEN& screen) {
             "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
             "   Use the arrow keys to scroll your view in case the player's window is larger than yours.\n"
             "   Simply start typing and press 'Enter' to send a chat message.\n\n"
-            "\2Active games: (press space to refresh)\3\n\n";
+            "\2Active games: (press space to refresh)\3\n\n"_map;
 
         char c = 'a';
 
@@ -423,12 +423,12 @@ void choose_and_watch(SCREEN& screen) {
                 std::string name = j.name;
 
                 if (name.empty()) 
-                    name = "anonymous";
+                    name = "anonymous"_map;
 
                 if (name == "_")
                     continue;
                 
-                window += nlp::message("%c) %S, started playing %d minutes ago.\n", c, name, (now - i.first) / 60);
+                window += nlp::message("%c) %S, started playing %d minutes ago.\n"_m, c, name, (now - i.first) / 60);
                 games_c[c] = j.tag;
                 ++c;
             }

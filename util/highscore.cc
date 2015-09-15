@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "../strings_bank.h"
 #include "../highscore.h"
 
 

@@ -50,16 +50,16 @@ void add_ailments(Player& p, GameState& state) {
 
         switch (num_ails) {
         case 1:
-            msg = "This reincarnation of your body seems frail. (Press '@')";
+            msg = "This reincarnation of your body seems frail. (Press '@')"_map;
             break;
         case 2:
-            msg = "This reincarnation of your body is very frail.";
+            msg = "This reincarnation of your body is very frail."_map;
             break;
         case 3:
-            msg = "This reincarnation of your body is extremely fragile.";
+            msg = "This reincarnation of your body is extremely fragile."_map;
             break;
         default:
-            msg = "This reincarnation of your body is no good at all.";
+            msg = "This reincarnation of your body is no good at all."_map;
             break;
         }
     }
@@ -326,7 +326,7 @@ void finish_digging(const Player& p, GameState& state, unsigned int x, unsigned 
             items::Item made = state.items.make_item(ii.first, items::pt(x, y), state.rng);
             state.items.place(x, y, made, state.render);
 
-            state.render.do_message(nlp::message("You found %s!", nlp::count(), 
+            state.render.do_message(nlp::message("You found %s!"_m, nlp::count(), 
                                                  designs().get(made.tag), made.count));
         }
     }
@@ -341,13 +341,11 @@ void do_digging_step(Player& p, GameState& state) {
 
     height -= digspeed;
 
-    std::cout << "DIG " << height << std::endl;
-
     if (height <= -10) {
         height = -10;
 
         p.stats.counts.erase(constants().digging_count);
-        state.render.do_message("Digging done.");
+        state.render.do_message("Digging done."_m);
 
         finish_digging(p, state, p.dig.x, p.dig.y, p.dig.h);
     }
@@ -555,7 +553,7 @@ void Game::process_world(GameState& state,
         if (sp.timeout <= 0) {
             si = p.spells.erase(si);
 
-            state.render.do_message("You feel a sense of arcane foreboding.", true);
+            state.render.do_message("You feel a sense of arcane foreboding."_m, true);
         } else {
             ++si;
         }
@@ -653,8 +651,8 @@ void Game::process_world(GameState& state,
 
         std::string code = rcode::encode(game_seed);
 
-        state.render.do_message("You are dead. (Press space to exit.)", true);
-        state.render.do_message(nlp::message("Replay code: %s", code), true);
+        state.render.do_message("You are dead. (Press space to exit.)"_m, true);
+        state.render.do_message(nlp::message("Replay code: %s"_m, code), true);
         dead = true;
         done = true;
         return;
@@ -754,7 +752,7 @@ inline void find_existing_item_make(GameState& state, unsigned int px, unsigned 
     unsigned int trucount = state.designs_counts.take(design);
 
     if (trucount == 0) {
-        state.render.do_message("Strange. Nothing happened.");
+        state.render.do_message("Strange. Nothing happened."_m);
         return;
     }
 
@@ -763,7 +761,7 @@ inline void find_existing_item_make(GameState& state, unsigned int px, unsigned 
     items::Item made = state.items.make_item(design, items::pt(px, py), state.rng);
     state.items.place(px, py, made, state.render);
 
-    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+    state.render.do_message(nlp::message("You see %s."_m, nlp::count(), _design, made.count));
 }
 
 inline bool find_existing_item(GameState& state, unsigned int px, unsigned int py, const std::string& name) {
@@ -771,7 +769,7 @@ inline bool find_existing_item(GameState& state, unsigned int px, unsigned int p
     tag_t d = find_existing_item_search(state, name, true, false);
 
     if (d.null()) {
-        state.render.do_message("Strange. Nothing happened.");
+        state.render.do_message("Strange. Nothing happened."_m);
         return false;
     }
 
@@ -809,7 +807,7 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
     }
 
     if (desgns.empty()) {
-        state.render.do_message("Strange. Nothing happened.");
+        state.render.do_message("Strange. Nothing happened."_m);
         return false;
     }
 
@@ -828,7 +826,7 @@ inline bool find_any_item(GameState& state, Player& p, unsigned int px, unsigned
 
     state.items.place(px, py, made, state.render);
 
-    state.render.do_message(nlp::message("You see %s.", nlp::count(), _design, made.count));
+    state.render.do_message(nlp::message("You see %s."_m, nlp::count(), _design, made.count));
     return true;
 }
 

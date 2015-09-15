@@ -472,7 +472,7 @@ struct Map {
         for (size_t np = 0; np < npass; ++np) {
 
             if (walkmap_p->size() > 2000)
-                progressbar("  ...");
+                progressbar("  ..."_map);
 
             std::unordered_map<pt, size_t> nwalk;
             std::unordered_map<pt, size_t> nwater;
@@ -541,7 +541,7 @@ struct Map {
         for (size_t np = 0; np < npass; ++np) {
 
             if (watermap_p->size() > 2000)
-                progressbar("  ...");
+                progressbar("  ..."_map);
             
             unwater.clear();
 
@@ -571,12 +571,12 @@ struct Map {
     void flatten(neighbors::Neighbors& neigh, const PARAMS& genparams, FUNC progressbar) {
 
         {
-            progressbar("Aging rock...");
+            progressbar("Aging rock..."_map);
             flatten_pass(neigh, genparams, progressbar, genparams.nflatten_walk, genparams.nflatten_water);
         }
 
         {
-            progressbar("Flowing water...");
+            progressbar("Flowing water..."_map);
             unflow(neigh, genparams,  progressbar, genparams.nunflow);
         }
     }
@@ -641,12 +641,12 @@ struct Map {
         clear();
 
         {
-            progressbar("Placing shiprock...");
+            progressbar("Placing shiprock..."_map);
             makegrid(rng);
         }
 
         {
-            progressbar("Placing water...");
+            progressbar("Placing water..."_map);
             makerivers(neigh, rng, genparams);
         }        
 
@@ -667,12 +667,12 @@ struct Map {
 
         //
         {
-            progressbar("Allotting karma...");
+            progressbar("Allotting karma..."_map);
             make_karma(rng, genparams);
         }
 
         {
-            progressbar("Combining...");
+            progressbar("Combining..."_map);
             set_maps(neigh);
         }
     }

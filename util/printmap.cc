@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "../strings_bank.h"
 #include "../serialize.h"
 #include "../common_types.h"
 #include "../common.h"

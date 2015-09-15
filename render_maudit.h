@@ -941,7 +941,7 @@ public:
             }
         }
 
-        std::string help_message = "[ Use arrow keys to scroll view, tab to change color scheme ]";
+        std::string help_message = "[ Use arrow keys to scroll view, tab to change color scheme ]"_map;
 
         bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {

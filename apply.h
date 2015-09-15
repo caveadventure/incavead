@@ -7,40 +7,40 @@ inline std::string dowsing_message(const Player& p, const GameState& state) {
     const Levelskin& ls = levelskins().get(p.worldz);
 
     if (!ls.has_treasure) {
-        return "Dowsing is useless here.";
+        return "Dowsing is useless here."_map;
     }
 
     double h = state.grid.get(p.px, p.py);
 
     if (h <= -1) {
-        return "Completely cold.";
+        return "Completely cold."_map;
 
     } else if (h < 0.5) {
-        return "Very cold.";
+        return "Very cold."_map;
 
     } else if (h < 0) {
-        return "Cold.";
+        return "Cold."_map;
 
     } else if (h < 0.5) {
-        return "A little bit warm.";
+        return "A little bit warm."_map;
 
     } else if (h < 1) {
-        return "Warm.";
+        return "Warm."_map;
 
     } else if (h < 1.5) {
-        return "Warm and getting warmer.";
+        return "Warm and getting warmer."_map;
 
     } else if (h < 2) {
-        return "A little bit hot.";
+        return "A little bit hot."_map;
 
     } else if (h < 2.5) {
-        return "Hot.";
+        return "Hot."_map;
 
     } else if (h < 3.0) {
-        return "Very hot.";
+        return "Very hot."_map;
 
     } else {
-        return "Extremely hot.";
+        return "Extremely hot."_map;
     }
 }
 
@@ -139,7 +139,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         return false;
 
     if (d.action_name.size() > 0) {
-        state.render.do_message(nlp::message("You %s %s.", d.action_name, d));
+        state.render.do_message(nlp::message("You %s %s."_m, d.action_name, d));
     }
     
     if (!d.attacks.empty()) {
@@ -193,7 +193,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
     if (d.heal_ailments && p.ailments.size() > 0) {
 
         p.ailments.clear();
-        state.render.do_message("You feel cured.");
+        state.render.do_message("You feel cured."_m);
         ret = true;
     }
 
@@ -201,7 +201,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         
         p.polymorph.species = tag_t();
         p.polymorph.turns = 0;
-        state.render.do_message("You return to your original form.", true);
+        state.render.do_message("You return to your original form."_m, true);
         state.render.invalidate(p.px, p.py);
         ret = true;
     }
@@ -230,7 +230,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
         if (ls.no_phase_level && t.stairs > 0) {
 
-            state.render.do_message("Nothing happened. Strange.", true);
+            state.render.do_message("Nothing happened. Strange."_m, true);
             ret = false;
 
         } else {
@@ -261,7 +261,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         const Levelskin& ls = levelskins().get(p.worldz);
 
         if (ls.no_phase_level) {
-            state.render.do_message("Nothing happened. Strange.", true);
+            state.render.do_message("Nothing happened. Strange."_m, true);
             ret = false;
 
         } else {
@@ -273,7 +273,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
 
     if (!d.genocide.null()) {
 
-        state.render.do_message("You sense a great disturbance in the force.", true);
+        state.render.do_message("You sense a great disturbance in the force."_m, true);
 
         genocide(state, d.genocide);
         ret = true;
@@ -343,9 +343,9 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
             });
 
         if (n > 0) {
-            state.render.do_message("The earth shudders and the dead wake!", true);
+            state.render.do_message("The earth shudders and the dead wake!"_m, true);
         } else {
-            state.render.do_message("Nothing happens. How curious.");
+            state.render.do_message("Nothing happens. How curious."_m);
         }
 
         ret = true;
@@ -356,7 +356,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         if (charm_attack(p, state, d.attack_level, d.attacks, d.charm.range)) {
             state.render.do_message(d.charm.msg, true);
         } else {
-            state.render.do_message("Nothing happens. Strange.");
+            state.render.do_message("Nothing happens. Strange."_m);
         }
 
         ret = true;
@@ -378,7 +378,7 @@ inline bool apply_item(Player& p, tag_t slot, GameState& state, bool& regen) {
         p.fast.slice = d.fast.slice;
         p.fast.turns = std::max(state.rng.gauss(d.fast.turns.mean, d.fast.turns.deviation), 1.0);
 
-        state.render.do_message("You feel your movements speed up unnaturally.", true);
+        state.render.do_message("You feel your movements speed up unnaturally."_m, true);
         
         ret = true;
     }
@@ -645,14 +645,14 @@ inline bool start_poly_blast(Player& p, size_t i, GameState& state) {
 
     if ((state.ticks % b.turns) != 0) {
 
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
     
     double v = state.rng.gauss(0.0, 1.0);
 
     if (v <= b.chance) {
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
 
@@ -699,14 +699,14 @@ inline bool start_poly_cloud(Player& p, size_t i, GameState& state) {
 
     if ((state.ticks % c.turns) != 0) {
 
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
     
     double v = state.rng.gauss(0.0, 1.0);
 
     if (v <= c.chance) {
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
 
@@ -729,14 +729,14 @@ inline bool summon_poly(Player& p, size_t i, GameState& state) {
 
     if ((state.ticks % c.turns) != 0) {
 
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
     
     double v = state.rng.gauss(0.0, 1.0);
 
     if (v <= c.chance) {
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
 
@@ -759,14 +759,14 @@ inline bool spawn_poly(Player& p, size_t i, GameState& state) {
 
     if ((state.ticks % c.turns) != 0) {
 
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
     
     double v = state.rng.gauss(0.0, 1.0);
 
     if (v <= c.chance) {
-        state.render.do_message("You failed to activate your ability properly.");
+        state.render.do_message("You failed to activate your ability properly."_m);
         return false;
     }
 
@@ -809,7 +809,7 @@ inline bool take_item(unsigned int x, unsigned int y, unsigned int z,
             const Design& d = designs().get(discarded_item.tag);
 
             // HACK
-            state.render.do_message(nlp::message("You discard %s to make space.", nlp::count(), d, 
+            state.render.do_message(nlp::message("You discard %s to make space."_m, nlp::count(), d, 
                                                  discarded_item.count));
         }
 
