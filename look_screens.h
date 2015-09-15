@@ -243,7 +243,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
             }
 
             if (st.critical) {
-                health = std::min(health, (i.second.val - st.min) / (st.min - st.min));
+                health = std::min(health, (i.second.val - st.min) / (st.max - st.min));
+                std::cout << "  [" << health << "] " << (i.second.val - st.max) / (st.min - st.min) << std::endl;
             }
         }
 
@@ -253,7 +254,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
                 state.push_back("badly damaged");
             } else if (health < 0.5) {
                 state.push_back("damaged");
-            } else if (health < 0.75) {
+            } else if (health < 0.9) {
                 state.push_back("slightly damaged");
             }
 
@@ -263,6 +264,8 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
                 state.push_back("badly wounded");
             } else if (health < 0.5) {
                 state.push_back("wounded");
+            } else if (health < 0.9) {
+                state.push_back("lightly wounded");
             }
         }
 

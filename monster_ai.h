@@ -28,16 +28,17 @@ inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigne
                              });
 }
 
-inline void monster_blast_process_point(Player& p, GameState& state, const Species& s, monsters::Monster& mon,
+template <typename T>
+inline void monster_blast_process_point(Player& p, GameState& state, const Species& s, T& actor,
                                         unsigned int _x, unsigned int _y, const damage::attacks_t& attacks,
-                                        bool friendly_fire) {
+                                        bool player_is_attacking) {
 
     if (_x == p.px && _y == p.py) {
 
         damage::defenses_t defenses;
         p.get_defense(defenses);
 
-        defend(p, defenses, p.get_computed_level(), s, mon, attacks, state, friendly_fire);
+        defend(p, defenses, p.get_computed_level(), s, actor, attacks, state, player_is_attacking);
 
     } else {
 
@@ -45,25 +46,27 @@ inline void monster_blast_process_point(Player& p, GameState& state, const Speci
 
         if (!mon.null()) {
 
-            attack_from_env(p, attacks, s.get_computed_level(), state, monsters::pt(_x, _y), mon, friendly_fire);
+            attack_from_env(p, attacks, s.get_computed_level(), state, monsters::pt(_x, _y), mon,
+                            actor, player_is_attacking);
         }
     }
 }
 
-inline void do_monster_blast(Player& p, GameState& state, const Species& s, monsters::Monster& mon,
+template <typename T>
+inline void do_monster_blast(Player& p, GameState& state, const Species& s, T& actor,
                              unsigned int tx, unsigned int ty, unsigned int rad, 
-                             const damage::attacks_t& attacks, bool friendly_fire = false) {
+                             const damage::attacks_t& attacks, bool track_kills = false) {
 
     if (rad == 0) {
 
-        monster_blast_process_point(p, state, s, mon, tx, ty, attacks, friendly_fire);
+        monster_blast_process_point(p, state, s, actor, tx, ty, attacks, track_kills);
 
     } else {
 
         state.render.draw_circle(tx, ty, rad, s.skin.a.fore, maudit::color::bright_black,
                                  [&](unsigned int _x, unsigned int _y) {
                                  
-                                     monster_blast_process_point(p, state, s, mon, _x, _y, attacks, friendly_fire);
+                                     monster_blast_process_point(p, state, s, actor, _x, _y, attacks, track_kills);
                                  });
     }
 }
@@ -244,7 +247,15 @@ inline bool move_monster_main(Player& p, GameState& state,
 
         if (!t.attacks.empty()) {
 
-            attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, false);
+            if (t.player_attack) {
+
+                attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, p, true);
+
+            } else {
+                
+                int tmp;
+                attack_from_env(p, t.attacks, t.attack_level, state, mxy, m, tmp, false);
+            }
 
             if (t.uncharge.attack) {
                 state.features.uncharge(mxy.first, mxy.second, state.render);
@@ -276,7 +287,8 @@ inline bool move_monster_main(Player& p, GameState& state,
             if (a == constants().ailments.end())
                 throw std::runtime_error("Unknown ailment in levelskin.");
 
-            attack_from_env(p, a->second.attacks, a->second.level, state, mxy, m, false, true);
+            int tmp;
+            attack_from_env(p, a->second.attacks, a->second.level, state, mxy, m, tmp, false, true);
         }
     }
 
@@ -635,13 +647,13 @@ inline int conflict_monster(Player& p, GameState& state,
     if (!ma.did_attack) {
 
         ma.did_attack = true;
-        attack_from_env(p, sa.attacks, sa.get_computed_level(), state, mxyb, mb, false);
+        attack_from_env(p, sa.attacks, sa.get_computed_level(), state, mxyb, mb, ma, false);
     }
 
     if (!mb.did_attack) {
 
         mb.did_attack = true;
-        attack_from_env(p, sb.attacks, sb.get_computed_level(), state, mxya, ma, false);
+        attack_from_env(p, sb.attacks, sb.get_computed_level(), state, mxya, ma, mb, false);
     }
 
     int ret = 0;

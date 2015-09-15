@@ -64,7 +64,7 @@ inline bool charm_attack(Player& p, GameState& state,
         if (!ok)
             continue;
 
-        ok = attack_from_env(p, attacks, plevel, state, monsters::pt(i.x, i.y), m, true);
+        ok = attack_from_env(p, attacks, plevel, state, monsters::pt(i.x, i.y), m, p, true);
 
         if (ok)
             return true;
@@ -629,8 +629,7 @@ inline bool end_poly_blast(Player& p, size_t i, unsigned int x, unsigned int y, 
 
     const auto& b = s.blast[i];
 
-    monsters::Monster tmpmon;
-    do_monster_blast(p, state, s, tmpmon, x, y, b.radius, b.attacks, true);
+    do_monster_blast(p, state, s, p, x, y, b.radius, b.attacks, true);
 
     return true;
 }

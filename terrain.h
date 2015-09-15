@@ -68,6 +68,8 @@ struct Terrain {
 
     uncharge_t uncharge;
 
+    bool player_attack;
+
     struct craft_t {
         tag_t from;
         tag_t to;
@@ -118,7 +120,7 @@ struct Terrain {
     Terrain() : count(0), placement(placement_t::floor), stairs(0), tunnel_x(0), tunnel_y(0),
                 viewblock(false), walkblock(false), decay(0), attack_level(0),
                 sticky(false), is_lit(false), is_lightsource(false), air(false), charges(0), safebox(false),
-                wishing(NO_WISH), important(false), view_radius(-1), preserve(false) {}
+                player_attack(false), wishing(NO_WISH), important(false), view_radius(-1), preserve(false) {}
 
 };
 

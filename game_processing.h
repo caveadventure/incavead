@@ -341,7 +341,9 @@ void do_digging_step(Player& p, GameState& state) {
 
     height -= digspeed;
 
-    if (height < -10) {
+    std::cout << "DIG " << height << std::endl;
+
+    if (height <= -10) {
         height = -10;
 
         p.stats.counts.erase(constants().digging_count);

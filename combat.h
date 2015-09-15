@@ -123,10 +123,29 @@ inline void monster_kill(Player& p, GameState& state, const monsters::pt& mxy, m
     }
 }
 
+inline void wrap_sinc_stats(Player& p, tag_t stat, double v) {
 
+    if (p.stats.sinc(stat, v)) {
+        p.dead = true;
+    }
+}
+
+inline void wrap_sinc_stats(monsters::Monster& mon, tag_t stat, double v) {
+
+    if (mon.stats.sinc(stat, v)) {
+        mon.dead = true;
+    }
+}
+
+inline void wrap_sinc_stats(int, tag_t, double) {
+}
+
+
+template <typename T>
 inline bool attack_damage_monster(const damage::val_t& v, 
                                   const monsters::pt& mxy, monsters::Monster& mon, const Species& s,
                                   Player& p, GameState& state,
+                                  T& receiver,
                                   std::map<tag_t,double>& stathits,
                                   std::map<tag_t,unsigned int>& counthits,
                                   std::set<tag_t>& types, bool& did_poly, bool& did_level,
@@ -197,18 +216,12 @@ inline bool attack_damage_monster(const damage::val_t& v,
 
     for (const tag_t& i : dam.inc_stats) {
 
-        if (p.stats.sinc(i, dmg)) {
-
-            types.insert(v.type);
-        }
+        wrap_sinc_stats(receiver, i, dmg);
     }
 
     for (const tag_t& i : dam.transfer_stats) {
 
-        if (p.stats.sinc(i, -mon.stats.gets(i) * dmg)) {
-
-            types.insert(v.type);
-        }
+        wrap_sinc_stats(receiver, i, -mon.stats.gets(i) * dmg);
     }
 
     unsigned int polyturns = dam.player_poly.get(dmg);
@@ -245,9 +258,10 @@ inline bool attack_damage_monster(const damage::val_t& v,
     return true;
 }
 
-
+template <typename T>
 inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigned int plevel,
                             GameState& state, const monsters::pt& mxy, monsters::Monster& mon,
+                            T& receiver,
                             bool track_kills, bool zero_mon_level = false) {
 
     if (attacks.empty()) {
@@ -275,8 +289,8 @@ inline bool attack_from_env(Player& p, const damage::attacks_t& attacks, unsigne
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, counthits,
-                                         types, did_poly, did_level, visible_damage);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, receiver,
+                                         stathits, counthits, types, did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
@@ -339,8 +353,8 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
 
     for (const auto& v : attack_res) {
 
-        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, stathits, counthits,
-                                         types, did_poly, did_level, visible_damage);
+        bool tmp = attack_damage_monster(v, mxy, mon, s, p, state, p,
+                                         stathits, counthits, types, did_poly, did_level, visible_damage);
 
         if (tmp)
             ret = true;
@@ -470,23 +484,13 @@ inline void defend_message(GameState& state, const ConstantsBank::ailment_t& a, 
     state.render.do_message(nlp::message(msg.str, a), msg.important);
 }
 
-inline void defend_sinc_stats(monsters::Monster& mon, tag_t stat, double v) {
-
-    if (mon.stats.sinc(stat, v)) {
-        mon.dead = true;
-    }
-}
-
-inline void defend_sinc_stats(int, tag_t, double) {
-}
-
 
 template <typename S, typename T>
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const damage::attacks_t& attacks, unsigned int alevel, 
                    GameState& state, const std::string& attacker_name, bool env,
-                   const S& s, T mon, size_t& n) {
+                   const S& s, T& mon, size_t& n) {
 
     if (attacks.empty())
         return;
@@ -567,12 +571,12 @@ inline void defend(Player& p,
 
         for (const tag_t& i : dam.inc_stats) {
 
-            defend_sinc_stats(mon, i, dmg);
+            wrap_sinc_stats(mon, i, dmg);
         }
 
         for (const tag_t& i : dam.transfer_stats) {
 
-            defend_sinc_stats(mon, i, -p.stats.gets(i) * dmg);
+            wrap_sinc_stats(mon, i, -p.stats.gets(i) * dmg);
         }
 
         // HACK!
@@ -591,7 +595,7 @@ inline void defend(Player& p,
 
             p.add_ailment(state.rng, dam.infect.first, i->second.triggers);
 
-            defend_sinc_stats(mon, dam.infect.second, -dmg);
+            wrap_sinc_stats(mon, dam.infect.second, -dmg);
         }
 
         if (env) {
@@ -606,14 +610,14 @@ inline void defend(Player& p,
     }
 }
 
+template <typename T>
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
-                   const Species& s, monsters::Monster& mon, const damage::attacks_t& attacks,
+                   const Species& s, T& actor, const damage::attacks_t& attacks,
                    GameState& state, bool friendly_fire = false) {
 
     size_t tmp;
-    defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s,
-           std::ref(mon), tmp);
+    defend(p, defenses, plevel, attacks, s.get_computed_level(), state, s.name, friendly_fire, s, actor, tmp);
 }
 
 inline void defend(Player& p, 
@@ -624,15 +628,14 @@ inline void defend(Player& p,
     defend(p, defenses, plevel, s, mon, s.attacks, state, friendly_fire);
 }
 
-
-
 inline void defend(Player& p, 
                    const damage::defenses_t& defenses, unsigned int plevel, 
                    const Terrain& t, 
                    GameState& state) {
 
     size_t tmp;
-    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t, 1234, tmp);
+    int tmp0;
+    defend(p, defenses, plevel, t.attacks, t.attack_level, state, t.name, true, t, tmp0, tmp);
 }
 
 inline void defend(Player& p, 
@@ -643,7 +646,8 @@ inline void defend(Player& p,
     unsigned int level = (d.attack_level >= 0 ? d.attack_level : d.level);
 
     size_t tmp;
-    defend(p, defenses, plevel, d.attacks, level, state, d.name, true, d, 1234, tmp);
+    int tmp0;
+    defend(p, defenses, plevel, d.attacks, level, state, d.name, true, d, tmp0, tmp);
 }
 
 inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameState& state) {
@@ -652,9 +656,10 @@ inline size_t defend(Player& p, const ConstantsBank::ailment_t& ailment, GameSta
     p.get_defense(defenses);
 
     size_t tmp = 0;
+    int tmp0;
 
     defend(p, defenses, /*p.get_computed_level(state.rng)*/ 0, ailment.attacks, ailment.level, state, 
-           ailment.name, true, ailment, 1234, tmp);
+           ailment.name, true, ailment, tmp0, tmp);
 
     return tmp;
 }

@@ -1222,7 +1222,7 @@ void start_digging(Player& p, GameState& state, unsigned int nx, unsigned int ny
     p.dig.y = ny;
     p.dig.h = state.grid.get(nx, ny);
 
-    p.stats.cinc(constants().digging_count, 1 + ((p.dig.h + 10) / p.inv.get_digging()));
+    p.stats.cinc(constants().digging_count, 2 + ((p.dig.h + 10) / p.inv.get_digging()));
 }
 
 void Game::handle_input(GameState& state, GameOptions& options,
