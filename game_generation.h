@@ -119,7 +119,7 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
     // Place some dungeon features on the same spots every time.
     
     {
-        progressbar("Placing features..."_map);
+        progressbar("Placing features..."_m);
 
         counters::Counts terrain_counts = terrain().counts;
 
@@ -136,7 +136,7 @@ generate_or_read_cached(const std::string& filename, GameState& state, const Lev
     }
 
     {
-        progressbar("Placing vaults..."_map);
+        progressbar("Placing vaults..."_m);
 
         generate_vaults(state, maps, vaults_level, lev.number_fixed_vaults, Vault::type_t::FIXED, vaultstate);
     }
@@ -171,7 +171,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     std::string filename = make_mapname(p.worldx, p.worldy, p.worldz);
 
-    progressbar("Generating dungeon..."_map);
+    progressbar("Generating dungeon..."_m);
 
     unsigned int species_level = lev.get_species_level(p.worldz);
     unsigned int designs_level = lev.get_designs_level(p.worldz);
@@ -229,7 +229,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     // Place some vaults. Some are randomized, some are always on the same spots every time.
 
     {
-        progressbar("Placing vaults..."_map);
+        progressbar("Placing vaults..."_m);
 
         state.rng.init(semirandomseed);
 
@@ -285,7 +285,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place bones.
     {
-        progressbar("Scattering bones..."_map);
+        progressbar("Scattering bones..."_m);
 
         std::vector< std::pair<bones::pt, double> > bxy;
 
@@ -429,7 +429,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place some random items.
     {
-        progressbar("Placing items..."_map);
+        progressbar("Placing items..."_m);
 
         unsigned int items = std::max(0.0, state.rng.gauss(lev.number_items.mean, lev.number_items.deviation));
 
@@ -501,7 +501,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
 
     // Place some random monsters.
     {
-        progressbar("Placing monsters..."_map);
+        progressbar("Placing monsters..."_m);
 
         for (const auto& s : vaultstate.summons) {
 
@@ -546,7 +546,7 @@ void Game::generate(GameState& state, FUNC progressbar) {
     p.current_wy = p.worldy;
     p.current_wz = p.worldz;
 
-    progressbar("Done!"_map);
+    progressbar("Done!"_m);
 }
 
 

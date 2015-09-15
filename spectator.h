@@ -411,7 +411,7 @@ void choose_and_watch(SCREEN& screen) {
             "   When viewing a game, press 'ESC' twice to stop and return to this screen.\n"
             "   Use the arrow keys to scroll your view in case the player's window is larger than yours.\n"
             "   Simply start typing and press 'Enter' to send a chat message.\n\n"
-            "\2Active games: (press space to refresh)\3\n\n"_map;
+            "\2Active games: (press space to refresh)\3\n\n"_m;
 
         char c = 'a';
 
@@ -423,7 +423,7 @@ void choose_and_watch(SCREEN& screen) {
                 std::string name = j.name;
 
                 if (name.empty()) 
-                    name = "anonymous"_map;
+                    name = "anonymous"_m;
 
                 if (name == "_")
                     continue;

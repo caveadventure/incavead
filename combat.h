@@ -496,7 +496,7 @@ inline void defend(Player& p,
     if (attack_res.empty()) {
 
         if (!env) {
-            Damage::msg_t msg("%s attacks but does no damage."_map);
+            Damage::msg_t msg("%s attacks but does no damage."_m);
             defend_message(state, s, msg);
         }
 

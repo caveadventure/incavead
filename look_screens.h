@@ -219,7 +219,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         std::vector<std::string> state;
 
         if (!mon.ally.null()) {
-            state.push_back("ally"_map);
+            state.push_back("ally"_m);
         }
 
         for (const auto& i : mon.stats.counts) {
@@ -250,21 +250,21 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         if (s.flags.robot) {
 
             if (health < 0.1666) {
-                state.push_back("badly damaged"_map);
+                state.push_back("badly damaged"_m);
             } else if (health < 0.5) {
-                state.push_back("damaged"_map);
+                state.push_back("damaged"_m);
             } else if (health < 0.9) {
-                state.push_back("slightly damaged"_map);
+                state.push_back("slightly damaged"_m);
             }
 
         } else if (!s.flags.plant) {
 
             if (health < 0.1666) {
-                state.push_back("badly wounded"_map);
+                state.push_back("badly wounded"_m);
             } else if (health < 0.5) {
-                state.push_back("wounded"_map);
+                state.push_back("wounded"_m);
             } else if (health < 0.9) {
-                state.push_back("lightly wounded"_map);
+                state.push_back("lightly wounded"_m);
             }
         }
 
@@ -307,7 +307,7 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         }            
 
     } else if (x == px && y == py) {
-        msg = " This is you"_map;
+        msg = " This is you"_m;
 
     } else {
         ok = false;
@@ -319,11 +319,11 @@ inline void handle_input_looking(unsigned int& pstate, Player::look_state_t& loo
         bool water = state.grid.is_water(x, y);
 
         if (!walk) {
-            msg = " rock"_map;
+            msg = " rock"_m;
         } else if (water) {
-            msg = " water"_map;
+            msg = " water"_m;
         } else {
-            msg = " floor"_map;
+            msg = " floor"_m;
         }
     }
 

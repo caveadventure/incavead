@@ -50,16 +50,16 @@ void add_ailments(Player& p, GameState& state) {
 
         switch (num_ails) {
         case 1:
-            msg = "This reincarnation of your body seems frail. (Press '@')"_map;
+            msg = "This reincarnation of your body seems frail. (Press '@')"_m;
             break;
         case 2:
-            msg = "This reincarnation of your body is very frail."_map;
+            msg = "This reincarnation of your body is very frail."_m;
             break;
         case 3:
-            msg = "This reincarnation of your body is extremely fragile."_map;
+            msg = "This reincarnation of your body is extremely fragile."_m;
             break;
         default:
-            msg = "This reincarnation of your body is no good at all."_map;
+            msg = "This reincarnation of your body is no good at all."_m;
             break;
         }
     }

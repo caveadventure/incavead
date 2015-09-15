@@ -941,7 +941,7 @@ public:
             }
         }
 
-        std::string help_message = "[ Use arrow keys to scroll view, tab to change color scheme ]"_map;
+        std::string help_message = "[ Use arrow keys to scroll view, tab to change color scheme ]"_m;
 
         bool ok = screen.refresh(
             [&](std::vector<maudit::glyph>& ret_glyphs, size_t view_w, size_t view_h) {
@@ -1182,11 +1182,6 @@ public:
 
         messages.emplace_front(msg, important, 0, temporary);
     }
-
-    void do_message(const std::pair<uint64_t, const char*>& msg, bool important = false, bool temporary = false) {
-        do_message(strings().get(msg.first, msg.second), important, temporary);
-    }
-
 
     std::string all_messages() {
 

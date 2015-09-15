@@ -663,7 +663,7 @@ inline int conflict_monster(Player& p, GameState& state,
 
         if (state.render.is_in_fov(mxy.first, mxy.second)) {
 
-            std::string verb = (s.flags.robot || s.flags.plant ? "destroyed"_map : "killed"_map);
+            std::string verb = (s.flags.robot || s.flags.plant ? "destroyed"_m : "killed"_m);
 
             if (m.ally.null()) {
                 state.render.do_message(nlp::message("%S is %s."_m, s, verb));

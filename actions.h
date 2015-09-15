@@ -12,12 +12,12 @@ void do_player_input(GameState& state, Player& p, const std::string& prompt, int
 
 void do_player_wish(GameState& state, Player& p) {
 
-    do_player_input(state, p, "Wish for what: >>> "_map);
+    do_player_input(state, p, "Wish for what: >>> "_m);
 }
 
 void do_player_label(GameState& state, Player& p, int limit) {
 
-    do_player_input(state, p, "Write what: >>> "_map, limit);
+    do_player_input(state, p, "Write what: >>> "_m, limit);
 }
 
 void move_player(const Player& p, GameState& state) {
@@ -299,14 +299,14 @@ std::string tombstone_text(const Player& p) {
 
     if (!bones::bones().get(p, bone)) {
 
-        return "\n\nHm, this tombstone is blank..."_map;
+        return "\n\nHm, this tombstone is blank..."_m;
     }
 
     if (bone.name.name.empty())
-        bone.name.name = "anonymous"_map;
+        bone.name.name = "anonymous"_m;
 
     if (bone.cause.name.empty())
-        bone.cause.name = "unnatural causes"_map;
+        bone.cause.name = "unnatural causes"_m;
 
     return nlp::message(constants().tombstone_text,
                         bone.name,
@@ -399,7 +399,7 @@ void use_terrain(Player& p, GameState& state, bool& regen, bool& done, bool& dea
             state.render.do_message(" ~*~   You win the game!   ~*~ "_m, true);
 
             // HACK!
-            p.attacker = "VICTORY"_map;
+            p.attacker = "VICTORY";
             done = true;
             dead = true;
 

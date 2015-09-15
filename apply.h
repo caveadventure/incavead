@@ -7,40 +7,40 @@ inline std::string dowsing_message(const Player& p, const GameState& state) {
     const Levelskin& ls = levelskins().get(p.worldz);
 
     if (!ls.has_treasure) {
-        return "Dowsing is useless here."_map;
+        return "Dowsing is useless here."_m;
     }
 
     double h = state.grid.get(p.px, p.py);
 
     if (h <= -1) {
-        return "Completely cold."_map;
+        return "Completely cold."_m;
 
     } else if (h < 0.5) {
-        return "Very cold."_map;
+        return "Very cold."_m;
 
     } else if (h < 0) {
-        return "Cold."_map;
+        return "Cold."_m;
 
     } else if (h < 0.5) {
-        return "A little bit warm."_map;
+        return "A little bit warm."_m;
 
     } else if (h < 1) {
-        return "Warm."_map;
+        return "Warm."_m;
 
     } else if (h < 1.5) {
-        return "Warm and getting warmer."_map;
+        return "Warm and getting warmer."_m;
 
     } else if (h < 2) {
-        return "A little bit hot."_map;
+        return "A little bit hot."_m;
 
     } else if (h < 2.5) {
-        return "Hot."_map;
+        return "Hot."_m;
 
     } else if (h < 3.0) {
-        return "Very hot."_map;
+        return "Very hot."_m;
 
     } else {
-        return "Extremely hot."_map;
+        return "Extremely hot."_m;
     }
 }
 

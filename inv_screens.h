@@ -68,7 +68,7 @@ inline std::string select_floor_item(inventory_t& inv, items::Items& items,
                           d.descr);
 
     if (inv.slots.count(d.slot) != 0) {
-        window += "  \2t\1) Take.\n"_map;
+        window += "  \2t\1) Take.\n"_m;
     }
 
     inv.selected_floor_item = z;
@@ -85,9 +85,9 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
 
     if (p.worldx != 0 || p.worldy != 0) {
         static const std::string tunnels[3][3] = {
-            { "due NW"_map, "due W"_map, "due SW"_map },
-            { "due N"_map,  ""_map,      "due S"_map },
-            { "due NE"_map, "due E"_map, "due SE"_map } };
+            { "due NW"_m, "due W"_m, "due SW"_m },
+            { "due N"_m,  ""_m,      "due S"_m },
+            { "due NE"_m, "due E"_m, "due SE"_m } };
 
 
         level_name += ", ";
@@ -167,7 +167,7 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
         ++letter;
 
         if (letter == '9') {
-            m += "               \1(There are more items here in the pile.)\n"_map;
+            m += "               \1(There are more items here in the pile.)\n"_m;
             break;
         }
     }

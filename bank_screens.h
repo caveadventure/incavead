@@ -224,7 +224,7 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
 
         //state.window_stack.clear();
         state.window_stack.pop_back();
-        state.push_window("No such item exists. Please try again."_map, screens_t::messages);
+        state.push_window("No such item exists. Please try again."_m, screens_t::messages);
         return;
     }
 
@@ -270,14 +270,14 @@ inline void show_banking_buy_item_menu(Player& p, GameState& state, const Terrai
     }
 
     if (p.banking.assets < price) {
-        msg += "You cannot afford this item, sorry."_map;
+        msg += "You cannot afford this item, sorry."_m;
 
         //state.window_stack.clear();
         state.window_stack.pop_back();
         state.push_window(msg, screens_t::messages);
 
     } else {
-        msg += "  \2y\1) Yes, I agree to buy this item.\n"_map;
+        msg += "  \2y\1) Yes, I agree to buy this item.\n"_m;
 
         p.banking.item = item;
         p.banking.item_price = price;
@@ -293,7 +293,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
     switch (k.letter) {
     case 'w':
         p.input.s.clear();
-        state.push_window("\2Input your account's PIN code (three digits)\1: \3"_map, 
+        state.push_window("\2Input your account's PIN code (three digits)\1: \3"_m, 
                           screens_t::bank_withdrawal);
         break;
 
@@ -302,7 +302,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
             state.window_stack.pop_back(); 
         } else {
             p.input.s.clear();
-            state.push_window("\2Choose a PIN code for your account (three digits)\1: \3"_map,
+            state.push_window("\2Choose a PIN code for your account (three digits)\1: \3"_m,
                               screens_t::bank_deposit);
         }
         break;
@@ -317,7 +317,7 @@ inline bool handle_input_banking_main(Player& p, GameState& state, maudit::keypr
             state.window_stack.pop_back(); 
         } else {
             p.input.s.clear();
-            state.push_window("\2Buy what (enter the name)\1: \3"_map, screens_t::bank_buy);
+            state.push_window("\2Buy what (enter the name)\1: \3"_m, screens_t::bank_buy);
         }
         break;
 
@@ -339,7 +339,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
     const auto& money = constants().money;
 
     if (money.empty()) {
-        return "Sorry, money doesn't exist yet."_map;
+        return "Sorry, money doesn't exist yet."_m;
     }
 
     tag_t money_slot = constants().money_slot;
@@ -349,7 +349,7 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
     double& assets = p.banking.assets;
     assets = 0;
 
-    std::string msg = "\2Welcome to Frobozz Bank.\n\n"_map;
+    std::string msg = "\2Welcome to Frobozz Bank.\n\n"_m;
 
     items::Item vi;
     if (p.inv.get(money_slot, vi)) {
@@ -386,27 +386,27 @@ inline std::string show_banking_menu(Player& p, GameState& state, tag_t terrain,
         msg += nlp::message("You have no liquid assets.\n"_m);
     }
     
-    msg += "\nPlease choose:\n\n"_map;
+    msg += "\nPlease choose:\n\n"_m;
 
-    msg += "  \2w\1) Withdraw from an account.\n"_map;
+    msg += "  \2w\1) Withdraw from an account.\n"_m;
 
     if (assets >= constants().min_money_value) {
-        msg += "  \2d\1) Deposit to an account.\n"_map;
+        msg += "  \2d\1) Deposit to an account.\n"_m;
 
         if (bank.stat_bonus > 0) {
 
             if (p.stats.gets(bank.bonus_stat) < stats().get(bank.bonus_stat).max) {
 
-                msg += "  \2p\1) Purchase divine protection.\n"_map;
+                msg += "  \2p\1) Purchase divine protection.\n"_m;
             }
         }
 
         if (bank.sell_margin > 0) {
-            msg += "  \2i\1) Buy an item.\n"_map;
+            msg += "  \2i\1) Buy an item.\n"_m;
         }
 
         if (bank.gives_change > 0) {
-            msg += "  \2c\1) Exchange assets for coins.\n"_map;
+            msg += "  \2c\1) Exchange assets for coins.\n"_m;
         }
     }
 

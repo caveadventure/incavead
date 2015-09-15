@@ -125,10 +125,10 @@ struct Scores {
             bones::bone_t& bone = i->bone;
 
             if (bone.cause.name.empty())
-                bone.cause.name = "unnatural causes"_map;
+                bone.cause.name = "unnatural causes"_m;
 
             if (bone.name.name.empty())
-                bone.name.name = "anonymous"_map;
+                bone.name.name = "anonymous"_m;
 
             f(n, bone.name, bone.cause, i->plev, i->dlev, i->worth, i->victory, i->scum_streak);
 

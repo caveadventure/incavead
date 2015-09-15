@@ -54,12 +54,19 @@ inline void init_strings_copy(uint64_t hash, const std::string& to) {
     __strings__().set(hash, to);
 }
 
-constexpr std::pair<uint64_t, const char*> operator"" _m(const char* s, size_t len) {
-    return std::make_pair(fnv64a_hash(s, len), s);
-}
+struct hash_and_string {
+    uint64_t hash;
+    const char* str;
 
-inline std::string operator"" _map(const char* s, size_t len) {
-    return strings().get(fnv64a_hash(s, len), std::string(s, len));
+    constexpr hash_and_string(uint64_t h, const char* s) : hash(h), str(s) {}
+
+    operator std::string() const {
+        return strings().get(hash, str);
+    }
+};
+
+constexpr hash_and_string operator"" _m(const char* s, size_t len) {
+    return hash_and_string(fnv64a_hash(s, len), s);
 }
 
 #endif

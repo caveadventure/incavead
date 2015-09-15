@@ -37,7 +37,7 @@ struct bone_t {
         {
 
             if (name.name.empty()) {
-                name.name = "anonymous"_map;
+                name.name = "anonymous"_m;
             }
 
             std::string label;
@@ -75,7 +75,7 @@ struct bone_t {
                     label += ", ";
                 }
 
-                label += "in the form of"_map;
+                label += "in the form of"_m;
                 label += polyform;
             }
 
