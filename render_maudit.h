@@ -1183,6 +1183,10 @@ public:
         messages.emplace_front(msg, important, 0, temporary);
     }
 
+    void do_message(const std::pair<uint64_t, const char*>& msg, bool important = false, bool temporary = false) {
+        do_message(strings().get(msg.first, msg.second), important, temporary);
+    }
+
 
     std::string all_messages() {
 

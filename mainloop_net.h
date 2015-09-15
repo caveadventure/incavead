@@ -351,7 +351,9 @@ struct Main {
         name.clear();
         std::string pass;
 
-        std::string window = 
+        std::string window = "\nWelcome!\n"_map;
+
+        window += 
             "\n\1The name and passcode will identify your savefile.\n"
             "If a name/passcode combination doesn't exist, then a new savefile will be created.\n"
             "\n\3Enter your name:\2 ";
@@ -383,8 +385,8 @@ struct Main {
 
         size_t oldticks = 0;
 
-        state.render.do_message("Press '?' twice for detailed instructions.");
-        state.render.do_message("Press '?' for help on controls.");
+        state.render.do_message("Press '?' twice for detailed instructions."_m);
+        state.render.do_message("Press '?' for help on controls."_m);
 
         draw(dead);
 

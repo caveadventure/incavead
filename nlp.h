@@ -2,6 +2,7 @@
 #define __NLP_H
 
 #include "rcode.h"
+#include "strings_bank.h"
 
 namespace nlp {
 
@@ -458,6 +459,11 @@ std::string message(const std::string& tmpl, const ARGS&... args) {
     return ret;
 }
 
+template <typename... ARGS>
+std::string message(const std::pair<uint64_t, const char*>& tmpl, const ARGS&... args) {
+
+    return message(strings().get(tmpl.first, tmpl.second), args...);
+}
 
 }
 

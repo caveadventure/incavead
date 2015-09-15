@@ -133,6 +133,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     tag_t ail_tag;
     tag_t tmp_tag;
     unsigned int starsign_n;
+    uint64_t hash;
 
     ui_symbols_t* ui_syms = NULL;
 
@@ -1409,10 +1410,16 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         pc_include = 'include' ws1 string %{ parse_config(state.match, tagmem); } ws ';';
 
+        pc_string = 'string'
+            ws1 string %{ hash = fnv64a_hash(state.match.c_str(), state.match.size()); }
+            ws1 string %{ init_strings_copy(hash, state.match); }
+            ws ';';
+
         ###
 
         entry = species | design | terrain | vault | celauto | levelskin | constant | 
-                achievement | ailment | ui_syms | damage | stat | count | pc_include;
+                achievement | ailment | ui_syms | damage | stat | count | pc_include |
+                pc_string;
             
       main := (ws entry)+ ws ;
         

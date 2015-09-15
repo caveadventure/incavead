@@ -6,6 +6,7 @@
 #include "common_types.h"
 #include "skins.h"
 
+#include "strings_bank.h"
 #include "pstats.h"
 #include "damage.h"
 
