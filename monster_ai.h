@@ -78,18 +78,14 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
     if (!s.magic_cost.stat.null()) {
 
-        if (m.stats.sinc(s.magic_cost.stat, -s.magic_cost.cost)) {
-
-            m.dead = true;
-            return true;
-        }
-
         if (m.stats.is_min(s.magic_cost.stat))
             return false;
     }
-                    
+
+    bool ret = false;
+
     if ((is_player && !m.ally.null()) || (!is_player && ally == m.ally))
-        return false;
+        return ret;
 
     if (s.summon.size() > 0) {
 
@@ -116,7 +112,9 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
 
             summons.emplace_back(mxy.first, mxy.second, summons_t::type_t::LEVEL,
                                  tag_t(), c.level, 1, m.tag, m.ally, c.msg);
-        }        
+
+            ret = true;
+        }
     }
 
     if (!s.morph.species.null()) {
@@ -129,7 +127,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
             m.tag = news;
 
             state.render.invalidate(mxy.first, mxy.second);
-            return true;
+            ret = true;
         }
     }
 
@@ -145,7 +143,7 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
         if (v <= b.chance) continue;
 
         do_monster_blast(p, state, s, m, target.first, target.second, b.radius, b.attacks);
-        return true;
+        ret = true;
     }
 
     for (const auto& c : s.cast_cloud) {
@@ -160,10 +158,17 @@ inline bool do_monster_magic(Player& p, GameState& state, std::vector<summons_t>
         if (state.render.is_in_fov(mxy.first, mxy.second)) 
             state.render.do_message(nlp::message("%s casts %s!"_m, s, c.name));
 
-        return true;
+        ret = true;
     }
 
-    return false;
+    if (!s.magic_cost.stat.null()) {
+        if (m.stats.sinc(s.magic_cost.stat, -s.magic_cost.cost)) {
+
+            m.dead = true;
+        }
+    }
+
+    return ret;
 }
 
 namespace {

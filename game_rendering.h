@@ -174,6 +174,10 @@ unsigned int get_lightradius(const Player& p, const GameState& state) {
         r = terrain().get(feat.tag).view_radius;
     }
 
+    if (!p.polymorph.species.null()) {
+        r = p.get_species().range;
+    }
+
     if (r < 0) {
         const Levelskin& ls = levelskins().get(p.worldz);
 

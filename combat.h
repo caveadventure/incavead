@@ -423,10 +423,10 @@ inline bool attack_from_player(Player& p, const damage::attacks_t& attacks, unsi
     }
 
     if (!ret) {
-        state.render.do_message("You try to attack but do no damage."_m);
+        state.render.do_message(nlp::message("You attack %s but do no damage."_m, s));
     }
 
-    return ret;
+    return true;
 }
 
 

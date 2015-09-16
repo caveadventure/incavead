@@ -105,7 +105,7 @@ inline std::string show_inventory(Player& p, const std::string& moon_phase, item
                      dlevel >= -9 ? " " : "");
 
     std::string poly = (p.polymorph.species.null() ? std::string() :
-                        nlp::message("(in the form of \2%s\1)"_m, species().get(p.polymorph.species)));
+                        nlp::message("(in the form of \2%s\1)"_m, p.get_species()));
 
     m = nlp::message("\2Player stats:\n"
                      "  Character level:%s%d  %s\n"
