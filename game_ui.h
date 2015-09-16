@@ -1130,7 +1130,7 @@ bool handle_input_pick_direction(unsigned int px, unsigned int py, GameState& st
 void handle_input_messages(GameState& state, maudit::keypress k, bool do_howto) {
 
     if (do_howto && k.letter == '?') {
-        state.push_window(constants().howto_text, screens_t::howto);
+        state.push_window("howto_text_placeholder"_m, screens_t::howto);
         return;
     }
 

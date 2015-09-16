@@ -52,10 +52,6 @@ struct ConstantsBank {
 
     size_t max_celauto_cells;
 
-    std::string howto_text;
-
-    std::string tombstone_text;
-
     struct achievement_t {
         tag_t genus;
         unsigned int kills;

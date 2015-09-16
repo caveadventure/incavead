@@ -308,7 +308,7 @@ std::string tombstone_text(const Player& p) {
     if (bone.cause.name.empty())
         bone.cause.name = "unnatural causes"_m;
 
-    return nlp::message(constants().tombstone_text,
+    return nlp::message("tombstone_text_placeholder"_m,
                         bone.name,
                         bone.level+1, 
                         bone.cause, 

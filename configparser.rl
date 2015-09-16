@@ -1077,10 +1077,6 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
             )+
             ;
 
-        constant_howto_text = 'howto_text' ws1 string %{ __constants__().howto_text = state.match; };
-
-        constant_tombstone_text = 'tombstone_text' ws1 string %{ __constants__().tombstone_text = state.match; };
-
         constant_achievement_trigger_rate = 'achievement_trigger_rate' 
             ws1 number %{ __constants__().achievement_trigger_rate = toint(state.match); } ;
 
@@ -1141,7 +1137,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
                        constant_shortcut_messages | constant_shortcut_action | 
                        constant_genus | constant_flavor | constant_unique_item | constant_uniques_timeout |
                        constant_min_money_value | constant_max_celauto_cells |
-                       constant_howto_text | constant_tombstone_text | constant_achievement_trigger_rate | 
+                       constant_achievement_trigger_rate | 
                        constant_treasure_chance | constant_digging_count |
                        constant_monetary_supply_base | constant_money_slot | constant_player_level_cap |
                        constant_bonus_a_items | constant_bonus_b_items | constant_max_ailments | constant_luck_stat |
