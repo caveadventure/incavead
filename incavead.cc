@@ -69,11 +69,11 @@ extern void parse_config(const std::string& filename, tag_mem_t& tagmem);
 #include "game.h"
 
 
-void init_statics() {
+void init_statics(const std::string& gamecfg) {
 
     tag_mem_t tagmem;
 
-    configparser::parse_config("game.cfg", tagmem);
+    configparser::parse_config(gamecfg, tagmem);
 
     ////
 }
@@ -180,17 +180,6 @@ void do_genmaps(int start, int end) {
 
 int main(int argc, char** argv) {
 
-    maudit::server_socket server(20020);
-
-    init_statics();
-
-    bones::bones().load(constants().max_bones);
-    uniques::uniques().load();
-    uniques::items().load();
-    permafeats::features().load(constants().max_permafeats);
-    finance::supply().load(constants().monetary_supply_base, constants().min_money_value);
-
-
     bool singleplayer = false;
     bool genmaps = false;
     bool debug = false;
@@ -199,6 +188,8 @@ int main(int argc, char** argv) {
 
     int genmaps_start = -9;
     int genmaps_end = 26;
+
+    std::string gamecfg("game.cfg");
     
     for (int argi = 1; argi < argc; ++argi) {
 
@@ -225,6 +216,13 @@ int main(int argc, char** argv) {
             graphics = 2;
             fullwidth = true;
 
+        } else if (arg == "-g" || arg == "--game") {
+
+            ++argi;
+            if (argi < argc) {
+                gamecfg = argv[argi];
+            }
+
         } else if (genmaps) {
 
             size_t n = arg.find(':');
@@ -235,6 +233,16 @@ int main(int argc, char** argv) {
             }
         }
     }
+
+    maudit::server_socket server(20020);
+
+    init_statics(gamecfg);
+
+    bones::bones().load(constants().max_bones);
+    uniques::uniques().load();
+    uniques::items().load();
+    permafeats::features().load(constants().max_permafeats);
+    finance::supply().load(constants().monetary_supply_base, constants().min_money_value);
 
     if (genmaps) {
         do_genmaps(genmaps_start, genmaps_end);
