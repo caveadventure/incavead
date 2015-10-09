@@ -56,7 +56,7 @@ inline bool luck_level_scale(rnd::Generator& rng, pstats::stats_t& stats, tag_t 
     unsigned int fudge = rng.geometric(pv);
 
     if (neg) {
-        level -= std::max(level, fudge);
+        level -= std::min(level, fudge);
         return false;
 
     } else {
