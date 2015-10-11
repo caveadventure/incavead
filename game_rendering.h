@@ -227,11 +227,22 @@ void draw_one_stat(Player& p, GameState& state, tag_t s, size_t n_skin) {
 
     double v;
 
+    double min;
+    double max;
+
+    if (st.reversed) {
+        max = st.min;
+        min = st.max;
+    } else {
+        max = st.max;
+        min = st.min;
+    }
+
     if (st.progressbar) {
-        v = 6.0 * (val - st.min) / (st.max - st.min);
+        v = 6.0 * (val - min) / (max - min);
 
     } else {
-        v = 3.0 * (2 * val - st.max - st.min) / (st.max - st.min);
+        v = 3.0 * (2 * val - max - min) / (max - min);
     }
 
     int vp = v;

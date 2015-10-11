@@ -111,6 +111,7 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
     Damage dam;
     Stat sta;
     Count cou;
+    ConstantsBank::ailment_t ail;
 
     damage::val_t dmgval;
 
@@ -1207,28 +1208,29 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         ####
 
-        ailment_attack = 'attack' ws1 damage_val %{ __constants__().ailments[ail_tag].attacks.add(dmgval); } ;
+        ailment_attack = 'attack' ws1 damage_val %{ ail.attacks.add(dmgval); } ;
 
-        ailment_attack_level = 'attack_level' ws1 number 
-                               %{ __constants__().ailments[ail_tag].level = toint(state.match); } ;
+        ailment_attack_level = 'attack_level' ws1 number  %{ ail.level = toint(state.match); } ;
 
-        ailment_name = 'name' ws1 string 
-                       %{ __constants__().ailments[ail_tag].name = state.match; } ;
+        ailment_name = 'name' ws1 string %{ ail.name = state.match; } ;
 
-        ailment_triggers = 'triggers' ws1 number 
-                           %{ __constants__().ailments[ail_tag].triggers = toint(state.match); } ;
+        ailment_triggers = 'triggers' ws1 number %{ ail.triggers = toint(state.match); } ;
 
-        ailment_oneshot = 'oneshot' %{ __constants__().ailments[ail_tag].oneshot = true; } ;
+        ailment_oneshot = 'oneshot' %{ ail.oneshot = true; } ;
+
+        ailment_inc_stat = 'inc_stat'
+            ws1 tag  %{ tmp_tag = tag_t(state.match, tagmem); }
+            ws1 real %{ ail.inc_stat[tmp_tag] += toreal(state.match); };
 
         ailment_line = 
-            ailment_attack | ailment_attack_level | ailment_name | ailment_triggers | ailment_oneshot
-            ;
+            ailment_attack | ailment_attack_level | ailment_name | ailment_triggers | ailment_oneshot |
+            ailment_inc_stat ;
 
         ailment = 'ailment' 
-            ws1 tag    %{ ail_tag = tag_t(state.match, tagmem); }
+            ws1 tag    %{ ail_tag = tag_t(state.match, tagmem); ail = ConstantsBank::ailment_t(); }
             ws '{'
             ( ws ailment_line ws ';')+
-            ws '}'
+            ws '}' %{ __constants__().ailments[ail_tag] = ail; }
             ;
 
         ####
@@ -1320,7 +1322,8 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         stat_mark = 'mark'
             ws1 skin %{ sta.label.pskin.set(SKINS); }
-            (ws1 skin %{ sta.label.nskin.set(SKINS); sta.progressbar = false; })? ;
+            (ws1 skin %{ sta.label.nskin.set(SKINS); sta.progressbar = false; })?
+            (ws1 'reversed' %{ sta.reversed = true; })?;
 
         stat_limits = 'limits'
             ws1 real %{ sta.min = toreal(state.match); }
@@ -1382,9 +1385,11 @@ void parse_config(const std::string& filename, tag_mem_t& tagmem) {
 
         count_cancellable = 'cancellable' %{ cou.cancellable = true; };
 
+        count_ailment = 'ailment' ws1 tag %{ cou.ailment = tag_t(state.match, tagmem); } ;
+
         count_one_data =
             (count_label | count_mark | count_max | count_hidden |
-            count_monster_hit_msg | count_status_msg |
+            count_monster_hit_msg | count_status_msg | count_ailment |
             count_blind | count_stun | count_fear | count_sleep | count_cancellable |
             '}' ${ fret; })
             ;

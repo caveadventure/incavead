@@ -32,18 +32,12 @@ struct Stat {
 
     bool hidden;
     bool progressbar;
+    bool reversed;
 
     tag_t ailment;
 
-    bool blind;
-    bool stun;
-    bool fear;
-    bool sleep;
-
-    bool cancellable;
-
     Stat() : min(-3), max(3), cmax(1000), critical(false), hidden(false), progressbar(true),
-             blind(false), stun(false), fear(false), sleep(false), cancellable(false) {}
+             reversed(false) {}
 };
 
 struct Count {
@@ -72,6 +66,8 @@ struct Count {
     bool sleep;
 
     bool cancellable;
+
+    tag_t ailment;
 
     Count() : cmax(1000), hidden(true), blind(false), stun(false), fear(false), sleep(false),
               cancellable(false) {}

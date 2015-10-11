@@ -65,6 +65,26 @@ void add_ailments(Player& p, GameState& state) {
     }
 }
 
+bool process_ailment(tag_t ail, Player& p, GameState& state) {
+
+    auto a = constants().ailments.find(ail);
+
+    if (a == constants().ailments.end())
+        throw std::runtime_error("Unknown ailment.");
+
+    const auto& ailment = a->second;
+
+    int n = defend(p, ailment, state);
+
+    for (const auto& z : ailment.inc_stat) {
+        if (p.stats.sinc(z.first, z.second))
+            p.dead = true;
+    }
+
+    return (ailment.oneshot && n > 0);
+}
+
+
 void Game::init(GameState& state, unsigned int address, unsigned int seed) {
 
     game_seed = seed;
@@ -369,15 +389,8 @@ void Game::process_world(GameState& state,
 
         if (a != p.ailments.end()) {
 
-            auto b = consts.ailments.find(a->second);
-
-            if (b != consts.ailments.end()) {
-
-                size_t n = defend(p, b->second, state);
-
-                if (b->second.oneshot && n > 0) {
-                    p.ailments.erase(a);
-                }
+            if (process_ailment(a->second, p, state)) {
+                p.ailments.erase(a);
             }
         }
     }
@@ -578,12 +591,7 @@ void Game::process_world(GameState& state,
 
         if (!ls.ailment.null() && !p.dead) {
 
-            auto a = constants().ailments.find(ls.ailment);
-
-            if (a == constants().ailments.end())
-                throw std::runtime_error("Unknown ailment in levelskin.");
-
-            defend(p, a->second, state);
+            process_ailment(ls.ailment, p, state);
         }
     }
 
@@ -593,12 +601,7 @@ void Game::process_world(GameState& state,
 
         if (!st.ailment.null() && i.second.val <= st.min && !p.dead) {
 
-            auto a = constants().ailments.find(st.ailment);
-
-            if (a == constants().ailments.end())
-                throw std::runtime_error("Unknown ailment in stats description.");
-
-            defend(p, a->second, state);
+            process_ailment(st.ailment, p, state);
         }
     }
 
@@ -617,6 +620,11 @@ void Game::process_world(GameState& state,
         if (ct.stun)  p.stun = true;
         if (ct.fear)  p.fear = true;
         if (ct.sleep) p.sleep = true;
+
+        if (!ct.ailment.null() && !p.dead) {
+
+            process_ailment(ct.ailment, p, state);
+        }
     }
 
     if (p.polymorph.turns > 0) {

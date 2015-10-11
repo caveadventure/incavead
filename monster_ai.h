@@ -2,6 +2,26 @@
 #define __MONSTER_AI_H
 
 
+bool process_ailment(tag_t ail, Player& p, GameState& state, const monsters::pt& mxy, monsters::Monster& mon) {
+
+    auto a = constants().ailments.find(ail);
+
+    if (a == constants().ailments.end())
+        throw std::runtime_error("Unknown ailment.");
+
+    const auto& ailment = a->second;
+
+    int tmp;
+    int n = attack_from_env(p, ailment.attacks, ailment.level, state, mxy, mon, tmp, false, true);
+
+    for (const auto& z : ailment.inc_stat) {
+        if (mon.stats.sinc(z.first, z.second))
+            mon.dead = true;
+    }
+
+    return (ailment.oneshot && n > 0);
+}
+
 inline void cast_cloud(GameState& state, unsigned int x, unsigned int y, unsigned int r,
                        tag_t terraintag) {
 
@@ -287,13 +307,7 @@ inline bool move_monster_main(Player& p, GameState& state,
 
         if (!ls.ailment.null()) {
 
-            auto a = constants().ailments.find(ls.ailment);
-
-            if (a == constants().ailments.end())
-                throw std::runtime_error("Unknown ailment in levelskin.");
-
-            int tmp;
-            attack_from_env(p, a->second.attacks, a->second.level, state, mxy, m, tmp, false, true);
+            process_ailment(ls.ailment, p, state, mxy, m);
         }
     }
 

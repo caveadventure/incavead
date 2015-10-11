@@ -69,6 +69,7 @@ struct ConstantsBank {
     size_t achievement_trigger_rate;
 
     struct ailment_t {
+        std::map<tag_t,double> inc_stat;
         damage::attacks_t attacks;
         unsigned int level;
         std::string name;
