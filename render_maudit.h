@@ -216,8 +216,8 @@ private:
 
     double _dist(const pt& a, const pt& b) {
 
-        unsigned int dx = abs(a.first - b.first);
-        unsigned int dy = abs(a.second - b.second);
+        unsigned int dx = abs((int)a.first - (int)b.first);
+        unsigned int dy = abs((int)a.second - (int)b.second);
         return sqrt(dx*dx + dy*dy);
     }
 
