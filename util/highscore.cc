@@ -181,12 +181,28 @@ struct other_stats_t {
 
     std::pair< std::string, std::pair<double, std::string> > got_rich_quick;
 
-    std::pair<std::string, size_t> most_achievements;
+    std::pair<std::string, std::pair<size_t,unsigned int> > most_achievements;
 
     std::string rare_cause;
 
     other_stats_t() : gdp1(0), gdp2(0), gdp3(0), avg_plev(0), avg_dlev(0), 
                       median_plev(0), median_dlev(0), players(0), ngames(0) {}
+
+    struct cause_stat_t {
+        unsigned int n = 0;
+        double plev = 1;
+        double worth = 1;
+        double dlev = 1;
+
+        template <typename N>
+        bool tiebreak_ordering(N x, N y, const cause_stat_t& a) const {
+            if (x < y)
+                return true;
+            if (x == y && (plev * worth * dlev) / n < (a.plev * a.worth * a.dlev) / a.n)
+                return true;
+            return false;
+        }
+    };
 
     void operator()(std::vector<highscore::Scores::order_t>& v) {
 
@@ -197,7 +213,7 @@ struct other_stats_t {
 
         ngames = v.size();
 
-        typedef std::map< std::string, std::pair<unsigned int, std::pair<double,double> > > by_cause_t;
+        typedef std::map< std::string, cause_stat_t> by_cause_t;
         by_cause_t by_cause;
 
         typedef std::map< std::string, std::pair<unsigned int, size_t> > by_players_t;
@@ -211,9 +227,10 @@ struct other_stats_t {
         for (const auto& i : v) {
 
             auto& tmp = by_cause[i.bone.cause.name];
-            tmp.first++;
-            tmp.second.first += ::log(i.plev+1);
-            tmp.second.second += ::log(i.worth+0.01);
+            tmp.n++;
+            tmp.plev *= ::log(i.plev + 1);
+            tmp.worth *= ::log(i.worth + 1);
+            tmp.dlev *= abs(::log(abs(i.dlev) + 0.9));
 
             gdp1 += i.worth;
             gdp2 += i.bone.worth;
@@ -235,9 +252,11 @@ struct other_stats_t {
 
             gdp_lev[i.dlev] += i.bone.worth;
 
-            if (num_aches >= most_achievements.second) {
+            if (num_aches > most_achievements.second.first ||
+                (num_aches == most_achievements.second.first && i.plev > most_achievements.second.second)) {
                 most_achievements.first = i.bone.name.name;
-                most_achievements.second = num_aches;
+                most_achievements.second.first = num_aches;
+                most_achievements.second.second = i.plev;
             }
         }
 
@@ -264,33 +283,31 @@ struct other_stats_t {
 
         auto i = std::max_element(by_cause.begin(), by_cause.end(),
                                   [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
-                                      return (a.second.first < b.second.first); });
+                                      return a.second.tiebreak_ordering(a.second.n, b.second.n, b.second);
+                                  });
 
         cause_raw.first = i->first;
-        cause_raw.second = i->second.first;
+        cause_raw.second = i->second.n;
 
         i = std::max_element(by_cause.begin(), by_cause.end(),
                              [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
-                                 return (a.second.second.first < b.second.second.first); });
+                                 return a.second.tiebreak_ordering(a.second.plev / a.second.n, b.second.plev / b.second.n, b.second);
+                             });
 
         cause_plev.first = i->first;
-        cause_plev.second = i->second.first;
+        cause_plev.second = i->second.n;
 
         i = std::max_element(by_cause.begin(), by_cause.end(),
                              [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
-                                 return (a.second.second.second < b.second.second.second); });
+                                 return a.second.tiebreak_ordering(a.second.worth / a.second.n, b.second.worth / b.second.n, b.second);
+                             });
 
         cause_worth.first = i->first;
-        cause_worth.second = i->second.first;
+        cause_worth.second = i->second.n;
 
         i = std::min_element(by_cause.begin(), by_cause.end(),
                              [](const by_cause_t::value_type& a, const by_cause_t::value_type& b) {
-                                 if (a.second.first < b.second.first) 
-                                     return true;
-                                 if (a.second.first == b.second.first && 
-                                     a.second.second.second > b.second.second.second)
-                                     return true;
-                                 return false;
+                                 return b.second.tiebreak_ordering(a.second.n, b.second.n, a.second);
                              });
 
         rare_cause = i->first;
@@ -352,7 +369,7 @@ struct other_stats_t {
                                   players,
                                   most_active_player.first, most_active_player.second,
                                   scummer.first, scummer.second,
-                                  most_achievements.first, most_achievements.second,
+                                  most_achievements.first, most_achievements.second.first,
                                   got_rich_quick.first, got_rich_quick.second.first, cause_g_r_q);
     }
 };
@@ -396,6 +413,11 @@ int main(int argc, char** argv) {
         scores.by_worth();
         std::cout << "\"worth\": [";
         scores.process(_process, 0);
+        std::cout << "]" << std::endl;
+
+        scores.by_rank();
+        std::cout << "\"rank\": [";
+        scores.process(_process, 0, 10, true);
         std::cout << "]" << std::endl;
 
         std::cout << "}," << std::endl; 

@@ -32,6 +32,7 @@ function do_highscore() {
                   apply_template("#panel_dlev_d", "#scorelines_tmpl", data.highscores.dlev_d);
                   apply_template("#panel_dlev_a", "#scorelines_tmpl", data.highscores.dlev_a);
                   apply_template("#panel_worth", "#scorelines_tmpl", data.highscores.worth);
+                  apply_template("#panel_rank", "#scorelines_tmpl", data.highscores.rank);
                   apply_template("#panel_ts", "#scorelines_tmpl", data.highscores.ts);
 
                   apply_template("#num_games", "#num_games_tmpl", data);

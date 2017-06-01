@@ -111,11 +111,20 @@ struct Scores {
         return false;
     }
 
+    static bool sort_rank(const order_t& a, const order_t& b) {
+        double ar = ::log(a.plev + 1) * ::log(a.worth + 0.01) * abs(::log(abs(a.dlev) + 0.9));
+        double br = ::log(b.plev + 1) * ::log(b.worth + 0.01) * abs(::log(abs(b.dlev) + 0.9));
+
+        if (ar > br) return true;
+        return false;
+    }
 
     template <typename FUNC>
-    void process(FUNC f, int vfilt = -1, size_t limit = 10) {
+    void process(FUNC f, int vfilt = -1, size_t limit = 10, bool uniq = false) {
 
         size_t n = 0;
+
+        std::set<std::string> filter;
 
         for (auto i = scores.begin(); i != scores.end() && n < limit; ++i) {
 
@@ -123,6 +132,20 @@ struct Scores {
                 continue;
 
             bones::bone_t& bone = i->bone;
+
+            if (uniq) {
+                std::string name = bone.name.name;
+                std::string::size_type achpos = name.find(" (");
+
+                if (achpos != std::string::npos) {
+                    name = name.substr(0, achpos);
+                }
+
+                if (filter.count(name))
+                    continue;
+
+                filter.insert(name);
+            }
 
             if (bone.cause.name.empty())
                 bone.cause.name = "unnatural causes"_m;
@@ -154,6 +177,10 @@ struct Scores {
 
     void by_worth() {
         std::sort(scores.begin(), scores.end(), sort_worth);
+    }
+
+    void by_rank() {
+        std::sort(scores.begin(), scores.end(), sort_rank);
     }
 };
 
