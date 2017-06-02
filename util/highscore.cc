@@ -413,7 +413,7 @@ int main(int argc, char** argv) {
         scores.by_worth();
         std::cout << "\"worth\": [";
         scores.process(_process, 0);
-        std::cout << "]" << std::endl;
+        std::cout << "]," << std::endl;
 
         scores.by_rank();
         std::cout << "\"rank\": [";
