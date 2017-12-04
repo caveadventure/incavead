@@ -640,21 +640,7 @@ void Game::process_world(GameState& state,
     if (p.fast.turns > 0) {
         --(p.fast.turns);
     }
-
-    if (p.sleep) {
-        ++(state.ticks);
-        do_draw = true;
-        return;
-    }
-    
-    if (p.stats.counts.count(constants().digging_count) != 0) {
-
-        ++(state.ticks);
-        do_draw = true;            
-
-        do_digging_step(p, state);
-    }
-
+  
     if (p.dead) {
 
         std::string code = rcode::encode(game_seed);
@@ -663,7 +649,18 @@ void Game::process_world(GameState& state,
         state.render.do_message(nlp::message("Replay code: %s"_m, code), true);
         dead = true;
         done = true;
-        return;
+
+    } else if (p.sleep) {
+
+        ++(state.ticks);
+        do_draw = true;
+
+    } else if (p.stats.counts.count(constants().digging_count) != 0) {
+
+        ++(state.ticks);
+        do_draw = true;            
+
+        do_digging_step(p, state);
     }
 }
 
