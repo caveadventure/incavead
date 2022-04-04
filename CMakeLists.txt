@@ -1,5 +1,5 @@
 
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.9)
 project (incavead)
 
 SET(CMAKE_BUILD_TYPE "Release")
@@ -19,11 +19,13 @@ include_directories(../libmaudit)
 find_program(RAGEL ragel)
 
 if(NOT RAGEL) 
-  
+
+  message("ragel NOT found")
   add_executable(incavead configparser.cc incavead.cc)
 
 else(NOT RAGEL)
 
+  message("ragel found")
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/configparser.h
     COMMAND ${RAGEL} -s -T0 -o configparser.h configparser.rl

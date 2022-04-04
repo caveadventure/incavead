@@ -57,7 +57,7 @@ struct screen_params_t {
 };
 
 
-template <typename GAME, typename GAMESTATE, typename GAMEOPTIONS, typename SCREEN>
+template <typename GAME, typename GAMESTATE, typename GAMEOPTIONS, typename SCREEN, unsigned int SAVEFILE_VERSION = 23>
 struct Main {
 
     GAME game;
@@ -67,9 +67,6 @@ struct Main {
 
     GAMEOPTIONS options;
     GAMESTATE state;
-
-    static const unsigned int SAVEFILE_VERSION = 23;
-
 
     Main(SCREEN& s, bool debug, size_t n_skin, bool fullwidth) : 
         game(debug, n_skin), 
